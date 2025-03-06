@@ -14,8 +14,8 @@ import {
   AvailableFilter,
   Filter,
   FilterConditions,
-} from "../../filter/services/types";
-import { buildFilterSummary } from "../../filter/utils/build-summary";
+} from "../filter/services/types";
+import { buildFilterSummary } from "../filter/utils/build-summary";
 import { InputBase } from "./InputBase";
 import { Combobox } from "@/components/selects/Combobox";
 import { MultiCombobox } from "@/components/selects/MultiCombobox";
