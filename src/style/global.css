@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +12,6 @@
 }
 
 @layer base {
-  /* Tema Padrão (Light) */
   :root {
     --background: 0 0% 100%; /* Fundo branco */
     --foreground: 222.2 47.4% 11.2%; /* Texto escuro */
@@ -57,8 +58,7 @@
     --ring: 216 34% 17%;
   }
 
-  /* Cores Personalizadas */
-  /* Tema Light com Purple */
+  /* Other Themes */
   .light-purple {
     --background: 0 0% 100%; /* Fundo branco */
     --foreground: 222.2 47.4% 11.2%; /* Texto escuro */
@@ -100,91 +100,6 @@
     --ring: 215 20.2% 65.1%;
     --radius: 0.5rem;
   }
-
-  /* Tema Light com Green */
-  .light-green {
-    --background: 0 0% 100%; /* Fundo branco */
-    --foreground: 222.2 47.4% 11.2%; /* Texto escuro */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --primary: 147 36% 51%; /* Verde */
-    --primary-foreground: 0 0% 100%; /* Texto branco */
-    --secondary: 147 36% 51%; /* Verde */
-    --secondary-foreground: 0 0% 100%;
-    --accent: 147 36% 51%; /* Verde */
-    --accent-foreground: 0 0% 100%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 215 20.2% 65.1%;
-    --radius: 0.5rem;
-  }
-
-  /* Tema Escuro com Purple */
-  .dark-purple {
-    --background: 224 71% 4%; /* Fundo escuro */
-    --foreground: 213 31% 91%; /* Texto claro */
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --primary: 255 100% 70%; /* Roxo */
-    --primary-foreground: 0 0% 100%; /* Texto branco */
-    --secondary: 255 100% 70%; /* Roxo */
-    --secondary-foreground: 0 0% 100%;
-    --accent: 255 100% 70%; /* Roxo */
-    --accent-foreground: 0 0% 100%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 216 34% 17%;
-  }
-
-  /* Tema Escuro com Green */
-  .dark-green {
-    --background: 224 71% 4%; /* Fundo escuro */
-    --foreground: 213 31% 91%; /* Texto claro */
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --primary: 147 36% 51%; /* Verde */
-    --primary-foreground: 0 0% 100%; /* Texto branco */
-    --secondary: 147 36% 51%; /* Verde */
-    --secondary-foreground: 0 0% 100%;
-    --accent: 147 36% 51%; /* Verde */
-    --accent-foreground: 0 0% 100%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 216 34% 17%;
-  }
-
-  /* Tema Escuro com Blue */
-  .dark-blue {
-    --background: 224 71% 4%; /* Fundo escuro */
-    --foreground: 213 31% 91%; /* Texto claro */
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --primary: 215 76% 51%; /* Azul */
-    --primary-foreground: 0 0% 100%; /* Texto branco */
-    --secondary: 215 76% 51%; /* Azul */
-    --secondary-foreground: 0 0% 100%;
-    --accent: 215 76% 51%; /* Azul */
-    --accent-foreground: 0 0% 100%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 216 34% 17%;
-  }
 }
 
 /* Configuração de Estilos Globais */
@@ -195,5 +110,6 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Syne', sans-serif;  /* Apply Syne font globally */
   }
 }

@@ -14,9 +14,9 @@ export const TabsPage = () => {
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <TabsBase>
           <TabsListBase>
-            <TabsTriggerBase value="tab1">Tab 1</TabsTriggerBase>
-            <TabsTriggerBase value="tab2">Tab 2</TabsTriggerBase>
-            <TabsTriggerBase value="tab3">Tab 3</TabsTriggerBase>
+            <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>
+            <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
+            <TabsTriggerBase value="tab3">Infantil</TabsTriggerBase>
           </TabsListBase>
 
           <TabsContentBase value="tab1">
