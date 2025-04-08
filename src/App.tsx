@@ -7,7 +7,7 @@ import "./style/global.css";
 import { ModeToggleBase } from "./components/mode-toggle";
 
 import { SidebarProviderBase } from "@/components/ui/SidebarBase";
-import { AppSidebar } from "@/components/sidebar/AppSidebar";
+import { AppSidebar } from "@/components/Sidebar/AppSidebar";
 
 function App() {
   return (
