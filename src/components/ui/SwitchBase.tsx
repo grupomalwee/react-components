@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
 
-import { cn } from "@/lib/utils"
+import { cn } from "../..//lib/utils";
 
 const SwitchBase = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -23,7 +23,7 @@ const SwitchBase = React.forwardRef<
       )}
     />
   </SwitchPrimitives.Root>
-))
-SwitchBase.displayName = SwitchPrimitives.Root.displayName
+));
+SwitchBase.displayName = SwitchPrimitives.Root.displayName;
 
-export { SwitchBase }
+export { SwitchBase };

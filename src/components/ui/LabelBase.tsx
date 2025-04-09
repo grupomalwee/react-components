@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Label as RadixLabel } from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@/lib/utils";
+
+import { cn } from "../..//lib/utils";
 
 export type LabelBaseProps = React.ComponentPropsWithoutRef<"label"> & {
   asChild?: boolean;
@@ -14,7 +15,10 @@ const LabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
       <RadixLabel asChild>
         <Comp
           ref={ref}
-          className={cn("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", className)}
+          className={cn(
+            "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+            className
+          )}
           {...props}
         />
       </RadixLabel>

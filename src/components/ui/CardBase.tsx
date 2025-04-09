@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "../..//lib/utils";
 
 const CardBase = React.forwardRef<
   HTMLDivElement,
@@ -14,8 +14,8 @@ const CardBase = React.forwardRef<
     )}
     {...props}
   />
-))
-CardBase.displayName = "Card"
+));
+CardBase.displayName = "Card";
 
 const CardHeaderBase = React.forwardRef<
   HTMLDivElement,
@@ -26,8 +26,8 @@ const CardHeaderBase = React.forwardRef<
     className={cn("flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
-))
-CardHeaderBase.displayName = "CardHeader"
+));
+CardHeaderBase.displayName = "CardHeader";
 
 const CardTitleBase = React.forwardRef<
   HTMLDivElement,
@@ -38,8 +38,8 @@ const CardTitleBase = React.forwardRef<
     className={cn("font-semibold leading-none tracking-tight", className)}
     {...props}
   />
-))
-CardTitleBase.displayName = "CardTitle"
+));
+CardTitleBase.displayName = "CardTitle";
 
 const CardDescriptionBase = React.forwardRef<
   HTMLDivElement,
@@ -50,16 +50,16 @@ const CardDescriptionBase = React.forwardRef<
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
-))
-CardDescriptionBase.displayName = "CardDescription"
+));
+CardDescriptionBase.displayName = "CardDescription";
 
 const CardContentBase = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-))
-CardContentBase.displayName = "CardContent"
+));
+CardContentBase.displayName = "CardContent";
 
 const CardFooterBase = React.forwardRef<
   HTMLDivElement,
@@ -70,8 +70,15 @@ const CardFooterBase = React.forwardRef<
     className={cn("flex items-center p-6 pt-0", className)}
     {...props}
   />
-))
+));
 
-CardFooterBase.displayName = "CardFooter"
+CardFooterBase.displayName = "CardFooter";
 
-export { CardBase, CardHeaderBase, CardFooterBase, CardTitleBase, CardDescriptionBase, CardContentBase }
+export {
+  CardBase,
+  CardHeaderBase,
+  CardFooterBase,
+  CardTitleBase,
+  CardDescriptionBase,
+  CardContentBase,
+};

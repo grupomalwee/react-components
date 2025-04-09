@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "../..//lib/utils";
 
 const TableBase = React.forwardRef<
   HTMLTableElement,
@@ -13,16 +13,16 @@ const TableBase = React.forwardRef<
       {...props}
     />
   </div>
-))
-TableBase.displayName = "TableBase"
+));
+TableBase.displayName = "TableBase";
 
 const TableHeaderBase = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
-))
-TableHeaderBase.displayName = "TableHeaderBase"
+));
+TableHeaderBase.displayName = "TableHeaderBase";
 
 const TableBodyBase = React.forwardRef<
   HTMLTableSectionElement,
@@ -33,8 +33,8 @@ const TableBodyBase = React.forwardRef<
     className={cn("[&_tr:last-child]:border-0", className)}
     {...props}
   />
-))
-TableBodyBase.displayName = "TableBodyBase"
+));
+TableBodyBase.displayName = "TableBodyBase";
 
 const TableFooterBase = React.forwardRef<
   HTMLTableSectionElement,
@@ -48,8 +48,8 @@ const TableFooterBase = React.forwardRef<
     )}
     {...props}
   />
-))
-TableFooterBase.displayName = "TableFooterBase"
+));
+TableFooterBase.displayName = "TableFooterBase";
 
 const TableRowBase = React.forwardRef<
   HTMLTableRowElement,
@@ -63,8 +63,8 @@ const TableRowBase = React.forwardRef<
     )}
     {...props}
   />
-))
-TableRowBase.displayName = "TableRowBase"
+));
+TableRowBase.displayName = "TableRowBase";
 
 const TableHeadBase = React.forwardRef<
   HTMLTableCellElement,
@@ -78,8 +78,8 @@ const TableHeadBase = React.forwardRef<
     )}
     {...props}
   />
-))
-TableHeadBase.displayName = "TableHeadBase"
+));
+TableHeadBase.displayName = "TableHeadBase";
 
 const TableCellBase = React.forwardRef<
   HTMLTableCellElement,
@@ -93,8 +93,8 @@ const TableCellBase = React.forwardRef<
     )}
     {...props}
   />
-))
-TableCellBase.displayName = "TableCellBase"
+));
+TableCellBase.displayName = "TableCellBase";
 
 const TableCaptionBase = React.forwardRef<
   HTMLTableCaptionElement,
@@ -105,8 +105,8 @@ const TableCaptionBase = React.forwardRef<
     className={cn("mt-4 text-sm text-muted-foreground", className)}
     {...props}
   />
-))
-TableCaptionBase.displayName = "TableCaptionBase"
+));
+TableCaptionBase.displayName = "TableCaptionBase";
 
 export {
   TableBase,
@@ -117,4 +117,4 @@ export {
   TableRowBase,
   TableCellBase,
   TableCaptionBase,
-}
+};
