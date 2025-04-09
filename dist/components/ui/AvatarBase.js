@@ -1,0 +1,12 @@
+"use client";
+import { jsx as _jsx } from "react/jsx-runtime";
+import * as React from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { cn } from "@/lib/utils";
+const AvatarBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(AvatarPrimitive.Root, { ref: ref, className: cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className), ...props })));
+AvatarBase.displayName = AvatarPrimitive.Root.displayName;
+const AvatarImageBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(AvatarPrimitive.Image, { ref: ref, className: cn("aspect-square h-full w-full", className), ...props })));
+AvatarImageBase.displayName = AvatarPrimitive.Image.displayName;
+const AvatarFallbackBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(AvatarPrimitive.Fallback, { ref: ref, className: cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className), ...props })));
+AvatarFallbackBase.displayName = AvatarPrimitive.Fallback.displayName;
+export { AvatarBase, AvatarImageBase, AvatarFallbackBase };

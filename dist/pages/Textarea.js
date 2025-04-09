@@ -1,0 +1,17 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { TextAreaBase } from "@/components/ui/TextAreaBase";
+import LabelBase from "@/components/ui/LabelBase";
+import { ButtonBase } from "@/components/ui/ButtonBase";
+export const TextareaPage = () => {
+    return (_jsxs("div", { children: [_jsxs("div", { className: "mt-5 ml-5 flex gap-5 p-3 rounded-sm", children: [_jsxs("div", { className: "flex flex-col items-start gap-2", children: [_jsx(LabelBase, { className: "pb-3", htmlFor: "message", children: "Default" }), _jsx(TextAreaBase, { className: "h-14 w-44", placeholder: "Type your message here" })] }), _jsxs("div", { className: "flex flex-col items-start gap-2", children: [_jsx(LabelBase, { className: "pb-3", htmlFor: "message", children: "With label" }), _jsx(TextAreaBase, { className: "h-14 w-44", placeholder: "Type your message here" })] }), _jsxs("div", { className: "flex flex-col items-start gap-2", children: [_jsx(LabelBase, { className: "pb-3", htmlFor: "message", children: "With text" }), _jsx(TextAreaBase, { className: "h-14 w-44", placeholder: "Type your message here" }), _jsx("p", { className: "text-sm text-muted-foreground", children: "Text here" })] }), _jsxs("div", { className: "flex flex-col items-start gap-2", children: [_jsx(LabelBase, { className: "pb-3", htmlFor: "message", children: "With label" }), _jsx(TextAreaBase, { className: "h-14 w-44", placeholder: "Type your message here" }), _jsx(ButtonBase, { className: "w-full", children: "Send message" })] })] }), _jsx("div", { className: "mt-5 ml-5 flex gap-5 p-3 rounded-sm", children: _jsxs("div", { className: "flex flex-col items-start gap-2", children: [_jsx(LabelBase, { className: "pb-3", htmlFor: "message", children: "Form Type" }), _jsx(TextAreaBase, { className: "h-14 w-44", placeholder: "Type your message here" }), _jsx("p", { className: "text-sm text-muted-foreground", children: "Text here" }), _jsx(ButtonBase, { className: "pt-2 w-44", children: "Send message" })] }) }), _jsxs("div", { className: "my-8 mx-5", children: [_jsx("h3", { className: "text-xl font-semibold mb-3", children: "Documenta\u00E7\u00E3o" }), _jsx("div", { className: "border-t-2 border-gray-300 mb-4" }), _jsxs("div", { className: "bg-gray-800 text-white p-4 rounded-md mb-4", children: [_jsx("h5", { className: "font-medium mb-2", children: "Como importar:" }), _jsx("pre", { className: "bg-gray-900 p-3 rounded-sm", children: _jsx("code", { children: `import { TextAreaBase } from "@/components/ui/TextAreaBase";
+import  LabelBase  from "@/components/ui/LabelBase";
+import { ButtonBase } from "@/components/ui/ButtonBase";` }) })] }), _jsxs("div", { className: "bg-gray-800 text-white p-4 rounded-md", children: [_jsx("h5", { className: "font-medium mb-2", children: "Como usar:" }), _jsx("pre", { className: "bg-gray-900 p-3 rounded-sm", children: _jsx("code", { children: `<div className="flex flex-col items-start gap-2">
+  <LabelBase className="pb-3" htmlFor="message">Default</LabelBase>
+  <TextAreaBase className="h-14 w-44" placeholder="Type your message here"></TextAreaBase>
+</div>` }) }), _jsx("pre", { className: "bg-gray-900 p-3 rounded-sm mt-4", children: _jsx("code", { children: `<div className="flex flex-col items-start gap-2">
+  <LabelBase className="pb-3" htmlFor="message">With label</LabelBase>
+  <TextAreaBase className="h-14 w-44" placeholder="Type your message here"></TextAreaBase>
+  <ButtonBase className="w-full">Send message</ButtonBase>
+</div>` }) })] })] })] }));
+};

@@ -1,0 +1,9 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Moon, Sun } from "phosphor-react";
+import { ButtonBase } from "@/components/ui/ButtonBase";
+import { DropDownMenuBase, DropDownMenuContentBase, DropDownMenuItemBase, DropDownMenuTriggerBase, } from "@/components/ui/DropDownMenuBase";
+import { useTheme } from "@/components/theme-provider";
+export function ModeToggleBase() {
+    const { setTheme } = useTheme();
+    return (_jsxs(DropDownMenuBase, { children: [_jsx(DropDownMenuTriggerBase, { asChild: true, children: _jsxs(ButtonBase, { variant: "outline", size: "icon", children: [_jsx(Sun, { className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" }), _jsx(Moon, { className: "absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" }), _jsx("span", { className: "sr-only", children: "Toggle theme" })] }) }), _jsxs(DropDownMenuContentBase, { align: "end", children: [_jsx(DropDownMenuItemBase, { onClick: () => setTheme("light"), children: "Light" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("dark"), children: "Dark" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("light-purple"), children: "Light Purple" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("light-blue"), children: "Light Blue" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("light-green"), children: "Light Green" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("dark-purple"), children: "Dark Purple" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("dark-blue"), children: "Dark Blue" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("dark-green"), children: "Dark Green" }), _jsx(DropDownMenuItemBase, { onClick: () => setTheme("system"), children: "System" })] })] }));
+}

@@ -1,0 +1,14 @@
+"use client";
+import { jsx as _jsx } from "react/jsx-runtime";
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cn } from "@/lib/utils";
+const TabsBase = TabsPrimitive.Root;
+const TabsListBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(TabsPrimitive.List, { ref: ref, className: cn("inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground", className), ...props })));
+TabsListBase.displayName = TabsPrimitive.List.displayName;
+const TabsTriggerBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(TabsPrimitive.Trigger, { ref: ref, className: cn("inline-flex items-center justify-center whitespace-nowrap px-3 py-1 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-b-2 border-slate-200 data-[state=active]:border-[#8e68ff]", // Custom purple color for active state
+    className), ...props })));
+TabsTriggerBase.displayName = TabsPrimitive.Trigger.displayName;
+const TabsContentBase = React.forwardRef(({ className, ...props }, ref) => (_jsx(TabsPrimitive.Content, { ref: ref, className: cn("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className), ...props })));
+TabsContentBase.displayName = TabsPrimitive.Content.displayName;
+export { TabsBase, TabsListBase, TabsTriggerBase, TabsContentBase };
