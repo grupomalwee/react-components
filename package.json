@@ -1,11 +1,12 @@
 {
   "name": "@malwee/react-components",
-  "private": true,
   "version": "0.1.0",
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": ["dist", "README.md", "LICENSE.md"],
   "scripts": {
     "dev": "vite",
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",

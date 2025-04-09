@@ -5,7 +5,7 @@
 // import { z } from "zod";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 
 // const FormSchema = z.object({
 //   username: z.string().min(2, {
@@ -55,7 +55,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { ButtonBase } from "@/components/ui/ButtonBase"
 import { InputBase } from "@/components/ui/InputBase"
-import { LabelBase } from "@/components/ui/LabelBase"`}
+import  LabelBase  from "@/components/ui/LabelBase"`}
             </code>
           </pre>
         </div>

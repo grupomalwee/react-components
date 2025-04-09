@@ -1,7 +1,7 @@
 "use client";
 
 import { TextAreaBase } from "@/components/ui/TextAreaBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 
 export const TextareaPage = () => {
@@ -74,7 +74,7 @@ export const TextareaPage = () => {
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
               {`import { TextAreaBase } from "@/components/ui/TextAreaBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";`}
             </code>
           </pre>

@@ -1,5 +1,5 @@
 import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 
 export function LabelPage() {
   return (
@@ -23,7 +23,7 @@ export function LabelPage() {
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
               {`import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import { LabelBase } from "@/components/ui/LabelBase";`}
+import LabelBase  from "@/components/ui/LabelBase";`}
             </code>
           </pre>
         </div>

@@ -13,7 +13,7 @@ import {
   DialogTitleBase,
   DialogTriggerBase,
 } from "../ui/DialogBase";
-import { LabelBase } from "../ui/LabelBase";
+import  LabelBase  from "../ui/LabelBase";
 import { TimePicker } from "./TimePicker";
 
 interface DateTimePickerProps {

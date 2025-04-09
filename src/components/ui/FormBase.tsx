@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
   Controller,
@@ -11,8 +10,9 @@ import {
 } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
-import { LabelBase } from "@/components/ui/LabelBase";
+import LabelBase, { LabelBaseProps } from "@/components/ui/LabelBase";
 
+// Reexporta diretamente
 const FormBase = FormProvider;
 
 type FormFieldBaseContextValue<
@@ -85,8 +85,8 @@ const FormItemBase = React.forwardRef<
 FormItemBase.displayName = "FormItemBase";
 
 const FormLabelBase = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+  HTMLLabelElement,
+  LabelBaseProps
 >(({ className, ...props }, ref) => {
   const { error, FormItemId } = useFormFieldBase();
 
