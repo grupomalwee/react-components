@@ -2,14 +2,15 @@
   "name": "@malwee/react-components",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-
   "scripts": {
     "dev": "vite",
-    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
+    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir dist && npm run build-css",
+    "build-css": "npx tailwindcss -i ./src/style/global.css -o ./dist/global.css --config ./tailwind.config.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -56,6 +57,7 @@
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.4.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.19.0",

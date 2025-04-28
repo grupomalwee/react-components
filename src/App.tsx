@@ -24,7 +24,7 @@ function App() {
     - "dark-blue": Tema escuro com tonalidade azul
     - "system": Tema baseado na preferência do sistema (claro ou escuro)
   */}
-      <ThemeProviderBase defaultTheme="light-blue" storageKey="vite-ui-theme">
+      <ThemeProviderBase defaultTheme="light-purple" storageKey="vite-ui-theme">
         <div className="flex">
           <SidebarProviderBase>
             <AppSidebar />
