@@ -16,7 +16,36 @@ import {
   SidebarMenuButtonBase,
   ModeToggleBase,
 } from "@lib";
-import { House, Envelope, Calendar, MagnifyingGlass, Gear } from "phosphor-react";
+import {
+  House,
+  Envelope,
+  Calendar,
+  MagnifyingGlass,
+  Gear,
+  Warning,
+  User,
+  RadioButton,
+  Cards,
+  CheckCircle,
+  Command,
+  Chat,
+  List,
+  Funnel,
+  FolderMinus,
+  Table,
+  PictureInPicture,
+  Textbox,
+  Sticker,
+  AppWindow,
+  Barcode,
+  Minus,
+  Scroll,
+  Selection,
+  ArrowsInLineVertical,
+  CursorText,
+  UserSwitch,
+  ChatDots,
+} from "phosphor-react";
 
 import { AlertDialogPage } from "./pages/Alert-dialog";
 import { AvatarPage } from "./pages/Avatar";
@@ -26,43 +55,45 @@ import { CommandPage } from "./pages/Command";
 import Home from "./Home";
 
 const items = [
-  { title: "Alert Dialog", url: "/alert-dialog", icon: House },
-  { title: "Avatar", url: "/avatar", icon: Envelope },
-  { title: "Button", url: "/button", icon: Calendar },
-  { title: "Calendar", url: "/calender", icon: Calendar },
-  { title: "Card", url: "/card", icon: Calendar },
-  { title: "Checkbox", url: "/checkbox", icon: MagnifyingGlass },
-  { title: "Command", url: "/command", icon: Gear },
-  { title: "Dialog", url: "/dialog", icon: Envelope },
-  { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
-  { title: "Filter", url: "/Filter", icon: Calendar },
-  { title: "Form", url: "/form", icon: Gear },
-  { title: "Input", url: "/input", icon: Envelope },
-  { title: "Label", url: "/label", icon: Calendar },
-  { title: "Popover", url: "/popover", icon: MagnifyingGlass },
-  { title: "Progress", url: "/progress", icon: Gear },
-  { title: "Scrollarea", url: "/scrollarea", icon: House },
-  { title: "Select", url: "/select", icon: Envelope },
-  { title: "Separator", url: "/separator", icon: Calendar },
+  { title: "Home", url: "/", icon: House },
+  { title: "Alert Dialog", url: "/alert-dialog", icon: Warning },
+  { title: "Avatar", url: "/avatar", icon: User },
+  { title: "Button", url: "/button", icon: RadioButton },
+  { title: "Calendar", url: "/calendar", icon: Calendar },
+  { title: "Card", url: "/card", icon: Cards },
+  { title: "Checkbox", url: "/checkbox", icon: CheckCircle },
+  { title: "Command", url: "/command", icon: Command },
+  { title: "Dialog", url: "/dialog", icon: Chat },
+  { title: "Dropdown Menu", url: "/dropdown-menu", icon: List },
+  { title: "Filter", url: "/filter", icon: Funnel },
+  { title: "Form", url: "/form", icon: Table },
+  { title: "Input", url: "/input", icon: Textbox},
+  { title: "Label", url: "/label", icon: Sticker },
+  { title: "Popover", url: "/popover", icon: AppWindow },
+  { title: "Progress", url: "/progress", icon: Minus },
+  { title: "Scrollarea", url: "/scrollarea", icon: Scroll },
+  { title: "Select", url: "/select", icon: Selection },
+  { title: "Separator", url: "/separator", icon:  ArrowsInLineVertical},
   { title: "Sheet", url: "/sheet", icon: MagnifyingGlass },
-  { title: "Skeleton", url: "/skeleton", icon: Gear },
+  { title: "Skeleton", url: "/skeleton", icon: CursorText },
   { title: "Slider", url: "/slider", icon: House },
-  { title: "Sonner", url: "/sonner", icon: Envelope },
-  { title: "Switch", url: "/switch", icon: Calendar },
-  { title: "Table", url: "/table", icon: MagnifyingGlass },
+  { title: "Sonner", url: "/sonner", icon: ChatDots },
+  { title: "Switch", url: "/switch", icon: UserSwitch },
+  { title: "Table", url: "/table", icon: Table },
   { title: "Tabs", url: "/tabs", icon: Gear },
-  { title: "Textarea", url: "/textarea", icon: House },
+  { title: "Textarea", url: "/textarea", icon: Textbox },
   { title: "Tooltip", url: "/tooltip", icon: MagnifyingGlass },
 ];
+
 // Layout com Sidebar
 function LayoutWithSidebar() {
   return (
     <SidebarProviderBase>
       <div className="flex min-h-screen">
         <SidebarBase>
-          <SidebarContentBase>
+          <SidebarContentBase className="sidebar-scroll"> {/* Adicionando a classe sidebar-scroll */}
             <SidebarGroupBase>
-              <SidebarGroupLabelBase>Componentes</SidebarGroupLabelBase>
+              <SidebarGroupLabelBase><div className="text-lg mb-2">Componentes</div></SidebarGroupLabelBase>
               <SidebarGroupContentBase>
                 <SidebarMenuBase>
                   {items.map((item) => (
@@ -98,7 +129,7 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/" element={<LayoutWithSidebar />}>
+          <Route path="/" element={<LayoutWithSidebar />} >
             <Route index element={<Home />} />
             <Route path="/alert-dialog" element={<AlertDialogPage />} />
             <Route path="/avatar" element={<AvatarPage />} />
