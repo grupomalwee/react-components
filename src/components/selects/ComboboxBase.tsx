@@ -12,7 +12,8 @@ import {
   PopoverContentBase,
   PopoverTriggerBase,
 } from "@/components/ui/PopoverBase";
-import { cn } from "@/lib/utils";
+
+import { cn } from "../..//lib/utils";
 // import { CaretUpDown, Check } from "@phosphor-icons/react";
 import { ReactNode, useState } from "react";
 
@@ -43,7 +44,7 @@ export function ComboboxBase({
       <PopoverTriggerBase asChild className="flex w-full justify-between">
         <ButtonBase variant="outline" role="combobox" aria-expanded={open}>
           {renderSelected}
-          <button className="text-gray-500"/>
+          <button className="text-gray-500" />
         </ButtonBase>
       </PopoverTriggerBase>
       <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0">
@@ -67,7 +68,7 @@ export function ComboboxBase({
                   <button
                     className={cn(
                       "ml-auto",
-                      checkIsSelected(item.value) ? "opacity-100" : "opacity-0",
+                      checkIsSelected(item.value) ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItemBase>

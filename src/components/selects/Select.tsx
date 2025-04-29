@@ -7,7 +7,8 @@ import {
   SelectTriggerBase,
   SelectValueBase,
 } from "@/components/ui/SelectBase";
-import { cn } from "@/lib/utils";
+
+import { cn } from "../..//lib/utils";
 import { ScrollAreaBase } from "../ui/ScrollareaBase";
 
 export interface SelectItem {

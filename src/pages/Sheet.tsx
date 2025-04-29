@@ -2,7 +2,7 @@
 
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import {
   SheetBase,
   SheetCloseBase,
@@ -75,7 +75,7 @@ export const SheetPage = () => {
   ButtonBase
 } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import {
   SheetBase,
   SheetCloseBase,

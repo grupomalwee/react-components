@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import * as React from "react";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
 
-import { cn } from "@/lib/utils"
+import { cn } from "../..//lib/utils";
 
 const ProgressBase = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
@@ -22,7 +22,7 @@ const ProgressBase = React.forwardRef<
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     />
   </ProgressPrimitive.Root>
-))
-ProgressBase.displayName = ProgressPrimitive.Root.displayName
+));
+ProgressBase.displayName = ProgressPrimitive.Root.displayName;
 
-export { ProgressBase }
+export { ProgressBase };

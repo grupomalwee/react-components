@@ -2,7 +2,8 @@ import { add, format } from "date-fns";
 
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { CalendarBase } from "@/components/date-time-picker/calendar";
-import { cn } from "@/lib/utils";
+
+import { cn } from "../..//lib/utils";
 import { Calendar } from "phosphor-react";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ import {
   DialogTitleBase,
   DialogTriggerBase,
 } from "../ui/DialogBase";
-import { LabelBase } from "../ui/LabelBase";
+import LabelBase from "../ui/LabelBase";
 import { TimePicker } from "./TimePicker";
 
 interface DateTimePickerProps {

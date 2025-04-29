@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "../..//lib/utils";
 
 const TextAreaBase = React.forwardRef<
   HTMLTextAreaElement,
@@ -15,8 +15,8 @@ const TextAreaBase = React.forwardRef<
       ref={ref}
       {...props}
     />
-  )
-})
-TextAreaBase.displayName = "TextAreaBase"
+  );
+});
+TextAreaBase.displayName = "TextAreaBase";
 
-export { TextAreaBase }
+export { TextAreaBase };

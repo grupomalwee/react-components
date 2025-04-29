@@ -11,7 +11,7 @@ import {
   DialogCloseBase,
 } from "@/components/ui/DialogBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 
 export const DialogPage = () => {
@@ -80,7 +80,7 @@ import {
   DialogCloseBase,
 } from "@/components/ui/DialogBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";`}
             </code>
           </pre>

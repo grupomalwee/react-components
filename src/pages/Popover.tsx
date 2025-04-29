@@ -1,6 +1,6 @@
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import LabelBase  from "@/components/ui/LabelBase";
 import {
   PopoverBase,
   PopoverContentBase,
@@ -75,7 +75,7 @@ export function PopoverPage() {
             <code>
               {`import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import {
   PopoverBase,
   PopoverContentBase,

@@ -1,4 +1,4 @@
-import { LabelBase } from "../ui/LabelBase";
+import  LabelBase  from "../ui/LabelBase";
 import { Clock } from "phosphor-react";
 import * as React from "react";
 import { TimePickerInput } from "./TimePickerInput";

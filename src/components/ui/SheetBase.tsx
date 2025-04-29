@@ -5,7 +5,7 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "phosphor-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../..//lib/utils";
 
 const SheetBase = SheetPrimitive.Root;
 

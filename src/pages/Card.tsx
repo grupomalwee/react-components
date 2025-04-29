@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/CardBase";
 
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 
 import {
   SelectBase,
@@ -85,7 +85,7 @@ export const CardPage = () => {
 } from "@/components/ui/CardBase";
 
 import { InputBase } from "@/components/ui/InputBase";
-import { LabelBase } from "@/components/ui/LabelBase";
+import  LabelBase  from "@/components/ui/LabelBase";
 import {
   SelectBase,
   SelectContentBase,
