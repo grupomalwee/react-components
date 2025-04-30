@@ -1,7 +1,5 @@
-"use client";
 
 import { TextAreaBase } from "@lib";
-import  LabelBase  from "@lib";
 import { ButtonBase } from "@lib";
 
 export const TextareaPage = () => {
@@ -10,27 +8,27 @@ export const TextareaPage = () => {
       {/* TextArea Examples */}
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <div className="flex flex-col items-start gap-2">
-          <LabelBase className="pb-3" htmlFor="message">
+          <p className="pb-3" htmlFor="message">
             Default
-          </LabelBase>
+          </p>
           <TextAreaBase
             className="h-14 w-44"
             placeholder="Type your message here"
           ></TextAreaBase>
         </div>
         <div className="flex flex-col items-start gap-2">
-          <LabelBase className="pb-3" htmlFor="message">
+          <p className="pb-3" htmlFor="message">
             With label
-          </LabelBase>
+          </p>
           <TextAreaBase
             className="h-14 w-44"
             placeholder="Type your message here"
           ></TextAreaBase>
         </div>
         <div className="flex flex-col items-start gap-2">
-          <LabelBase className="pb-3" htmlFor="message">
+          <p className="pb-3" htmlFor="message">
             With text
-          </LabelBase>
+          </p>
           <TextAreaBase
             className="h-14 w-44"
             placeholder="Type your message here"
@@ -38,9 +36,9 @@ export const TextareaPage = () => {
           <p className="text-sm text-muted-foreground">Text here</p>
         </div>
         <div className="flex flex-col items-start gap-2">
-          <LabelBase className="pb-3" htmlFor="message">
+          <p className="pb-3" htmlFor="message">
             With label
-          </LabelBase>
+          </p>
           <TextAreaBase
             className="h-14 w-44"
             placeholder="Type your message here"
@@ -51,9 +49,9 @@ export const TextareaPage = () => {
 
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <div className="flex flex-col items-start gap-2">
-          <LabelBase className="pb-3" htmlFor="message">
+          <p className="pb-3" htmlFor="message">
             Form Type
-          </LabelBase>
+          </p>
           <TextAreaBase
             className="h-14 w-44"
             placeholder="Type your message here"

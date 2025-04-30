@@ -1,8 +1,5 @@
-"use client";
-
 import { ButtonBase } from "@lib";
 import { InputBase } from "@lib";
-import  LabelBase  from "@lib";
 import {
   SheetBase,
   SheetCloseBase,
@@ -17,7 +14,6 @@ import {
 export const SheetPage = () => {
   return (
     <div>
-      {/* Sheet Component Example */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <SheetBase>
           <SheetTriggerBase asChild>
@@ -32,9 +28,7 @@ export const SheetPage = () => {
             </SheetHeaderBase>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <LabelBase htmlFor="name" className="text-right">
-                  Name
-                </LabelBase>
+                <p>Name</p>
                 <InputBase
                   id="name"
                   value="Pedro Duarte"
@@ -42,9 +36,7 @@ export const SheetPage = () => {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <LabelBase htmlFor="username" className="text-right">
-                  Username
-                </LabelBase>
+                <p>UserName</p>
                 <InputBase
                   id="username"
                   value="@peduarte"

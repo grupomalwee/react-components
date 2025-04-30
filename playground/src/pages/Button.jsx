@@ -25,7 +25,7 @@ export const ButtonPage = () => {
             <h5 className="font-medium mb-2">Como importar:</h5>
             <pre className="bg-gray-900 p-3 rounded-sm">
               <code>
-                {`import { ButtonBase } from "@/components/ui/ButtonBase";`}
+{`import { ButtonBase } from "@/components/ui/ButtonBase";`}
               </code>
             </pre>
           </div>
@@ -35,7 +35,7 @@ export const ButtonPage = () => {
             <h5 className="font-medium mb-2">Como usar:</h5>
             <pre className="bg-gray-900 p-3 rounded-sm">
               <code>
-                {`<ButtonBase>dad</ButtonBase>
+{`<ButtonBase>dad</ButtonBase>
 <ButtonBase variant="destructive">dad</ButtonBase>
 <ButtonBase variant="ghost">dad</ButtonBase>
 <ButtonBase variant="link">dad</ButtonBase>

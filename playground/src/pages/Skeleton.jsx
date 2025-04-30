@@ -20,7 +20,7 @@ export const SkeletonPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`import { SkeletonBase } from "@/components/ui/SkeletonBase";`}
+{`import { SkeletonBase } from "@/components/ui/SkeletonBase";`}
             </code>
           </pre>
         </div>
@@ -30,7 +30,7 @@ export const SkeletonPage = () => {
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`<div className="mt-5 ml-5 flex gap-5 h-11 p-3 rounded-sm">
+{`<div className="mt-5 ml-5 flex gap-5 h-11 p-3 rounded-sm">
   <SkeletonBase className="w-[350px] h-24 absolute left-[32%] -translate-x-1/3 rounded-2xl" />
 </div>`}
             </code>

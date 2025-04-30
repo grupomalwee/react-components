@@ -24,7 +24,7 @@ export const SeparatorPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`import { SeparatorBase } from "@/components/ui/SeparatorBase";`}
+{`import { SeparatorBase } from "@/components/ui/SeparatorBase";`}
             </code>
           </pre>
         </div>
@@ -34,7 +34,7 @@ export const SeparatorPage = () => {
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`<div className="p-5">
+{`<div className="p-5">
   <h1>Section 1</h1>
   <p>This is the first section content.</p>
   <SeparatorBase className="my-5 w-full border-t-2 border-gray-300" />

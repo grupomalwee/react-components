@@ -1,42 +1,28 @@
 "use client";
 
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
 import { ButtonBase } from "@lib";
 import { InputBase } from "@lib";
-import  LabelBase  from "@lib";
-
-// const FormSchema = z.object({
-//   username: z.string().min(2, {
-//     message: "Username must be at least 2 characters.",
-//   }),
-// });
 
 export const InputPage = () => {
-  // const form = useForm<z.infer<typeof FormSchema>>({
-  //   resolver: zodResolver(FormSchema),
-  //   defaultValues: {
-  //     username: "",
-  //   },
-  // });
-
   return (
     <>
       {/* Input Fields Component */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="email">Email</LabelBase>
+          <p>Email</p>
           <InputBase type="email" id="email" placeholder="Email" />
         </div>
+
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="picture">Picture</LabelBase>
+          <p>Picture</p>
           <InputBase id="picture" type="file" />
         </div>
+
         <div className="flex w-full max-w-sm items-center space-x-2">
           <InputBase type="email" placeholder="Email" />
           <ButtonBase type="submit">Subscribe</ButtonBase>
         </div>
+
         <InputBase disabled type="email" placeholder="Email" />
       </div>
 
@@ -50,12 +36,9 @@ export const InputPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { ButtonBase } from "@/components/ui/ButtonBase"
-import { InputBase } from "@/components/ui/InputBase"
-import  LabelBase  from "@/components/ui/LabelBase"`}
+{`import { ButtonBase } from "@/components/ui/ButtonBase";
+import { InputBase } from "@/components/ui/InputBase";
+import LabelBase from "@/components/ui/LabelBase";`}
             </code>
           </pre>
         </div>
@@ -65,41 +48,22 @@ import  LabelBase  from "@/components/ui/LabelBase"`}
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+{`<div className="grid w-full max-w-sm items-center gap-1.5">
+  <LabelBase htmlFor="email">Email</LabelBase>
+  <InputBase type="email" id="email" placeholder="Email" />
+</div>
 
-export const InputPage = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
-  })
+<div className="grid w-full max-w-sm items-center gap-1.5">
+  <LabelBase htmlFor="picture">Picture</LabelBase>
+  <InputBase id="picture" type="file" />
+</div>
 
-  return (
-    <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
-      <div className="mt-5 ml-5 flex gap-5 h-20 p-3 rounded-sm">
-        <InputBase type="email" placeholder="Email" />
-        <InputBase disabled type="email" placeholder="Email" />
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="picture">Picture</LabelBase>
-          <InputBase id="picture" type="file" />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="email">Email</LabelBase>
-          <InputBase type="email" id="email" placeholder="Email" />
-        </div>
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <InputBase type="email" placeholder="Email" />
-          <ButtonBase type="submit">Subscribe</ButtonBase>
-        </div>
-      </div>
-    </div>
-  )
-}`}
+<div className="flex w-full max-w-sm items-center space-x-2">
+  <InputBase type="email" placeholder="Email" />
+  <ButtonBase type="submit">Subscribe</ButtonBase>
+</div>
+
+<InputBase disabled type="email" placeholder="Email" />`}
             </code>
           </pre>
         </div>

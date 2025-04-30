@@ -42,7 +42,7 @@ export const SelectPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`import {
+{`import {
   SelectBase,
   SelectContentBase,
   SelectGroupBase,
@@ -60,7 +60,7 @@ export const SelectPage = () => {
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-              {`<SelectBase>
+{`<SelectBase>
   <SelectTriggerBase className="w-[180px]">
     <SelectValueBase placeholder="Select a fruit" />
   </SelectTriggerBase>

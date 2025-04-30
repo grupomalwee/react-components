@@ -5,41 +5,41 @@ import {
   TabsListBase,
   TabsTriggerBase,
   TabsContentBase,
-} from "@lib";
+} from "@lib"; // Importando os componentes necessários para as abas
 
 export const TabsPage = () => {
   return (
     <div>
-      {/* Tabs Example */}
+      {/* Exemplo de Tabs */}
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <TabsBase>
           <TabsListBase>
-            <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>
+            <TabsTriggerBase value="tab1">Visão Geral</TabsTriggerBase>
             <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
             <TabsTriggerBase value="tab3">Infantil</TabsTriggerBase>
           </TabsListBase>
 
           <TabsContentBase value="tab1">
-            <h2>Content for Tab 1</h2>
-            <p>This is some content for the first tab.</p>
+            <h2>Conteúdo para a Aba 1</h2>
+            <p>Este é o conteúdo da primeira aba.</p>
           </TabsContentBase>
           <TabsContentBase value="tab2">
-            <h2>Content for Tab 2</h2>
-            <p>This is some content for the second tab.</p>
+            <h2>Conteúdo para a Aba 2</h2>
+            <p>Este é o conteúdo da segunda aba.</p>
           </TabsContentBase>
           <TabsContentBase value="tab3">
-            <h2>Content for Tab 3</h2>
-            <p>This is some content for the third tab.</p>
+            <h2>Conteúdo para a Aba 3</h2>
+            <p>Este é o conteúdo da terceira aba.</p>
           </TabsContentBase>
         </TabsBase>
       </div>
 
-      {/* Documentation Section */}
+      {/* Seção de Documentação */}
       <div className="my-8 mx-5">
         <h3 className="text-xl font-semibold mb-3">Documentação</h3>
         <div className="border-t-2 border-gray-300 mb-4"></div>
 
-        {/* Code Block for Importing */}
+        {/* Bloco de Código para Importação */}
         <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
@@ -49,7 +49,7 @@ export const TabsPage = () => {
           </pre>
         </div>
 
-        {/* Code Block for Usage */}
+        {/* Bloco de Código para Uso */}
         <div className="bg-gray-800 text-white p-4 rounded-md">
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
@@ -62,16 +62,16 @@ export const TabsPage = () => {
   </TabsListBase>
 
   <TabsContentBase value="tab1">
-    <h2>Content for Tab 1</h2>
-    <p>This is some content for the first tab.</p>
+    <h2>Conteúdo para a Aba 1</h2>
+    <p>Este é o conteúdo da primeira aba.</p>
   </TabsContentBase>
   <TabsContentBase value="tab2">
-    <h2>Content for Tab 2</h2>
-    <p>This is some content for the second tab.</p>
+    <h2>Conteúdo para a Aba 2</h2>
+    <p>Este é o conteúdo da segunda aba.</p>
   </TabsContentBase>
   <TabsContentBase value="tab3">
-    <h2>Content for Tab 3</h2>
-    <p>This is some content for the third tab.</p>
+    <h2>Conteúdo para a Aba 3</h2>
+    <p>Este é o conteúdo da terceira aba.</p>
   </TabsContentBase>
 </TabsBase>`}
             </code>

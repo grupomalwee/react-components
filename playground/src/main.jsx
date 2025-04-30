@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 
@@ -18,7 +18,6 @@ import {
 } from "@lib";
 import {
   House,
-  Envelope,
   Calendar,
   MagnifyingGlass,
   Gear,
@@ -31,13 +30,10 @@ import {
   Chat,
   List,
   Funnel,
-  FolderMinus,
   Table,
-  PictureInPicture,
   Textbox,
   Sticker,
   AppWindow,
-  Barcode,
   Minus,
   Scroll,
   Selection,
@@ -45,6 +41,7 @@ import {
   CursorText,
   UserSwitch,
   ChatDots,
+  Sidebar, // Importando o ícone Sidebar
 } from "phosphor-react";
 
 import { AlertDialogPage } from "./pages/Alert-dialog";
@@ -52,8 +49,29 @@ import { AvatarPage } from "./pages/Avatar";
 import { ButtonPage } from "./pages/Button";
 import { CheckboxPage } from "./pages/Checkbox";
 import { CommandPage } from "./pages/Command";
+import { ProfileForm } from "./pages/Form";
+import { CalendarPage } from "./pages/Calendar";
+import { CardPage } from "./pages/Card";
+import { DialogPage } from "./pages/Dialog";
+import { DropDownMenuPage } from "./pages/Dropdown-menu";
+import { InputPage } from "./pages/Input";
+import { ProgressPage } from "./pages/Progress";
+import { PopoverPage } from "./pages/Popover";
+import { ScrollareaPage } from "./pages/Scrollarea";
+import { SelectPage } from "./pages/Select";
+import { SeparatorPage } from "./pages/Separator";
+import { SkeletonPage } from "./pages/Skeleton";
+import { SliderPage } from "./pages/Slider";
+import { SheetPage } from "./pages/Sheet";
+import { SonnerPage } from "./pages/Sonner";
+import { SwitchPage } from "./pages/Switch";
+import { TablePage } from "./pages/Table";
+import { TabsPage } from "./pages/Tabs";
+import { TextareaPage } from "./pages/Textarea";
+import { TooltipPage } from "./pages/Tooltip";
 import Home from "./Home";
 
+// Itens da sidebar (ordenados alfabeticamente)
 const items = [
   { title: "Home", url: "/", icon: House },
   { title: "Alert Dialog", url: "/alert-dialog", icon: Warning },
@@ -67,13 +85,13 @@ const items = [
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: List },
   { title: "Filter", url: "/filter", icon: Funnel },
   { title: "Form", url: "/form", icon: Table },
-  { title: "Input", url: "/input", icon: Textbox},
+  { title: "Input", url: "/input", icon: Textbox },
   { title: "Label", url: "/label", icon: Sticker },
   { title: "Popover", url: "/popover", icon: AppWindow },
   { title: "Progress", url: "/progress", icon: Minus },
   { title: "Scrollarea", url: "/scrollarea", icon: Scroll },
   { title: "Select", url: "/select", icon: Selection },
-  { title: "Separator", url: "/separator", icon:  ArrowsInLineVertical},
+  { title: "Separator", url: "/separator", icon: ArrowsInLineVertical },
   { title: "Sheet", url: "/sheet", icon: MagnifyingGlass },
   { title: "Skeleton", url: "/skeleton", icon: CursorText },
   { title: "Slider", url: "/slider", icon: House },
@@ -85,33 +103,54 @@ const items = [
   { title: "Tooltip", url: "/tooltip", icon: MagnifyingGlass },
 ];
 
-// Layout com Sidebar
+// Função para Layout com Sidebar
 function LayoutWithSidebar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Estado para controlar a sidebar
+
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
   return (
     <SidebarProviderBase>
       <div className="flex min-h-screen">
-        <SidebarBase>
-          <SidebarContentBase className="sidebar-scroll"> {/* Adicionando a classe sidebar-scroll */}
-            <SidebarGroupBase>
-              <SidebarGroupLabelBase><div className="text-lg mb-2">Componentes</div></SidebarGroupLabelBase>
-              <SidebarGroupContentBase>
-                <SidebarMenuBase>
-                  {items.map((item) => (
-                    <SidebarMenuItemBase key={item.url}>
-                      <SidebarMenuButtonBase asChild>
-                        <Link to={item.url} className="flex items-center gap-2">
-                          <item.icon size={18} />
-                          {item.title}
-                        </Link>
-                      </SidebarMenuButtonBase>
-                    </SidebarMenuItemBase>
-                  ))}
-                </SidebarMenuBase>
-              </SidebarGroupContentBase>
-            </SidebarGroupBase>
-          </SidebarContentBase>
+        {/* Sidebar */}
+        <SidebarBase className={`transition-all ${isSidebarOpen ? 'w-64' : 'w-16'}`}>
+          <div className="flex justify-end">
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-500 hover:text-gray-800 p-2"
+            >
+              <Sidebar size={18} />
+            </button>
+          </div>
+
+          {isSidebarOpen && (
+            <SidebarContentBase className="sidebar-scroll">
+              <SidebarGroupBase>
+                <SidebarGroupLabelBase>
+                  <div className="text-lg mb-2">Componentes</div>
+                </SidebarGroupLabelBase>
+                <SidebarGroupContentBase>
+                  <SidebarMenuBase>
+                    {items
+                      .sort((a, b) => a.title.localeCompare(b.title)) // Ordena os itens alfabeticamente
+                      .map((item) => (
+                        <SidebarMenuItemBase key={item.url}>
+                          <SidebarMenuButtonBase asChild>
+                            <Link to={item.url} className="flex items-center gap-2">
+                              <item.icon size={18} />
+                              {item.title}
+                            </Link>
+                          </SidebarMenuButtonBase>
+                        </SidebarMenuItemBase>
+                      ))}
+                  </SidebarMenuBase>
+                </SidebarGroupContentBase>
+              </SidebarGroupBase>
+            </SidebarContentBase>
+          )}
         </SidebarBase>
 
+        {/* Conteúdo principal */}
         <main className="flex-1 p-6">
           <Outlet />
         </main>
@@ -120,6 +159,7 @@ function LayoutWithSidebar() {
   );
 }
 
+// Função principal do App
 function App() {
   return (
     <ThemeProviderBase defaultTheme="light-purple" storageKey="vite-ui-theme">
@@ -129,13 +169,33 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/" element={<LayoutWithSidebar />} >
+          <Route path="/" element={<LayoutWithSidebar />}>
             <Route index element={<Home />} />
             <Route path="/alert-dialog" element={<AlertDialogPage />} />
             <Route path="/avatar" element={<AvatarPage />} />
             <Route path="/button" element={<ButtonPage />} />
             <Route path="/checkbox" element={<CheckboxPage />} />
             <Route path="/command" element={<CommandPage />} />
+            <Route path="/card" element={<CardPage />} />
+            <Route path="/form" element={<ProfileForm />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/dialog" element={<DialogPage />} />
+            <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
+            <Route path="/input" element={<InputPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/scrollarea" element={<ScrollareaPage />} />
+            <Route path="/select" element={<SelectPage />} />
+            <Route path="/separator" element={<SeparatorPage />} />
+            <Route path="/popover" element={<PopoverPage />} />
+            <Route path="/skeleton" element={<SkeletonPage />} />
+            <Route path="/slider" element={<SliderPage />} />
+            <Route path="/sonner" element={<SonnerPage />} />
+            <Route path="/switch" element={<SwitchPage />} />
+            <Route path="/table" element={<TablePage />} />
+            <Route path="/tabs" element={<TabsPage />} />
+            <Route path="/textarea" element={<TextareaPage />} />
+            <Route path="/tooltip" element={<TooltipPage />} />
+            <Route path="/sheet" element={<SheetPage />} />
             <Route path="*" element={<div className="p-10">404 - Página não encontrada</div>} />
           </Route>
         </Routes>
