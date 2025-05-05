@@ -103,63 +103,65 @@ const items = [
   { title: "Tooltip", url: "/tooltip", icon: MagnifyingGlass },
 ];
 
-// Função para Layout com Sidebar
 function LayoutWithSidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Estado para controlar a sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <SidebarProviderBase>
-      <div className="flex min-h-screen">
-        {/* Sidebar */}
-        <SidebarBase className={`transition-all ${isSidebarOpen ? 'w-64' : 'w-16'}`}>
-          <div className="flex justify-end">
-            <button
-              onClick={toggleSidebar}
-              className="text-gray-500 hover:text-gray-800 p-2"
-            >
-              <Sidebar size={18} />
+    <div>
+      <SidebarProviderBase>
+        <div className="flex min-h-screen relative">
+          <SidebarBase
+            className={`transition-all ${isSidebarOpen ? "w-72" : "w-16"}`} 
+          >
+            {isSidebarOpen && (
+              <SidebarContentBase className="sidebar-scroll">
+                <SidebarGroupBase>
+                  <SidebarGroupLabelBase>
+                    <div className="text-lg mb-2">Componentes</div>
+                  </SidebarGroupLabelBase>
+                  <SidebarGroupContentBase>
+                    <SidebarMenuBase>
+                      {items
+                        .sort((a, b) => a.title.localeCompare(b.title))
+                        .map((item) => (
+                          <SidebarMenuItemBase key={item.url}>
+                            <SidebarMenuButtonBase asChild>
+                              <Link
+                                to={item.url}
+                                className="flex items-center gap-2"
+                              >
+                                <item.icon size={18} />
+                                {item.title}
+                              </Link>
+                            </SidebarMenuButtonBase>
+                          </SidebarMenuItemBase>
+                        ))}
+                    </SidebarMenuBase>
+                  </SidebarGroupContentBase>
+                </SidebarGroupBase>
+              </SidebarContentBase>
+            )}
+          </SidebarBase>
+
+          <div
+            className={`fixed${isSidebarOpen ? "left-[16rem]" : "left-[4rem]"}`}
+          >
+            <button onClick={toggleSidebar} className="text-gray-500 py-2 pl-8">
+              <Sidebar size={17}/>
             </button>
           </div>
 
-          {isSidebarOpen && (
-            <SidebarContentBase className="sidebar-scroll">
-              <SidebarGroupBase>
-                <SidebarGroupLabelBase>
-                  <div className="text-lg mb-2">Componentes</div>
-                </SidebarGroupLabelBase>
-                <SidebarGroupContentBase>
-                  <SidebarMenuBase>
-                    {items
-                      .sort((a, b) => a.title.localeCompare(b.title)) // Ordena os itens alfabeticamente
-                      .map((item) => (
-                        <SidebarMenuItemBase key={item.url}>
-                          <SidebarMenuButtonBase asChild>
-                            <Link to={item.url} className="flex items-center gap-2">
-                              <item.icon size={18} />
-                              {item.title}
-                            </Link>
-                          </SidebarMenuButtonBase>
-                        </SidebarMenuItemBase>
-                      ))}
-                  </SidebarMenuBase>
-                </SidebarGroupContentBase>
-              </SidebarGroupBase>
-            </SidebarContentBase>
-          )}
-        </SidebarBase>
-
-        {/* Conteúdo principal */}
-        <main className="flex-1 p-6">
-          <Outlet />
-        </main>
-      </div>
-    </SidebarProviderBase>
+          <main className="flex-1 p-6">
+            <Outlet />
+          </main>
+        </div>
+      </SidebarProviderBase>
+    </div>
   );
 }
 
-// Função principal do App
 function App() {
   return (
     <ThemeProviderBase defaultTheme="light-purple" storageKey="vite-ui-theme">
@@ -196,7 +198,10 @@ function App() {
             <Route path="/textarea" element={<TextareaPage />} />
             <Route path="/tooltip" element={<TooltipPage />} />
             <Route path="/sheet" element={<SheetPage />} />
-            <Route path="*" element={<div className="p-10">404 - Página não encontrada</div>} />
+            <Route
+              path="*"
+              element={<div className="p-10">404 - Página não encontrada</div>}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
