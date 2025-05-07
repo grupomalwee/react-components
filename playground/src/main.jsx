@@ -118,10 +118,10 @@ function LayoutWithSidebar() {
             className={`transition-all ${isSidebarOpen ? "w-72" : "w-16"}`}
           >
             {isSidebarOpen && (
-              <SidebarContentBase className="sidebar-scroll">
+              <SidebarContentBase className="sidebar-scroll transition-all duration-200">
                 <SidebarGroupBase>
                   <SidebarGroupLabelBase>
-                    <div className="text-lg mb-2">Componentes</div>
+                    <div className="text-lg mb-2 transition-all duration-200">Componentes</div>
                   </SidebarGroupLabelBase>
                   <SidebarGroupContentBase>
                     <SidebarMenuBase>
@@ -136,7 +136,7 @@ function LayoutWithSidebar() {
                             <SidebarMenuButtonBase asChild>
                               <Link
                                 to={item.url}
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 transition-all duration-200"
                               >
                                 <item.icon size={18} />
                                 {item.title}
@@ -152,7 +152,18 @@ function LayoutWithSidebar() {
             )}
           </SidebarBase>
 
-          <main className="flex-1 p-6">
+          <main
+        className={`fixed transition-all duration-300 top-1/2 transform -translate-y-1/2 duration-300${
+          isSidebarOpen ? "left-[18rem]" : "left-[4rem] transition-all duration-200"
+        }`}
+        style={{
+          zIndex: 1000,
+          top: "0.5%",
+          left: isSidebarOpen ? "18rem" : "10rem",
+          bottom: "auto",
+          right: "auto",
+        }}
+      >
             <Outlet />
           </main>
         </div>
