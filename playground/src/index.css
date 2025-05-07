@@ -55,13 +55,13 @@
 }
 
 .sidebar-scroll::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: #000000;
   border-radius: 10px;
   margin: 4px 0;
 }
 
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background-color: #919191;
+  background-color: #000000;
   border-radius: 10px;
   border: 3px solid #e2e8f0;
   transition: background-color 0.3s, transform 0.2s ease-in-out;
@@ -75,3 +75,5 @@
 .sidebar-scroll::-webkit-scrollbar:vertical {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+

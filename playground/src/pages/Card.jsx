@@ -1,67 +1,148 @@
-import React from "react";
+import { ButtonBase } from "@lib";
 import {
   CardBase,
+  CardContentBase,
+  CardDescriptionBase,
+  CardFooterBase,
   CardHeaderBase,
   CardTitleBase,
-  CardDescriptionBase,
-  CardContentBase,
-  InputBase,
+} from "@lib";
+
+import { InputBase } from "@lib";
+import  {LabelBase } from "@lib";
+
+import {
   SelectBase,
-  SelectTriggerBase,
-  SelectValueBase,
   SelectContentBase,
   SelectItemBase,
-  ButtonBase,
+  SelectTriggerBase,
+  SelectValueBase,
 } from "@lib";
 
 export const CardPage = () => {
   return (
-    <div className=" flex justify-center items-center min-h-screen bg-gray-100">
-      <CardBase className="w-[350px] bg-white shadow-lg rounded-lg py-6">
-        <CardHeaderBase className="mb-4">
-          <CardTitleBase className="text-xl font-semibold text-gray-800 mx-2">
-            Create project
-          </CardTitleBase>
-          <CardDescriptionBase className="text-sm text-gray-600 mt-1 mx-2">
-            Deploy your new project in one-click and select your preferred
-            framework.
-          </CardDescriptionBase>
-        </CardHeaderBase>
+    <div>
+      <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
+        <CardBase className="w-[350px]">
+          <CardHeaderBase>
+            <CardTitleBase>Create project</CardTitleBase>
+            <CardDescriptionBase>
+              Deploy your new project in one-click.
+            </CardDescriptionBase>
+          </CardHeaderBase>
+          <CardContentBase>
+            <form>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <LabelBase htmlFor="name">Name</LabelBase>
+                  <InputBase id="name" placeholder="Name of your project" />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <LabelBase htmlFor="framework">Framework</LabelBase>
+                  <SelectBase>
+                    <SelectTriggerBase id="framework">
+                      <SelectValueBase placeholder="Select" />
+                    </SelectTriggerBase>
+                    <SelectContentBase position="popper">
+                      <SelectItemBase value="next">Next.js</SelectItemBase>
+                      <SelectItemBase value="sveltekit">
+                        SvelteKit
+                      </SelectItemBase>
+                      <SelectItemBase value="astro">Astro</SelectItemBase>
+                      <SelectItemBase value="nuxt">Nuxt.js</SelectItemBase>
+                    </SelectContentBase>
+                  </SelectBase>
+                </div>
+              </div>
+            </form>
+          </CardContentBase>
+          <CardFooterBase className="flex justify-between">
+            <ButtonBase variant="outline">Cancel</ButtonBase>
+            <ButtonBase>Deploy</ButtonBase>
+          </CardFooterBase>
+        </CardBase>
+      </div>
 
-        {/* Card Content */}
-        <CardContentBase >
-          <div className="mb-4 mr-2 ml-2">
-            <strong className="font-medium text-gray-700">Name</strong>
-            <InputBase
-              placeholder="Name of your project"
-              className="border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      {/* Linha separadora e Título de Documentação */}
+      <div className="my-8 mx-5">
+        <h3 className="text-xl font-semibold mb-3">Documentação</h3>
+        <div className="border-t-2 border-gray-300 mb-4"></div>
 
-          <div className="mb-4 mr-2 ml-2">
-            <strong className="font-medium text-gray-700">Framework</strong>
-            <SelectBase className="border border-gray-300 rounded-sm">
-              <SelectTriggerBase>
-                <SelectValueBase placeholder="Select" />
-              </SelectTriggerBase>
-              <SelectContentBase>
-                <SelectItemBase value="next">Next.js</SelectItemBase>
-                <SelectItemBase value="sveltekit">SvelteKit</SelectItemBase>
-                <SelectItemBase value="astro">Astro</SelectItemBase>
-                <SelectItemBase value="nuxt">Nuxt.js</SelectItemBase>
-              </SelectContentBase>
-            </SelectBase>
-          </div>
-        </CardContentBase>
+        {/* Bloco de Código para Importação */}
+        <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
+          <h5 className="font-medium mb-2">Como importar:</h5>
+          <pre className="bg-gray-900 p-3 rounded-sm">
+            <code>
+              {`import {
+  ButtonBase,
+  CardBase,
+  CardContentBase,
+  CardDescriptionBase,
+  CardFooterBase,
+  CardHeaderBase,
+  CardTitleBase
+} from "@/components/ui/CardBase";
 
-        {/* Card Footer with Buttons */}
-        <div className="flex justify-between px-8">
-          <ButtonBase variant="outline" className="w-[48%]">
-            Cancel
-          </ButtonBase>
-          <ButtonBase className="w-[48%]">Deploy</ButtonBase>
+import { InputBase } from "@/components/ui/InputBase";
+import  LabelBase  from "@/components/ui/LabelBase";
+import {
+  SelectBase,
+  SelectContentBase,
+  SelectItemBase,
+  SelectTriggerBase,
+  SelectValueBase
+} from "@/components/ui/SelectBase";`}
+            </code>
+          </pre>
         </div>
-      </CardBase>
+
+        {/* Bloco de Código para Uso */}
+        <div className="bg-gray-800 text-white p-4 rounded-md">
+          <h5 className="font-medium mb-2">Como usar:</h5>
+          <pre className="bg-gray-900 p-3 rounded-sm">
+            <code>
+              {`<CardBase className="w-[350px]">
+  <CardHeaderBase>
+    <CardTitleBase>Create project</CardTitleBase>
+    <CardDescriptionBase>
+      Deploy your new project in one-click.
+    </CardDescriptionBase>
+  </CardHeaderBase>
+
+  <CardContentBase>
+    <form>
+      <div className="grid w-full items-center gap-4">
+        <div className="flex flex-col space-y-1.5">
+          <LabelBase htmlFor="name">Name</LabelBase>
+          <InputBase id="name" placeholder="Name of your project" />
+        </div>
+        <div className="flex flex-col space-y-1.5">
+          <LabelBase htmlFor="framework">Framework</LabelBase>
+          <SelectBase>
+            <SelectTriggerBase id="framework">
+              <SelectValueBase placeholder="Select" />
+            </SelectTriggerBase>
+            <SelectContentBase position="popper">
+              <SelectItemBase value="next">Next.js</SelectItemBase>
+              <SelectItemBase value="sveltekit">SvelteKit</SelectItemBase>
+              <SelectItemBase value="astro">Astro</SelectItemBase>
+              <SelectItemBase value="nuxt">Nuxt.js</SelectItemBase>
+            </SelectContentBase>
+          </SelectBase>
+        </div>
+      </div>
+    </form>
+  </CardContentBase>
+
+  <CardFooterBase className="flex justify-between">
+    <ButtonBase variant="outline">Cancel</ButtonBase>
+    <ButtonBase>Deploy</ButtonBase>
+  </CardFooterBase>
+</CardBase>`}
+            </code>
+          </pre>
+        </div>
+      </div>
     </div>
   );
 };

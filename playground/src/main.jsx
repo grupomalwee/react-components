@@ -16,6 +16,7 @@ import {
   SidebarMenuButtonBase,
   ModeToggleBase,
 } from "@lib";
+
 import {
   House,
   Calendar,
@@ -41,7 +42,7 @@ import {
   CursorText,
   UserSwitch,
   ChatDots,
-  Sidebar, // Importando o ícone Sidebar
+  Sidebar,
 } from "phosphor-react";
 
 import { AlertDialogPage } from "./pages/Alert-dialog";
@@ -69,9 +70,10 @@ import { TablePage } from "./pages/Table";
 import { TabsPage } from "./pages/Tabs";
 import { TextareaPage } from "./pages/Textarea";
 import { TooltipPage } from "./pages/Tooltip";
+import { LabelPage } from "./pages/Label";
+
 import Home from "./Home";
 
-// Itens da sidebar (ordenados alfabeticamente)
 const items = [
   { title: "Home", url: "/", icon: House },
   { title: "Alert Dialog", url: "/alert-dialog", icon: Warning },
@@ -109,11 +111,11 @@ function LayoutWithSidebar() {
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <div>
+    <div className="relative min-h-screen">
       <SidebarProviderBase>
-        <div className="flex min-h-screen relative">
+        <div className="flex">
           <SidebarBase
-            className={`transition-all ${isSidebarOpen ? "w-72" : "w-16"}`} 
+            className={`transition-all ${isSidebarOpen ? "w-72" : "w-16"}`}
           >
             {isSidebarOpen && (
               <SidebarContentBase className="sidebar-scroll">
@@ -123,9 +125,13 @@ function LayoutWithSidebar() {
                   </SidebarGroupLabelBase>
                   <SidebarGroupContentBase>
                     <SidebarMenuBase>
-                      {items
-                        .sort((a, b) => a.title.localeCompare(b.title))
-                        .map((item) => (
+                      {[
+                        items.find((item) => item.title === "Home"),
+                        ...items
+                          .filter((item) => item.title !== "Home")
+                          .sort((a, b) => a.title.localeCompare(b.title)),
+                      ].map((item) =>
+                        item ? (
                           <SidebarMenuItemBase key={item.url}>
                             <SidebarMenuButtonBase asChild>
                               <Link
@@ -137,7 +143,8 @@ function LayoutWithSidebar() {
                               </Link>
                             </SidebarMenuButtonBase>
                           </SidebarMenuItemBase>
-                        ))}
+                        ) : null
+                      )}
                     </SidebarMenuBase>
                   </SidebarGroupContentBase>
                 </SidebarGroupBase>
@@ -145,23 +152,34 @@ function LayoutWithSidebar() {
             )}
           </SidebarBase>
 
-          <div
-            className={`fixed${isSidebarOpen ? "left-[16rem]" : "left-[4rem]"}`}
-          >
-            <button onClick={toggleSidebar} className="text-gray-500 py-2 pl-8">
-              <Sidebar size={17}/>
-            </button>
-          </div>
-
           <main className="flex-1 p-6">
             <Outlet />
           </main>
         </div>
       </SidebarProviderBase>
+
+      <div
+        className={`fixed transition-all duration-300 top-1/2 transform -translate-y-1/2 ${
+          isSidebarOpen ? "left-[18rem]" : "left-[4rem]"
+        }`}
+        style={{
+          zIndex: 1000,
+          top: "0.5%",
+          left: isSidebarOpen ? "18rem" : "0rem",
+          bottom: "auto",
+          right: "auto",
+        }}
+      >
+        <button
+          onClick={toggleSidebar}
+          className="text-gray-500 p-2 transition-all duration-300 ease-in-out transform hover:scale-110"
+        >
+          <Sidebar size={17} className="bg-white" />
+        </button>
+      </div>
     </div>
   );
 }
-
 function App() {
   return (
     <ThemeProviderBase defaultTheme="light-purple" storageKey="vite-ui-theme">
@@ -184,6 +202,7 @@ function App() {
             <Route path="/dialog" element={<DialogPage />} />
             <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
             <Route path="/input" element={<InputPage />} />
+            <Route path="/label" element={<LabelPage />} />
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/scrollarea" element={<ScrollareaPage />} />
             <Route path="/select" element={<SelectPage />} />

@@ -8,7 +8,7 @@ export const SonnerPage = () => {
   };
 
   return (
-    <div>
+    <div className="p-6">
       <ButtonBase onClick={handleClick}>
         Clique para ativar a notificação
       </ButtonBase>

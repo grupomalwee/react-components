@@ -97,6 +97,7 @@ __export(index_exports, {
   FormLabelBase: () => FormLabelBase,
   FormMessageBase: () => FormMessageBase,
   InputBase: () => InputBase,
+  LabelBase: () => LabelBase_default,
   ModeToggleBase: () => ModeToggleBase,
   MultiCombobox: () => MultiCombobox,
   PopoverAnchorBase: () => PopoverAnchorBase,
@@ -1651,7 +1652,7 @@ function CalendarBase2({
     import_react_day_picker2.DayPicker,
     {
       showOutsideDays,
-      className: cn("bg-zinc-50 p-3", className),
+      className: cn("bg-black-50 p-3", className),
       classNames: {
         months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -2910,6 +2911,7 @@ TextAreaBase.displayName = "TextAreaBase";
   FormLabelBase,
   FormMessageBase,
   InputBase,
+  LabelBase,
   ModeToggleBase,
   MultiCombobox,
   PopoverAnchorBase,

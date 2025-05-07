@@ -1466,7 +1466,7 @@ function CalendarBase2({
     DayPicker2,
     {
       showOutsideDays,
-      className: cn("bg-zinc-50 p-3", className),
+      className: cn("bg-black-50 p-3", className),
       classNames: {
         months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -2728,6 +2728,7 @@ export {
   FormLabelBase,
   FormMessageBase,
   InputBase,
+  LabelBase_default as LabelBase,
   ModeToggleBase,
   MultiCombobox,
   PopoverAnchorBase,
