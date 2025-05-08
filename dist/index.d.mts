@@ -417,7 +417,7 @@ interface MultiComboboxProps extends Omit<ComboboxProps, "selected" | "onChange"
 }
 declare function MultiCombobox({ items, selected, onChange, placeholder, searchPlaceholder, }: MultiComboboxProps): react_jsx_runtime.JSX.Element;
 
-interface SelectItem {
+interface SelectItem$1 {
     label: string;
     value: string;
 }
@@ -427,13 +427,13 @@ interface DefaultSelectProps {
     errorMessage?: string;
 }
 interface SelectPropsWithItems extends DefaultSelectProps {
-    items: SelectItem[];
+    items: SelectItem$1[];
     groupItems?: never;
 }
 interface SelectPropsWithGroupItems extends DefaultSelectProps {
     items?: never;
     groupItems: {
-        [key: string]: SelectItem[];
+        [key: string]: SelectItem$1[];
     };
 }
 type SelectProps = SelectPropsWithItems | SelectPropsWithGroupItems;
@@ -454,4 +454,43 @@ declare namespace CalendarBase {
     var displayName: string;
 }
 
-export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxItem, type ComboboxProps, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, FormBase, FormControlBase, FormDescriptionBase, FormFieldBase, FormItemBase, FormLabelBase, FormMessageBase, InputBase, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, buttonVariantsBase, useFormFieldBase, useIsMobile, useTheme };
+type BaseType = string | string[] | number | boolean | Date;
+
+type FilterTypes = "string" | "number" | "boolean" | "date" | "select" | "multi-select";
+type FilterValues = BaseType;
+type Filter<T extends Record<string, unknown>> = {
+    id: keyof T | null;
+    conditionId: FilterConditions | null;
+    valueType: FilterTypes | null;
+    value: FilterValues | null;
+};
+type FilterConditions = "$eq" | "$ne" | "$gt" | "$lt" | "$gte" | "$lte" | "$startsWith" | "$endsWith" | "$contains" | "$in" | "$nin" | "$exists" | "$notExists";
+type AvailableFilterConditions = {
+    conditionId: FilterConditions;
+    conditionName: string;
+    valueType: FilterTypes;
+    selectValues?: SelectItem[];
+};
+type AvailableFilter<T extends Record<string, unknown>> = {
+    filterId: keyof T;
+    filterName: string;
+    conditions: AvailableFilterConditions[];
+};
+interface SelectItem {
+    label: string;
+    value: string;
+}
+
+interface ApplyFilterProps {
+    condition: FilterConditions;
+    filterValue: FilterValues | null;
+    valueType: FilterTypes | null;
+    value: FilterValues;
+}
+declare function applyfilter({ condition, filterValue, valueType, value, }: ApplyFilterProps): boolean | undefined;
+
+declare const defaultStringConditions: AvailableFilterConditions[];
+
+declare function buildFilterSummary<T extends Record<string, unknown>>(filter: Filter<T>, availableFilters: AvailableFilter<T>[]): string | null;
+
+export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxItem, type ComboboxProps, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, FormBase, FormControlBase, FormDescriptionBase, FormFieldBase, FormItemBase, FormLabelBase, FormMessageBase, InputBase, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem$1 as SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, applyfilter, buildFilterSummary, buttonVariantsBase, defaultStringConditions, useFormFieldBase, useIsMobile, useTheme };

@@ -63,12 +63,10 @@ export const CardPage = () => {
         </CardBase>
       </div>
 
-      {/* Linha separadora e Título de Documentação */}
       <div className="my-8 mx-5">
         <h3 className="text-xl font-semibold mb-3">Documentação</h3>
         <div className="border-t-2 border-gray-300 mb-4"></div>
 
-        {/* Bloco de Código para Importação */}
         <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">

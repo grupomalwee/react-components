@@ -71,6 +71,7 @@ import { TabsPage } from "./pages/Tabs";
 import { TextareaPage } from "./pages/Textarea";
 import { TooltipPage } from "./pages/Tooltip";
 import { LabelPage } from "./pages/Label";
+// import { FilterPage } from "./pages/Filter";
 
 import Home from "./Home";
 
@@ -85,7 +86,7 @@ const items = [
   { title: "Command", url: "/command", icon: Command },
   { title: "Dialog", url: "/dialog", icon: Chat },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: List },
-  { title: "Filter", url: "/filter", icon: Funnel },
+  // { title: "Filter", url: "/filter", icon: Funnel },
   { title: "Form", url: "/form", icon: Table },
   { title: "Input", url: "/input", icon: Textbox },
   { title: "Label", url: "/label", icon: Sticker },
@@ -121,7 +122,9 @@ function LayoutWithSidebar() {
               <SidebarContentBase className="sidebar-scroll transition-all duration-200">
                 <SidebarGroupBase>
                   <SidebarGroupLabelBase>
-                    <div className="text-lg mb-2 transition-all duration-200">Componentes</div>
+                    <div className="text-lg mb-2 transition-all duration-200">
+                      Componentes
+                    </div>
                   </SidebarGroupLabelBase>
                   <SidebarGroupContentBase>
                     <SidebarMenuBase>
@@ -153,17 +156,19 @@ function LayoutWithSidebar() {
           </SidebarBase>
 
           <main
-        className={`fixed transition-all duration-300 top-1/2 transform -translate-y-1/2 duration-300${
-          isSidebarOpen ? "left-[18rem]" : "left-[4rem] transition-all duration-200"
-        }`}
-        style={{
-          zIndex: 1000,
-          top: "0.5%",
-          left: isSidebarOpen ? "18rem" : "10rem",
-          bottom: "auto",
-          right: "auto",
-        }}
-      >
+            className={`fixed transition-all duration-300 top-1/2 transform -translate-y-1/2 duration-300${
+              isSidebarOpen
+                ? "left-[18rem]"
+                : "left-[4rem] transition-all duration-200"
+            }`}
+            style={{
+              zIndex: 1000,
+              top: "1%",
+              left: isSidebarOpen ? "18rem" : "10rem",
+              bottom: "auto",
+              right: "auto",
+            }}
+          >
             <Outlet />
           </main>
         </div>
@@ -212,6 +217,8 @@ function App() {
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/dialog" element={<DialogPage />} />
             <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
+            {/* <Route path="/filter" element={<FilterPage />} /> */}
+
             <Route path="/input" element={<InputPage />} />
             <Route path="/label" element={<LabelPage />} />
             <Route path="/progress" element={<ProgressPage />} />
