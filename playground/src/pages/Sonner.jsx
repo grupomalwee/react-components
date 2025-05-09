@@ -18,7 +18,7 @@ export const SonnerPage = () => {
       <Toaster
         style={{
           left: "800px",
-          bottom: "-180px",
+          bottom: "0px",
         }}
       />
       <div className="my-8 mx-5">
