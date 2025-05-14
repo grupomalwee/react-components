@@ -12,7 +12,7 @@ export default function Home() {
           A <strong>Malwee React Components</strong> oferece uma coleção de
           componentes reutilizáveis e estilosos para acelerar o desenvolvimento
           da sua interface. Aproveite nossa biblioteca para criar interfaces
-          rápidas, eficientes e com design moderno!
+          rápidas, eficientes e com design moderno
         </p>
       </div>
 
