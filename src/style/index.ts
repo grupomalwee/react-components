@@ -1,1 +1,1 @@
-export * from "./global.css"
+export * from "./global.css";

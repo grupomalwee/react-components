@@ -8,12 +8,12 @@ export default defineConfig({
   clean: true,
   sourcemap: false,
   banner: {
-    js: "import './index.css';" // 👈 adiciona no topo de index.js e index.mjs
+    js: "import './index.css';" 
   },
   esbuildOptions(options) {
     options.loader = {
       ...options.loader,
-      '.css': 'copy', // garante que .css seja preservado
+      '.css': 'copy', 
     };
   },
 });
