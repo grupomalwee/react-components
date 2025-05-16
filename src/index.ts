@@ -39,4 +39,4 @@ export { default as LabelBase } from "./components/ui/LabelBase";
 export * from "./components/filter/services/apply-filter"
 export * from "./components/filter/services/default-conditions"
 export * from "./components/filter/utils/build-summary"
-export * from "./style/global.css"
+import "./style/global.css"

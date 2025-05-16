@@ -4,13 +4,14 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "style": "dist/global.css",
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir dist && npm run build-css",
-    "build-css": "npx tailwindcss -i ./src/style/global.css -o ./dist/global.css --config ./tailwind.config.js",
+    "build": "npm run build-css && tsup",
+    "build-css": "npx tailwindcss -i ./src/style/global.css -o ./dist/index.css --config ./tailwind.config.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
