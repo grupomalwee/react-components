@@ -97,6 +97,7 @@ __export(index_exports, {
   FormLabelBase: () => FormLabelBase,
   FormMessageBase: () => FormMessageBase,
   InputBase: () => InputBase,
+  LabelBase: () => LabelBase_default,
   ModeToggleBase: () => ModeToggleBase,
   MultiCombobox: () => MultiCombobox,
   PopoverAnchorBase: () => PopoverAnchorBase,
@@ -176,7 +177,10 @@ __export(index_exports, {
   TooltipProviderBase: () => TooltipProviderBase,
   TooltipTriggerBase: () => TooltipTriggerBase,
   UseSideBarBase: () => UseSideBarBase,
+  applyfilter: () => applyfilter,
+  buildFilterSummary: () => buildFilterSummary,
   buttonVariantsBase: () => buttonVariantsBase,
+  defaultStringConditions: () => defaultStringConditions,
   useFormFieldBase: () => useFormFieldBase,
   useIsMobile: () => useIsMobile,
   useTheme: () => useTheme
@@ -1651,7 +1655,7 @@ function CalendarBase2({
     import_react_day_picker2.DayPicker,
     {
       showOutsideDays,
-      className: cn("bg-zinc-50 p-3", className),
+      className: cn("bg-black-50 p-3", className),
       classNames: {
         months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -2841,6 +2845,127 @@ var TextAreaBase = React27.forwardRef(({ className, ...props }, ref) => {
   );
 });
 TextAreaBase.displayName = "TextAreaBase";
+
+// src/utils/stringHelpers.ts
+var cleanString = (str) => str.toString().trim().replace(/[^a-zA-Z0-9\s]/g, "").toLowerCase();
+function includes(input, query) {
+  return cleanString(input).includes(cleanString(query));
+}
+
+// src/components/filter/services/apply-filter.ts
+function applyfilter({
+  condition,
+  filterValue,
+  valueType,
+  value
+}) {
+  if (!valueType || value === void 0) return true;
+  if (valueType === "string") {
+    if (!filterValue) return true;
+    switch (condition) {
+      case "$eq":
+        return value === filterValue;
+      case "$startsWith":
+        return cleanString(value).startsWith(cleanString(filterValue));
+      case "$endsWith":
+        return cleanString(value).endsWith(cleanString(filterValue));
+      case "$contains":
+        return includes(value, String(filterValue));
+      default:
+        return false;
+    }
+  }
+  if (valueType === "boolean") {
+    switch (condition) {
+      case "$exists":
+        return Boolean(value) === true;
+      case "$notExists":
+        return Boolean(value) === false;
+      default:
+        return false;
+    }
+  }
+  if (valueType === "select") {
+    if (!filterValue) return true;
+    switch (condition) {
+      case "$eq":
+        return cleanString(value) === cleanString(filterValue);
+      case "$ne":
+        return cleanString(value) !== cleanString(filterValue);
+      default:
+        return false;
+    }
+  }
+  if (valueType === "multi-select") {
+    if (!filterValue || !Array.isArray(filterValue)) return true;
+    const filterValues = filterValue.map((value2) => cleanString(value2));
+    switch (condition) {
+      case "$eq":
+        return filterValues.includes(cleanString(value));
+      case "$ne":
+        return !filterValues.includes(cleanString(value));
+      default:
+        return false;
+    }
+  }
+}
+
+// src/components/filter/services/default-conditions.ts
+var defaultStringConditions = [
+  {
+    conditionId: "$contains",
+    conditionName: "cont\xE9m",
+    valueType: "string"
+  },
+  {
+    conditionId: "$startsWith",
+    conditionName: "come\xE7a com",
+    valueType: "string"
+  },
+  {
+    conditionId: "$endsWith",
+    conditionName: "termina com",
+    valueType: "string"
+  },
+  {
+    conditionId: "$eq",
+    conditionName: "\xE9 igual a",
+    valueType: "string"
+  },
+  {
+    conditionId: "$ne",
+    conditionName: "n\xE3o \xE9 igual a",
+    valueType: "string"
+  }
+];
+
+// src/components/filter/utils/build-summary.ts
+function buildFilterSummary(filter, availableFilters) {
+  if (!filter) return null;
+  const foundFilter = availableFilters.find((f) => f.filterId == filter.id);
+  if (!foundFilter) return null;
+  const foundCondition = foundFilter.conditions.find(
+    (c) => c.conditionId == filter.conditionId
+  );
+  if (!foundCondition) return null;
+  if (filter.conditionId === "$exists" || filter.conditionId === "$notExists") {
+    return `${foundFilter.filterName} ${foundCondition.conditionName}`;
+  }
+  if (!filter.value) return null;
+  let value = filter.value.toString();
+  switch (foundCondition.valueType) {
+    case "select": {
+      const selected = foundCondition.selectValues?.find(
+        (s) => s.value == filter.value
+      );
+      if (selected) {
+        value = selected.label;
+      }
+      break;
+    }
+  }
+  return `${foundFilter.filterName} ${foundCondition.conditionName} '${value}'`;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   AlertDialogActionBase,
@@ -2910,6 +3035,7 @@ TextAreaBase.displayName = "TextAreaBase";
   FormLabelBase,
   FormMessageBase,
   InputBase,
+  LabelBase,
   ModeToggleBase,
   MultiCombobox,
   PopoverAnchorBase,
@@ -2989,7 +3115,10 @@ TextAreaBase.displayName = "TextAreaBase";
   TooltipProviderBase,
   TooltipTriggerBase,
   UseSideBarBase,
+  applyfilter,
+  buildFilterSummary,
   buttonVariantsBase,
+  defaultStringConditions,
   useFormFieldBase,
   useIsMobile,
   useTheme
