@@ -1,5 +1,4 @@
 import { Moon, Sun } from "phosphor-react";
-
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
   DropDownMenuBase,
@@ -7,9 +6,25 @@ import {
   DropDownMenuItemBase,
   DropDownMenuTriggerBase,
 } from "@/components/ui/DropDownMenuBase";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme, type Theme } from "@/components/theme-provider";
 
-export function ModeToggleBase() {
+type ModeToggleBaseProps = {
+  themes?: Theme[];
+};
+
+const themeLabels: Record<Theme, string> = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+  "light-purple": "Light Purple",
+  "dark-purple": "Dark Purple",
+  "light-blue": "Light Blue",
+  "dark-blue": "Dark Blue",
+  "light-green": "Light Green",
+  "dark-green": "Dark Green",
+};
+
+export function ModeToggleBase({ themes = ["light", "dark", "system"] }: ModeToggleBaseProps) {
   const { setTheme } = useTheme();
 
   return (
@@ -22,33 +37,11 @@ export function ModeToggleBase() {
         </ButtonBase>
       </DropDownMenuTriggerBase>
       <DropDownMenuContentBase align="end">
-        <DropDownMenuItemBase onClick={() => setTheme("light")}>
-          Light
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("dark")}>
-          Dark
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("light-purple")}>
-          Light Purple
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("light-blue")}>
-          Light Blue
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("light-green")}>
-          Light Green
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("dark-purple")}>
-          Dark Purple
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("dark-blue")}>
-          Dark Blue
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("dark-green")}>
-          Dark Green
-        </DropDownMenuItemBase>
-        <DropDownMenuItemBase onClick={() => setTheme("system")}>
-          System
-        </DropDownMenuItemBase>
+        {themes.map((theme) => (
+          <DropDownMenuItemBase key={theme} onClick={() => setTheme(theme)}>
+            {themeLabels[theme]}
+          </DropDownMenuItemBase>
+        ))}
       </DropDownMenuContentBase>
     </DropDownMenuBase>
   );
