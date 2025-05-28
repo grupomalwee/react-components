@@ -1,3 +1,5 @@
+import './index.css';
+
 // src/components/ui/AlertDialogBase.tsx
 import * as React2 from "react";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
