@@ -2,8 +2,7 @@
 
 import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-
-import { cn } from "../..//lib/utils";
+import { cn } from "../../lib/utils";
 
 const TabsBase = TabsPrimitive.Root;
 
@@ -11,14 +10,22 @@ const TabsListBase = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
+ <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground",
+      "relative flex w-full items-center justify-start gap-4 border-b-2  border-slate-200",
+      "[&_[data-state=active]::after]:content-['']",
+      "[&_[data-state=active]::after]:absolute",
+      "[&_[data-state=active]::after]:bottom-[-1px]",
+      "[&_[data-state=active]::after]:left-0",
+      "[&_[data-state=active]::after]:w-full",
+      "[&_[data-state=active]::after]:h-[2px]",
+      "[&_[data-state=active]::after]:bg-[#8e68ff]",
       className
     )}
     {...props}
   />
+ 
 ));
 TabsListBase.displayName = TabsPrimitive.List.displayName;
 
@@ -29,13 +36,18 @@ const TabsTriggerBase = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap px-3 py-1 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-b-2 border-slate-200 data-[state=active]:border-[#8e68ff]", // Custom purple color for active state
+      "relative inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium transition-all",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-3",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "data-[state=active]:text-[#8e68ff]",
+      "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-[#8e68ff] after:transition-transform after:duration-300",
+      "data-[state=active]:after:scale-x-100",
       className
     )}
     {...props}
   />
 ));
-TabsTriggerBase.displayName = TabsPrimitive.Trigger.displayName;
+
 
 const TabsContentBase = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
