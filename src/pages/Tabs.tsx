@@ -10,13 +10,14 @@ import {
 export const TabsPage = () => {
   return (
     <div>
-      {/* Tabs Example */}
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <TabsBase>
           <TabsListBase>
             <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>
             <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
             <TabsTriggerBase value="tab3">Infantil</TabsTriggerBase>
+            <div className="w-96"></div>
+            
           </TabsListBase>
 
           <TabsContentBase value="tab1">

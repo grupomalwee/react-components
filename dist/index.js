@@ -1161,25 +1161,38 @@ var useTheme = () => {
 
 // src/components/mode-toggle.tsx
 var import_jsx_runtime13 = require("react/jsx-runtime");
-function ModeToggleBase() {
+var themeLabels = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+  "light-purple": "Light Purple",
+  "dark-purple": "Dark Purple",
+  "light-blue": "Light Blue",
+  "dark-blue": "Dark Blue",
+  "light-green": "Light Green",
+  "dark-green": "Dark Green"
+};
+function ModeToggleBase({
+  themes = ["light", "dark", "system"]
+}) {
   const { setTheme } = useTheme();
   return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(DropDownMenuBase, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(ButtonBase, { variant: "outline", size: "icon", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Sun, { className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Moon, { className: "absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "sr-only", children: "Toggle theme" })
-    ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(DropDownMenuContentBase, { align: "end", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("light"), children: "Light" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("dark"), children: "Dark" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("light-purple"), children: "Light Purple" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("light-blue"), children: "Light Blue" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("light-green"), children: "Light Green" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("dark-purple"), children: "Dark Purple" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("dark-blue"), children: "Dark Blue" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("dark-green"), children: "Dark Green" }),
-      /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme("system"), children: "System" })
-    ] })
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+      ButtonBase,
+      {
+        variant: "ghost",
+        size: "icon",
+        className: "relative overflow-hidden border-transparent",
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Sun, { className: "h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "sr-only", children: "Toggle theme" })
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuContentBase, { align: "end", children: themes.map((theme) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme(theme), children: themeLabels[theme] }, theme)) })
   ] });
 }
 
@@ -2796,7 +2809,7 @@ var TabsListBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PU
   {
     ref,
     className: cn(
-      "inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground",
+      "relative flex w-full items-center justify-start gap-4 border-b-2 border-border",
       className
     ),
     ...props
@@ -2808,8 +2821,14 @@ var TabsTriggerBase = React26.forwardRef(({ className, ...props }, ref) => /* @_
   {
     ref,
     className: cn(
-      "inline-flex items-center justify-center whitespace-nowrap px-3 py-1 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-b-2 border-slate-200 data-[state=active]:border-[#8e68ff]",
-      // Custom purple color for active state
+      "relative inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-3",
+      "disabled:pointer-events-none disabled:opacity-50",
+      "data-[state=active]:text-[#8e68ff]",
+      "after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full",
+      "after:scale-x-0 after:bg-[#8e68ff] after:origin-left",
+      "after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65,0,0.35,1)]",
+      "data-[state=active]:after:scale-x-100",
       className
     ),
     ...props
@@ -2822,6 +2841,7 @@ var TabsContentBase = React26.forwardRef(({ className, ...props }, ref) => /* @_
     ref,
     className: cn(
       "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "animate-fade-in",
       className
     ),
     ...props

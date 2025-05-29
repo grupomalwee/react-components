@@ -24,15 +24,24 @@ const themeLabels: Record<Theme, string> = {
   "dark-green": "Dark Green",
 };
 
-export function ModeToggleBase({ themes = ["light", "dark", "system"] }: ModeToggleBaseProps) {
+export function ModeToggleBase({
+  themes = ["light", "dark", "system"],
+}: ModeToggleBaseProps) {
   const { setTheme } = useTheme();
 
   return (
     <DropDownMenuBase>
       <DropDownMenuTriggerBase asChild>
-        <ButtonBase variant="outline" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <ButtonBase
+          variant="ghost"
+          size="icon"
+          className="relative overflow-hidden border-transparent"
+        >
+          <>
+            <Sun className="h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" />
+            <Moon className="absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" />
+          </>
+
           <span className="sr-only">Toggle theme</span>
         </ButtonBase>
       </DropDownMenuTriggerBase>
