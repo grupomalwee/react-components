@@ -5,7 +5,7 @@ export const ButtonPage = () => {
     <>
       {/* Div contendo os botões e a Documentação, ambos em flex-col */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
-        {/* Botões */}
+     
         <div className="flex gap-5 justify-center">
           <ButtonBase>dad</ButtonBase>
           <ButtonBase variant="destructive">dad</ButtonBase>

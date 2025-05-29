@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 
-import "@lib/global.css";
+import "@lib/index.css";
 import {
   ThemeProviderBase,
   SidebarBase,

@@ -31,8 +31,8 @@ function App() {
             <main></main>
           </SidebarProviderBase>
 
-          <div className="mt-3 mr-5 border border-solid border-[#fff] inline-block rounded-md h-10">
-            <ModeToggleBase themes={["light-purple", "dark-purple"]} />
+          <div className="mt-3 mr-5  inline-block rounded-md h-10">
+            <ModeToggleBase themes={["light","dark", "dark-blue","dark-purple", ]} />
 
           </div>
         </div>

@@ -16,6 +16,7 @@ export const TabsPage = () => {
             <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>
             <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
             <TabsTriggerBase value="tab3">Infantil</TabsTriggerBase>
+            <div className="w-96"></div>
             
           </TabsListBase>
 
