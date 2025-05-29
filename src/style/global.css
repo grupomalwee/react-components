@@ -36,7 +36,7 @@
   }
 
   .dark {
-    --background: 231 15% 19%;
+    --background: 217 19% 27%;
     --foreground: 213 31% 91%;
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -54,14 +54,14 @@
     --primary-foreground: 222.2 47.4% 1.2%;
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
-    
+
     --destructive: 0 100% 70%;
     --destructive-foreground: 231 15% 19%;
     --ring: 216 34% 17%;
   }
 
 .dark-purple {
-  --background: 231 15% 19%;
+    --background: 217 19% 27%;
   --foreground: 213 31% 91%;
   --muted: 223 47% 11%;
   --muted-foreground: 215.4 16.3% 56.9%;
@@ -86,7 +86,7 @@
 }
 
 .dark-blue {
-  --background: 231 15% 19%;
+    --background: 217 19% 27%;
   --foreground: 213 31% 91%;
   --muted: 223 47% 11%;
   --muted-foreground: 215.4 16.3% 56.9%;
@@ -110,7 +110,6 @@
   --ring: 216 34% 17%;
 }
 
-  /* Light purple */
   .light-purple {
     --primary: 255 100% 70%;
     --primary-foreground: 0 0% 100%;
@@ -120,7 +119,6 @@
     --accent-foreground: 0 0% 100%;
   }
 
-  /* Light blue */
   .light-blue {
     --primary: 215 76% 51%;
     --primary-foreground: 0 0% 100%;
@@ -130,7 +128,6 @@
     --accent-foreground: 0 0% 100%;
   }
 
-  /* Scrollbar estilizada, suave e clean */
   * {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) hsl(var(--background));
@@ -166,7 +163,6 @@
   }
 }
 
-/* 🔥 Animações Globais */
 @layer utilities {
   .animate-fade-in {
     animation: fade-in 400ms ease-out;
@@ -189,7 +185,6 @@
   }
 }
 
-/* 🔥 Keyframes */
 @keyframes fade-in {
   from {
     opacity: 0;
