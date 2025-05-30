@@ -415,32 +415,32 @@ interface ComboboxProps {
 declare function Combobox({ items, selected, onChange, placeholder, searchPlaceholder, }: ComboboxProps): react_jsx_runtime.JSX.Element;
 
 interface MultiComboboxProps extends Omit<ComboboxProps, "selected" | "onChange"> {
-    selected: ComboboxItem["value"][];
-    onChange: (value: ComboboxItem["value"][]) => void;
+    selected: string[];
+    onChange: (value: string[]) => void;
 }
 declare function MultiCombobox({ items, selected, onChange, placeholder, searchPlaceholder, }: MultiComboboxProps): react_jsx_runtime.JSX.Element;
 
-interface SelectItem$1 {
+interface SelectItem$1<T extends string> {
     label: string;
-    value: string;
+    value: T;
 }
 interface DefaultSelectProps {
     placeholder: string;
     onChange: (value: string) => void;
     errorMessage?: string;
 }
-interface SelectPropsWithItems extends DefaultSelectProps {
-    items: SelectItem$1[];
+interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
+    items: SelectItem$1<T>[];
     groupItems?: never;
 }
-interface SelectPropsWithGroupItems extends DefaultSelectProps {
+interface SelectPropsWithGroupItems<T extends string> extends DefaultSelectProps {
     items?: never;
     groupItems: {
-        [key: string]: SelectItem$1[];
+        [key: string]: SelectItem$1<T>[];
     };
 }
-type SelectProps = SelectPropsWithItems | SelectPropsWithGroupItems;
-declare function Select({ items, groupItems, placeholder, onChange, errorMessage, }: SelectProps): react_jsx_runtime.JSX.Element;
+type SelectProps<T extends string> = SelectPropsWithItems<T> | SelectPropsWithGroupItems<T>;
+declare function Select<T extends string>({ items, groupItems, placeholder, onChange, errorMessage, }: SelectProps<T>): react_jsx_runtime.JSX.Element;
 
 type LabelBaseProps = React$1.ComponentPropsWithoutRef<"label"> & {
     asChild?: boolean;

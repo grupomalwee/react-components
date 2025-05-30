@@ -1137,6 +1137,7 @@ var PopoverContentBase = React12.forwardRef(({ className, align = "center", side
 PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
 
 // src/components/selects/ComboboxBase.tsx
+import { CaretUp, Check as Check2 } from "phosphor-react";
 import { useState as useState4 } from "react";
 import { jsx as jsx16, jsxs as jsxs8 } from "react/jsx-runtime";
 function ComboboxBase({
@@ -1144,26 +1145,39 @@ function ComboboxBase({
   renderSelected,
   handleSelection,
   checkIsSelected,
-  searchPlaceholder
+  searchPlaceholder,
+  errorMessage
 }) {
   const [open, setOpen] = useState4(false);
-  return /* @__PURE__ */ jsxs8(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
-    /* @__PURE__ */ jsx16(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between", children: /* @__PURE__ */ jsxs8(ButtonBase, { variant: "outline", role: "combobox", "aria-expanded": open, children: [
-      renderSelected,
-      /* @__PURE__ */ jsx16("button", { className: "text-gray-500" })
-    ] }) }),
+  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs8(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
+    /* @__PURE__ */ jsx16(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between", children: /* @__PURE__ */ jsxs8(
+      ButtonBase,
+      {
+        variant: "outline",
+        role: "combobox",
+        "aria-expanded": open,
+        className: "gap-2 bg-white text-xs sm:text-sm",
+        children: [
+          renderSelected,
+          /* @__PURE__ */ jsx16("span", { children: /* @__PURE__ */ jsx16(CaretUp, { className: "text-gray-500", size: 16 }) }),
+          errorMessage && /* @__PURE__ */ jsx16("span", { className: "text-red-500", children: errorMessage })
+        ]
+      }
+    ) }),
     /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs8(CommandBase, { children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
         {
+          tabIndex: -1,
           placeholder: searchPlaceholder ?? "Busque uma op\xE7\xE3o..."
         }
       ),
       /* @__PURE__ */ jsxs8(CommandListBase, { children: [
-        /* @__PURE__ */ jsx16(CommandEmptyBase, { children: "Nenhum respons\xE1vel encontrado" }),
+        /* @__PURE__ */ jsx16(CommandEmptyBase, { children: "Nenhum dado encontrado" }),
         /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs8(
           CommandItemBase,
           {
+            keywords: [item.label],
             value: item.value,
             onSelect: (value) => {
               handleSelection(value);
@@ -1172,7 +1186,7 @@ function ComboboxBase({
             children: [
               item.label,
               /* @__PURE__ */ jsx16(
-                "button",
+                Check2,
                 {
                   className: cn(
                     "ml-auto",
@@ -1186,7 +1200,7 @@ function ComboboxBase({
         )) })
       ] })
     ] }) })
-  ] });
+  ] }) });
 }
 
 // src/components/selects/Combobox.tsx
@@ -1227,6 +1241,7 @@ function Combobox({
 
 // src/components/selects/MultiCombobox.tsx
 import { useCallback as useCallback2, useMemo as useMemo2 } from "react";
+import { X as X2 } from "phosphor-react";
 import { jsx as jsx18, jsxs as jsxs9 } from "react/jsx-runtime";
 function MultiCombobox({
   items,
@@ -1235,10 +1250,7 @@ function MultiCombobox({
   placeholder,
   searchPlaceholder
 }) {
-  const selectedItems = useMemo2(
-    () => items.filter((item) => selected.includes(item.value)),
-    [items, selected]
-  );
+  const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = useCallback2(
     (value) => selected.includes(value),
     [selected]
@@ -1255,27 +1267,30 @@ function MultiCombobox({
     [selected, onChange]
   );
   const renderSelected = useMemo2(() => {
-    if (selectedItems.length === 0) return placeholder ?? "Selecione uma op\xE7\xE3o...";
-    return /* @__PURE__ */ jsx18("div", { className: "flex flex-wrap gap-2", children: selectedItems.map((item) => /* @__PURE__ */ jsxs9(
+    if (selectedItems.length == 0)
+      return placeholder ?? "Selecione uma op\xE7\xE3o...";
+    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs9(
       "div",
       {
         className: "flex items-center gap-1 rounded-md border p-1",
         children: [
-          /* @__PURE__ */ jsx18("span", { className: "text-xs", children: item.label }),
-          /* @__PURE__ */ jsx18(
-            "button",
+          /* @__PURE__ */ jsx18("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
+          /* @__PURE__ */ jsx18("span", { children: /* @__PURE__ */ jsx18(
+            X2,
             {
+              size: 14,
               onClick: (e) => {
                 e.stopPropagation();
                 handleSelection(item.value);
               },
               className: "cursor-pointer"
             }
-          )
+          ) })
         ]
       },
       item.value
-    )) });
+    ));
+    return /* @__PURE__ */ jsx18("div", { className: "flex flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
   return /* @__PURE__ */ jsx18(
     ComboboxBase,
@@ -1292,7 +1307,7 @@ function MultiCombobox({
 // src/components/ui/SelectBase.tsx
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check as Check2, CaretDown, CaretUp } from "phosphor-react";
+import { Check as Check3, CaretDown, CaretUp as CaretUp2 } from "phosphor-react";
 import { jsx as jsx19, jsxs as jsxs10 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
@@ -1322,7 +1337,7 @@ var SelectScrollUpButtonBase = React13.forwardRef(({ className, ...props }, ref)
       className
     ),
     ...props,
-    children: /* @__PURE__ */ jsx19(CaretUp, { className: "h-4 w-4" })
+    children: /* @__PURE__ */ jsx19(CaretUp2, { className: "h-4 w-4" })
   }
 ));
 SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -1386,7 +1401,7 @@ var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref)
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx19("span", { className: "absolute right-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx19(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx19(Check2, { className: "h-4 w-4" }) }) }),
+      /* @__PURE__ */ jsx19("span", { className: "absolute right-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx19(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx19(Check3, { className: "h-4 w-4" }) }) }),
       /* @__PURE__ */ jsx19(SelectPrimitive.ItemText, { children })
     ]
   }
@@ -1438,7 +1453,7 @@ var ScrollBarBase = React14.forwardRef(({ className, orientation = "vertical", .
 ScrollBarBase.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
 // src/components/selects/Select.tsx
-import { jsx as jsx21, jsxs as jsxs12 } from "react/jsx-runtime";
+import { Fragment as Fragment3, jsx as jsx21, jsxs as jsxs12 } from "react/jsx-runtime";
 function Select({
   items,
   groupItems,
@@ -1458,10 +1473,10 @@ function Select({
           children: /* @__PURE__ */ jsx21(SelectValueBase, { placeholder })
         }
       ),
-      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs12(SelectGroupBase, { children: [
+      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment3, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs12(SelectGroupBase, { children: [
         /* @__PURE__ */ jsx21(SelectLabelBase, { children: key }),
         groupItems[key].map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value))
-      ] }, key)) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
+      ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
     ] }),
     errorMessage && /* @__PURE__ */ jsx21("p", { className: "text-sm text-red-500", children: errorMessage })
   ] });
@@ -1579,7 +1594,7 @@ CardFooterBase.displayName = "CardFooter";
 // src/components/ui/CheckBoxBase.tsx
 import * as React16 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { Check as Check3 } from "phosphor-react";
+import { Check as Check4 } from "phosphor-react";
 import { jsx as jsx24 } from "react/jsx-runtime";
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
@@ -1594,7 +1609,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
       CheckboxPrimitive.Indicator,
       {
         className: cn("flex items-center justify-center text-current"),
-        children: /* @__PURE__ */ jsx24(Check3, { className: "h-4 w-4" })
+        children: /* @__PURE__ */ jsx24(Check4, { className: "h-4 w-4" })
       }
     )
   }
@@ -1756,7 +1771,7 @@ SeparatorBase.displayName = SeparatorPrimitive.Root.displayName;
 import * as React20 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
-import { X as X2 } from "phosphor-react";
+import { X as X3 } from "phosphor-react";
 import { jsx as jsx28, jsxs as jsxs13 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
@@ -1800,7 +1815,7 @@ var SheetContentBase = React20.forwardRef(({ side = "right", className, children
       ...props,
       children: [
         /* @__PURE__ */ jsxs13(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
-          /* @__PURE__ */ jsx28(X2, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx28(X3, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
         ] }),
         children
