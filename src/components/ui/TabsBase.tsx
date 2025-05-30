@@ -31,9 +31,9 @@ const TabsTriggerBase = React.forwardRef<
       "relative inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium transition-colors",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-3",
       "disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:text-[#8e68ff]",
-      "after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full",
-      "after:scale-x-0 after:bg-[#8e68ff] after:origin-left",
+      "data-[state=active]:text-primary",
+      "after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-full",
+      "after:scale-x-0 after:bg-primary after:origin-left",
       "after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65,0,0.35,1)]",
       "data-[state=active]:after:scale-x-100",
       className
@@ -41,7 +41,7 @@ const TabsTriggerBase = React.forwardRef<
     {...props}
   />
 ));
-TabsTriggerBase.displayName = TabsPrimitive.Trigger.displayName;
+
 
 const TabsContentBase = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
