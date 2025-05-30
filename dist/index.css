@@ -419,6 +419,36 @@ video {
   --destructive-foreground: 231 15% 19%;
   --ring: 216 34% 17%;
 }
+.dark-green {
+  --background: 231 15% 19%;
+  --foreground: 213 31% 91%;
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --primary:
+    147,
+    36%,
+    51%;
+  --primary-foreground: 0 0% 100%;
+  --secondary:
+    147,
+    36%,
+    51%;
+  --secondary-foreground: 0 0% 100%;
+  --accent:
+    147,
+    36%,
+    51%;
+  --accent-foreground: 0 0% 100%;
+  --popover: 231 15% 25%;
+  --popover-foreground: 60 30% 96%;
+  --border: 231 15% 31%;
+  --input: 231 15% 31%;
+  --card: 231 15% 25%;
+  --card-foreground: 60 30% 96%;
+  --destructive: 0 100% 70%;
+  --destructive-foreground: 231 15% 19%;
+  --ring: 216 34% 17%;
+}
 .light-purple {
   --primary: 255 100% 70%;
   --primary-foreground: 0 0% 100%;
@@ -433,6 +463,23 @@ video {
   --secondary: 215 76% 51%;
   --secondary-foreground: 0 0% 100%;
   --accent: 215 76% 51%;
+  --accent-foreground: 0 0% 100%;
+}
+.light-green {
+  --primary:
+    147,
+    36%,
+    51%;
+  --primary-foreground: 0 0% 100%;
+  --secondary:
+    147,
+    36%,
+    51%;
+  --secondary-foreground: 0 0% 100%;
+  --accent:
+    147,
+    36%,
+    51%;
   --accent-foreground: 0 0% 100%;
 }
 * {
@@ -1799,9 +1846,9 @@ body {
   content: var(--tw-content);
   left: 50%;
 }
-.after\:h-\[3px\]::after {
+.after\:h-\[1\.5px\]::after {
   content: var(--tw-content);
-  height: 3px;
+  height: 1.5px;
 }
 .after\:w-\[2px\]::after {
   content: var(--tw-content);
@@ -1820,10 +1867,9 @@ body {
   --tw-scale-x: 0;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.after\:bg-\[\#8e68ff\]::after {
+.after\:bg-primary::after {
   content: var(--tw-content);
-  --tw-bg-opacity: 1;
-  background-color: rgb(142 104 255 / var(--tw-bg-opacity, 1));
+  background-color: hsl(var(--primary));
 }
 .after\:transition-transform::after {
   content: var(--tw-content);
@@ -2091,9 +2137,8 @@ body {
 .data-\[selected\=true\]\:text-background[data-selected=true] {
   color: hsl(var(--background));
 }
-.data-\[state\=active\]\:text-\[\#8e68ff\][data-state=active] {
-  --tw-text-opacity: 1;
-  color: rgb(142 104 255 / var(--tw-text-opacity, 1));
+.data-\[state\=active\]\:text-primary[data-state=active] {
+  color: hsl(var(--primary));
 }
 .data-\[state\=checked\]\:text-primary-foreground[data-state=checked] {
   color: hsl(var(--primary-foreground));
