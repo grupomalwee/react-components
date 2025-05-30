@@ -1,19 +1,11 @@
-import {
-  SelectContentBase,
-  SelectGroupBase,
-  SelectItemBase,
-  SelectLabelBase,
-  SelectBase as SelectPrimitiveBase,
-  SelectTriggerBase,
-  SelectValueBase,
-} from "@/components/ui/SelectBase";
 
-import { cn } from "../..//lib/utils";
-import { ScrollAreaBase } from "../ui/ScrollareaBase";
+import {  SelectBase, SelectContentBase, SelectGroupBase, SelectItemBase, SelectLabelBase, SelectTriggerBase, SelectValueBase } from "@/components/ui/SelectBase";
+import {ScrollAreaBase} from "@/components/ui/ScrollareaBase"
+import { cn } from "@/lib/utils";
 
-export interface SelectItem {
+export interface SelectItem<T extends string> {
   label: string;
-  value: string;
+  value: T;
 }
 
 interface DefaultSelectProps {
@@ -22,34 +14,34 @@ interface DefaultSelectProps {
   errorMessage?: string;
 }
 
-interface SelectPropsWithItems extends DefaultSelectProps {
-  items: SelectItem[];
+interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
+  items: SelectItem<T>[];
   groupItems?: never;
 }
 
-interface SelectPropsWithGroupItems extends DefaultSelectProps {
+interface SelectPropsWithGroupItems<T extends string> extends DefaultSelectProps {
   items?: never;
   groupItems: {
-    [key: string]: SelectItem[];
+    [key: string]: SelectItem<T>[];
   };
 }
 
-type SelectProps = SelectPropsWithItems | SelectPropsWithGroupItems;
+type SelectProps<T extends string> = SelectPropsWithItems<T> | SelectPropsWithGroupItems<T>;
 
-export function Select({
+export function Select<T extends string>({
   items,
   groupItems,
   placeholder,
   onChange,
   errorMessage,
-}: SelectProps) {
+}: SelectProps<T>) {
   return (
     <div>
-      <SelectPrimitiveBase onValueChange={onChange}>
+      <SelectBase onValueChange={onChange}>
         <SelectTriggerBase
           className={cn(
             "flex h-12 w-full content-start text-lg shadow-md",
-            errorMessage && "border-red-500"
+            errorMessage && "border-red-500",
           )}
         >
           <SelectValueBase placeholder={placeholder} />
@@ -58,16 +50,18 @@ export function Select({
         <ScrollAreaBase>
           <SelectContentBase>
             {groupItems ? (
-              Object.keys(groupItems).map((key) => (
-                <SelectGroupBase key={key}>
-                  <SelectLabelBase>{key}</SelectLabelBase>
-                  {groupItems[key].map((item) => (
-                    <SelectItemBase key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItemBase>
-                  ))}
-                </SelectGroupBase>
-              ))
+              <>
+                {Object.keys(groupItems).map((key) => (
+                  <SelectGroupBase key={key}>
+                    <SelectLabelBase>{key}</SelectLabelBase>
+                    {groupItems[key].map((item) => (
+                      <SelectItemBase key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItemBase>
+                    ))}
+                  </SelectGroupBase>
+                ))}
+              </>
             ) : (
               <SelectGroupBase>
                 {items.map((item) => (
@@ -79,8 +73,7 @@ export function Select({
             )}
           </SelectContentBase>
         </ScrollAreaBase>
-      </SelectPrimitiveBase>
-
+      </SelectBase>
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
     </div>
   );

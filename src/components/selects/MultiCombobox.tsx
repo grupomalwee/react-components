@@ -1,11 +1,12 @@
 import { useCallback, useMemo } from "react";
-import { ComboboxItem, ComboboxProps } from "./Combobox";
+import { ComboboxProps } from "./Combobox";
 import { ComboboxBase } from "./ComboboxBase";
+import { X } from "phosphor-react";
 
 interface MultiComboboxProps
   extends Omit<ComboboxProps, "selected" | "onChange"> {
-  selected: ComboboxItem["value"][];
-  onChange: (value: ComboboxItem["value"][]) => void;
+  selected: string[];
+  onChange: (value: string[]) => void;
 }
 
 export function MultiCombobox({
@@ -15,54 +16,51 @@ export function MultiCombobox({
   placeholder,
   searchPlaceholder,
 }: MultiComboboxProps) {
-  // Filtra os itens selecionados com base no array 'selected'
-  const selectedItems = useMemo(() => 
-    items.filter((item) => selected.includes(item.value)),
-    [items, selected]
-  );
+  const selectedItems = items.filter((item) => selected.includes(item.value));
 
-  // Função que verifica se o item está selecionado
   const checkIsSelected = useCallback(
     (value: string) => selected.includes(value),
-    [selected]
+    [selected],
   );
 
-  // Lida com a seleção ou remoção de um item
   const handleSelection = useCallback(
     (value: string) => {
       const isSelected = selected.includes(value);
       if (isSelected) {
-        onChange(selected.filter((item) => item !== value)); // Remove o item se ele já estiver selecionado
+        onChange(selected.filter((item) => item !== value));
       } else {
-        onChange([...selected, value]); // Adiciona o item se não estiver selecionado
+        onChange([...selected, value]);
       }
     },
-    [selected, onChange]
+    [selected, onChange],
   );
 
-  // Renderiza os itens selecionados de maneira otimizada
   const renderSelected = useMemo(() => {
-    if (selectedItems.length === 0) return placeholder ?? "Selecione uma opção...";
+    if (selectedItems.length == 0)
+      return placeholder ?? "Selecione uma opção...";
 
-    return (
-      <div className="flex flex-wrap gap-2">
-        {selectedItems.map((item) => (
-          <div
-            key={item.value}
-            className="flex items-center gap-1 rounded-md border p-1"
-          >
-            <span className="text-xs">{item.label}</span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Impede que o click no botão afete a interação geral
-                handleSelection(item.value); // Remove ou adiciona ao selecionado
-              }}
-              className="cursor-pointer"
-            />
-          </div>
-        ))}
+    const items = selectedItems.map((item) => (
+      <div
+        key={item.value}
+        className="flex items-center gap-1 rounded-md border p-1"
+      >
+        <span className="truncate whitespace-break-spaces text-xs">
+          {item.label}
+        </span>
+        <span>
+          <X
+            size={14}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelection(item.value);
+            }}
+            className="cursor-pointer"
+          />
+        </span>
       </div>
-    );
+    ));
+
+    return <div className="flex flex-wrap gap-2">{items}</div>;
   }, [handleSelection, placeholder, selectedItems]);
 
   return (
