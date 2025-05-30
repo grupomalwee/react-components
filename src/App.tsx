@@ -32,8 +32,18 @@ function App() {
           </SidebarProviderBase>
 
           <div className="mt-3 mr-5  inline-block rounded-md h-10">
-            <ModeToggleBase themes={["light","dark", "dark-blue","dark-purple", ]} />
-
+            <ModeToggleBase
+              themes={[
+                "light",
+                "light-purple",
+                "light-blue",
+                "light-green",
+                "dark",
+                "dark-blue",
+                "dark-purple",
+                "dark-green",
+              ]}
+            />
           </div>
         </div>
       </ThemeProviderBase>

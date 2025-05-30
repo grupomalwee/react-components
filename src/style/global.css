@@ -36,7 +36,7 @@
   }
 
   .dark {
-    --background: 217 19% 27%;
+    --background: 231 15% 19%;
     --foreground: 213 31% 91%;
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -60,55 +60,79 @@
     --ring: 216 34% 17%;
   }
 
-.dark-purple {
-    --background: 217 19% 27%;
-  --foreground: 213 31% 91%;
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 56.9%;
+  .dark-purple {
+    --background: 231 15% 19%;
+    --foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
 
-  --primary: 267 85% 75%;
-  --primary-foreground: 0 0% 100%;      
-  --secondary: 267 85% 75%;
-  --secondary-foreground: 0 0% 100%;    
-  --accent: 267 85% 75%;
-  --accent-foreground: 0 0% 100%;       
+    --primary: 267 85% 75%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 267 85% 75%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 267 85% 75%;
+    --accent-foreground: 0 0% 100%;
 
-  --popover: 231 15% 25%;
-  --popover-foreground: 60 30% 96%;
-  --border: 231 15% 31%;
-  --input: 231 15% 31%;
-  --card: 231 15% 25%;
-  --card-foreground: 60 30% 96%;
+    --popover: 231 15% 25%;
+    --popover-foreground: 60 30% 96%;
+    --border: 231 15% 31%;
+    --input: 231 15% 31%;
+    --card: 231 15% 25%;
+    --card-foreground: 60 30% 96%;
 
-  --destructive: 0 100% 70%;
-  --destructive-foreground: 231 15% 19%;
-  --ring: 216 34% 17%;
-}
+    --destructive: 0 100% 70%;
+    --destructive-foreground: 231 15% 19%;
+    --ring: 216 34% 17%;
+  }
 
-.dark-blue {
-    --background: 217 19% 27%;
-  --foreground: 213 31% 91%;
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 56.9%;
+  .dark-blue {
+    --background: 231 15% 19%;
+    --foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
 
-  --primary: 215 80% 50%;
-  --primary-foreground: 0 0% 100%;      
-  --secondary: 215 80% 50%;
-  --secondary-foreground: 0 0% 100%;    
-  --accent: 215 80% 50%;
-  --accent-foreground: 0 0% 100%;       
+    --primary: 215 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 80% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 215 80% 50%;
+    --accent-foreground: 0 0% 100%;
 
-  --popover: 231 15% 25%;
-  --popover-foreground: 60 30% 96%;
-  --border: 231 15% 31%;
-  --input: 231 15% 31%;
-  --card: 231 15% 25%;
-  --card-foreground: 60 30% 96%;
+    --popover: 231 15% 25%;
+    --popover-foreground: 60 30% 96%;
+    --border: 231 15% 31%;
+    --input: 231 15% 31%;
+    --card: 231 15% 25%;
+    --card-foreground: 60 30% 96%;
 
-  --destructive: 0 100% 70%;
-  --destructive-foreground: 231 15% 19%;
-  --ring: 216 34% 17%;
-}
+    --destructive: 0 100% 70%;
+    --destructive-foreground: 231 15% 19%;
+    --ring: 216 34% 17%;
+  }
+  .dark-green {
+    --background: 231 15% 19%;
+    --foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --primary: 147, 36%, 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 147, 36%, 51%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 147, 36%, 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --popover: 231 15% 25%;
+    --popover-foreground: 60 30% 96%;
+    --border: 231 15% 31%;
+    --input: 231 15% 31%;
+    --card: 231 15% 25%;
+    --card-foreground: 60 30% 96%;
+
+    --destructive: 0 100% 70%;
+    --destructive-foreground: 231 15% 19%;
+    --ring: 216 34% 17%;
+  }
 
   .light-purple {
     --primary: 255 100% 70%;
@@ -125,6 +149,14 @@
     --secondary: 215 76% 51%;
     --secondary-foreground: 0 0% 100%;
     --accent: 215 76% 51%;
+    --accent-foreground: 0 0% 100%;
+  }
+  .light-green {
+    --primary: 147, 36%, 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 147, 36%, 51%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 147, 36%, 51%;
     --accent-foreground: 0 0% 100%;
   }
 
@@ -230,7 +262,8 @@
 }
 
 @keyframes pulse-soft {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
