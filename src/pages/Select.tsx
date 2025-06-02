@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import {
   SelectBase,
   SelectContentBase,
@@ -11,12 +12,13 @@ import {
 } from "@/components/ui/SelectBase";
 
 export const SelectPage = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <div>
-      {/* Select Component Example */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
-        <SelectBase>
-          <SelectTriggerBase className="w-[180px]">
+        <SelectBase open={open} onOpenChange={setOpen}>
+          <SelectTriggerBase open={open} className="w-[180px]">
             <SelectValueBase placeholder="Select a fruit" />
           </SelectTriggerBase>
           <SelectContentBase>
@@ -41,8 +43,7 @@ export const SelectPage = () => {
         <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
-            <code>
-              {`import {
+            <code>{`import {
   SelectBase,
   SelectContentBase,
   SelectGroupBase,
@@ -50,8 +51,7 @@ export const SelectPage = () => {
   SelectLabelBase,
   SelectTriggerBase,
   SelectValueBase
-} from "@/components/ui/SelectBase";`}
-            </code>
+} from "@/components/ui/SelectBase";`}</code>
           </pre>
         </div>
 
@@ -59,8 +59,7 @@ export const SelectPage = () => {
         <div className="bg-gray-800 text-white p-4 rounded-md">
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
-            <code>
-              {`<SelectBase>
+            <code>{`<SelectBase>
   <SelectTriggerBase className="w-[180px]">
     <SelectValueBase placeholder="Select a fruit" />
   </SelectTriggerBase>
@@ -74,8 +73,7 @@ export const SelectPage = () => {
       <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
     </SelectGroupBase>
   </SelectContentBase>
-</SelectBase>`}
-            </code>
+</SelectBase>`}</code>
           </pre>
         </div>
       </div>

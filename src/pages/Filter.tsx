@@ -148,9 +148,11 @@ export default function FilterPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <FilterDialog availableFilters={availableFilters} />
+      <div className="p-5">
+        {" "}
+        <FilterDialog availableFilters={availableFilters} />
+      </div>
 
-      {/* Linha separadora e Título de Documentação */}
       <div className="my-8 mx-5">
         <h3 className="text-xl font-semibold mb-3">Documentação</h3>
         <div className="border-t-2 border-gray-300 mb-4"></div>

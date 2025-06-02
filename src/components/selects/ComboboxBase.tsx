@@ -42,9 +42,9 @@ export function ComboboxBase<T extends string>({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="col-span-1 w-full">
+    <div className="col-span-1 w-full ">
       <PopoverBase open={open} onOpenChange={setOpen} modal>
-        <PopoverTriggerBase asChild className="flex w-full justify-between">
+        <PopoverTriggerBase asChild className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]">
           <ButtonBase
             variant="outline"
             role="combobox"
