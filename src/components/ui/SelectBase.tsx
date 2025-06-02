@@ -78,7 +78,6 @@ const SelectContentBase = React.forwardRef<
   <SelectPrimitive.Portal>
     <AnimatePresence>
       <SelectPrimitive.Content
-        forceMount
         ref={ref}
         className={cn(
           "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",

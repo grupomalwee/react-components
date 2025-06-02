@@ -17,16 +17,42 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { jsx } from "react/jsx-runtime";
 var buttonVariantsBase = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  `
+    inline-flex items-center justify-center gap-2
+    whitespace-nowrap rounded-md text-sm font-medium
+    transition-all duration-200
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50
+    active:scale-[0.97]
+    [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+  `,
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:opacity-70 transition duration-500",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:opacity-70 transition duration-500",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline"
+        default: `
+          bg-primary text-primary-foreground shadow
+          hover:opacity-90
+          hover:shadow-md
+        `,
+        destructive: `
+          bg-destructive text-destructive-foreground shadow-sm
+          hover:bg-destructive/90 hover:shadow-md
+        `,
+        outline: `
+          border border-input bg-background shadow-sm
+          hover:bg-accent hover:text-accent-foreground hover:shadow-md
+        `,
+        secondary: `
+          bg-secondary text-secondary-foreground shadow-sm
+          hover:opacity-80 hover:shadow-md
+        `,
+        ghost: `
+          hover:bg-accent hover:text-accent-foreground
+        `,
+        link: `
+          text-primary underline-offset-4
+          hover:underline
+        `
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -381,21 +407,30 @@ import * as React8 from "react";
 
 // src/components/ui/InputBase.tsx
 import * as React6 from "react";
-import { jsx as jsx7 } from "react/jsx-runtime";
-var InputBase = React6.forwardRef(({ className, type, ...props }, ref) => {
-  return /* @__PURE__ */ jsx7(
-    "input",
-    {
-      type,
-      className: cn(
-        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      ),
-      ref,
-      ...props
-    }
-  );
-});
+import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
+var InputBase = React6.forwardRef(
+  ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full", children: [
+      label && /* @__PURE__ */ jsx7(LabelBase_default, { children: label }),
+      /* @__PURE__ */ jsxs3("div", { className: "flex w-full items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
+        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),
+        /* @__PURE__ */ jsx7(
+          "input",
+          {
+            type,
+            className: cn(
+              "flex h-9 w-full bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              className
+            ),
+            ref,
+            ...props
+          }
+        ),
+        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+      ] })
+    ] });
+  }
+);
 InputBase.displayName = "Input";
 
 // src/components/date-time-picker/TimePickerInput.tsx
@@ -629,13 +664,13 @@ var TimePickerInput = React7.forwardRef(
 TimePickerInput.displayName = "TimePickerInput";
 
 // src/components/date-time-picker/TimePicker.tsx
-import { jsx as jsx9, jsxs as jsxs3 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs4 } from "react/jsx-runtime";
 function TimePicker({ date, setDate, hideSeconds }) {
   const minuteRef = React8.useRef(null);
   const hourRef = React8.useRef(null);
   const secondRef = React8.useRef(null);
-  return /* @__PURE__ */ jsxs3("div", { className: "flex items-end gap-2", children: [
-    /* @__PURE__ */ jsxs3("div", { className: "grid gap-1 text-center", children: [
+  return /* @__PURE__ */ jsxs4("div", { className: "flex items-end gap-2", children: [
+    /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
       /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "hours", className: "text-xs", children: "Horas" }),
       /* @__PURE__ */ jsx9(
         TimePickerInput,
@@ -648,7 +683,7 @@ function TimePicker({ date, setDate, hideSeconds }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxs3("div", { className: "grid gap-1 text-center", children: [
+    /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
       /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "minutes", className: "text-xs", children: "Minutos" }),
       /* @__PURE__ */ jsx9(
         TimePickerInput,
@@ -662,7 +697,7 @@ function TimePicker({ date, setDate, hideSeconds }) {
         }
       )
     ] }),
-    !hideSeconds && /* @__PURE__ */ jsxs3("div", { className: "grid gap-1 text-center", children: [
+    !hideSeconds && /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
       /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "seconds", className: "text-xs", children: "Segundos" }),
       /* @__PURE__ */ jsx9(
         TimePickerInput,
@@ -680,7 +715,7 @@ function TimePicker({ date, setDate, hideSeconds }) {
 }
 
 // src/components/date-time-picker/DateTimePicker.tsx
-import { Fragment, jsx as jsx10, jsxs as jsxs4 } from "react/jsx-runtime";
+import { Fragment, jsx as jsx10, jsxs as jsxs5 } from "react/jsx-runtime";
 function DateTimePicker({
   label,
   date,
@@ -709,10 +744,10 @@ function DateTimePicker({
       setInternalDate(date);
     }
   }, [date, open]);
-  return /* @__PURE__ */ jsxs4(Fragment, { children: [
+  return /* @__PURE__ */ jsxs5(Fragment, { children: [
     label && /* @__PURE__ */ jsx10(LabelBase_default, { className: "mb-[-1rem] pl-2", children: label }),
-    /* @__PURE__ */ jsxs4(DialogBase, { open, onOpenChange: setOpen, children: [
-      /* @__PURE__ */ jsx10(DialogTriggerBase, { disabled, asChild: true, children: /* @__PURE__ */ jsxs4(
+    /* @__PURE__ */ jsxs5(DialogBase, { open, onOpenChange: setOpen, children: [
+      /* @__PURE__ */ jsx10(DialogTriggerBase, { disabled, asChild: true, children: /* @__PURE__ */ jsxs5(
         ButtonBase,
         {
           variant: "default",
@@ -727,7 +762,7 @@ function DateTimePicker({
           ]
         }
       ) }),
-      /* @__PURE__ */ jsxs4(DialogContentBase, { children: [
+      /* @__PURE__ */ jsxs5(DialogContentBase, { children: [
         /* @__PURE__ */ jsx10(DialogHeaderBase, { children: /* @__PURE__ */ jsx10(DialogTitleBase, { className: "text-xl font-semibold", children: dialogTitle ?? "Selecione a data" }) }),
         /* @__PURE__ */ jsx10(
           CalendarBase,
@@ -788,14 +823,15 @@ import { Moon, Sun } from "phosphor-react";
 import * as React10 from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight as CaretRight2, Circle } from "phosphor-react";
-import { jsx as jsx11, jsxs as jsxs5 } from "react/jsx-runtime";
+import { motion, AnimatePresence } from "framer-motion";
+import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
 var DropDownMenuBase = DropdownMenuPrimitive.Root;
 var DropDownMenuTriggerBase = DropdownMenuPrimitive.Trigger;
 var DropDownMenuGroupBase = DropdownMenuPrimitive.Group;
 var DropDownMenuPortalBase = DropdownMenuPrimitive.Portal;
 var DropDownMenuSubBase = DropdownMenuPrimitive.Sub;
 var DropDownMenuRadioGroupBase = DropdownMenuPrimitive.RadioGroup;
-var DropDownMenuSubTriggerBase = React10.forwardRef(({ className, inset, children, ...props }, ref) => /* @__PURE__ */ jsxs5(
+var DropDownMenuSubTriggerBase = React10.forwardRef(({ className, inset, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.SubTrigger,
   {
     ref,
@@ -824,19 +860,30 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
   }
 ));
 DropDownMenuSubContentBase.displayName = DropdownMenuPrimitive.SubContent.displayName;
-var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(
+var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(AnimatePresence, { children: /* @__PURE__ */ jsx11(
   DropdownMenuPrimitive.Content,
   {
-    ref,
+    asChild: true,
     sideOffset,
-    className: cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-      "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      className
-    ),
-    ...props
+    forceMount: true,
+    ref,
+    ...props,
+    children: /* @__PURE__ */ jsx11(
+      motion.div,
+      {
+        initial: { opacity: 0, scale: 0.95, y: 5 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, y: 5 },
+        transition: { duration: 0.2, ease: "easeOut" },
+        className: cn(
+          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          className
+        ),
+        children: props.children
+      }
+    )
   }
-) }));
+) }) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
 var DropDownMenuItemBase = React10.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ jsx11(
   DropdownMenuPrimitive.Item,
@@ -851,7 +898,7 @@ var DropDownMenuItemBase = React10.forwardRef(({ className, inset, ...props }, r
   }
 ));
 DropDownMenuItemBase.displayName = DropdownMenuPrimitive.Item.displayName;
-var DropDownMenuCheckboxItemBase = React10.forwardRef(({ className, children, checked, ...props }, ref) => /* @__PURE__ */ jsxs5(
+var DropDownMenuCheckboxItemBase = React10.forwardRef(({ className, children, checked, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.CheckboxItem,
   {
     ref,
@@ -868,7 +915,7 @@ var DropDownMenuCheckboxItemBase = React10.forwardRef(({ className, children, ch
   }
 ));
 DropDownMenuCheckboxItemBase.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
-var DropDownMenuRadioItemBase = React10.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs5(
+var DropDownMenuRadioItemBase = React10.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.RadioItem,
   {
     ref,
@@ -972,7 +1019,7 @@ var useTheme = () => {
 };
 
 // src/components/mode-toggle.tsx
-import { Fragment as Fragment2, jsx as jsx13, jsxs as jsxs6 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx13, jsxs as jsxs7 } from "react/jsx-runtime";
 var themeLabels = {
   light: "Light",
   dark: "Dark",
@@ -988,15 +1035,15 @@ function ModeToggleBase({
   themes = ["light", "dark", "system"]
 }) {
   const { setTheme } = useTheme();
-  return /* @__PURE__ */ jsxs6(DropDownMenuBase, { children: [
-    /* @__PURE__ */ jsx13(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ jsxs6(
+  return /* @__PURE__ */ jsxs7(DropDownMenuBase, { children: [
+    /* @__PURE__ */ jsx13(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ jsxs7(
       ButtonBase,
       {
         variant: "ghost",
         size: "icon",
         className: "relative overflow-hidden border-transparent",
         children: [
-          /* @__PURE__ */ jsxs6(Fragment2, { children: [
+          /* @__PURE__ */ jsxs7(Fragment2, { children: [
             /* @__PURE__ */ jsx13(Sun, { className: "h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" }),
             /* @__PURE__ */ jsx13(Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" })
           ] }),
@@ -1015,7 +1062,8 @@ import { useCallback, useMemo } from "react";
 import * as React11 from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlass } from "phosphor-react";
-import { jsx as jsx14, jsxs as jsxs7 } from "react/jsx-runtime";
+import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
+import { jsx as jsx14, jsxs as jsxs8 } from "react/jsx-runtime";
 var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   CommandPrimitive,
   {
@@ -1028,10 +1076,27 @@ var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PUR
   }
 ));
 CommandBase.displayName = CommandPrimitive.displayName;
-var CommandDialogBase = ({ children, ...props }) => {
-  return /* @__PURE__ */ jsx14(DialogBase, { ...props, children: /* @__PURE__ */ jsx14(DialogContentBase, { className: "overflow-hidden p-0", children: /* @__PURE__ */ jsx14(CommandBase, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children }) }) });
+var dialogVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: -20 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.95, y: -20 }
 };
-var CommandInputBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs7("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
+var CommandDialogBase = ({ children, open, ...props }) => {
+  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence2, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
+    motion2.div,
+    {
+      initial: "hidden",
+      animate: "visible",
+      exit: "exit",
+      variants: dialogVariants,
+      transition: { duration: 0.2, ease: "easeOut" },
+      className: "overflow-hidden p-0",
+      children: /* @__PURE__ */ jsx14(CommandBase, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children })
+    },
+    "command-dialog"
+  ) }) }) });
+};
+var CommandInputBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs8("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
   /* @__PURE__ */ jsx14(MagnifyingGlass, { className: "mr-2 h-4 w-4 shrink-0 text-primary" }),
   /* @__PURE__ */ jsx14(
     CommandPrimitive.Input,
@@ -1055,14 +1120,7 @@ var CommandListBase = React11.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 CommandListBase.displayName = CommandPrimitive.List.displayName;
-var CommandEmptyBase = React11.forwardRef((props, ref) => /* @__PURE__ */ jsx14(
-  CommandPrimitive.Empty,
-  {
-    ref,
-    className: "py-6 text-center text-sm",
-    ...props
-  }
-));
+var CommandEmptyBase = React11.forwardRef((props, ref) => /* @__PURE__ */ jsx14(CommandPrimitive.Empty, { ref, className: "py-6 text-center text-sm", ...props }));
 CommandEmptyBase.displayName = CommandPrimitive.Empty.displayName;
 var CommandGroupBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   CommandPrimitive.Group,
@@ -1076,41 +1134,22 @@ var CommandGroupBase = React11.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 CommandGroupBase.displayName = CommandPrimitive.Group.displayName;
-var CommandSeparatorBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
-  CommandPrimitive.Separator,
-  {
-    ref,
-    className: cn("-mx-1 h-px bg-border", className),
-    ...props
-  }
-));
+var CommandSeparatorBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(CommandPrimitive.Separator, { ref, className: cn("-mx-1 h-px bg-border", className), ...props }));
 CommandSeparatorBase.displayName = CommandPrimitive.Separator.displayName;
 var CommandItemBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   CommandPrimitive.Item,
   {
     ref,
     className: cn(
-      "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary data-[selected=true]:text-background data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary data-[selected=true]:text-background data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.02] active:scale-[0.98]",
       className
     ),
     ...props
   }
 ));
 CommandItemBase.displayName = CommandPrimitive.Item.displayName;
-var CommandShortcutBase = ({
-  className,
-  ...props
-}) => {
-  return /* @__PURE__ */ jsx14(
-    "span",
-    {
-      className: cn(
-        "ml-auto text-xs tracking-widest text-muted-foreground",
-        className
-      ),
-      ...props
-    }
-  );
+var CommandShortcutBase = ({ className, ...props }) => {
+  return /* @__PURE__ */ jsx14("span", { className: cn("ml-auto text-xs tracking-widest text-muted-foreground", className), ...props });
 };
 CommandShortcutBase.displayName = "CommandShortcut";
 
@@ -1139,7 +1178,7 @@ PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
 // src/components/selects/ComboboxBase.tsx
 import { CaretUp, Check as Check2 } from "phosphor-react";
 import { useState as useState4 } from "react";
-import { jsx as jsx16, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs9 } from "react/jsx-runtime";
 function ComboboxBase({
   items,
   renderSelected,
@@ -1149,8 +1188,8 @@ function ComboboxBase({
   errorMessage
 }) {
   const [open, setOpen] = useState4(false);
-  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs8(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
-    /* @__PURE__ */ jsx16(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between", children: /* @__PURE__ */ jsxs8(
+  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full ", children: /* @__PURE__ */ jsxs9(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
+    /* @__PURE__ */ jsx16(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ jsxs9(
       ButtonBase,
       {
         variant: "outline",
@@ -1164,7 +1203,7 @@ function ComboboxBase({
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs8(CommandBase, { children: [
+    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs9(CommandBase, { children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
         {
@@ -1172,9 +1211,9 @@ function ComboboxBase({
           placeholder: searchPlaceholder ?? "Busque uma op\xE7\xE3o..."
         }
       ),
-      /* @__PURE__ */ jsxs8(CommandListBase, { children: [
+      /* @__PURE__ */ jsxs9(CommandListBase, { children: [
         /* @__PURE__ */ jsx16(CommandEmptyBase, { children: "Nenhum dado encontrado" }),
-        /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs8(
+        /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs9(
           CommandItemBase,
           {
             keywords: [item.label],
@@ -1227,7 +1266,7 @@ function Combobox({
     },
     [selected, onChange]
   );
-  return /* @__PURE__ */ jsx17(
+  return /* @__PURE__ */ jsx17("div", { className: "dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ jsx17(
     ComboboxBase,
     {
       items,
@@ -1236,13 +1275,13 @@ function Combobox({
       checkIsSelected,
       searchPlaceholder
     }
-  );
+  ) });
 }
 
 // src/components/selects/MultiCombobox.tsx
 import { useCallback as useCallback2, useMemo as useMemo2 } from "react";
 import { X as X2 } from "phosphor-react";
-import { jsx as jsx18, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx18, jsxs as jsxs10 } from "react/jsx-runtime";
 function MultiCombobox({
   items,
   selected,
@@ -1269,7 +1308,7 @@ function MultiCombobox({
   const renderSelected = useMemo2(() => {
     if (selectedItems.length == 0)
       return placeholder ?? "Selecione uma op\xE7\xE3o...";
-    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs9(
+    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs10(
       "div",
       {
         className: "flex items-center gap-1 rounded-md border p-1",
@@ -1308,11 +1347,12 @@ function MultiCombobox({
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check as Check3, CaretDown, CaretUp as CaretUp2 } from "phosphor-react";
-import { jsx as jsx19, jsxs as jsxs10 } from "react/jsx-runtime";
+import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
+import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs11 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
 var SelectValueBase = SelectPrimitive.Value;
-var SelectTriggerBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs10(
+var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...props }, ref) => /* @__PURE__ */ jsxs11(
   SelectPrimitive.Trigger,
   {
     ref,
@@ -1323,7 +1363,15 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, ...props }, r
     ...props,
     children: [
       children,
-      /* @__PURE__ */ jsx19(SelectPrimitive.Icon, { asChild: true, children: /* @__PURE__ */ jsx19(CaretDown, { className: "h-4 w-4 opacity-50" }) })
+      /* @__PURE__ */ jsx19(
+        motion3.span,
+        {
+          animate: { rotate: open ? 180 : 0 },
+          transition: { duration: 0.3 },
+          className: "flex items-center",
+          children: /* @__PURE__ */ jsx19(CaretDown, { className: "h-4 w-4 opacity-50" })
+        }
+      )
     ]
   }
 ));
@@ -1354,33 +1402,42 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsxs10(
+var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
   SelectPrimitive.Content,
   {
     ref,
     className: cn(
-      "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+      "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
       className
     ),
     position,
     ...props,
-    children: [
-      /* @__PURE__ */ jsx19(SelectScrollUpButtonBase, {}),
-      /* @__PURE__ */ jsx19(
-        SelectPrimitive.Viewport,
-        {
-          className: cn(
-            "p-1",
-            position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+    asChild: true,
+    children: /* @__PURE__ */ jsx19(
+      motion3.div,
+      {
+        initial: { opacity: 0, scale: 0.95 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.95 },
+        transition: { duration: 0.2 },
+        children: /* @__PURE__ */ jsxs11(Fragment3, { children: [
+          /* @__PURE__ */ jsx19(SelectScrollUpButtonBase, {}),
+          /* @__PURE__ */ jsx19(
+            SelectPrimitive.Viewport,
+            {
+              className: cn(
+                "p-1",
+                position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+              ),
+              children
+            }
           ),
-          children
-        }
-      ),
-      /* @__PURE__ */ jsx19(SelectScrollDownButtonBase, {})
-    ]
+          /* @__PURE__ */ jsx19(SelectScrollDownButtonBase, {})
+        ] })
+      }
+    )
   }
-) }));
+) }) }));
 SelectContentBase.displayName = SelectPrimitive.Content.displayName;
 var SelectLabelBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
   SelectPrimitive.Label,
@@ -1391,7 +1448,7 @@ var SelectLabelBase = React13.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 SelectLabelBase.displayName = SelectPrimitive.Label.displayName;
-var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs10(
+var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs11(
   SelectPrimitive.Item,
   {
     ref,
@@ -1420,8 +1477,8 @@ SelectSeparatorBase.displayName = SelectPrimitive.Separator.displayName;
 // src/components/ui/ScrollareaBase.tsx
 import * as React14 from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { jsx as jsx20, jsxs as jsxs11 } from "react/jsx-runtime";
-var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs11(
+import { jsx as jsx20, jsxs as jsxs12 } from "react/jsx-runtime";
+var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs12(
   ScrollAreaPrimitive.Root,
   {
     ref,
@@ -1453,7 +1510,7 @@ var ScrollBarBase = React14.forwardRef(({ className, orientation = "vertical", .
 ScrollBarBase.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
 // src/components/selects/Select.tsx
-import { Fragment as Fragment3, jsx as jsx21, jsxs as jsxs12 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx21, jsxs as jsxs13 } from "react/jsx-runtime";
 function Select({
   items,
   groupItems,
@@ -1461,8 +1518,8 @@ function Select({
   onChange,
   errorMessage
 }) {
-  return /* @__PURE__ */ jsxs12("div", { children: [
-    /* @__PURE__ */ jsxs12(SelectBase, { onValueChange: onChange, children: [
+  return /* @__PURE__ */ jsxs13("div", { children: [
+    /* @__PURE__ */ jsxs13(SelectBase, { onValueChange: onChange, children: [
       /* @__PURE__ */ jsx21(
         SelectTriggerBase,
         {
@@ -1473,7 +1530,7 @@ function Select({
           children: /* @__PURE__ */ jsx21(SelectValueBase, { placeholder })
         }
       ),
-      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment3, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs12(SelectGroupBase, { children: [
+      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs13(SelectGroupBase, { children: [
         /* @__PURE__ */ jsx21(SelectLabelBase, { children: key }),
         groupItems[key].map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value))
       ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
@@ -1595,23 +1652,28 @@ CardFooterBase.displayName = "CardFooter";
 import * as React16 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check as Check4 } from "phosphor-react";
+import { motion as motion4 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
   {
     ref,
     className: cn(
-      "peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      "peer h-4 w-4 shrink-0 rounded-md border border-primary shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-colors",
       className
     ),
     ...props,
-    children: /* @__PURE__ */ jsx24(
-      CheckboxPrimitive.Indicator,
+    children: /* @__PURE__ */ jsx24(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ jsx24(
+      motion4.div,
       {
-        className: cn("flex items-center justify-center text-current"),
-        children: /* @__PURE__ */ jsx24(Check4, { className: "h-4 w-4" })
+        initial: { scale: 0, opacity: 0, rotate: -90 },
+        animate: { scale: 1, opacity: 1, rotate: 0 },
+        exit: { scale: 0, opacity: 0, rotate: 90 },
+        transition: { type: "spring", stiffness: 500, damping: 30 },
+        className: "flex items-center justify-center text-current",
+        children: /* @__PURE__ */ jsx24(Check4, { className: "h-4 w-4", weight: "bold" })
       }
-    )
+    ) })
   }
 ));
 CheckboxBase.displayName = CheckboxPrimitive.Root.displayName;
@@ -1772,7 +1834,7 @@ import * as React20 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
 import { X as X3 } from "phosphor-react";
-import { jsx as jsx28, jsxs as jsxs13 } from "react/jsx-runtime";
+import { jsx as jsx28, jsxs as jsxs14 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
 var SheetCloseBase = SheetPrimitive.Close;
@@ -1805,16 +1867,16 @@ var sheetVariants = cva2(
     }
   }
 );
-var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs13(SheetPortalBase, { children: [
+var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs14(SheetPortalBase, { children: [
   /* @__PURE__ */ jsx28(SheetOverlayBase, {}),
-  /* @__PURE__ */ jsxs13(
+  /* @__PURE__ */ jsxs14(
     SheetPrimitive.Content,
     {
       ref,
       className: cn(sheetVariants({ side }), className),
       ...props,
       children: [
-        /* @__PURE__ */ jsxs13(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+        /* @__PURE__ */ jsxs14(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
           /* @__PURE__ */ jsx28(X3, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
         ] }),
@@ -1916,7 +1978,7 @@ var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...pro
 TooltipContentBase.displayName = TooltipPrimitive.Content.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import { jsx as jsx31, jsxs as jsxs14 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs15 } from "react/jsx-runtime";
 var SIDEBAR_COOKIE_NAME = "sidebar:state";
 var SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 var SIDEBAR_WIDTH = "16rem";
@@ -2044,7 +2106,7 @@ var SidebarBase = React22.forwardRef(
         }
       ) });
     }
-    return /* @__PURE__ */ jsxs14(
+    return /* @__PURE__ */ jsxs15(
       "div",
       {
         ref,
@@ -2094,7 +2156,7 @@ var SidebarBase = React22.forwardRef(
 SidebarBase.displayName = "SidebarBase";
 var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs14(
+  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs15(
     ButtonBase,
     {
       ref,
@@ -2350,7 +2412,7 @@ var SidebarMenuButtonBase = React22.forwardRef(
         children: tooltip
       };
     }
-    return /* @__PURE__ */ jsxs14(TooltipBase, { children: [
+    return /* @__PURE__ */ jsxs15(TooltipBase, { children: [
       /* @__PURE__ */ jsx31(TooltipTriggerBase, { asChild: true, children: button }),
       /* @__PURE__ */ jsx31(
         TooltipContentBase,
@@ -2410,7 +2472,7 @@ var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false,
   const width = React22.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
-  return /* @__PURE__ */ jsxs14(
+  return /* @__PURE__ */ jsxs15(
     "div",
     {
       ref,
@@ -2482,8 +2544,8 @@ SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 // src/components/ui/SliderBase.tsx
 import * as React23 from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { jsx as jsx32, jsxs as jsxs15 } from "react/jsx-runtime";
-var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs15(
+import { jsx as jsx32, jsxs as jsxs16 } from "react/jsx-runtime";
+var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs16(
   SliderPrimitive.Root,
   {
     ref,
@@ -2493,8 +2555,16 @@ var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE_
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx32(SliderPrimitive.Track, { className: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20", children: /* @__PURE__ */ jsx32(SliderPrimitive.Range, { className: "absolute h-full bg-primary" }) }),
-      /* @__PURE__ */ jsx32(SliderPrimitive.Thumb, { className: "block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" })
+      /* @__PURE__ */ jsx32(SliderPrimitive.Track, { className: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20 transition-colors duration-300 ease-in-out", children: /* @__PURE__ */ jsx32(SliderPrimitive.Range, { className: "absolute h-full bg-primary transition-all duration-300 ease-in-out" }) }),
+      /* @__PURE__ */ jsx32(
+        SliderPrimitive.Thumb,
+        {
+          className: cn(
+            "block h-4 w-4 rounded-full border border-primary/70 bg-background shadow-md transition-transform duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            "hover:scale-125 active:scale-125"
+          )
+        }
+      )
     ]
   }
 ));
@@ -2527,26 +2597,50 @@ var Toaster = ({ ...props }) => {
 // src/components/ui/SwitchBase.tsx
 import * as React24 from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
-import { jsx as jsx34 } from "react/jsx-runtime";
-var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
-  SwitchPrimitives.Root,
-  {
-    className: cn(
-      "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-      className
-    ),
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsx34(
-      SwitchPrimitives.Thumb,
-      {
-        className: cn(
-          "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
+import { jsx as jsx34, jsxs as jsxs17 } from "react/jsx-runtime";
+var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
+  const [isChecked, setIsChecked] = React24.useState(false);
+  const handleChange = (checked) => {
+    setIsChecked(checked);
+    if (props.onCheckedChange) props.onCheckedChange(checked);
+  };
+  return /* @__PURE__ */ jsxs17(
+    SwitchPrimitives.Root,
+    {
+      ...props,
+      ref,
+      onCheckedChange: handleChange,
+      className: cn(
+        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 " + (isChecked ? "bg-primary" : "bg-input"),
+        className
+      ),
+      children: [
+        /* @__PURE__ */ jsx34(
+          SwitchPrimitives.Thumb,
+          {
+            className: cn(
+              "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 " + (isChecked ? "animate-bounce-thumb" : "")
+            ),
+            style: {
+              transformOrigin: "center",
+              transition: "transform 350ms cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+            }
+          }
+        ),
+        /* @__PURE__ */ jsx34(
+          "span",
+          {
+            "aria-hidden": "true",
+            className: cn(
+              "pointer-events-none absolute top-1/2 left-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-50 blur-md transition-all duration-350 ease-in-out",
+              isChecked ? "scale-95 opacity-60" : "scale-75 opacity-0"
+            )
+          }
         )
-      }
-    )
-  }
-));
+      ]
+    }
+  );
+});
 SwitchBase.displayName = SwitchPrimitives.Root.displayName;
 
 // src/components/ui/TableBase.tsx
