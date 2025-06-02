@@ -2,30 +2,33 @@
 
 import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
+import { motion, AnimatePresence } from "framer-motion"
 
-
-import { cn } from "../..//lib/utils"
-
+import { cn } from "../../lib/utils"
 import { buttonVariantsBase } from "@/components/ui/ButtonBase"
 
-const AlertDialogBase= AlertDialogPrimitive.Root
-
+const AlertDialogBase = AlertDialogPrimitive.Root
 const AlertDialogTriggerBase = AlertDialogPrimitive.Trigger
-
-const AlertDialogPortalBase= AlertDialogPrimitive.Portal
+const AlertDialogPortalBase = AlertDialogPrimitive.Portal
 
 const AlertDialogOverlayBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Overlay
-    className={cn(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-    ref={ref}
-  />
+  <AlertDialogPrimitive.Overlay asChild>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1, ease: "easeOut" }}
+      ref={ref}
+      className={cn(
+        "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm",
+        className
+      )}
+      {...props}
+    />
+  </AlertDialogPrimitive.Overlay>
 ))
 AlertDialogOverlayBase.displayName = AlertDialogPrimitive.Overlay.displayName
 
@@ -34,15 +37,23 @@ const AlertDialogContentBase = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <AlertDialogPortalBase>
-    <AlertDialogOverlayBase />
-    <AlertDialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-        className
-      )}
-      {...props}
-    />
+    <AnimatePresence>
+      <AlertDialogOverlayBase />
+      <AlertDialogPrimitive.Content asChild forceMount>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
+          animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
+          exit={{ opacity: 0, scale: 0.9, y: "-50%", x: "-50%" }}
+          transition={{ duration: 0.10, ease: "easeOut" }}
+          ref={ref}
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-xl sm:rounded-lg",
+            className
+          )}
+          {...props}
+        />
+      </AlertDialogPrimitive.Content>
+    </AnimatePresence>
   </AlertDialogPortalBase>
 ))
 AlertDialogContentBase.displayName = AlertDialogPrimitive.Content.displayName

@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, CaretDown, CaretUp } from "phosphor-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";
 
@@ -14,8 +15,8 @@ const SelectValueBase = SelectPrimitive.Value;
 
 const SelectTriggerBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { open?: boolean }
+>(({ className, children, open, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -25,9 +26,13 @@ const SelectTriggerBase = React.forwardRef<
     {...props}
   >
     {children}
-    <SelectPrimitive.Icon asChild>
+    <motion.span
+      animate={{ rotate: open ? 180 : 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center"
+    >
       <CaretDown className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
+    </motion.span>
   </SelectPrimitive.Trigger>
 ));
 SelectTriggerBase.displayName = SelectPrimitive.Trigger.displayName;
@@ -47,8 +52,7 @@ const SelectScrollUpButtonBase = React.forwardRef<
     <CaretUp className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
-SelectScrollUpButtonBase.displayName =
-  SelectPrimitive.ScrollUpButton.displayName;
+SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
 const SelectScrollDownButtonBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
@@ -65,37 +69,47 @@ const SelectScrollDownButtonBase = React.forwardRef<
     <CaretDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
-SelectScrollDownButtonBase.displayName =
-  SelectPrimitive.ScrollDownButton.displayName;
+SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
 const SelectContentBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, position = "popper", ...props }, ref) => (
   <SelectPrimitive.Portal>
-    <SelectPrimitive.Content
-      ref={ref}
-      className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-        className
-      )}
-      position={position}
-      {...props}
-    >
-      <SelectScrollUpButtonBase />
-      <SelectPrimitive.Viewport
+    <AnimatePresence>
+      <SelectPrimitive.Content
+        forceMount
+        ref={ref}
         className={cn(
-          "p-1",
-          position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+          "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
+          className
         )}
+        position={position}
+        {...props}
+        asChild
       >
-        {children}
-      </SelectPrimitive.Viewport>
-      <SelectScrollDownButtonBase />
-    </SelectPrimitive.Content>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <>
+            <SelectScrollUpButtonBase />
+            <SelectPrimitive.Viewport
+              className={cn(
+                "p-1",
+                position === "popper" &&
+                  "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+              )}
+            >
+              {children}
+            </SelectPrimitive.Viewport>
+            <SelectScrollDownButtonBase />
+          </>
+        </motion.div>
+      </SelectPrimitive.Content>
+    </AnimatePresence>
   </SelectPrimitive.Portal>
 ));
 SelectContentBase.displayName = SelectPrimitive.Content.displayName;

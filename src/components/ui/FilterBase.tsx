@@ -234,7 +234,7 @@ function FilterItem<T extends Record<string, unknown>>({
   }, [filter, onFilterChange, valueType]);
 
   return (
-    <div className="flex w-full gap-2 bg-background items-center">
+    <div className="flex w-full gap-2 bg-background items-center dark:bg-[hsl(231,15%,19%)]">
       <div className="grid w-full grid-cols-3 gap-2">
         <Combobox
           items={dimensionItems}

@@ -25,28 +25,30 @@ export function Combobox({
 
   const renderSelected = useMemo(
     () => selectedItem?.label ?? placeholder ?? "Selecione uma opção...",
-    [placeholder, selectedItem],
+    [placeholder, selectedItem]
   );
 
   const checkIsSelected = useCallback(
     (value: string) => (selected == null ? false : selected == value),
-    [selected],
+    [selected]
   );
 
   const handleSelection = useCallback(
     (value: string) => {
       onChange(value === selected ? null : value);
     },
-    [selected, onChange],
+    [selected, onChange]
   );
 
   return (
-    <ComboboxBase
-      items={items}
-      renderSelected={renderSelected}
-      handleSelection={handleSelection}
-      checkIsSelected={checkIsSelected}
-      searchPlaceholder={searchPlaceholder}
-    />
+    <div className="dark:bg-[hsl(231,15%,19%)]">
+      <ComboboxBase
+        items={items}
+        renderSelected={renderSelected}
+        handleSelection={handleSelection}
+        checkIsSelected={checkIsSelected}
+        searchPlaceholder={searchPlaceholder}
+      />
+    </div>
   );
 }

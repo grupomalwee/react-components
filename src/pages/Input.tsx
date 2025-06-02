@@ -5,7 +5,7 @@
 // import { z } from "zod";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import  LabelBase  from "@/components/ui/LabelBase";
+import { MapPinLine } from "phosphor-react";
 
 // const FormSchema = z.object({
 //   username: z.string().min(2, {
@@ -23,21 +23,36 @@ export const InputPage = () => {
 
   return (
     <>
-      {/* Input Fields Component */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="email">Email</LabelBase>
-          <InputBase type="email" id="email" placeholder="Email" />
+          <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <LabelBase htmlFor="picture">Picture</LabelBase>
-          <InputBase id="picture" type="file" />
+          <InputBase id="picture" type="file" label="Picture" />
         </div>
         <div className="flex w-full max-w-sm items-center space-x-2">
           <InputBase type="email" placeholder="Email" />
           <ButtonBase type="submit">Subscribe</ButtonBase>
         </div>
-        <InputBase disabled type="email" placeholder="Email" />
+        <div>
+          <InputBase disabled type="email" placeholder="Email" />
+        </div>
+        <div>
+          <InputBase
+            type="text"
+            placeholder="Localização"
+            label="Local"
+            leftIcon={<MapPinLine size={16} />}
+          />
+        </div>
+        <div>
+          <InputBase
+            type="text"
+            placeholder="Localização"
+            label="Local"
+            rightIcon={<MapPinLine size={16} />}
+          />
+        </div>
       </div>
 
       {/* Linha separadora e Título de Documentação */}
