@@ -13,7 +13,8 @@
     "build": "npm run build-css && tsup",
     "build-css": "npx tailwindcss -i ./src/style/global.css -o ./dist/index.css --config ./tailwind.config.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm version patch && npm publish"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
