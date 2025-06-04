@@ -45,7 +45,7 @@ export function ModeToggleBase({
           <span className="sr-only">Toggle theme</span>
         </ButtonBase>
       </DropDownMenuTriggerBase>
-      <DropDownMenuContentBase align="end">
+      <DropDownMenuContentBase align="end" className="dark:border-transparent">
         {themes.map((theme) => (
           <DropDownMenuItemBase key={theme} onClick={() => setTheme(theme)}>
             {themeLabels[theme]}
