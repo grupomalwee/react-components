@@ -410,7 +410,7 @@ import * as React6 from "react";
 import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
 var InputBase = React6.forwardRef(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1", children: [
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
       label && /* @__PURE__ */ jsx7(LabelBase_default, { children: label }),
       /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
         leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),

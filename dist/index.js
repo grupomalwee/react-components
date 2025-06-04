@@ -598,7 +598,7 @@ var React6 = __toESM(require("react"));
 var import_jsx_runtime7 = require("react/jsx-runtime");
 var InputBase = React6.forwardRef(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col gap-1", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
       label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LabelBase_default, { children: label }),
       /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
         leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),
