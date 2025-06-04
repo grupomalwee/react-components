@@ -2800,7 +2800,7 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
       ...props,
       ref,
       className: cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
       children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(

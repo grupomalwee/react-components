@@ -2174,6 +2174,18 @@ body {
 .data-\[state\=open\]\:opacity-100[data-state=open] {
   opacity: 1;
 }
+.data-\[state\=checked\]\:shadow-\[0_0_15px_4px_var\(--tw-shadow-color\)\][data-state=checked] {
+  --tw-shadow: 0 0 15px 4px var(--tw-shadow-color);
+  --tw-shadow-colored: 0 0 15px 4px var(--tw-shadow-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
+}
+.data-\[state\=checked\]\:shadow-primary\/30[data-state=checked] {
+  --tw-shadow-color: hsl(var(--primary) / 0.3);
+  --tw-shadow: var(--tw-shadow-colored);
+}
 .data-\[state\=closed\]\:duration-300[data-state=closed] {
   transition-duration: 300ms;
 }
