@@ -598,16 +598,16 @@ var React6 = __toESM(require("react"));
 var import_jsx_runtime7 = require("react/jsx-runtime");
 var InputBase = React6.forwardRef(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col gap-1 w-full", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col gap-1", children: [
       label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LabelBase_default, { children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex w-full items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
         leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),
         /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "input",
           {
             type,
             className: cn(
-              "flex h-9 w-full bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "flex h-9  bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
@@ -1222,7 +1222,7 @@ var themeLabels = {
 function ModeToggleBase({
   themes = ["light", "dark", "system"]
 }) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme: currentTheme } = useTheme();
   return /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(DropDownMenuBase, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
       ButtonBase,
@@ -1232,14 +1232,25 @@ function ModeToggleBase({
         className: "relative overflow-hidden border-transparent",
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(import_jsx_runtime13.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Sun, { className: "h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" }),
-            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" })
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Sun, { className: "h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" }),
+            /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime13.jsx)("span", { className: "sr-only", children: "Toggle theme" })
         ]
       }
     ) }),
-    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuContentBase, { align: "end", children: themes.map((theme) => /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuItemBase, { onClick: () => setTheme(theme), children: themeLabels[theme] }, theme)) })
+    /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(DropDownMenuContentBase, { align: "end", className: "dark:border-transparent", children: themes.map((theme) => /* @__PURE__ */ (0, import_jsx_runtime13.jsxs)(
+      DropDownMenuItemBase,
+      {
+        onClick: () => setTheme(theme),
+        className: "flex items-center justify-between",
+        children: [
+          themeLabels[theme],
+          currentTheme === theme && /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(import_phosphor_react6.Check, { className: "h-4 w-4 opacity-100" })
+        ]
+      },
+      theme
+    )) })
   ] });
 }
 
@@ -2783,45 +2794,27 @@ var React24 = __toESM(require("react"));
 var SwitchPrimitives = __toESM(require("@radix-ui/react-switch"));
 var import_jsx_runtime34 = require("react/jsx-runtime");
 var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
-  const [isChecked, setIsChecked] = React24.useState(false);
-  const handleChange = (checked) => {
-    setIsChecked(checked);
-    if (props.onCheckedChange) props.onCheckedChange(checked);
-  };
-  return /* @__PURE__ */ (0, import_jsx_runtime34.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
     SwitchPrimitives.Root,
     {
       ...props,
       ref,
-      onCheckedChange: handleChange,
       className: cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 " + (isChecked ? "bg-primary" : "bg-input"),
+        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
         className
       ),
-      children: [
-        /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
-          SwitchPrimitives.Thumb,
-          {
-            className: cn(
-              "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 " + (isChecked ? "animate-bounce-thumb" : "")
-            ),
-            style: {
-              transformOrigin: "center",
-              transition: "transform 350ms cubic-bezier(0.68, -0.55, 0.265, 1.55)"
-            }
+      children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
+        SwitchPrimitives.Thumb,
+        {
+          className: cn(
+            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 data-[state=checked]:animate-bounce-thumb"
+          ),
+          style: {
+            transformOrigin: "center",
+            transition: "transform 350ms cubic-bezier(0.68, -0.55, 0.265, 1.55)"
           }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
-          "span",
-          {
-            "aria-hidden": "true",
-            className: cn(
-              "pointer-events-none absolute top-1/2 left-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-50 blur-md transition-all duration-350 ease-in-out",
-              isChecked ? "scale-95 opacity-60" : "scale-75 opacity-0"
-            )
-          }
-        )
-      ]
+        }
+      )
     }
   );
 });

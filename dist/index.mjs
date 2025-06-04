@@ -410,16 +410,16 @@ import * as React6 from "react";
 import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
 var InputBase = React6.forwardRef(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full", children: [
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1", children: [
       label && /* @__PURE__ */ jsx7(LabelBase_default, { children: label }),
-      /* @__PURE__ */ jsxs3("div", { className: "flex w-full items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
+      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
         leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),
         /* @__PURE__ */ jsx7(
           "input",
           {
             type,
             className: cn(
-              "flex h-9 w-full bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "flex h-9  bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
@@ -817,7 +817,7 @@ function useIsMobile() {
 }
 
 // src/components/mode-toggle.tsx
-import { Moon, Sun } from "phosphor-react";
+import { Check as Check2, Moon, Sun } from "phosphor-react";
 
 // src/components/ui/DropDownMenuBase.tsx
 import * as React10 from "react";
@@ -1034,7 +1034,7 @@ var themeLabels = {
 function ModeToggleBase({
   themes = ["light", "dark", "system"]
 }) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme: currentTheme } = useTheme();
   return /* @__PURE__ */ jsxs7(DropDownMenuBase, { children: [
     /* @__PURE__ */ jsx13(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ jsxs7(
       ButtonBase,
@@ -1044,14 +1044,25 @@ function ModeToggleBase({
         className: "relative overflow-hidden border-transparent",
         children: [
           /* @__PURE__ */ jsxs7(Fragment2, { children: [
-            /* @__PURE__ */ jsx13(Sun, { className: "h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" }),
-            /* @__PURE__ */ jsx13(Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" })
+            /* @__PURE__ */ jsx13(Sun, { className: "h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" }),
+            /* @__PURE__ */ jsx13(Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" })
           ] }),
           /* @__PURE__ */ jsx13("span", { className: "sr-only", children: "Toggle theme" })
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx13(DropDownMenuContentBase, { align: "end", children: themes.map((theme) => /* @__PURE__ */ jsx13(DropDownMenuItemBase, { onClick: () => setTheme(theme), children: themeLabels[theme] }, theme)) })
+    /* @__PURE__ */ jsx13(DropDownMenuContentBase, { align: "end", className: "dark:border-transparent", children: themes.map((theme) => /* @__PURE__ */ jsxs7(
+      DropDownMenuItemBase,
+      {
+        onClick: () => setTheme(theme),
+        className: "flex items-center justify-between",
+        children: [
+          themeLabels[theme],
+          currentTheme === theme && /* @__PURE__ */ jsx13(Check2, { className: "h-4 w-4 opacity-100" })
+        ]
+      },
+      theme
+    )) })
   ] });
 }
 
@@ -1176,7 +1187,7 @@ var PopoverContentBase = React12.forwardRef(({ className, align = "center", side
 PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
 
 // src/components/selects/ComboboxBase.tsx
-import { CaretUp, Check as Check2 } from "phosphor-react";
+import { CaretUp, Check as Check3 } from "phosphor-react";
 import { useState as useState4 } from "react";
 import { jsx as jsx16, jsxs as jsxs9 } from "react/jsx-runtime";
 function ComboboxBase({
@@ -1225,7 +1236,7 @@ function ComboboxBase({
             children: [
               item.label,
               /* @__PURE__ */ jsx16(
-                Check2,
+                Check3,
                 {
                   className: cn(
                     "ml-auto",
@@ -1346,7 +1357,7 @@ function MultiCombobox({
 // src/components/ui/SelectBase.tsx
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check as Check3, CaretDown, CaretUp as CaretUp2 } from "phosphor-react";
+import { Check as Check4, CaretDown, CaretUp as CaretUp2 } from "phosphor-react";
 import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
 import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs11 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
@@ -1458,7 +1469,7 @@ var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref)
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx19("span", { className: "absolute right-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx19(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx19(Check3, { className: "h-4 w-4" }) }) }),
+      /* @__PURE__ */ jsx19("span", { className: "absolute right-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx19(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx19(Check4, { className: "h-4 w-4" }) }) }),
       /* @__PURE__ */ jsx19(SelectPrimitive.ItemText, { children })
     ]
   }
@@ -1651,7 +1662,7 @@ CardFooterBase.displayName = "CardFooter";
 // src/components/ui/CheckBoxBase.tsx
 import * as React16 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { Check as Check4 } from "phosphor-react";
+import { Check as Check5 } from "phosphor-react";
 import { motion as motion4 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
@@ -1671,7 +1682,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
         exit: { scale: 0, opacity: 0, rotate: 90 },
         transition: { type: "spring", stiffness: 500, damping: 30 },
         className: "flex items-center justify-center text-current",
-        children: /* @__PURE__ */ jsx24(Check4, { className: "h-4 w-4", weight: "bold" })
+        children: /* @__PURE__ */ jsx24(Check5, { className: "h-4 w-4", weight: "bold" })
       }
     ) })
   }
@@ -2597,47 +2608,29 @@ var Toaster = ({ ...props }) => {
 // src/components/ui/SwitchBase.tsx
 import * as React24 from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
-import { jsx as jsx34, jsxs as jsxs17 } from "react/jsx-runtime";
+import { jsx as jsx34 } from "react/jsx-runtime";
 var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
-  const [isChecked, setIsChecked] = React24.useState(false);
-  const handleChange = (checked) => {
-    setIsChecked(checked);
-    if (props.onCheckedChange) props.onCheckedChange(checked);
-  };
-  return /* @__PURE__ */ jsxs17(
+  return /* @__PURE__ */ jsx34(
     SwitchPrimitives.Root,
     {
       ...props,
       ref,
-      onCheckedChange: handleChange,
       className: cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 " + (isChecked ? "bg-primary" : "bg-input"),
+        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
         className
       ),
-      children: [
-        /* @__PURE__ */ jsx34(
-          SwitchPrimitives.Thumb,
-          {
-            className: cn(
-              "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 " + (isChecked ? "animate-bounce-thumb" : "")
-            ),
-            style: {
-              transformOrigin: "center",
-              transition: "transform 350ms cubic-bezier(0.68, -0.55, 0.265, 1.55)"
-            }
+      children: /* @__PURE__ */ jsx34(
+        SwitchPrimitives.Thumb,
+        {
+          className: cn(
+            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 data-[state=checked]:animate-bounce-thumb"
+          ),
+          style: {
+            transformOrigin: "center",
+            transition: "transform 350ms cubic-bezier(0.68, -0.55, 0.265, 1.55)"
           }
-        ),
-        /* @__PURE__ */ jsx34(
-          "span",
-          {
-            "aria-hidden": "true",
-            className: cn(
-              "pointer-events-none absolute top-1/2 left-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-50 blur-md transition-all duration-350 ease-in-out",
-              isChecked ? "scale-95 opacity-60" : "scale-75 opacity-0"
-            )
-          }
-        )
-      ]
+        }
+      )
     }
   );
 });
