@@ -11,7 +11,7 @@ export interface InputBaseProps extends React.ComponentProps<"input"> {
 const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 w-full min-w-[150px]">
         {label && <LabelBase>{label}</LabelBase>}
 
         <div className="flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring">
