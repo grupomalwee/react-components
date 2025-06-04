@@ -1,4 +1,4 @@
-import { Moon, Sun } from "phosphor-react";
+import { Check, Moon, Sun } from "phosphor-react";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
   DropDownMenuBase,
@@ -27,7 +27,7 @@ const themeLabels: Record<Theme, string> = {
 export function ModeToggleBase({
   themes = ["light", "dark", "system"],
 }: ModeToggleBaseProps) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme: currentTheme } = useTheme();
 
   return (
     <DropDownMenuBase>
@@ -38,17 +38,21 @@ export function ModeToggleBase({
           className="relative overflow-hidden border-transparent"
         >
           <>
-            <Sun className="h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-0 scale-100" />
-            <Moon className="absolute top-0 left-0 h-[1.2rem] w-[1.2rem]  transition-transform duration-300 rotate-90 scale-0" />
+            <Sun className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
+            <Moon className="absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" />
           </>
-
           <span className="sr-only">Toggle theme</span>
         </ButtonBase>
       </DropDownMenuTriggerBase>
       <DropDownMenuContentBase align="end" className="dark:border-transparent">
         {themes.map((theme) => (
-          <DropDownMenuItemBase key={theme} onClick={() => setTheme(theme)}>
+          <DropDownMenuItemBase
+            key={theme}
+            onClick={() => setTheme(theme)}
+            className="flex items-center justify-between"
+          >
             {themeLabels[theme]}
+            {currentTheme === theme && <Check className="h-4 w-4 opacity-100" />}
           </DropDownMenuItemBase>
         ))}
       </DropDownMenuContentBase>
