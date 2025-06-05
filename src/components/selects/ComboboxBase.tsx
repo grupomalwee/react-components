@@ -13,7 +13,7 @@ import {
 }from "@/components/ui/PopoverBase"
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
-import { CaretUp, Check } from "phosphor-react";
+import { CaretDown, Check } from "phosphor-react";
 
 import { ReactNode, useState } from "react";
 
@@ -49,11 +49,10 @@ export function ComboboxBase<T extends string>({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="gap-2 bg-white text-xs sm:text-sm"
           >
             {renderSelected}
             <span>
-              <CaretUp className="text-gray-500" size={16} />
+              <CaretDown size={16} />
             </span>
             {errorMessage && (
               <span className="text-red-500">{errorMessage}</span>

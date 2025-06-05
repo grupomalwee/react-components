@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { ComboboxBase } from "./ComboboxBase";
+import LabelBase from "../ui/LabelBase";
 
 export interface ComboboxItem {
   label: string;
@@ -12,6 +13,7 @@ export interface ComboboxProps {
   onChange: (value: ComboboxItem["value"] | null) => void;
   placeholder?: string;
   searchPlaceholder?: string;
+  label?: string;
 }
 
 export function Combobox({
@@ -20,6 +22,7 @@ export function Combobox({
   onChange,
   placeholder,
   searchPlaceholder,
+  label,
 }: ComboboxProps) {
   const selectedItem = items.find((item) => item.value === selected);
 
@@ -41,7 +44,9 @@ export function Combobox({
   );
 
   return (
-    <div className="dark:bg-[hsl(231,15%,19%)]">
+    <div className="flex flex-col gap-1 w-full min-w-[150px]">
+      {label && <LabelBase>{label}</LabelBase>}
+
       <ComboboxBase
         items={items}
         renderSelected={renderSelected}

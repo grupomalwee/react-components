@@ -26,6 +26,8 @@ import { CalenderPage } from "@/pages/Calendar";
 import { CardPage } from "@/pages/Card";
 import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
+import { ComboboxPage } from "@/pages/Combobox";
+import { MultiComboboxPage } from "@/pages/Multicombobox";
 import { DialogPage } from "@/pages/Dialog";
 import { DropDownMenuPage } from "@/pages/Dropdown-menu";
 import Filter from "@/pages/Filter";
@@ -56,6 +58,7 @@ const items = [
   { title: "Card", url: "/card", icon: Calendar },
   { title: "Checkbox", url: "/checkbox", icon: MagnifyingGlass },
   { title: "Command", url: "/command", icon: Gear },
+  { title: "Combobox", url: "/combobox", icon: MagnifyingGlass },
   // { title: "Debounce Input", url: "/debounce-input", icon: House },
   { title: "Dialog", url: "/dialog", icon: Envelope },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
@@ -63,6 +66,7 @@ const items = [
   { title: "Form", url: "/form", icon: Gear },
   { title: "Input", url: "/input", icon: Envelope },
   { title: "Label", url: "/label", icon: Calendar },
+  { title: "MultiCombobox", url: "/multicombobox", icon: Gear },
   { title: "Popover", url: "/popover", icon: MagnifyingGlass },
   { title: "Progress", url: "/progress", icon: Gear },
   { title: "Scrollarea", url: "/scrollarea", icon: House },
@@ -121,12 +125,14 @@ export function AppSidebar() {
           <Route path="/card" element={<CardPage />} />
           <Route path="/checkbox" element={<CheckBoxPage />} />
           <Route path="/command" element={<CommandPage />} />
+          <Route path="/combobox" element={<ComboboxPage />} />
           <Route path="/dialog" element={<DialogPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
           <Route path="/filter" element={<Filter />} />
           <Route path="/form" element={<ProfileForm />} />
           <Route path="/input" element={<InputPage />} />
           <Route path="/label" element={<LabelPage />} />
+          <Route path="/multicombobox" element={<MultiComboboxPage />} />
           <Route path="/popover" element={<PopoverPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/scrollarea" element={<ScrollareaPage />} />

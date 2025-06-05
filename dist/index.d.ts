@@ -418,14 +418,16 @@ interface ComboboxProps {
     onChange: (value: ComboboxItem["value"] | null) => void;
     placeholder?: string;
     searchPlaceholder?: string;
+    label?: string;
 }
-declare function Combobox({ items, selected, onChange, placeholder, searchPlaceholder, }: ComboboxProps): react_jsx_runtime.JSX.Element;
+declare function Combobox({ items, selected, onChange, placeholder, searchPlaceholder, label, }: ComboboxProps): react_jsx_runtime.JSX.Element;
 
 interface MultiComboboxProps extends Omit<ComboboxProps, "selected" | "onChange"> {
+    label?: string;
     selected: string[];
     onChange: (value: string[]) => void;
 }
-declare function MultiCombobox({ items, selected, onChange, placeholder, searchPlaceholder, }: MultiComboboxProps): react_jsx_runtime.JSX.Element;
+declare function MultiCombobox({ items, selected, onChange, placeholder, searchPlaceholder, label, }: MultiComboboxProps): react_jsx_runtime.JSX.Element;
 
 interface SelectItem$1<T extends string> {
     label: string;

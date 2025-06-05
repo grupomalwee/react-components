@@ -419,7 +419,7 @@ var InputBase = React6.forwardRef(
           {
             type,
             className: cn(
-              "flex h-9  bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "flex bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
@@ -1187,7 +1187,7 @@ var PopoverContentBase = React12.forwardRef(({ className, align = "center", side
 PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
 
 // src/components/selects/ComboboxBase.tsx
-import { CaretUp, Check as Check3 } from "phosphor-react";
+import { CaretDown, Check as Check3 } from "phosphor-react";
 import { useState as useState4 } from "react";
 import { jsx as jsx16, jsxs as jsxs9 } from "react/jsx-runtime";
 function ComboboxBase({
@@ -1206,10 +1206,9 @@ function ComboboxBase({
         variant: "outline",
         role: "combobox",
         "aria-expanded": open,
-        className: "gap-2 bg-white text-xs sm:text-sm",
         children: [
           renderSelected,
-          /* @__PURE__ */ jsx16("span", { children: /* @__PURE__ */ jsx16(CaretUp, { className: "text-gray-500", size: 16 }) }),
+          /* @__PURE__ */ jsx16("span", { children: /* @__PURE__ */ jsx16(CaretDown, { size: 16 }) }),
           errorMessage && /* @__PURE__ */ jsx16("span", { className: "text-red-500", children: errorMessage })
         ]
       }
@@ -1254,13 +1253,14 @@ function ComboboxBase({
 }
 
 // src/components/selects/Combobox.tsx
-import { jsx as jsx17 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs10 } from "react/jsx-runtime";
 function Combobox({
   items,
   selected,
   onChange,
   placeholder,
-  searchPlaceholder
+  searchPlaceholder,
+  label
 }) {
   const selectedItem = items.find((item) => item.value === selected);
   const renderSelected = useMemo(
@@ -1277,28 +1277,32 @@ function Combobox({
     },
     [selected, onChange]
   );
-  return /* @__PURE__ */ jsx17("div", { className: "dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ jsx17(
-    ComboboxBase,
-    {
-      items,
-      renderSelected,
-      handleSelection,
-      checkIsSelected,
-      searchPlaceholder
-    }
-  ) });
+  return /* @__PURE__ */ jsxs10("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ jsx17(LabelBase_default, { children: label }),
+    /* @__PURE__ */ jsx17(
+      ComboboxBase,
+      {
+        items,
+        renderSelected,
+        handleSelection,
+        checkIsSelected,
+        searchPlaceholder
+      }
+    )
+  ] });
 }
 
 // src/components/selects/MultiCombobox.tsx
 import { useCallback as useCallback2, useMemo as useMemo2 } from "react";
 import { X as X2 } from "phosphor-react";
-import { jsx as jsx18, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx18, jsxs as jsxs11 } from "react/jsx-runtime";
 function MultiCombobox({
   items,
   selected,
   onChange,
   placeholder,
-  searchPlaceholder
+  searchPlaceholder,
+  label
 }) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = useCallback2(
@@ -1317,15 +1321,15 @@ function MultiCombobox({
     [selected, onChange]
   );
   const renderSelected = useMemo2(() => {
-    if (selectedItems.length == 0)
+    if (selectedItems.length === 0)
       return placeholder ?? "Selecione uma op\xE7\xE3o...";
-    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs10(
+    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs11(
       "div",
       {
         className: "flex items-center gap-1 rounded-md border p-1",
         children: [
           /* @__PURE__ */ jsx18("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
-          /* @__PURE__ */ jsx18("span", { children: /* @__PURE__ */ jsx18(
+          /* @__PURE__ */ jsx18(
             X2,
             {
               size: 14,
@@ -1335,35 +1339,38 @@ function MultiCombobox({
               },
               className: "cursor-pointer"
             }
-          ) })
+          )
         ]
       },
       item.value
     ));
     return /* @__PURE__ */ jsx18("div", { className: "flex flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
-  return /* @__PURE__ */ jsx18(
-    ComboboxBase,
-    {
-      items,
-      renderSelected,
-      handleSelection,
-      checkIsSelected,
-      searchPlaceholder
-    }
-  );
+  return /* @__PURE__ */ jsxs11("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ jsx18(LabelBase_default, { children: label }),
+    /* @__PURE__ */ jsx18(
+      ComboboxBase,
+      {
+        items,
+        renderSelected,
+        handleSelection,
+        checkIsSelected,
+        searchPlaceholder
+      }
+    )
+  ] });
 }
 
 // src/components/ui/SelectBase.tsx
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check as Check4, CaretDown, CaretUp as CaretUp2 } from "phosphor-react";
+import { Check as Check4, CaretDown as CaretDown2, CaretUp } from "phosphor-react";
 import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
-import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs11 } from "react/jsx-runtime";
+import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs12 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
 var SelectValueBase = SelectPrimitive.Value;
-var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...props }, ref) => /* @__PURE__ */ jsxs11(
+var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...props }, ref) => /* @__PURE__ */ jsxs12(
   SelectPrimitive.Trigger,
   {
     ref,
@@ -1380,7 +1387,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
           animate: { rotate: open ? 180 : 0 },
           transition: { duration: 0.3 },
           className: "flex items-center",
-          children: /* @__PURE__ */ jsx19(CaretDown, { className: "h-4 w-4 opacity-50" })
+          children: /* @__PURE__ */ jsx19(CaretDown2, { className: "h-4 w-4 opacity-50" })
         }
       )
     ]
@@ -1396,7 +1403,7 @@ var SelectScrollUpButtonBase = React13.forwardRef(({ className, ...props }, ref)
       className
     ),
     ...props,
-    children: /* @__PURE__ */ jsx19(CaretUp2, { className: "h-4 w-4" })
+    children: /* @__PURE__ */ jsx19(CaretUp, { className: "h-4 w-4" })
   }
 ));
 SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -1409,7 +1416,7 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
       className
     ),
     ...props,
-    children: /* @__PURE__ */ jsx19(CaretDown, { className: "h-4 w-4" })
+    children: /* @__PURE__ */ jsx19(CaretDown2, { className: "h-4 w-4" })
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -1431,7 +1438,7 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 0.95 },
         transition: { duration: 0.2 },
-        children: /* @__PURE__ */ jsxs11(Fragment3, { children: [
+        children: /* @__PURE__ */ jsxs12(Fragment3, { children: [
           /* @__PURE__ */ jsx19(SelectScrollUpButtonBase, {}),
           /* @__PURE__ */ jsx19(
             SelectPrimitive.Viewport,
@@ -1459,7 +1466,7 @@ var SelectLabelBase = React13.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 SelectLabelBase.displayName = SelectPrimitive.Label.displayName;
-var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs11(
+var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs12(
   SelectPrimitive.Item,
   {
     ref,
@@ -1488,8 +1495,8 @@ SelectSeparatorBase.displayName = SelectPrimitive.Separator.displayName;
 // src/components/ui/ScrollareaBase.tsx
 import * as React14 from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { jsx as jsx20, jsxs as jsxs12 } from "react/jsx-runtime";
-var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs12(
+import { jsx as jsx20, jsxs as jsxs13 } from "react/jsx-runtime";
+var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs13(
   ScrollAreaPrimitive.Root,
   {
     ref,
@@ -1521,7 +1528,7 @@ var ScrollBarBase = React14.forwardRef(({ className, orientation = "vertical", .
 ScrollBarBase.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
 // src/components/selects/Select.tsx
-import { Fragment as Fragment4, jsx as jsx21, jsxs as jsxs13 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx21, jsxs as jsxs14 } from "react/jsx-runtime";
 function Select({
   items,
   groupItems,
@@ -1529,8 +1536,8 @@ function Select({
   onChange,
   errorMessage
 }) {
-  return /* @__PURE__ */ jsxs13("div", { children: [
-    /* @__PURE__ */ jsxs13(SelectBase, { onValueChange: onChange, children: [
+  return /* @__PURE__ */ jsxs14("div", { children: [
+    /* @__PURE__ */ jsxs14(SelectBase, { onValueChange: onChange, children: [
       /* @__PURE__ */ jsx21(
         SelectTriggerBase,
         {
@@ -1541,7 +1548,7 @@ function Select({
           children: /* @__PURE__ */ jsx21(SelectValueBase, { placeholder })
         }
       ),
-      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs13(SelectGroupBase, { children: [
+      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs14(SelectGroupBase, { children: [
         /* @__PURE__ */ jsx21(SelectLabelBase, { children: key }),
         groupItems[key].map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value))
       ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
@@ -1845,7 +1852,7 @@ import * as React20 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
 import { X as X3 } from "phosphor-react";
-import { jsx as jsx28, jsxs as jsxs14 } from "react/jsx-runtime";
+import { jsx as jsx28, jsxs as jsxs15 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
 var SheetCloseBase = SheetPrimitive.Close;
@@ -1878,16 +1885,16 @@ var sheetVariants = cva2(
     }
   }
 );
-var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs14(SheetPortalBase, { children: [
+var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs15(SheetPortalBase, { children: [
   /* @__PURE__ */ jsx28(SheetOverlayBase, {}),
-  /* @__PURE__ */ jsxs14(
+  /* @__PURE__ */ jsxs15(
     SheetPrimitive.Content,
     {
       ref,
       className: cn(sheetVariants({ side }), className),
       ...props,
       children: [
-        /* @__PURE__ */ jsxs14(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+        /* @__PURE__ */ jsxs15(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
           /* @__PURE__ */ jsx28(X3, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
         ] }),
@@ -1989,7 +1996,7 @@ var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...pro
 TooltipContentBase.displayName = TooltipPrimitive.Content.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import { jsx as jsx31, jsxs as jsxs15 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs16 } from "react/jsx-runtime";
 var SIDEBAR_COOKIE_NAME = "sidebar:state";
 var SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 var SIDEBAR_WIDTH = "16rem";
@@ -2117,7 +2124,7 @@ var SidebarBase = React22.forwardRef(
         }
       ) });
     }
-    return /* @__PURE__ */ jsxs15(
+    return /* @__PURE__ */ jsxs16(
       "div",
       {
         ref,
@@ -2167,7 +2174,7 @@ var SidebarBase = React22.forwardRef(
 SidebarBase.displayName = "SidebarBase";
 var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs15(
+  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs16(
     ButtonBase,
     {
       ref,
@@ -2423,7 +2430,7 @@ var SidebarMenuButtonBase = React22.forwardRef(
         children: tooltip
       };
     }
-    return /* @__PURE__ */ jsxs15(TooltipBase, { children: [
+    return /* @__PURE__ */ jsxs16(TooltipBase, { children: [
       /* @__PURE__ */ jsx31(TooltipTriggerBase, { asChild: true, children: button }),
       /* @__PURE__ */ jsx31(
         TooltipContentBase,
@@ -2483,7 +2490,7 @@ var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false,
   const width = React22.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
-  return /* @__PURE__ */ jsxs15(
+  return /* @__PURE__ */ jsxs16(
     "div",
     {
       ref,
@@ -2555,8 +2562,8 @@ SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 // src/components/ui/SliderBase.tsx
 import * as React23 from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { jsx as jsx32, jsxs as jsxs16 } from "react/jsx-runtime";
-var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs16(
+import { jsx as jsx32, jsxs as jsxs17 } from "react/jsx-runtime";
+var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs17(
   SliderPrimitive.Root,
   {
     ref,

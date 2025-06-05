@@ -607,7 +607,7 @@ var InputBase = React6.forwardRef(
           {
             type,
             className: cn(
-              "flex h-9  bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "flex bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
@@ -1394,10 +1394,9 @@ function ComboboxBase({
         variant: "outline",
         role: "combobox",
         "aria-expanded": open,
-        className: "gap-2 bg-white text-xs sm:text-sm",
         children: [
           renderSelected,
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_phosphor_react8.CaretUp, { className: "text-gray-500", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_phosphor_react8.CaretDown, { size: 16 }) }),
           errorMessage && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "text-red-500", children: errorMessage })
         ]
       }
@@ -1448,7 +1447,8 @@ function Combobox({
   selected,
   onChange,
   placeholder,
-  searchPlaceholder
+  searchPlaceholder,
+  label
 }) {
   const selectedItem = items.find((item) => item.value === selected);
   const renderSelected = (0, import_react5.useMemo)(
@@ -1465,16 +1465,19 @@ function Combobox({
     },
     [selected, onChange]
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("div", { className: "dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
-    ComboboxBase,
-    {
-      items,
-      renderSelected,
-      handleSelection,
-      checkIsSelected,
-      searchPlaceholder
-    }
-  ) });
+  return /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(LabelBase_default, { children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+      ComboboxBase,
+      {
+        items,
+        renderSelected,
+        handleSelection,
+        checkIsSelected,
+        searchPlaceholder
+      }
+    )
+  ] });
 }
 
 // src/components/selects/MultiCombobox.tsx
@@ -1486,7 +1489,8 @@ function MultiCombobox({
   selected,
   onChange,
   placeholder,
-  searchPlaceholder
+  searchPlaceholder,
+  label
 }) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = (0, import_react6.useCallback)(
@@ -1505,7 +1509,7 @@ function MultiCombobox({
     [selected, onChange]
   );
   const renderSelected = (0, import_react6.useMemo)(() => {
-    if (selectedItems.length == 0)
+    if (selectedItems.length === 0)
       return placeholder ?? "Selecione uma op\xE7\xE3o...";
     const items2 = selectedItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(
       "div",
@@ -1513,7 +1517,7 @@ function MultiCombobox({
         className: "flex items-center gap-1 rounded-md border p-1",
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
-          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
             import_phosphor_react9.X,
             {
               size: 14,
@@ -1523,23 +1527,26 @@ function MultiCombobox({
               },
               className: "cursor-pointer"
             }
-          ) })
+          )
         ]
       },
       item.value
     ));
     return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { className: "flex flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
-  return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
-    ComboboxBase,
-    {
-      items,
-      renderSelected,
-      handleSelection,
-      checkIsSelected,
-      searchPlaceholder
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(LabelBase_default, { children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+      ComboboxBase,
+      {
+        items,
+        renderSelected,
+        handleSelection,
+        checkIsSelected,
+        searchPlaceholder
+      }
+    )
+  ] });
 }
 
 // src/components/ui/SelectBase.tsx

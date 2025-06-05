@@ -2,9 +2,11 @@ import { useCallback, useMemo } from "react";
 import { ComboboxProps } from "./Combobox";
 import { ComboboxBase } from "./ComboboxBase";
 import { X } from "phosphor-react";
+import LabelBase from "../ui/LabelBase";
 
 interface MultiComboboxProps
   extends Omit<ComboboxProps, "selected" | "onChange"> {
+  label?: string;
   selected: string[];
   onChange: (value: string[]) => void;
 }
@@ -15,6 +17,7 @@ export function MultiCombobox({
   onChange,
   placeholder,
   searchPlaceholder,
+  label,
 }: MultiComboboxProps) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
@@ -36,7 +39,7 @@ export function MultiCombobox({
   );
 
   const renderSelected = useMemo(() => {
-    if (selectedItems.length == 0)
+    if (selectedItems.length === 0)
       return placeholder ?? "Selecione uma opção...";
 
     const items = selectedItems.map((item) => (
@@ -47,16 +50,14 @@ export function MultiCombobox({
         <span className="truncate whitespace-break-spaces text-xs">
           {item.label}
         </span>
-        <span>
-          <X
-            size={14}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleSelection(item.value);
-            }}
-            className="cursor-pointer"
-          />
-        </span>
+        <X
+          size={14}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSelection(item.value);
+          }}
+          className="cursor-pointer"
+        />
       </div>
     ));
 
@@ -64,12 +65,15 @@ export function MultiCombobox({
   }, [handleSelection, placeholder, selectedItems]);
 
   return (
-    <ComboboxBase
-      items={items}
-      renderSelected={renderSelected}
-      handleSelection={handleSelection}
-      checkIsSelected={checkIsSelected}
-      searchPlaceholder={searchPlaceholder}
-    />
+    <div className="flex flex-col gap-1 w-full min-w-[150px]">
+      {label && <LabelBase>{label}</LabelBase>}
+      <ComboboxBase
+        items={items}
+        renderSelected={renderSelected}
+        handleSelection={handleSelection}
+        checkIsSelected={checkIsSelected}
+        searchPlaceholder={searchPlaceholder}
+      />
+    </div>
   );
 }
