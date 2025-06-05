@@ -13,7 +13,7 @@ const SwitchBase = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out " +
+        "peer relative inline-flex h-[16px] w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out " +
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background " +
           "disabled:cursor-not-allowed disabled:opacity-50 " +
           "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input " +
@@ -25,7 +25,7 @@ const SwitchBase = React.forwardRef<
         className={cn(
           "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out " +
             "peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 " +
-            "data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 " +
+            "data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-7 " +
             "data-[state=checked]:animate-bounce-thumb"
         )}
         style={{

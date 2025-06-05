@@ -48,9 +48,7 @@ export const DialogPage = () => {
             </div>
             <DialogFooterBase className="sm:justify-start">
               <DialogCloseBase asChild>
-                <ButtonBase type="button" variant="secondary">
-                  Close
-                </ButtonBase>
+                
               </DialogCloseBase>
             </DialogFooterBase>
           </DialogContentBase>

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ProgressBase } from "@/components/ui/ProgressBase";
+import { Download } from "phosphor-react";
 
 export const ProgressPage = () => {
   const [progress, setProgress] = React.useState(13);
@@ -12,42 +13,61 @@ export const ProgressPage = () => {
   }, []);
 
   return (
-    <div>
-      {/* Progress Bar 100% */}
-      <div className="mt-5 ml-5 flex gap-5 h-11 p-3 rounded-sm">
-        <ProgressBase value={progress} className="w-full" />
-      </div>
+    <div className="min-h-screen w-full px-6 py-10 flex flex-col gap-10 bg-background">
+      
+     
+      <section className="flex flex-col gap-6">
+        <ProgressBase
+          value={progress}
+          className="w-full"
+          label="Download "
+          leftIcon={<Download />}
+        />
+        <ProgressBase
+          value={progress}
+          className="w-[20%]"
+          label="Download"
+          leftIcon={<Download />}
+        />
+        <ProgressBase
+          value={progress}
+          className="w-[50%]"
+          label="Download"
+          rightIcon={<Download />}
+        />
+        <ProgressBase
+          value={progress}
+          className="w-[70%]"
+          label="Download"
+          leftIcon={<Download />}
+        />
+        <ProgressBase
+          value={progress}
+          className="w-[90%]"
+          label="Download"
+          rightIcon={<Download />}
+        />
+      </section>
 
-      {/* Progress Bars with different widths */}
-      <div className="mt-5 ml-5 flex gap-5 h-11 p-3 rounded-sm">
-        <ProgressBase value={progress} className="w-[20%]" />
-        <ProgressBase value={progress} className="w-[50%]" />
-        <ProgressBase value={progress} className="w-[70%]" />
-        <ProgressBase value={progress} className="w-[90%]" />
-      </div>
+      <section>
+        <h3 className="text-2xl font-semibold mb-4">Documentação</h3>
+        <div className="space-y-6">
 
-      {/* Documentation Section */}
-      <div className="my-8 mx-5">
-        <h3 className="text-xl font-semibold mb-3">Documentação</h3>
-        <div className="border-t-2 border-gray-300 mb-4"></div>
-
-        {/* Code Block for Importing */}
-        <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
-          <h5 className="font-medium mb-2">Como importar:</h5>
-          <pre className="bg-gray-900 p-3 rounded-sm">
-            <code>
-              {`import * as React from "react";
+          <div className="bg-zinc-900 text-white p-4 rounded-md">
+            <h5 className="font-medium mb-2">Como importar:</h5>
+            <pre className="bg-zinc-800 p-3 rounded-sm overflow-x-auto">
+              <code>
+                {`import * as React from "react";
 import { ProgressBase } from "@/components/ui/ProgressBase";`}
-            </code>
-          </pre>
-        </div>
+              </code>
+            </pre>
+          </div>
 
-        {/* Code Block for Usage */}
-        <div className="bg-gray-800 text-white p-4 rounded-md">
-          <h5 className="font-medium mb-2">Como usar:</h5>
-          <pre className="bg-gray-900 p-3 rounded-sm">
-            <code>
-              {`const [progress, setProgress] = React.useState(13);
+          <div className="bg-zinc-900 text-white p-4 rounded-md">
+            <h5 className="font-medium mb-2">Como usar:</h5>
+            <pre className="bg-zinc-800 p-3 rounded-sm overflow-x-auto">
+              <code>
+                {`const [progress, setProgress] = React.useState(13);
 
 React.useEffect(() => {
   const timer = setTimeout(() => setProgress(66), 500);
@@ -59,10 +79,12 @@ React.useEffect(() => {
 <ProgressBase value={progress} className="w-[50%]" />
 <ProgressBase value={progress} className="w-[70%]" />
 <ProgressBase value={progress} className="w-[90%]" />`}
-            </code>
-          </pre>
+              </code>
+            </pre>
+          </div>
+
         </div>
-      </div>
+      </section>
     </div>
   );
 };

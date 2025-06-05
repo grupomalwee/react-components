@@ -17,7 +17,6 @@ import {
 export const SheetPage = () => {
   return (
     <div>
-      {/* Sheet Component Example */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <SheetBase>
           <SheetTriggerBase asChild>
@@ -48,6 +47,26 @@ export const SheetPage = () => {
                 <InputBase
                   id="username"
                   value="@peduarte"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <LabelBase htmlFor="password" className="text-right">
+                  Password
+                </LabelBase>
+                <InputBase
+                  id="password"
+                  value="*********"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <LabelBase htmlFor="surname" className="text-right">
+                  Surname
+                </LabelBase>
+                <InputBase
+                  id="surname"
+                  value="peduarte"
                   className="col-span-3"
                 />
               </div>

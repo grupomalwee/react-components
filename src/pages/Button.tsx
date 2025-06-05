@@ -7,12 +7,12 @@ export const ButtonPage = () => {
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
      
         <div className="flex gap-5 justify-center">
-          <ButtonBase>dad</ButtonBase>
-          <ButtonBase variant="destructive">dad</ButtonBase>
-          <ButtonBase variant="ghost">dad</ButtonBase>
-          <ButtonBase variant="link">dad</ButtonBase>
-          <ButtonBase variant="outline">dad</ButtonBase>
-          <ButtonBase variant="secondary">dad</ButtonBase>
+          <ButtonBase>Button</ButtonBase>
+          <ButtonBase variant="destructive">Button</ButtonBase>
+          <ButtonBase variant="ghost">Button</ButtonBase>
+          <ButtonBase variant="link">Button</ButtonBase>
+          <ButtonBase variant="outline">Button</ButtonBase>
+          <ButtonBase variant="secondary">Button</ButtonBase>
         </div>
 
         {/* Linha separadora e Título de Documentação */}
@@ -35,12 +35,12 @@ export const ButtonPage = () => {
             <h5 className="font-medium mb-2">Como usar:</h5>
             <pre className="bg-gray-900 p-3 rounded-sm">
               <code>
-                {`<ButtonBase>dad</ButtonBase>
-<ButtonBase variant="destructive">dad</ButtonBase>
-<ButtonBase variant="ghost">dad</ButtonBase>
-<ButtonBase variant="link">dad</ButtonBase>
-<ButtonBase variant="outline">dad</ButtonBase>
-<ButtonBase variant="secondary">dad</ButtonBase>`}
+                {`<ButtonBase>Button</ButtonBase>
+<ButtonBase variant="destructive">Button</ButtonBase>
+<ButtonBase variant="ghost">Button</ButtonBase>
+<ButtonBase variant="link">Button</ButtonBase>
+<ButtonBase variant="outline">Button</ButtonBase>
+<ButtonBase variant="secondary">Button</ButtonBase>`}
               </code>
             </pre>
           </div>

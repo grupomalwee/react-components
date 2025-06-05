@@ -16,7 +16,7 @@ export function PopoverPage() {
           <PopoverTriggerBase asChild>
             <ButtonBase variant="outline">Open popover</ButtonBase>
           </PopoverTriggerBase>
-          <PopoverContentBase className="w-80">
+          <PopoverContentBase className="w-96 ml-64">
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Dimensions</h4>
