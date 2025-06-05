@@ -1213,7 +1213,7 @@ function ComboboxBase({
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs9(CommandBase, { children: [
+    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs9(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
         {
@@ -1804,46 +1804,69 @@ FormMessageBase.displayName = "FormMessageBase";
 // src/components/ui/ProgressBase.tsx
 import * as React18 from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
-import { jsx as jsx26 } from "react/jsx-runtime";
-var ProgressBase = React18.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ jsx26(
-  ProgressPrimitive.Root,
-  {
-    ref,
-    className: cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-      className
-    ),
-    ...props,
-    children: /* @__PURE__ */ jsx26(
-      ProgressPrimitive.Indicator,
-      {
-        className: "h-full w-full flex-1 bg-primary transition-all",
-        style: { transform: `translateX(-${100 - (value || 0)}%)` }
-      }
-    )
-  }
-));
-ProgressBase.displayName = ProgressPrimitive.Root.displayName;
+import { jsx as jsx26, jsxs as jsxs15 } from "react/jsx-runtime";
+var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
+  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px] ", children: [
+    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
+      leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: leftIcon }),
+      /* @__PURE__ */ jsx26(
+        ProgressPrimitive.Root,
+        {
+          ref,
+          className: cn(
+            "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+            className
+          ),
+          value,
+          ...props,
+          children: /* @__PURE__ */ jsx26(
+            ProgressPrimitive.Indicator,
+            {
+              className: "h-full w-full flex-1 bg-primary transition-all",
+              style: { transform: `translateX(-${100 - (value || 0)}%)` }
+            }
+          )
+        }
+      ),
+      rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: rightIcon })
+    ] })
+  ] });
+});
+ProgressBase.displayName = "ProgressBase";
 
 // src/components/ui/SeparatorBase.tsx
 import * as React19 from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
+import { motion as motion5 } from "framer-motion";
 import { jsx as jsx27 } from "react/jsx-runtime";
 var SeparatorBase = React19.forwardRef(
-  ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ jsx27(
-    SeparatorPrimitive.Root,
-    {
-      ref,
-      decorative,
-      orientation,
-      className: cn(
-        "shrink-0 bg-border",
-        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        className
-      ),
-      ...props
-    }
-  )
+  ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
+    const isHorizontal = orientation === "horizontal";
+    return /* @__PURE__ */ jsx27(
+      SeparatorPrimitive.Root,
+      {
+        ref,
+        decorative,
+        orientation,
+        asChild: true,
+        ...props,
+        children: /* @__PURE__ */ jsx27(
+          motion5.div,
+          {
+            className: cn(
+              "shrink-0 bg-border",
+              isHorizontal ? "h-[1px] w-full" : "h-full w-[1px]",
+              className
+            ),
+            initial: { scaleX: isHorizontal ? 0 : 1, scaleY: isHorizontal ? 1 : 0 },
+            animate: { scaleX: 1, scaleY: 1 },
+            transition: { duration: 0.2, ease: "easeInOut" }
+          }
+        )
+      }
+    );
+  }
 );
 SeparatorBase.displayName = SeparatorPrimitive.Root.displayName;
 
@@ -1852,7 +1875,7 @@ import * as React20 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
 import { X as X3 } from "phosphor-react";
-import { jsx as jsx28, jsxs as jsxs15 } from "react/jsx-runtime";
+import { jsx as jsx28, jsxs as jsxs16 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
 var SheetCloseBase = SheetPrimitive.Close;
@@ -1885,16 +1908,16 @@ var sheetVariants = cva2(
     }
   }
 );
-var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs15(SheetPortalBase, { children: [
+var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs16(SheetPortalBase, { children: [
   /* @__PURE__ */ jsx28(SheetOverlayBase, {}),
-  /* @__PURE__ */ jsxs15(
+  /* @__PURE__ */ jsxs16(
     SheetPrimitive.Content,
     {
       ref,
       className: cn(sheetVariants({ side }), className),
       ...props,
       children: [
-        /* @__PURE__ */ jsxs15(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+        /* @__PURE__ */ jsxs16(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
           /* @__PURE__ */ jsx28(X3, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
         ] }),
@@ -1965,7 +1988,7 @@ function SkeletonBase({
   return /* @__PURE__ */ jsx29(
     "div",
     {
-      className: cn("animate-pulse rounded-md bg-primary/10", className),
+      className: cn("animate-pulse  bg-primary/10", className),
       ...props
     }
   );
@@ -1996,7 +2019,7 @@ var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...pro
 TooltipContentBase.displayName = TooltipPrimitive.Content.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import { jsx as jsx31, jsxs as jsxs16 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs17 } from "react/jsx-runtime";
 var SIDEBAR_COOKIE_NAME = "sidebar:state";
 var SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 var SIDEBAR_WIDTH = "16rem";
@@ -2124,7 +2147,7 @@ var SidebarBase = React22.forwardRef(
         }
       ) });
     }
-    return /* @__PURE__ */ jsxs16(
+    return /* @__PURE__ */ jsxs17(
       "div",
       {
         ref,
@@ -2174,7 +2197,7 @@ var SidebarBase = React22.forwardRef(
 SidebarBase.displayName = "SidebarBase";
 var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs16(
+  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs17(
     ButtonBase,
     {
       ref,
@@ -2430,7 +2453,7 @@ var SidebarMenuButtonBase = React22.forwardRef(
         children: tooltip
       };
     }
-    return /* @__PURE__ */ jsxs16(TooltipBase, { children: [
+    return /* @__PURE__ */ jsxs17(TooltipBase, { children: [
       /* @__PURE__ */ jsx31(TooltipTriggerBase, { asChild: true, children: button }),
       /* @__PURE__ */ jsx31(
         TooltipContentBase,
@@ -2490,7 +2513,7 @@ var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false,
   const width = React22.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
-  return /* @__PURE__ */ jsxs16(
+  return /* @__PURE__ */ jsxs17(
     "div",
     {
       ref,
@@ -2562,31 +2585,88 @@ SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 // src/components/ui/SliderBase.tsx
 import * as React23 from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { jsx as jsx32, jsxs as jsxs17 } from "react/jsx-runtime";
-var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs17(
-  SliderPrimitive.Root,
-  {
-    ref,
-    className: cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    ),
-    ...props,
-    children: [
-      /* @__PURE__ */ jsx32(SliderPrimitive.Track, { className: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20 transition-colors duration-300 ease-in-out", children: /* @__PURE__ */ jsx32(SliderPrimitive.Range, { className: "absolute h-full bg-primary transition-all duration-300 ease-in-out" }) }),
-      /* @__PURE__ */ jsx32(
-        SliderPrimitive.Thumb,
-        {
-          className: cn(
-            "block h-4 w-4 rounded-full border border-primary/70 bg-background shadow-md transition-transform duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            "hover:scale-125 active:scale-125"
+import { jsx as jsx32, jsxs as jsxs18 } from "react/jsx-runtime";
+var SlideBase = React23.forwardRef(
+  ({
+    className,
+    orientation = "horizontal",
+    label,
+    leftIcon,
+    rightIcon,
+    ...props
+  }, ref) => {
+    const isVertical = orientation === "vertical";
+    return /* @__PURE__ */ jsxs18(
+      "div",
+      {
+        className: cn(
+          "flex flex-col gap-1",
+          isVertical ? "h-full " : "w-full"
+        ),
+        children: [
+          label && /* @__PURE__ */ jsx32(LabelBase_default, { className: "py-2", children: label }),
+          /* @__PURE__ */ jsxs18(
+            "div",
+            {
+              className: cn(
+                "flex gap-2",
+                isVertical ? "flex-col  h-full" : "flex-row items-center w-full"
+              ),
+              children: [
+                leftIcon && /* @__PURE__ */ jsx32("div", { className: "flex items-center justify-center", children: leftIcon }),
+                /* @__PURE__ */ jsxs18(
+                  SliderPrimitive.Root,
+                  {
+                    ref,
+                    orientation,
+                    className: cn(
+                      "relative flex touch-none select-none items-center",
+                      isVertical ? "flex-col h-full" : "flex-row w-full",
+                      className
+                    ),
+                    ...props,
+                    children: [
+                      /* @__PURE__ */ jsx32(
+                        SliderPrimitive.Track,
+                        {
+                          className: cn(
+                            "relative overflow-hidden bg-primary/20 rounded-full",
+                            isVertical ? "w-1.5 h-full" : "h-1.5 w-full"
+                          ),
+                          children: /* @__PURE__ */ jsx32(
+                            SliderPrimitive.Range,
+                            {
+                              className: cn(
+                                "absolute bg-primary",
+                                isVertical ? "w-full" : "h-full"
+                              )
+                            }
+                          )
+                        }
+                      ),
+                      /* @__PURE__ */ jsx32(
+                        SliderPrimitive.Thumb,
+                        {
+                          className: cn(
+                            "block h-4 w-4 rounded-full border border-primary/70 bg-background shadow-md transition-transform",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                            "hover:scale-125 active:scale-125"
+                          )
+                        }
+                      )
+                    ]
+                  }
+                ),
+                rightIcon && /* @__PURE__ */ jsx32("div", { className: "flex items-center justify-center", children: rightIcon })
+              ]
+            }
           )
-        }
-      )
-    ]
+        ]
+      }
+    );
   }
-));
-SlideBase.displayName = SliderPrimitive.Root.displayName;
+);
+SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
 import { useTheme as useTheme2 } from "next-themes";
@@ -2623,14 +2703,14 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
       ...props,
       ref,
       className: cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
+        "peer relative inline-flex h-[16px] w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
       children: /* @__PURE__ */ jsx34(
         SwitchPrimitives.Thumb,
         {
           className: cn(
-            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 data-[state=checked]:animate-bounce-thumb"
+            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-7 data-[state=checked]:animate-bounce-thumb"
           ),
           style: {
             transformOrigin: "center",

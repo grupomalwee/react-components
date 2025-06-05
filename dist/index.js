@@ -1401,7 +1401,7 @@ function ComboboxBase({
         ]
       }
     ) }),
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(CommandBase, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
         CommandInputBase,
         {
@@ -1989,45 +1989,68 @@ FormMessageBase.displayName = "FormMessageBase";
 var React18 = __toESM(require("react"));
 var ProgressPrimitive = __toESM(require("@radix-ui/react-progress"));
 var import_jsx_runtime26 = require("react/jsx-runtime");
-var ProgressBase = React18.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
-  ProgressPrimitive.Root,
-  {
-    ref,
-    className: cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-      className
-    ),
-    ...props,
-    children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
-      ProgressPrimitive.Indicator,
-      {
-        className: "h-full w-full flex-1 bg-primary transition-all",
-        style: { transform: `translateX(-${100 - (value || 0)}%)` }
-      }
-    )
-  }
-));
-ProgressBase.displayName = ProgressPrimitive.Root.displayName;
+var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px] ", children: [
+    label && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex items-center gap-2", children: [
+      leftIcon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "flex items-center justify-center", children: leftIcon }),
+      /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        ProgressPrimitive.Root,
+        {
+          ref,
+          className: cn(
+            "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+            className
+          ),
+          value,
+          ...props,
+          children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+            ProgressPrimitive.Indicator,
+            {
+              className: "h-full w-full flex-1 bg-primary transition-all",
+              style: { transform: `translateX(-${100 - (value || 0)}%)` }
+            }
+          )
+        }
+      ),
+      rightIcon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "flex items-center justify-center", children: rightIcon })
+    ] })
+  ] });
+});
+ProgressBase.displayName = "ProgressBase";
 
 // src/components/ui/SeparatorBase.tsx
 var React19 = __toESM(require("react"));
 var SeparatorPrimitive = __toESM(require("@radix-ui/react-separator"));
+var import_framer_motion5 = require("framer-motion");
 var import_jsx_runtime27 = require("react/jsx-runtime");
 var SeparatorBase = React19.forwardRef(
-  ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
-    SeparatorPrimitive.Root,
-    {
-      ref,
-      decorative,
-      orientation,
-      className: cn(
-        "shrink-0 bg-border",
-        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        className
-      ),
-      ...props
-    }
-  )
+  ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
+    const isHorizontal = orientation === "horizontal";
+    return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+      SeparatorPrimitive.Root,
+      {
+        ref,
+        decorative,
+        orientation,
+        asChild: true,
+        ...props,
+        children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+          import_framer_motion5.motion.div,
+          {
+            className: cn(
+              "shrink-0 bg-border",
+              isHorizontal ? "h-[1px] w-full" : "h-full w-[1px]",
+              className
+            ),
+            initial: { scaleX: isHorizontal ? 0 : 1, scaleY: isHorizontal ? 1 : 0 },
+            animate: { scaleX: 1, scaleY: 1 },
+            transition: { duration: 0.2, ease: "easeInOut" }
+          }
+        )
+      }
+    );
+  }
 );
 SeparatorBase.displayName = SeparatorPrimitive.Root.displayName;
 
@@ -2149,7 +2172,7 @@ function SkeletonBase({
   return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
     "div",
     {
-      className: cn("animate-pulse rounded-md bg-primary/10", className),
+      className: cn("animate-pulse  bg-primary/10", className),
       ...props
     }
   );
@@ -2747,30 +2770,87 @@ SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 var React23 = __toESM(require("react"));
 var SliderPrimitive = __toESM(require("@radix-ui/react-slider"));
 var import_jsx_runtime32 = require("react/jsx-runtime");
-var SlideBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
-  SliderPrimitive.Root,
-  {
-    ref,
-    className: cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    ),
-    ...props,
-    children: [
-      /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(SliderPrimitive.Track, { className: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20 transition-colors duration-300 ease-in-out", children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(SliderPrimitive.Range, { className: "absolute h-full bg-primary transition-all duration-300 ease-in-out" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
-        SliderPrimitive.Thumb,
-        {
-          className: cn(
-            "block h-4 w-4 rounded-full border border-primary/70 bg-background shadow-md transition-transform duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            "hover:scale-125 active:scale-125"
+var SlideBase = React23.forwardRef(
+  ({
+    className,
+    orientation = "horizontal",
+    label,
+    leftIcon,
+    rightIcon,
+    ...props
+  }, ref) => {
+    const isVertical = orientation === "vertical";
+    return /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+      "div",
+      {
+        className: cn(
+          "flex flex-col gap-1",
+          isVertical ? "h-full " : "w-full"
+        ),
+        children: [
+          label && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(LabelBase_default, { className: "py-2", children: label }),
+          /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+            "div",
+            {
+              className: cn(
+                "flex gap-2",
+                isVertical ? "flex-col  h-full" : "flex-row items-center w-full"
+              ),
+              children: [
+                leftIcon && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("div", { className: "flex items-center justify-center", children: leftIcon }),
+                /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+                  SliderPrimitive.Root,
+                  {
+                    ref,
+                    orientation,
+                    className: cn(
+                      "relative flex touch-none select-none items-center",
+                      isVertical ? "flex-col h-full" : "flex-row w-full",
+                      className
+                    ),
+                    ...props,
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
+                        SliderPrimitive.Track,
+                        {
+                          className: cn(
+                            "relative overflow-hidden bg-primary/20 rounded-full",
+                            isVertical ? "w-1.5 h-full" : "h-1.5 w-full"
+                          ),
+                          children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
+                            SliderPrimitive.Range,
+                            {
+                              className: cn(
+                                "absolute bg-primary",
+                                isVertical ? "w-full" : "h-full"
+                              )
+                            }
+                          )
+                        }
+                      ),
+                      /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(
+                        SliderPrimitive.Thumb,
+                        {
+                          className: cn(
+                            "block h-4 w-4 rounded-full border border-primary/70 bg-background shadow-md transition-transform",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                            "hover:scale-125 active:scale-125"
+                          )
+                        }
+                      )
+                    ]
+                  }
+                ),
+                rightIcon && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("div", { className: "flex items-center justify-center", children: rightIcon })
+              ]
+            }
           )
-        }
-      )
-    ]
+        ]
+      }
+    );
   }
-));
-SlideBase.displayName = SliderPrimitive.Root.displayName;
+);
+SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
 var import_next_themes = require("next-themes");
@@ -2807,14 +2887,14 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
       ...props,
       ref,
       className: cn(
-        "peer relative inline-flex h-5 w-11 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
+        "peer relative inline-flex h-[16px] w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
       children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
         SwitchPrimitives.Thumb,
         {
           className: cn(
-            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-5 data-[state=checked]:animate-bounce-thumb"
+            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xl ring-0 transition-transform duration-350 ease-out peer-focus:shadow-lg peer-focus:ring-2 peer-focus:ring-primary/70 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-7 data-[state=checked]:animate-bounce-thumb"
           ),
           style: {
             transformOrigin: "center",
