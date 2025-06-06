@@ -59,7 +59,7 @@ export function ComboboxBase<T extends string>({
             )}
           </ButtonBase>
         </PopoverTriggerBase>
-        <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0">
+        <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none">
           <CommandBase className="dark:text-white">
             <CommandInputBase
               tabIndex={-1}
