@@ -14,8 +14,6 @@ export const ProgressPage = () => {
 
   return (
     <div className="min-h-screen w-full px-6 py-10 flex flex-col gap-10 bg-background">
-      
-     
       <section className="flex flex-col gap-6">
         <ProgressBase
           value={progress}
@@ -47,12 +45,18 @@ export const ProgressPage = () => {
           label="Download"
           rightIcon={<Download />}
         />
+        <ProgressBase
+          value={progress}
+          showValue
+          className="w-[90%]"
+          label="Download"
+          leftIcon={<Download />}
+        />
       </section>
 
       <section>
         <h3 className="text-2xl font-semibold mb-4">Documentação</h3>
         <div className="space-y-6">
-
           <div className="bg-zinc-900 text-white p-4 rounded-md">
             <h5 className="font-medium mb-2">Como importar:</h5>
             <pre className="bg-zinc-800 p-3 rounded-sm overflow-x-auto">
@@ -82,7 +86,6 @@ React.useEffect(() => {
               </code>
             </pre>
           </div>
-
         </div>
       </section>
     </div>

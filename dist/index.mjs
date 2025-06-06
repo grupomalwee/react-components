@@ -413,13 +413,13 @@ var InputBase = React6.forwardRef(
     return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
       label && /* @__PURE__ */ jsx7(LabelBase_default, { children: label }),
       /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
-        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2  focus-within:opacity-100", children: leftIcon }),
+        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
         /* @__PURE__ */ jsx7(
           "input",
           {
             type,
             className: cn(
-              "flex bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              " w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
@@ -1805,34 +1805,50 @@ FormMessageBase.displayName = "FormMessageBase";
 import * as React18 from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { jsx as jsx26, jsxs as jsxs15 } from "react/jsx-runtime";
-var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
-  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px] ", children: [
-    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
-    /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
-      leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: leftIcon }),
-      /* @__PURE__ */ jsx26(
-        ProgressPrimitive.Root,
-        {
-          ref,
-          className: cn(
-            "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-            className
-          ),
-          value,
-          ...props,
-          children: /* @__PURE__ */ jsx26(
-            ProgressPrimitive.Indicator,
+var ProgressBase = React18.forwardRef(
+  ({
+    className,
+    value,
+    label,
+    leftIcon,
+    rightIcon,
+    showValue = false,
+    ...props
+  }, ref) => {
+    return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+      label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+      /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
+        leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center", children: leftIcon }),
+        /* @__PURE__ */ jsxs15("div", { className: "relative w-full", children: [
+          /* @__PURE__ */ jsx26(
+            ProgressPrimitive.Root,
             {
-              className: "h-full w-full flex-1 bg-primary transition-all",
-              style: { transform: `translateX(-${100 - (value || 0)}%)` }
+              ref,
+              className: cn(
+                "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+                className
+              ),
+              value,
+              ...props,
+              children: /* @__PURE__ */ jsx26(
+                ProgressPrimitive.Indicator,
+                {
+                  className: "h-full w-full flex-1 bg-primary transition-all ",
+                  style: { transform: `translateX(-${100 - (value || 0)}%)` }
+                }
+              )
             }
-          )
-        }
-      ),
-      rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: rightIcon })
-    ] })
-  ] });
-});
+          ),
+          showValue && /* @__PURE__ */ jsxs15("span", { className: "absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground", children: [
+            Math.round(value ?? 0),
+            "%"
+          ] })
+        ] }),
+        rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center", children: rightIcon })
+      ] })
+    ] });
+  }
+);
 ProgressBase.displayName = "ProgressBase";
 
 // src/components/ui/SeparatorBase.tsx

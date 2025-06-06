@@ -1,12 +1,12 @@
 import * as React from "react";
 import { cn } from "../..//lib/utils";
 import LabelBase from "./LabelBase";
+
 export interface InputBaseProps extends React.ComponentProps<"input"> {
   label?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
-
 
 const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
   ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
@@ -16,7 +16,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
 
         <div className="flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring">
           {leftIcon && (
-            <div className="flex items-center justify-center px-2  focus-within:opacity-100">
+            <div className="flex items-center justify-center px-2">
               {leftIcon}
             </div>
           )}
@@ -24,7 +24,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
           <input
             type={type}
             className={cn(
-              "flex bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              " w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             )}
             ref={ref}
