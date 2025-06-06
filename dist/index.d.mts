@@ -223,6 +223,8 @@ interface ProgressBaseProps extends React$1.ComponentPropsWithoutRef<typeof Prog
     label?: string;
     leftIcon?: React$1.ReactNode;
     rightIcon?: React$1.ReactNode;
+    showValue?: boolean;
+    value?: number;
 }
 declare const ProgressBase: React$1.ForwardRefExoticComponent<ProgressBaseProps & React$1.RefAttributes<HTMLDivElement>>;
 
