@@ -11,8 +11,9 @@ export type LabelBaseProps = React.ComponentPropsWithoutRef<"label"> & {
 const LabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "label";
+
     return (
-      <RadixLabel asChild>
+      <RadixLabel>
         <Comp
           ref={ref}
           className={cn(

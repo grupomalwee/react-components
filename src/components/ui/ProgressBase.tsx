@@ -8,9 +8,10 @@ import LabelBase from "./LabelBase";
 export interface ProgressBaseProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   label?: string;
+  labelClassname?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  showValue?: boolean; // NOVO: se true, exibe o valor
+  showValue?: boolean;
   value?: number;
 }
 
@@ -23,16 +24,17 @@ const ProgressBase = React.forwardRef<
       className,
       value,
       label,
+      labelClassname,
       leftIcon,
       rightIcon,
-      showValue = false, 
+      showValue = false,
       ...props
     },
     ref
   ) => {
     return (
       <div className="flex flex-col gap-1 w-full min-w-[150px]">
-        {label && <LabelBase className="py-2">{label}</LabelBase>}
+        {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
 
         <div className="flex items-center gap-2">
           {leftIcon && <div className="flex items-center">{leftIcon}</div>}
@@ -48,7 +50,7 @@ const ProgressBase = React.forwardRef<
               {...props}
             >
               <ProgressPrimitive.Indicator
-                className="h-full w-full flex-1 bg-primary transition-all "
+                className="h-full w-full flex-1 bg-primary transition-all"
                 style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
               />
             </ProgressPrimitive.Root>
