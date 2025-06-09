@@ -1,18 +1,22 @@
 import * as React from "react";
-import { cn } from "../..//lib/utils";
+import { cn } from "../../lib/utils"; // ajeitei o path duplicado
 import LabelBase from "./LabelBase";
 
 export interface InputBaseProps extends React.ComponentProps<"input"> {
   label?: string;
+  labelClassname?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
 const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
-  ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
+  (
+    { className, type = "text", label, labelClassname, leftIcon, rightIcon, ...props },
+    ref
+  ) => {
     return (
       <div className="flex flex-col gap-1 w-full min-w-[150px]">
-        {label && <LabelBase>{label}</LabelBase>}
+        {label && <LabelBase labelClassname={labelClassname}>{label}</LabelBase>}
 
         <div className="flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring">
           {leftIcon && (
@@ -24,7 +28,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
           <input
             type={type}
             className={cn(
-              " w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             )}
             ref={ref}

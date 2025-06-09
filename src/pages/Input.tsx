@@ -25,13 +25,13 @@ export const InputPage = () => {
     <>
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
+          <InputBase id="email" label="E-mail" placeholder="seu@email.com"/>
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <InputBase id="picture" type="file" label="Picture" />
+          <InputBase id="picture" type="file" label="Picture"/>
         </div>
         <div className="flex w-full max-w-sm items-center space-x-2">
-          <InputBase type="email" placeholder="Email" />
+          <InputBase type="email" placeholder="Email"/>
           <ButtonBase type="submit">Subscribe</ButtonBase>
         </div>
         <div>

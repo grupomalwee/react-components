@@ -6,13 +6,14 @@ import { cn } from "../../lib/utils";
 
 export type LabelBaseProps = React.ComponentPropsWithoutRef<"label"> & {
   asChild?: boolean;
+  labelClassname?: string;
 };
 
 const LabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
-  ({ className, asChild = false, ...props }, ref) => {
+  ({ className, labelClassname, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "label";
     return (
-      <RadixLabel asChild>
+      <RadixLabel asChild className={labelClassname}>
         <Comp
           ref={ref}
           className={cn(
