@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "../../lib/utils"; // ajeitei o path duplicado
+import { cn } from "../../lib/utils"; 
 import LabelBase from "./LabelBase";
 
 export interface InputBaseProps extends React.ComponentProps<"input"> {
