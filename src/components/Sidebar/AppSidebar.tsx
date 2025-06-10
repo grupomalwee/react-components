@@ -51,9 +51,12 @@ import { TabsPage } from "@/pages/Tabs";
 import { TextareaPage } from "@/pages/Textarea";
 import RootLayout from "@/pages/Sonner";
 import { TooltipPage } from "@/pages/Tooltip";
+import Home from "@/pages/Home";
+import Comparison from "@/pages/Comparasion"; 
 
 // Menu items
 const items = [
+  { title: "Home", url: "/", icon: House },
   { title: "Alert Dialog", url: "/alert-dialog", icon: House },
   { title: "Avatar", url: "/avatar", icon: Envelope },
   { title: "Button", url: "/button", icon: Calendar },
@@ -88,6 +91,7 @@ const items = [
   { title: "Tabs", url: "/tabs", icon: Gear },
   { title: "Textarea", url: "/textarea", icon: House },
   { title: "Tooltip", url: "/tooltip", icon: MagnifyingGlass },
+  { title: "Comparação", url: "/comparison", icon: MagnifyingGlass },
 ];
 
 export function AppSidebar() {
@@ -124,6 +128,7 @@ export function AppSidebar() {
         {/* Main Content */}
 
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/button" element={<ButtonPage />} />
@@ -156,6 +161,7 @@ export function AppSidebar() {
           <Route path="/textarea" element={<TextareaPage />} />
           <Route path="/sonner" element={<RootLayout />} />
           <Route path="/tooltip" element={<TooltipPage />} />
+          <Route path="/comparison" element={<Comparison />} />
         </Routes>
       </div>
     </Router>
