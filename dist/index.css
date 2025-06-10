@@ -1107,6 +1107,9 @@ body {
 .border-t-2 {
   border-top-width: 2px;
 }
+.border-none {
+  border-style: none;
+}
 .border-border {
   border-color: hsl(var(--border));
 }

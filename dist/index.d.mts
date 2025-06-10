@@ -209,6 +209,7 @@ declare const FormMessageBase: React$1.ForwardRefExoticComponent<React$1.HTMLAtt
 
 interface InputBaseProps extends React$1.ComponentProps<"input"> {
     label?: string;
+    labelClassname?: string;
     leftIcon?: React$1.ReactNode;
     rightIcon?: React$1.ReactNode;
 }
@@ -221,6 +222,7 @@ declare const PopoverContentBase: React$1.ForwardRefExoticComponent<Omit<Popover
 
 interface ProgressBaseProps extends React$1.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
     label?: string;
+    labelClassname?: string;
     leftIcon?: React$1.ReactNode;
     rightIcon?: React$1.ReactNode;
     showValue?: boolean;
