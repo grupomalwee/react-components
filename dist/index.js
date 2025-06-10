@@ -231,7 +231,7 @@ var buttonVariantsBase = (0, import_class_variance_authority.cva)(
           hover:bg-accent hover:text-accent-foreground hover:shadow-md
         `,
         secondary: `
-          bg-secondary text-secondary-foreground shadow-sm
+          bg-secondary border border-transparent text-secondary-foreground shadow-sm
           hover:opacity-80 hover:shadow-md
         `,
         ghost: `
@@ -243,7 +243,7 @@ var buttonVariantsBase = (0, import_class_variance_authority.cva)(
         `
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-9 px-4 py-1.5",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9"
@@ -573,7 +573,7 @@ var import_jsx_runtime6 = require("react/jsx-runtime");
 var LabelBase = React5.forwardRef(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? import_react_slot2.Slot : "label";
-    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_react_label.Label, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(import_react_label.Label, { children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
       Comp,
       {
         ref,
@@ -597,25 +597,42 @@ var React8 = __toESM(require("react"));
 var React6 = __toESM(require("react"));
 var import_jsx_runtime7 = require("react/jsx-runtime");
 var InputBase = React6.forwardRef(
-  ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LabelBase_default, { children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
-        leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
-          "input",
-          {
-            type,
-            className: cn(
-              " w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              className
+  ({
+    className,
+    type = "text",
+    label,
+    labelClassname,
+    leftIcon,
+    rightIcon,
+    ...props
+  }, ref) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex flex-col w-full min-w-[150px]", children: [
+      label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LabelBase_default, { className: labelClassname, children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
+        "div",
+        {
+          className: cn(
+            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring",
+            type !== "file" && "border border-input"
+          ),
+          children: [
+            leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              "input",
+              {
+                type,
+                className: cn(
+                  "w-full flex-1 bg-transparent px-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                  className
+                ),
+                ref,
+                ...props
+              }
             ),
-            ref,
-            ...props
-          }
-        ),
-        rightIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: rightIcon })
-      ] })
+            rightIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+          ]
+        }
+      )
     ] });
   }
 );
@@ -1401,7 +1418,7 @@ function ComboboxBase({
         ]
       }
     ) }),
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(CommandBase, { className: "dark:text-white", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
         CommandInputBase,
         {
@@ -1994,13 +2011,14 @@ var ProgressBase = React18.forwardRef(
     className,
     value,
     label,
+    labelClassname,
     leftIcon,
     rightIcon,
     showValue = false,
     ...props
   }, ref) => {
     return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(LabelBase_default, { className: "py-2", children: label }),
+      label && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(LabelBase_default, { className: labelClassname, children: label }),
       /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "flex items-center gap-2", children: [
         leftIcon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { className: "flex items-center", children: leftIcon }),
         /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: "relative w-full", children: [
@@ -2017,7 +2035,7 @@ var ProgressBase = React18.forwardRef(
               children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
                 ProgressPrimitive.Indicator,
                 {
-                  className: "h-full w-full flex-1 bg-primary transition-all ",
+                  className: "h-full w-full flex-1 bg-primary transition-all",
                   style: { transform: `translateX(-${100 - (value || 0)}%)` }
                 }
               )

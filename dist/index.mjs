@@ -43,7 +43,7 @@ var buttonVariantsBase = cva(
           hover:bg-accent hover:text-accent-foreground hover:shadow-md
         `,
         secondary: `
-          bg-secondary text-secondary-foreground shadow-sm
+          bg-secondary border border-transparent text-secondary-foreground shadow-sm
           hover:opacity-80 hover:shadow-md
         `,
         ghost: `
@@ -55,7 +55,7 @@ var buttonVariantsBase = cva(
         `
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-9 px-4 py-1.5",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9"
@@ -385,7 +385,7 @@ import { jsx as jsx6 } from "react/jsx-runtime";
 var LabelBase = React5.forwardRef(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot2 : "label";
-    return /* @__PURE__ */ jsx6(RadixLabel, { asChild: true, children: /* @__PURE__ */ jsx6(
+    return /* @__PURE__ */ jsx6(RadixLabel, { children: /* @__PURE__ */ jsx6(
       Comp,
       {
         ref,
@@ -409,25 +409,42 @@ import * as React8 from "react";
 import * as React6 from "react";
 import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
 var InputBase = React6.forwardRef(
-  ({ className, type = "text", label, leftIcon, rightIcon, ...props }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ jsx7(LabelBase_default, { children: label }),
-      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
-        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
-        /* @__PURE__ */ jsx7(
-          "input",
-          {
-            type,
-            className: cn(
-              " w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              className
+  ({
+    className,
+    type = "text",
+    label,
+    labelClassname,
+    leftIcon,
+    rightIcon,
+    ...props
+  }, ref) => {
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col w-full min-w-[150px]", children: [
+      label && /* @__PURE__ */ jsx7(LabelBase_default, { className: labelClassname, children: label }),
+      /* @__PURE__ */ jsxs3(
+        "div",
+        {
+          className: cn(
+            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring",
+            type !== "file" && "border border-input"
+          ),
+          children: [
+            leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
+            /* @__PURE__ */ jsx7(
+              "input",
+              {
+                type,
+                className: cn(
+                  "w-full flex-1 bg-transparent px-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                  className
+                ),
+                ref,
+                ...props
+              }
             ),
-            ref,
-            ...props
-          }
-        ),
-        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
-      ] })
+            rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+          ]
+        }
+      )
     ] });
   }
 );
@@ -1213,7 +1230,7 @@ function ComboboxBase({
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0", children: /* @__PURE__ */ jsxs9(CommandBase, { className: "dark:text-white", children: [
+    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ jsxs9(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
         {
@@ -1810,13 +1827,14 @@ var ProgressBase = React18.forwardRef(
     className,
     value,
     label,
+    labelClassname,
     leftIcon,
     rightIcon,
     showValue = false,
     ...props
   }, ref) => {
     return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+      label && /* @__PURE__ */ jsx26(LabelBase_default, { className: labelClassname, children: label }),
       /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
         leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center", children: leftIcon }),
         /* @__PURE__ */ jsxs15("div", { className: "relative w-full", children: [
@@ -1833,7 +1851,7 @@ var ProgressBase = React18.forwardRef(
               children: /* @__PURE__ */ jsx26(
                 ProgressPrimitive.Indicator,
                 {
-                  className: "h-full w-full flex-1 bg-primary transition-all ",
+                  className: "h-full w-full flex-1 bg-primary transition-all",
                   style: { transform: `translateX(-${100 - (value || 0)}%)` }
                 }
               )
