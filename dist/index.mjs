@@ -409,24 +409,32 @@ import * as React8 from "react";
 import * as React6 from "react";
 import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
 var InputBase = React6.forwardRef(
-  ({ className, type = "text", label, labelClassname, leftIcon, rightIcon, ...props }, ref) => {
+  ({
+    className,
+    type = "text",
+    label,
+    labelClassname,
+    leftIcon,
+    rightIcon,
+    ...props
+  }, ref) => {
     return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
       label && /* @__PURE__ */ jsx7(LabelBase_default, { labelClassname, children: label }),
-      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring", children: [
-        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
+      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)]", children: [
+        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: leftIcon }),
         /* @__PURE__ */ jsx7(
           "input",
           {
             type,
             className: cn(
-              "w-full flex-1 bg-transparent px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "w-full overflow-hidden flex-1 bg-white dark:bg-[hsl(231,15%,19%)] px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             ),
             ref,
             ...props
           }
         ),
-        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: rightIcon })
       ] })
     ] });
   }
@@ -885,16 +893,23 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
   }
 ) }) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
-var DropDownMenuItemBase = React10.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ jsx11(
+var DropDownMenuItemBase = React10.forwardRef(({ className, inset, leftIcon, rightIcon, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.Item,
   {
     ref,
     className: cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
+      "relative flex cursor-default select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     ),
-    ...props
+    ...props,
+    children: [
+      /* @__PURE__ */ jsxs6("div", { className: "flex items-center gap-2", children: [
+        leftIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: leftIcon }),
+        children
+      ] }),
+      rightIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: rightIcon })
+    ]
   }
 ));
 DropDownMenuItemBase.displayName = DropdownMenuPrimitive.Item.displayName;

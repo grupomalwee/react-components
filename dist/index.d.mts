@@ -173,6 +173,8 @@ declare const DropDownMenuSubContentBase: React$1.ForwardRefExoticComponent<Omit
 declare const DropDownMenuContentBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
     inset?: boolean;
+    leftIcon?: React$1.ReactNode;
+    rightIcon?: React$1.ReactNode;
 } & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuCheckboxItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuCheckboxItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuRadioItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuRadioItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
