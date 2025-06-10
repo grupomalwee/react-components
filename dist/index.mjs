@@ -43,7 +43,7 @@ var buttonVariantsBase = cva(
           hover:bg-accent hover:text-accent-foreground hover:shadow-md
         `,
         secondary: `
-          bg-secondary text-secondary-foreground shadow-sm
+          bg-secondary text-secondary-foreground shadow-sm border border-transparent
           hover:opacity-80 hover:shadow-md
         `,
         ghost: `
@@ -55,7 +55,7 @@ var buttonVariantsBase = cva(
         `
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-9 px-4 py-1.5",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9"
@@ -390,7 +390,7 @@ var LabelBase = React5.forwardRef(
       {
         ref,
         className: cn(
-          "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+          "text-sm mb-3 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
           className
         ),
         ...props
@@ -418,24 +418,33 @@ var InputBase = React6.forwardRef(
     rightIcon,
     ...props
   }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ jsx7(LabelBase_default, { labelClassname, children: label }),
-      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)]", children: [
-        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: leftIcon }),
-        /* @__PURE__ */ jsx7(
-          "input",
-          {
-            type,
-            className: cn(
-              "w-full overflow-hidden flex-1 bg-white dark:bg-[hsl(231,15%,19%)] px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              className
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col w-full min-w-[150px]", children: [
+      label && /* @__PURE__ */ jsx7(LabelBase_default, { className: labelClassname, children: label }),
+      /* @__PURE__ */ jsxs3(
+        "div",
+        {
+          className: cn(
+            "flex items-center border border-input rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
+            type === "file" && "border-none p-0"
+          ),
+          children: [
+            leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
+            /* @__PURE__ */ jsx7(
+              "input",
+              {
+                type,
+                className: cn(
+                  "w-full flex-1 text-sm leading-tight py-2 px-3 focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 bg-white dark:bg-[hsl(231,15%,19%)]",
+                  className
+                ),
+                ref,
+                ...props
+              }
             ),
-            ref,
-            ...props
-          }
-        ),
-        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: rightIcon })
-      ] })
+            rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+          ]
+        }
+      )
     ] });
   }
 );
