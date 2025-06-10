@@ -418,33 +418,24 @@ var InputBase = React6.forwardRef(
     rightIcon,
     ...props
   }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col w-full min-w-[150px]", children: [
+    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
       label && /* @__PURE__ */ jsx7(LabelBase_default, { className: labelClassname, children: label }),
-      /* @__PURE__ */ jsxs3(
-        "div",
-        {
-          className: cn(
-            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring",
-            type !== "file" && "border border-input"
-          ),
-          children: [
-            leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
-            /* @__PURE__ */ jsx7(
-              "input",
-              {
-                type,
-                className: cn(
-                  "w-full flex-1 bg-transparent px-4 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
-                  className
-                ),
-                ref,
-                ...props
-              }
+      /* @__PURE__ */ jsxs3("div", { className: "flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)]", children: [
+        leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: leftIcon }),
+        /* @__PURE__ */ jsx7(
+          "input",
+          {
+            type,
+            className: cn(
+              "w-full overflow-hidden flex-1 bg-white dark:bg-[hsl(231,15%,19%)] px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              className
             ),
-            rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
-          ]
-        }
-      )
+            ref,
+            ...props
+          }
+        ),
+        rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]", children: rightIcon })
+      ] })
     ] });
   }
 );
@@ -902,16 +893,23 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
   }
 ) }) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
-var DropDownMenuItemBase = React10.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ jsx11(
+var DropDownMenuItemBase = React10.forwardRef(({ className, inset, leftIcon, rightIcon, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.Item,
   {
     ref,
     className: cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
+      "relative flex cursor-default select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     ),
-    ...props
+    ...props,
+    children: [
+      /* @__PURE__ */ jsxs6("div", { className: "flex items-center gap-2", children: [
+        leftIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: leftIcon }),
+        children
+      ] }),
+      rightIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: rightIcon })
+    ]
   }
 ));
 DropDownMenuItemBase.displayName = DropdownMenuPrimitive.Item.displayName;
@@ -1822,52 +1820,144 @@ FormMessageBase.displayName = "FormMessageBase";
 import * as React18 from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { jsx as jsx26, jsxs as jsxs15 } from "react/jsx-runtime";
-var ProgressBase = React18.forwardRef(
-  ({
-    className,
-    value,
-    label,
-    labelClassname,
-    leftIcon,
-    rightIcon,
-    showValue = false,
-    ...props
-  }, ref) => {
-    return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ jsx26(LabelBase_default, { className: labelClassname, children: label }),
-      /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
-        leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center", children: leftIcon }),
-        /* @__PURE__ */ jsxs15("div", { className: "relative w-full", children: [
-          /* @__PURE__ */ jsx26(
-            ProgressPrimitive.Root,
-            {
-              ref,
-              className: cn(
-                "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-                className
-              ),
-              value,
-              ...props,
-              children: /* @__PURE__ */ jsx26(
-                ProgressPrimitive.Indicator,
-                {
-                  className: "h-full w-full flex-1 bg-primary transition-all",
-                  style: { transform: `translateX(-${100 - (value || 0)}%)` }
-                }
-              )
-            }
+var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
+  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
+      leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: leftIcon }),
+      /* @__PURE__ */ jsx26(
+        ProgressPrimitive.Root,
+        {
+          ref,
+          className: cn(
+            "relative h-3 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800 shadow-inner transition-all",
+            className
           ),
-          showValue && /* @__PURE__ */ jsxs15("span", { className: "absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground", children: [
-            Math.round(value ?? 0),
-            "%"
-          ] })
-        ] }),
-        rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center", children: rightIcon })
-      ] })
-    ] });
+          value,
+          ...props,
+          children: /* @__PURE__ */ jsx26(
+            ProgressPrimitive.Indicator,
+            {
+              className: "h-full w-full flex-1 bg-primary transition-all duration-500 ease-in-out",
+              style: { transform: `translateX(-${100 - (value || 0)}%)` }
+            }
+          )
+        }
+      ),
+      rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: rightIcon })
+    ] })
+  ] });
+});
+ProgressBase.displayName = "ProgressBase";
+var ProgressSegmentsBase = ({
+  label,
+  segments,
+  value
+}) => {
+  const filled = Math.round(value / 100 * segments);
+  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsx26("div", { className: "flex gap-1 w-full", children: Array.from({ length: segments }).map((_, idx) => /* @__PURE__ */ jsx26(
+      "div",
+      {
+        className: cn(
+          "h-2 flex-1 rounded-full transition-all duration-300",
+          idx < filled ? "bg-primary" : "bg-zinc-300 hover:bg-zinc-400"
+        )
+      },
+      idx
+    )) })
+  ] });
+};
+var ArrowRightIcon = () => /* @__PURE__ */ jsx26(
+  "svg",
+  {
+    className: "w-6 h-6 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    viewBox: "0 0 24 24",
+    xmlns: "http://www.w3.org/2000/svg",
+    children: /* @__PURE__ */ jsx26("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 5l7 7-7 7" })
   }
 );
-ProgressBase.displayName = "ProgressBase";
+var ProgressPanelsBase = ({
+  label,
+  steps,
+  currentStep
+}) => {
+  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full", children: [
+    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsx26("div", { className: "flex w-full gap-1 rounded-lg overflow-hidden", children: steps.map((step, idx) => {
+      const isActive = idx === currentStep;
+      const isLast = idx === steps.length - 1;
+      return /* @__PURE__ */ jsxs15(React18.Fragment, { children: [
+        /* @__PURE__ */ jsxs15(
+          "div",
+          {
+            className: cn(
+              "relative flex items-center justify-center cursor-pointer select-none rounded-lg border transition-shadow duration-300 ease-in-out",
+              "hover:shadow-md hover:z-10",
+              "aspect-[5/1] min-w-[90px] px-4",
+              isActive ? "bg-primary/20 border-2 border-primary shadow-lg font-semibold" : "border-zinc-300"
+            ),
+            style: { flex: "1 1 0" },
+            children: [
+              /* @__PURE__ */ jsx26("span", { className: "truncate", children: step }),
+              isActive && /* @__PURE__ */ jsx26("div", { className: "absolute bottom-0 left-0 h-1 w-full animate-pulse rounded-b-lg" })
+            ]
+          }
+        ),
+        !isLast && /* @__PURE__ */ jsx26("div", { className: "flex items-center px-2 group", children: /* @__PURE__ */ jsx26(ArrowRightIcon, {}) })
+      ] }, idx);
+    }) })
+  ] });
+};
+var ProgressCirclesBase = ({
+  label,
+  steps,
+  currentStep
+}) => {
+  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-2 w-full", children: [
+    label && /* @__PURE__ */ jsx26("label", { className: "py-2 text-base font-semibold text-gray-700 dark:text-gray-300", children: label }),
+    /* @__PURE__ */ jsxs15("div", { className: "relative flex items-center justify-between w-full", children: [
+      /* @__PURE__ */ jsx26("div", { className: "absolute top-5 left-0 w-full h-1 bg-zinc-200 dark:bg-zinc-700" }),
+      /* @__PURE__ */ jsx26(
+        "div",
+        {
+          className: "absolute top-5 left-0 h-1 bg-primary transition-all duration-300",
+          style: {
+            width: `${currentStep / (steps.length - 1) * 100}%`
+          }
+        }
+      ),
+      steps.map((step, idx) => {
+        const isActive = idx <= currentStep;
+        return /* @__PURE__ */ jsxs15(
+          "div",
+          {
+            className: "relative flex flex-col items-center w-10",
+            style: { zIndex: isActive ? 10 : 1 },
+            children: [
+              /* @__PURE__ */ jsx26(
+                "div",
+                {
+                  className: cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 cursor-pointer select-none",
+                    isActive ? "bg-primary text-white dark:text-black shadow-md" : "bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-500 dark:text-black"
+                  ),
+                  children: idx + 1
+                }
+              ),
+              /* @__PURE__ */ jsx26("span", { className: "text-xs text-center font-medium mt-1 max-w-[80px] break-words", children: step })
+            ]
+          },
+          idx
+        );
+      })
+    ] })
+  ] });
+};
 
 // src/components/ui/SeparatorBase.tsx
 import * as React19 from "react";
@@ -3101,6 +3191,9 @@ export {
   PopoverContentBase,
   PopoverTriggerBase,
   ProgressBase,
+  ProgressCirclesBase,
+  ProgressPanelsBase,
+  ProgressSegmentsBase,
   ScrollAreaBase,
   ScrollBarBase,
   Select,

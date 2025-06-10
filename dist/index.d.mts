@@ -173,6 +173,8 @@ declare const DropDownMenuSubContentBase: React$1.ForwardRefExoticComponent<Omit
 declare const DropDownMenuContentBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
     inset?: boolean;
+    leftIcon?: React$1.ReactNode;
+    rightIcon?: React$1.ReactNode;
 } & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuCheckboxItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuCheckboxItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuRadioItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuRadioItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
@@ -222,13 +224,28 @@ declare const PopoverContentBase: React$1.ForwardRefExoticComponent<Omit<Popover
 
 interface ProgressBaseProps extends React$1.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
     label?: string;
-    labelClassname?: string;
     leftIcon?: React$1.ReactNode;
     rightIcon?: React$1.ReactNode;
-    showValue?: boolean;
-    value?: number;
 }
 declare const ProgressBase: React$1.ForwardRefExoticComponent<ProgressBaseProps & React$1.RefAttributes<HTMLDivElement>>;
+interface ProgressSegmentsBaseProps {
+    label?: string;
+    segments: number;
+    value: number;
+}
+declare const ProgressSegmentsBase: ({ label, segments, value, }: ProgressSegmentsBaseProps) => react_jsx_runtime.JSX.Element;
+interface ProgressPanelsBaseProps {
+    label?: string;
+    steps: string[];
+    currentStep: number;
+}
+declare const ProgressPanelsBase: ({ label, steps, currentStep, }: ProgressPanelsBaseProps) => react_jsx_runtime.JSX.Element;
+interface ProgressCirclesBaseProps {
+    label?: string;
+    steps: string[];
+    currentStep: number;
+}
+declare const ProgressCirclesBase: ({ label, steps, currentStep, }: ProgressCirclesBaseProps) => react_jsx_runtime.JSX.Element;
 
 declare const ScrollAreaBase: React$1.ForwardRefExoticComponent<Omit<ScrollAreaPrimitive.ScrollAreaProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const ScrollBarBase: React$1.ForwardRefExoticComponent<Omit<ScrollAreaPrimitive.ScrollAreaScrollbarProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
@@ -519,4 +536,4 @@ declare const defaultStringConditions: AvailableFilterConditions[];
 
 declare function buildFilterSummary<T extends Record<string, unknown>>(filter: Filter<T>, availableFilters: AvailableFilter<T>[]): string | null;
 
-export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxItem, type ComboboxProps, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, FormBase, FormControlBase, FormDescriptionBase, FormFieldBase, FormItemBase, FormLabelBase, FormMessageBase, InputBase, type InputBaseProps, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, type ProgressBaseProps, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem$1 as SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, type SliderBaseProps, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, type Theme, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, applyfilter, buildFilterSummary, buttonVariantsBase, defaultStringConditions, useFormFieldBase, useIsMobile, useTheme };
+export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxItem, type ComboboxProps, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, FormBase, FormControlBase, FormDescriptionBase, FormFieldBase, FormItemBase, FormLabelBase, FormMessageBase, InputBase, type InputBaseProps, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, type ProgressBaseProps, ProgressCirclesBase, type ProgressCirclesBaseProps, ProgressPanelsBase, type ProgressPanelsBaseProps, ProgressSegmentsBase, type ProgressSegmentsBaseProps, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem$1 as SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, type SliderBaseProps, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, type Theme, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, applyfilter, buildFilterSummary, buttonVariantsBase, defaultStringConditions, useFormFieldBase, useIsMobile, useTheme };

@@ -27,12 +27,15 @@ import { CardPage } from "@/pages/Card";
 import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
 import { ComboboxPage } from "@/pages/Combobox";
+import { CarouselPage } from "@/pages/Carousel";
 import { MultiComboboxPage } from "@/pages/Multicombobox";
 import { DialogPage } from "@/pages/Dialog";
+import  DrawerPage  from "@/pages/Drawer";
 import { DropDownMenuPage } from "@/pages/Dropdown-menu";
 import Filter from "@/pages/Filter";
 import { ProfileForm } from "@/pages/Form";
 import { InputPage } from "@/pages/Input";
+import InputOTPPage from "@/pages/InputOTP";
 import { LabelPage } from "@/pages/Label";
 import { PopoverPage } from "@/pages/Popover";
 import { ProgressPage } from "@/pages/Progress";
@@ -59,12 +62,15 @@ const items = [
   { title: "Checkbox", url: "/checkbox", icon: MagnifyingGlass },
   { title: "Command", url: "/command", icon: Gear },
   { title: "Combobox", url: "/combobox", icon: MagnifyingGlass },
+  { title: "Carousel", url: "/carousel", icon: Gear },
   // { title: "Debounce Input", url: "/debounce-input", icon: House },
   { title: "Dialog", url: "/dialog", icon: Envelope },
+  { title: "Drawer", url: "/drawer", icon: Envelope },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
   { title: "Filter", url: "/Filter", icon: Calendar },
   { title: "Form", url: "/form", icon: Gear },
   { title: "Input", url: "/input", icon: Envelope },
+  { title: "InputOTP", url: "/inputOTP", icon: Envelope },
   { title: "Label", url: "/label", icon: Calendar },
   { title: "MultiCombobox", url: "/multicombobox", icon: Gear },
   { title: "Popover", url: "/popover", icon: MagnifyingGlass },
@@ -126,11 +132,14 @@ export function AppSidebar() {
           <Route path="/checkbox" element={<CheckBoxPage />} />
           <Route path="/command" element={<CommandPage />} />
           <Route path="/combobox" element={<ComboboxPage />} />
+          <Route path="/carousel" element={<CarouselPage />} />
           <Route path="/dialog" element={<DialogPage />} />
+          <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
           <Route path="/filter" element={<Filter />} />
           <Route path="/form" element={<ProfileForm />} />
           <Route path="/input" element={<InputPage />} />
+          <Route path="/inputOTP" element={<InputOTPPage />} />
           <Route path="/label" element={<LabelPage />} />
           <Route path="/multicombobox" element={<MultiComboboxPage />} />
           <Route path="/popover" element={<PopoverPage />} />

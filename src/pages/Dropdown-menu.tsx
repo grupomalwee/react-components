@@ -6,6 +6,7 @@ import {
   DropDownMenuSeparatorBase,
   DropDownMenuTriggerBase,
 } from "@/components/ui/DropDownMenuBase";
+import { Check, List } from "phosphor-react";
 
 export const DropDownMenuPage = () => {
   return (
@@ -13,14 +14,14 @@ export const DropDownMenuPage = () => {
       {/* DropDown Menu Component */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <DropDownMenuBase>
-          <DropDownMenuTriggerBase>Open</DropDownMenuTriggerBase>
+          <DropDownMenuTriggerBase><List /></DropDownMenuTriggerBase>
           <DropDownMenuContentBase>
             <DropDownMenuLabelBase>My Account</DropDownMenuLabelBase>
             <DropDownMenuSeparatorBase />
             <DropDownMenuItemBase>Profile</DropDownMenuItemBase>
             <DropDownMenuItemBase>Billing</DropDownMenuItemBase>
-            <DropDownMenuItemBase>Team</DropDownMenuItemBase>
-            <DropDownMenuItemBase>Subscription</DropDownMenuItemBase>
+            <DropDownMenuItemBase  rightIcon={<Check />}>Team</DropDownMenuItemBase>
+            <DropDownMenuItemBase  leftIcon={<Check />}>Subscription</DropDownMenuItemBase>
           </DropDownMenuContentBase>
         </DropDownMenuBase>
       </div>

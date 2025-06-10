@@ -23,17 +23,14 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
     ref
   ) => {
     return (
-      <div className="flex flex-col w-full min-w-[150px]">
-        {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
+      <div className="flex flex-col gap-1 w-full min-w-[150px]">
+        {label && (
+          <LabelBase className={labelClassname}>{label}</LabelBase>
+        )}
 
-        <div
-          className={cn(
-            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring",
-            type !== "file" && "border border-input"
-          )}
-        >
+        <div className="flex items-center rounded-md border border-input transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)]">
           {leftIcon && (
-            <div className="flex items-center justify-center px-2">
+            <div className="flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]">
               {leftIcon}
             </div>
           )}
@@ -41,7 +38,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
           <input
             type={type}
             className={cn(
-              "w-full flex-1 bg-transparent px-4 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+              "w-full overflow-hidden flex-1 bg-white dark:bg-[hsl(231,15%,19%)] px-3 py-1 text-base placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               className
             )}
             ref={ref}
@@ -49,7 +46,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
           />
 
           {rightIcon && (
-            <div className="flex items-center justify-center px-2">
+            <div className="flex items-center justify-center px-2 bg-white dark:bg-[hsl(231,15%,19%)]">
               {rightIcon}
             </div>
           )}

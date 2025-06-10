@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { ProgressBase } from "@/components/ui/ProgressBase";
+import {
+ ProgressBase,
+  ProgressSegmentsBase,
+  ProgressPanelsBase,
+  ProgressCirclesBase,
+} from "@/components/ui/ProgressBase";
 import { Download } from "phosphor-react";
 
 export const ProgressPage = () => {
@@ -21,36 +26,17 @@ export const ProgressPage = () => {
           label="Download "
           leftIcon={<Download />}
         />
-        <ProgressBase
-          value={progress}
-          className="w-[20%]"
-          label="Download"
-          leftIcon={<Download />}
+        <ProgressSegmentsBase segments={10} value={progress} label="Segment"/>
+        <ProgressPanelsBase
+          steps={["Briefing", "Design", "Dev", "Deploy"]}
+          currentStep={2}
+          label="Panels"
         />
-        <ProgressBase
-          value={progress}
-          className="w-[50%]"
-          label="Download"
-          rightIcon={<Download />}
-        />
-        <ProgressBase
-          value={progress}
-          className="w-[70%]"
-          label="Download"
-          leftIcon={<Download />}
-        />
-        <ProgressBase
-          value={progress}
-          className="w-[90%]"
-          label="Download"
-          rightIcon={<Download />}
-        />
-        <ProgressBase
-          value={progress}
-          showValue
-          className="w-[90%]"
-          label="Download"
-          leftIcon={<Download />}
+
+        <ProgressCirclesBase
+          steps={["Login", "Endereço", "Pagamento", "Felicidade"]}
+          currentStep={2}
+          label="Circle"
         />
       </section>
 
