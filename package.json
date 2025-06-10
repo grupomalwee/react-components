@@ -1,6 +1,6 @@
 {
-  "name": "@malwee/react-components",
-  "version": "1.2.0",
+  "name": "@mlw-packages/react-components",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
