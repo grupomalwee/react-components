@@ -30,11 +30,7 @@ const buttonVariantsBase = cva(
           hover:bg-accent hover:text-accent-foreground hover:shadow-md
         `,
         secondary: `
-<<<<<<< HEAD
           bg-secondary border border-transparent text-secondary-foreground shadow-sm
-=======
-          bg-secondary text-secondary-foreground shadow-sm border border-transparent
->>>>>>> origin/improvements/Home
           hover:opacity-80 hover:shadow-md
         `,
         ghost: `
