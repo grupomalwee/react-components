@@ -28,8 +28,9 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
 
         <div
           className={cn(
-            "flex items-center border border-input rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
-            type === "file" && "border-none p-0"
+            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
+            type !== "number" && type !== "file" && "border border-input",
+            (type === "file" || type === "number") && "border-none"
           )}
         >
           {leftIcon && (
