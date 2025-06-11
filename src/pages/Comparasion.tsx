@@ -96,6 +96,7 @@ function ComparisonRowFlex({
 
       <div className="flex-1 min-w-[200px]">
         <InputBase
+        type="number"
           label="Input de Tamanho"
           placeholder="Digite algo..."
           value={inputValue}
