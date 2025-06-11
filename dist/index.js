@@ -46,6 +46,7 @@ __export(index_exports, {
   AvatarFallbackBase: () => AvatarFallbackBase,
   AvatarImageBase: () => AvatarImageBase,
   ButtonBase: () => ButtonBase,
+  ButtonGroupBase: () => ButtonGroupBase,
   CalendarBase: () => CalendarBase2,
   CardBase: () => CardBase,
   CardContentBase: () => CardContentBase,
@@ -220,34 +221,12 @@ var buttonVariantsBase = (0, import_class_variance_authority.cva)(
   {
     variants: {
       variant: {
-        default: `
-          bg-primary text-primary-foreground shadow
-          hover:opacity-90
-          hover:shadow-md
-        `,
-        destructive: `
-          bg-destructive text-destructive-foreground shadow-sm
-          hover:bg-destructive/90 hover:shadow-md
-        `,
-        outline: `
-          border border-input bg-background shadow-sm
-          hover:bg-accent hover:text-accent-foreground hover:shadow-md
-        `,
-        secondary: `
-<<<<<<< HEAD
-          bg-secondary border border-transparent text-secondary-foreground shadow-sm
-=======
-          bg-secondary text-secondary-foreground shadow-sm border border-transparent
->>>>>>> origin/improvements/Home
-          hover:opacity-80 hover:shadow-md
-        `,
-        ghost: `
-          hover:bg-accent hover:text-accent-foreground
-        `,
-        link: `
-          text-primary underline-offset-4
-          hover:underline
-        `
+        default: "bg-primary text-primary-foreground shadow hover:opacity-90 hover:shadow-md",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:shadow-md",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm border border-transparent hover:opacity-80 hover:shadow-md",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline"
       },
       size: {
         default: "h-9 px-4 py-1.5",
@@ -276,6 +255,38 @@ var ButtonBase = React.forwardRef(
   }
 );
 ButtonBase.displayName = "Button";
+var ButtonGroupBase = React.forwardRef(
+  ({ className, children, orientation = "horizontal", ...props }, ref) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "div",
+      {
+        ref,
+        className: cn(
+          "inline-flex",
+          orientation === "vertical" ? "flex-col" : "flex-row",
+          "rounded-md overflow-hidden shadow-sm isolate",
+          className
+        ),
+        ...props,
+        children: React.Children.map(children, (child, index) => {
+          if (!React.isValidElement(child)) return child;
+          const typedChild = child;
+          return React.cloneElement(typedChild, {
+            className: cn(
+              typedChild.props.className,
+              "rounded-none border-0",
+              index === 0 && orientation === "horizontal" && "rounded-l-md",
+              index === 0 && orientation === "vertical" && "rounded-t-md",
+              index === React.Children.count(children) - 1 && orientation === "horizontal" && "rounded-r-md",
+              index === React.Children.count(children) - 1 && orientation === "vertical" && "rounded-b-md"
+            )
+          });
+        })
+      }
+    );
+  }
+);
+ButtonGroupBase.displayName = "ButtonGroup";
 
 // src/components/ui/AlertDialogBase.tsx
 var import_jsx_runtime2 = require("react/jsx-runtime");
@@ -619,8 +630,9 @@ var InputBase = React6.forwardRef(
         "div",
         {
           className: cn(
-            "flex items-center border border-input rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
-            type === "file" && "border-none p-0"
+            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
+            type !== "number" && type !== "file" && "border border-input",
+            (type === "file" || type === "number") && "border-none"
           ),
           children: [
             leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
@@ -3332,6 +3344,7 @@ function buildFilterSummary(filter, availableFilters) {
   AvatarFallbackBase,
   AvatarImageBase,
   ButtonBase,
+  ButtonGroupBase,
   CalendarBase,
   CardBase,
   CardContentBase,
