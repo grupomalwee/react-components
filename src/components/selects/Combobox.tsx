@@ -1,29 +1,24 @@
 import { useCallback, useMemo } from "react";
-import { ComboboxBase } from "./ComboboxBase";
+import { ComboboxBase, ComboboxItem } from "./ComboboxBase";
 import LabelBase from "../ui/LabelBase";
 
-export interface ComboboxItem {
-  label: string;
-  value: string;
-}
-
-export interface ComboboxProps {
-  items: ComboboxItem[];
-  selected: ComboboxItem["value"] | null;
-  onChange: (value: ComboboxItem["value"] | null) => void;
+export interface ComboboxProps<T extends string> {
+  items: ComboboxItem<T>[];
+  selected: ComboboxItem<T>["value"] | null;
+  onChange: (value: ComboboxItem<T>["value"] | null) => void;
   placeholder?: string;
   searchPlaceholder?: string;
   label?: string;
 }
 
-export function Combobox({
+export function Combobox<T extends string>({
   items,
   selected,
   onChange,
   placeholder,
   searchPlaceholder,
   label,
-}: ComboboxProps) {
+}: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
   const renderSelected = useMemo(
@@ -32,12 +27,12 @@ export function Combobox({
   );
 
   const checkIsSelected = useCallback(
-    (value: string) => (selected == null ? false : selected == value),
+    (value: T) => (selected == null ? false : selected == value),
     [selected]
   );
 
   const handleSelection = useCallback(
-    (value: string) => {
+    (value: T) => {
       onChange(value === selected ? null : value);
     },
     [selected, onChange]

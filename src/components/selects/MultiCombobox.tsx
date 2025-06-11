@@ -4,30 +4,30 @@ import { ComboboxBase } from "./ComboboxBase";
 import { X } from "phosphor-react";
 import LabelBase from "../ui/LabelBase";
 
-interface MultiComboboxProps
-  extends Omit<ComboboxProps, "selected" | "onChange"> {
+interface MultiComboboxProps<T extends string>
+  extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
   label?: string;
-  selected: string[];
-  onChange: (value: string[]) => void;
+  selected: T[];
+  onChange: (value: T[]) => void;
 }
 
-export function MultiCombobox({
+export function MultiCombobox<T extends string>({
   items,
   selected,
   onChange,
   placeholder,
   searchPlaceholder,
   label,
-}: MultiComboboxProps) {
+}: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
   const checkIsSelected = useCallback(
-    (value: string) => selected.includes(value),
+    (value: T) => selected.includes(value),
     [selected],
   );
 
   const handleSelection = useCallback(
-    (value: string) => {
+    (value: T) => {
       const isSelected = selected.includes(value);
       if (isSelected) {
         onChange(selected.filter((item) => item !== value));

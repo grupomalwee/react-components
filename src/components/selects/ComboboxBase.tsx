@@ -17,13 +17,13 @@ import { CaretDown, Check } from "phosphor-react";
 
 import { ReactNode, useState } from "react";
 
-export interface ComboboxItem {
+export interface ComboboxItem<T extends string> {
   label: string;
-  value: string;
+  value: T;
 }
 
 export interface ComboboxBaseProps<T extends string> {
-  items: ComboboxItem[];
+  items: ComboboxItem<T>[];
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
   checkIsSelected: (value: T) => boolean;
