@@ -30,7 +30,11 @@ const buttonVariantsBase = cva(
           hover:bg-accent hover:text-accent-foreground hover:shadow-md
         `,
         secondary: `
+<<<<<<< HEAD
           bg-secondary border border-transparent text-secondary-foreground shadow-sm
+=======
+          bg-secondary text-secondary-foreground shadow-sm border border-transparent
+>>>>>>> origin/improvements/Home
           hover:opacity-80 hover:shadow-md
         `,
         ghost: `
@@ -42,7 +46,7 @@ const buttonVariantsBase = cva(
         `,
       },
       size: {
-        default: "px-4 py-1.5",
+        default: "h-9 px-4 py-1.5",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",

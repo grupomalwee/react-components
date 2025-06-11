@@ -9,11 +9,33 @@ export const AvatarPage = () => {
     <>
       {/* Div contendo o Avatar e a Documentação, ambos em flex-col */}
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
-        {/* Avatar */}
-        <div className="flex justify-center">
+        <div className="justify-center">
           <AvatarBase>
-            <AvatarImageBase src="https://github.com/shadcn.png" />
+            <AvatarImageBase src="https://github.com/grupomalwee.png" />
             <AvatarFallbackBase>CN</AvatarFallbackBase>
+          </AvatarBase>
+        </div>
+        <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+          <AvatarBase>
+            <AvatarImageBase
+              src="https://github.com/grupomalwee.png"
+              alt="@shadcn"
+            />
+            <AvatarFallbackBase>CN</AvatarFallbackBase>
+          </AvatarBase>
+          <AvatarBase>
+            <AvatarImageBase
+              src="https://github.com/grupomalwee.png"
+              alt="@shadcn"
+            />
+            <AvatarFallbackBase>LR</AvatarFallbackBase>
+          </AvatarBase>
+          <AvatarBase>
+            <AvatarImageBase
+              src="https://github.com/grupomalwee.png"
+              alt="@shadcn"
+            />
+            <AvatarFallbackBase>ER</AvatarFallbackBase>
           </AvatarBase>
         </div>
 
