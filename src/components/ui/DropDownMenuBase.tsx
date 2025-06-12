@@ -5,7 +5,6 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight, Circle } from "phosphor-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-
 import { cn } from "../..//lib/utils";
 
 const DropDownMenuBase = DropdownMenuPrimitive.Root;
@@ -55,37 +54,34 @@ const DropDownMenuSubContentBase = React.forwardRef<
     {...props}
   />
 ));
-DropDownMenuSubContentBase.displayName =
-  DropdownMenuPrimitive.SubContent.displayName;
-
 const DropDownMenuContentBase = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      sideOffset={sideOffset}
+      forceMount={true}
+      ref={ref}
+      {...props}
+      className={cn("p-0", className)} 
+    >
       <AnimatePresence>
-        <DropdownMenuPrimitive.Content
-          asChild
-          sideOffset={sideOffset}
-          forceMount={true} 
-          ref={ref}
-          {...props}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 5 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 5 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className={cn(
+            "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+            className
+          )}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 5 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 5 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className={cn(
-              "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-              className
-            )}
-          >
-            {props.children}
-          </motion.div>
-        </DropdownMenuPrimitive.Content>
+          {props.children}
+        </motion.div>
       </AnimatePresence>
-    </DropdownMenuPrimitive.Portal>
+    </DropdownMenuPrimitive.Content>
+  </DropdownMenuPrimitive.Portal>
 ));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
 
@@ -114,7 +110,6 @@ const DropDownMenuItemBase = React.forwardRef<
   </DropdownMenuPrimitive.Item>
 ));
 DropDownMenuItemBase.displayName = DropdownMenuPrimitive.Item.displayName;
-
 
 const DropDownMenuCheckboxItemBase = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
