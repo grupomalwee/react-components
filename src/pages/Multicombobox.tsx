@@ -8,7 +8,7 @@ export const MultiComboboxPage = () => {
 
   return (
     <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
-      <div className="flex gap-5 justify-center">
+      <div className="flex gap-5 justify-center w-96">
         <MultiCombobox
           label="Selecione os cargos"
           items={[
@@ -16,7 +16,10 @@ export const MultiComboboxPage = () => {
             { label: "Designer", value: "designer" },
             { label: "Product Owner", value: "po" },
             { label: "Scrum Master", value: "scrum" },
-            { label: "Tech Lead", value: "techlead" },
+            { label: "Tech Lead", value: "765" },
+            { label: "Tech453 Lead", value: "534" },
+            { label: "Tec5345Lead", value: "techlead" },
+            { label: "Tech 3534Lead", value: "543" },
           ]}
           selected={selected}
           onChange={setSelected}

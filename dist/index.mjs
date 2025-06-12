@@ -855,6 +855,7 @@ import { Check as Check2, Moon, Sun } from "phosphor-react";
 import * as React10 from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight as CaretRight2, Circle } from "phosphor-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
 var DropDownMenuBase = DropdownMenuPrimitive.Root;
 var DropDownMenuTriggerBase = DropdownMenuPrimitive.Trigger;
@@ -890,18 +891,28 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
     ...props
   }
 ));
-DropDownMenuSubContentBase.displayName = DropdownMenuPrimitive.SubContent.displayName;
 var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(
   DropdownMenuPrimitive.Content,
   {
     sideOffset,
-    className: cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-      className
-    ),
+    forceMount: true,
     ref,
     ...props,
-    children: props.children
+    className: cn("p-0", className),
+    children: /* @__PURE__ */ jsx11(AnimatePresence, { children: /* @__PURE__ */ jsx11(
+      motion.div,
+      {
+        initial: { opacity: 0, scale: 0.95, y: 5 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, y: 5 },
+        transition: { duration: 0.2, ease: "easeOut" },
+        className: cn(
+          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          className
+        ),
+        children: props.children
+      }
+    ) })
   }
 ) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
@@ -1100,7 +1111,7 @@ import { useCallback, useMemo } from "react";
 import * as React11 from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlass } from "phosphor-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
 import { jsx as jsx14, jsxs as jsxs8 } from "react/jsx-runtime";
 var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   CommandPrimitive,
@@ -1120,8 +1131,8 @@ var dialogVariants = {
   exit: { opacity: 0, scale: 0.95, y: -20 }
 };
 var CommandDialogBase = ({ children, open, ...props }) => {
-  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
-    motion.div,
+  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence2, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
+    motion2.div,
     {
       initial: "hidden",
       animate: "visible",
@@ -1227,19 +1238,29 @@ function ComboboxBase({
 }) {
   const [open, setOpen] = useState4(false);
   return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full ", children: /* @__PURE__ */ jsxs9(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
-    /* @__PURE__ */ jsx16(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ jsxs9(
-      ButtonBase,
+    /* @__PURE__ */ jsx16(
+      PopoverTriggerBase,
       {
-        variant: "outline",
-        role: "combobox",
-        "aria-expanded": open,
-        children: [
-          renderSelected,
-          /* @__PURE__ */ jsx16("span", { children: /* @__PURE__ */ jsx16(CaretDown, { size: 16 }) }),
-          errorMessage && /* @__PURE__ */ jsx16("span", { className: "text-red-500", children: errorMessage })
-        ]
+        asChild: true,
+        className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]",
+        children: /* @__PURE__ */ jsxs9(
+          ButtonBase,
+          {
+            variant: "outline",
+            role: "combobox",
+            "aria-expanded": open,
+            className: cn(
+              "flex-wrap items-start gap-2 justify-between h-full",
+              errorMessage && "border-red-500"
+            ),
+            children: [
+              /* @__PURE__ */ jsx16("div", { className: "flex flex-wrap gap-2 flex-1", children: renderSelected }),
+              /* @__PURE__ */ jsx16(CaretDown, { size: 16, className: "mt-1" })
+            ]
+          }
+        )
       }
-    ) }),
+    ),
     /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ jsxs9(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
@@ -1357,14 +1378,22 @@ function MultiCombobox({
         children: [
           /* @__PURE__ */ jsx18("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
           /* @__PURE__ */ jsx18(
-            X2,
+            "span",
             {
-              size: 14,
+              role: "button",
+              tabIndex: 0,
               onClick: (e) => {
                 e.stopPropagation();
                 handleSelection(item.value);
               },
-              className: "cursor-pointer"
+              onKeyDown: (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleSelection(item.value);
+                }
+              },
+              className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
+              children: /* @__PURE__ */ jsx18(X2, { size: 14 })
             }
           )
         ]
@@ -1392,7 +1421,7 @@ function MultiCombobox({
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check as Check4, CaretDown as CaretDown2, CaretUp } from "phosphor-react";
-import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
+import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
 import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs12 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
@@ -1409,7 +1438,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
     children: [
       children,
       /* @__PURE__ */ jsx19(
-        motion2.span,
+        motion3.span,
         {
           animate: { rotate: open ? 180 : 0 },
           transition: { duration: 0.3 },
@@ -1447,7 +1476,7 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence2, { children: /* @__PURE__ */ jsx19(
+var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
   SelectPrimitive.Content,
   {
     ref,
@@ -1459,7 +1488,7 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
     ...props,
     asChild: true,
     children: /* @__PURE__ */ jsx19(
-      motion2.div,
+      motion3.div,
       {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
@@ -1697,7 +1726,7 @@ CardFooterBase.displayName = "CardFooter";
 import * as React16 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check as Check5 } from "phosphor-react";
-import { motion as motion3 } from "framer-motion";
+import { motion as motion4 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
@@ -1709,7 +1738,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
     ),
     ...props,
     children: /* @__PURE__ */ jsx24(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ jsx24(
-      motion3.div,
+      motion4.div,
       {
         initial: { scale: 0, opacity: 0, rotate: -90 },
         animate: { scale: 1, opacity: 1, rotate: 0 },
@@ -1974,7 +2003,7 @@ var ProgressCirclesBase = ({
 // src/components/ui/SeparatorBase.tsx
 import * as React19 from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { motion as motion4 } from "framer-motion";
+import { motion as motion5 } from "framer-motion";
 import { jsx as jsx27 } from "react/jsx-runtime";
 var SeparatorBase = React19.forwardRef(
   ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
@@ -1988,7 +2017,7 @@ var SeparatorBase = React19.forwardRef(
         asChild: true,
         ...props,
         children: /* @__PURE__ */ jsx27(
-          motion4.div,
+          motion5.div,
           {
             className: cn(
               "shrink-0 bg-border",
@@ -2805,19 +2834,19 @@ var SlideBase = React23.forwardRef(
 SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
-import { useTheme as useTheme2 } from "next-themes";
-import { Toaster as Sonner } from "sonner";
+import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 import { jsx as jsx33 } from "react/jsx-runtime";
 var Toaster = ({ ...props }) => {
-  const { theme = "system" } = useTheme2();
   return /* @__PURE__ */ jsx33(
     Sonner,
     {
-      theme,
       className: "toaster group",
+      position: "top-center",
       toastOptions: {
         classNames: {
-          toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+          toast: `group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg
+            data-[type=success]:text-green-500 
+            data-[type=error]:text-red-500`,
           description: "group-[.toast]:text-muted-foreground",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground"
@@ -2827,6 +2856,7 @@ var Toaster = ({ ...props }) => {
     }
   );
 };
+var toast = sonnertoast;
 
 // src/components/ui/SwitchBase.tsx
 import * as React24 from "react";
@@ -3283,6 +3313,7 @@ export {
   buildFilterSummary,
   buttonVariantsBase,
   defaultStringConditions,
+  toast,
   useFormFieldBase,
   useIsMobile,
   useTheme

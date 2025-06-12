@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight, Circle } from "phosphor-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";
 
@@ -53,28 +54,6 @@ const DropDownMenuSubContentBase = React.forwardRef<
     {...props}
   />
 ));
-DropDownMenuSubContentBase.displayName =
-  DropdownMenuPrimitive.SubContent.displayName;
-
-// function DropDownMenuContentBase({
-//   className,
-//   sideOffset = 4,
-//   ...props
-// }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
-//   return (
-//     <DropdownMenuPrimitive.Portal>
-//       <DropdownMenuPrimitive.Content
-//         sideOffset={sideOffset}
-//         className={cn(
-//               "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-//               className
-//             )}
-//         {...props}
-//       />
-//     </DropdownMenuPrimitive.Portal>
-//   )
-// }
-
 const DropDownMenuContentBase = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
@@ -82,14 +61,25 @@ const DropDownMenuContentBase = React.forwardRef<
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       sideOffset={sideOffset}
-      className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-        className
-      )}
+      forceMount={true}
       ref={ref}
       {...props}
+      className={cn("p-0", className)} 
     >
-      {props.children}
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 5 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 5 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className={cn(
+            "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+            className
+          )}
+        >
+          {props.children}
+        </motion.div>
+      </AnimatePresence>
     </DropdownMenuPrimitive.Content>
   </DropdownMenuPrimitive.Portal>
 ));

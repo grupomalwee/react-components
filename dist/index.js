@@ -186,6 +186,7 @@ __export(index_exports, {
   buildFilterSummary: () => buildFilterSummary,
   buttonVariantsBase: () => buttonVariantsBase,
   defaultStringConditions: () => defaultStringConditions,
+  toast: () => toast,
   useFormFieldBase: () => useFormFieldBase,
   useIsMobile: () => useIsMobile,
   useTheme: () => useTheme
@@ -1047,6 +1048,7 @@ var import_phosphor_react6 = require("phosphor-react");
 var React10 = __toESM(require("react"));
 var DropdownMenuPrimitive = __toESM(require("@radix-ui/react-dropdown-menu"));
 var import_phosphor_react5 = require("phosphor-react");
+var import_framer_motion = require("framer-motion");
 var import_jsx_runtime11 = require("react/jsx-runtime");
 var DropDownMenuBase = DropdownMenuPrimitive.Root;
 var DropDownMenuTriggerBase = DropdownMenuPrimitive.Trigger;
@@ -1082,18 +1084,28 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
     ...props
   }
 ));
-DropDownMenuSubContentBase.displayName = DropdownMenuPrimitive.SubContent.displayName;
 var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
   DropdownMenuPrimitive.Content,
   {
     sideOffset,
-    className: cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-      className
-    ),
+    forceMount: true,
     ref,
     ...props,
-    children: props.children
+    className: cn("p-0", className),
+    children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(import_framer_motion.AnimatePresence, { children: /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+      import_framer_motion.motion.div,
+      {
+        initial: { opacity: 0, scale: 0.95, y: 5 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, y: 5 },
+        transition: { duration: 0.2, ease: "easeOut" },
+        className: cn(
+          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          className
+        ),
+        children: props.children
+      }
+    ) })
   }
 ) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
@@ -1292,7 +1304,7 @@ var import_react5 = require("react");
 var React11 = __toESM(require("react"));
 var import_cmdk = require("cmdk");
 var import_phosphor_react7 = require("phosphor-react");
-var import_framer_motion = require("framer-motion");
+var import_framer_motion2 = require("framer-motion");
 var import_jsx_runtime14 = require("react/jsx-runtime");
 var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
   import_cmdk.Command,
@@ -1312,8 +1324,8 @@ var dialogVariants = {
   exit: { opacity: 0, scale: 0.95, y: -20 }
 };
 var CommandDialogBase = ({ children, open, ...props }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(DialogBase, { open, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_framer_motion.AnimatePresence, { children: open && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-    import_framer_motion.motion.div,
+  return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(DialogBase, { open, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(import_framer_motion2.AnimatePresence, { children: open && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+    import_framer_motion2.motion.div,
     {
       initial: "hidden",
       animate: "visible",
@@ -1419,19 +1431,29 @@ function ComboboxBase({
 }) {
   const [open, setOpen] = (0, import_react4.useState)(false);
   return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "col-span-1 w-full ", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverTriggerBase, { asChild: true, className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(
-      ButtonBase,
+    /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+      PopoverTriggerBase,
       {
-        variant: "outline",
-        role: "combobox",
-        "aria-expanded": open,
-        children: [
-          renderSelected,
-          /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_phosphor_react8.CaretDown, { size: 16 }) }),
-          errorMessage && /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("span", { className: "text-red-500", children: errorMessage })
-        ]
+        asChild: true,
+        className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]",
+        children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(
+          ButtonBase,
+          {
+            variant: "outline",
+            role: "combobox",
+            "aria-expanded": open,
+            className: cn(
+              "flex-wrap items-start gap-2 justify-between h-full",
+              errorMessage && "border-red-500"
+            ),
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)("div", { className: "flex flex-wrap gap-2 flex-1", children: renderSelected }),
+              /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(import_phosphor_react8.CaretDown, { size: 16, className: "mt-1" })
+            ]
+          }
+        )
       }
-    ) }),
+    ),
     /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ (0, import_jsx_runtime16.jsxs)(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
         CommandInputBase,
@@ -1549,14 +1571,22 @@ function MultiCombobox({
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
           /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
-            import_phosphor_react9.X,
+            "span",
             {
-              size: 14,
+              role: "button",
+              tabIndex: 0,
               onClick: (e) => {
                 e.stopPropagation();
                 handleSelection(item.value);
               },
-              className: "cursor-pointer"
+              onKeyDown: (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleSelection(item.value);
+                }
+              },
+              className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
+              children: /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(import_phosphor_react9.X, { size: 14 })
             }
           )
         ]
@@ -1584,7 +1614,7 @@ function MultiCombobox({
 var React13 = __toESM(require("react"));
 var SelectPrimitive = __toESM(require("@radix-ui/react-select"));
 var import_phosphor_react10 = require("phosphor-react");
-var import_framer_motion2 = require("framer-motion");
+var import_framer_motion3 = require("framer-motion");
 var import_jsx_runtime19 = require("react/jsx-runtime");
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
@@ -1601,7 +1631,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
     children: [
       children,
       /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
-        import_framer_motion2.motion.span,
+        import_framer_motion3.motion.span,
         {
           animate: { rotate: open ? 180 : 0 },
           transition: { duration: 0.3 },
@@ -1639,7 +1669,7 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(SelectPrimitive.Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(import_framer_motion2.AnimatePresence, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(SelectPrimitive.Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(import_framer_motion3.AnimatePresence, { children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
   SelectPrimitive.Content,
   {
     ref,
@@ -1651,7 +1681,7 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
     ...props,
     asChild: true,
     children: /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
-      import_framer_motion2.motion.div,
+      import_framer_motion3.motion.div,
       {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
@@ -1889,7 +1919,7 @@ CardFooterBase.displayName = "CardFooter";
 var React16 = __toESM(require("react"));
 var CheckboxPrimitive = __toESM(require("@radix-ui/react-checkbox"));
 var import_phosphor_react12 = require("phosphor-react");
-var import_framer_motion3 = require("framer-motion");
+var import_framer_motion4 = require("framer-motion");
 var import_jsx_runtime24 = require("react/jsx-runtime");
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
   CheckboxPrimitive.Root,
@@ -1901,7 +1931,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
     ),
     ...props,
     children: /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
-      import_framer_motion3.motion.div,
+      import_framer_motion4.motion.div,
       {
         initial: { scale: 0, opacity: 0, rotate: -90 },
         animate: { scale: 1, opacity: 1, rotate: 0 },
@@ -2162,7 +2192,7 @@ var ProgressCirclesBase = ({
 // src/components/ui/SeparatorBase.tsx
 var React19 = __toESM(require("react"));
 var SeparatorPrimitive = __toESM(require("@radix-ui/react-separator"));
-var import_framer_motion4 = require("framer-motion");
+var import_framer_motion5 = require("framer-motion");
 var import_jsx_runtime27 = require("react/jsx-runtime");
 var SeparatorBase = React19.forwardRef(
   ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
@@ -2176,7 +2206,7 @@ var SeparatorBase = React19.forwardRef(
         asChild: true,
         ...props,
         children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
-          import_framer_motion4.motion.div,
+          import_framer_motion5.motion.div,
           {
             className: cn(
               "shrink-0 bg-border",
@@ -2993,19 +3023,19 @@ var SlideBase = React23.forwardRef(
 SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
-var import_next_themes = require("next-themes");
 var import_sonner = require("sonner");
 var import_jsx_runtime33 = require("react/jsx-runtime");
 var Toaster = ({ ...props }) => {
-  const { theme = "system" } = (0, import_next_themes.useTheme)();
   return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
     import_sonner.Toaster,
     {
-      theme,
       className: "toaster group",
+      position: "top-center",
       toastOptions: {
         classNames: {
-          toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+          toast: `group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg
+            data-[type=success]:text-green-500 
+            data-[type=error]:text-red-500`,
           description: "group-[.toast]:text-muted-foreground",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground"
@@ -3015,6 +3045,7 @@ var Toaster = ({ ...props }) => {
     }
   );
 };
+var toast = import_sonner.toast;
 
 // src/components/ui/SwitchBase.tsx
 var React24 = __toESM(require("react"));
@@ -3472,6 +3503,7 @@ function buildFilterSummary(filter, availableFilters) {
   buildFilterSummary,
   buttonVariantsBase,
   defaultStringConditions,
+  toast,
   useFormFieldBase,
   useIsMobile,
   useTheme

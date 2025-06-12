@@ -7,10 +7,10 @@ import {
   CommandListBase,
 } from "@/components/ui/CommandBase";
 import {
-   PopoverBase,
+  PopoverBase,
   PopoverContentBase,
   PopoverTriggerBase,
-}from "@/components/ui/PopoverBase"
+} from "@/components/ui/PopoverBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
 import { CaretDown, Check } from "phosphor-react";
@@ -44,19 +44,21 @@ export function ComboboxBase<T extends string>({
   return (
     <div className="col-span-1 w-full ">
       <PopoverBase open={open} onOpenChange={setOpen} modal>
-        <PopoverTriggerBase asChild className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]">
+        <PopoverTriggerBase
+          asChild
+          className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]"
+        >
           <ButtonBase
             variant="outline"
             role="combobox"
             aria-expanded={open}
-          >
-            {renderSelected}
-            <span>
-              <CaretDown size={16} />
-            </span>
-            {errorMessage && (
-              <span className="text-red-500">{errorMessage}</span>
+            className={cn(
+              "flex-wrap items-start gap-2 justify-between h-full",
+              errorMessage && "border-red-500"
             )}
+          >
+            <div className="flex flex-wrap gap-2 flex-1">{renderSelected}</div>
+            <CaretDown size={16} className="mt-1" />
           </ButtonBase>
         </PopoverTriggerBase>
         <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none">

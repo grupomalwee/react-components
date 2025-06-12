@@ -35,7 +35,7 @@ export function MultiCombobox<T extends string>({
         onChange([...selected, value]);
       }
     },
-    [selected, onChange],
+    [selected, onChange]
   );
 
   const renderSelected = useMemo(() => {
@@ -50,14 +50,23 @@ export function MultiCombobox<T extends string>({
         <span className="truncate whitespace-break-spaces text-xs">
           {item.label}
         </span>
-        <X
-          size={14}
+        <span
+          role="button"
+          tabIndex={0}
           onClick={(e) => {
             e.stopPropagation();
             handleSelection(item.value);
           }}
-          className="cursor-pointer"
-        />
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleSelection(item.value);
+            }
+          }}
+          className="cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all"
+        >
+          <X size={14} />
+        </span>
       </div>
     ));
 
