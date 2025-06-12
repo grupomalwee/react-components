@@ -10,18 +10,32 @@ import { Check, List } from "phosphor-react";
 
 export const DropDownMenuPage = () => {
   return (
-    <>
+    <div className="flex flex-col gap-6">
       {/* DropDown Menu Component */}
-      <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
+      <div className="ml-5 mt-5">
         <DropDownMenuBase>
-          <DropDownMenuTriggerBase><List /></DropDownMenuTriggerBase>
-          <DropDownMenuContentBase>
+          <DropDownMenuTriggerBase className="flex items-center gap-2">
+            Abrir menu
+            <List />
+          </DropDownMenuTriggerBase>
+          <DropDownMenuContentBase align="end">
             <DropDownMenuLabelBase>My Account</DropDownMenuLabelBase>
             <DropDownMenuSeparatorBase />
-            <DropDownMenuItemBase>Profile</DropDownMenuItemBase>
+            <DropDownMenuItemBase
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('event')
+              }}
+            >
+              Profile
+            </DropDownMenuItemBase>
             <DropDownMenuItemBase>Billing</DropDownMenuItemBase>
-            <DropDownMenuItemBase  rightIcon={<Check />}>Team</DropDownMenuItemBase>
-            <DropDownMenuItemBase  leftIcon={<Check />}>Subscription</DropDownMenuItemBase>
+            <DropDownMenuItemBase rightIcon={<Check />}>
+              Team
+            </DropDownMenuItemBase>
+            <DropDownMenuItemBase leftIcon={<Check />}>
+              Subscription
+            </DropDownMenuItemBase>
           </DropDownMenuContentBase>
         </DropDownMenuBase>
       </div>
@@ -68,6 +82,6 @@ export const DropDownMenuPage = () => {
           </pre>
         </div>
       </div>
-    </>
+    </div>
   );
 };
