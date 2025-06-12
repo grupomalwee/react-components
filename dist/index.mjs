@@ -855,7 +855,6 @@ import { Check as Check2, Moon, Sun } from "phosphor-react";
 import * as React10 from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight as CaretRight2, Circle } from "phosphor-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
 var DropDownMenuBase = DropdownMenuPrimitive.Root;
 var DropDownMenuTriggerBase = DropdownMenuPrimitive.Trigger;
@@ -892,30 +891,19 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
   }
 ));
 DropDownMenuSubContentBase.displayName = DropdownMenuPrimitive.SubContent.displayName;
-var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(AnimatePresence, { children: /* @__PURE__ */ jsx11(
+var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(
   DropdownMenuPrimitive.Content,
   {
-    asChild: true,
     sideOffset,
-    forceMount: true,
+    className: cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+      className
+    ),
     ref,
     ...props,
-    children: /* @__PURE__ */ jsx11(
-      motion.div,
-      {
-        initial: { opacity: 0, scale: 0.95, y: 5 },
-        animate: { opacity: 1, scale: 1, y: 0 },
-        exit: { opacity: 0, scale: 0.95, y: 5 },
-        transition: { duration: 0.2, ease: "easeOut" },
-        className: cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-          className
-        ),
-        children: props.children
-      }
-    )
+    children: props.children
   }
-) }) }));
+) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
 var DropDownMenuItemBase = React10.forwardRef(({ className, inset, leftIcon, rightIcon, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
   DropdownMenuPrimitive.Item,
@@ -1112,7 +1100,7 @@ import { useCallback, useMemo } from "react";
 import * as React11 from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlass } from "phosphor-react";
-import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { jsx as jsx14, jsxs as jsxs8 } from "react/jsx-runtime";
 var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
   CommandPrimitive,
@@ -1132,8 +1120,8 @@ var dialogVariants = {
   exit: { opacity: 0, scale: 0.95, y: -20 }
 };
 var CommandDialogBase = ({ children, open, ...props }) => {
-  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence2, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
-    motion2.div,
+  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
+    motion.div,
     {
       initial: "hidden",
       animate: "visible",
@@ -1404,7 +1392,7 @@ function MultiCombobox({
 import * as React13 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check as Check4, CaretDown as CaretDown2, CaretUp } from "phosphor-react";
-import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
+import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
 import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs12 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
@@ -1421,7 +1409,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
     children: [
       children,
       /* @__PURE__ */ jsx19(
-        motion3.span,
+        motion2.span,
         {
           animate: { rotate: open ? 180 : 0 },
           transition: { duration: 0.3 },
@@ -1459,7 +1447,7 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
+var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence2, { children: /* @__PURE__ */ jsx19(
   SelectPrimitive.Content,
   {
     ref,
@@ -1471,7 +1459,7 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
     ...props,
     asChild: true,
     children: /* @__PURE__ */ jsx19(
-      motion3.div,
+      motion2.div,
       {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
@@ -1709,7 +1697,7 @@ CardFooterBase.displayName = "CardFooter";
 import * as React16 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check as Check5 } from "phosphor-react";
-import { motion as motion4 } from "framer-motion";
+import { motion as motion3 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
 var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
@@ -1721,7 +1709,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
     ),
     ...props,
     children: /* @__PURE__ */ jsx24(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ jsx24(
-      motion4.div,
+      motion3.div,
       {
         initial: { scale: 0, opacity: 0, rotate: -90 },
         animate: { scale: 1, opacity: 1, rotate: 0 },
@@ -1986,7 +1974,7 @@ var ProgressCirclesBase = ({
 // src/components/ui/SeparatorBase.tsx
 import * as React19 from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { motion as motion5 } from "framer-motion";
+import { motion as motion4 } from "framer-motion";
 import { jsx as jsx27 } from "react/jsx-runtime";
 var SeparatorBase = React19.forwardRef(
   ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
@@ -2000,7 +1988,7 @@ var SeparatorBase = React19.forwardRef(
         asChild: true,
         ...props,
         children: /* @__PURE__ */ jsx27(
-          motion5.div,
+          motion4.div,
           {
             className: cn(
               "shrink-0 bg-border",
