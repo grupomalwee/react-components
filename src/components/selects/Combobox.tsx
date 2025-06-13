@@ -9,6 +9,7 @@ export interface ComboboxProps<T extends string> {
   placeholder?: string;
   searchPlaceholder?: string;
   label?: string;
+  labelClassname?:string
 }
 
 export function Combobox<T extends string>({
@@ -18,6 +19,7 @@ export function Combobox<T extends string>({
   placeholder,
   searchPlaceholder,
   label,
+  labelClassname
 }: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
@@ -40,7 +42,7 @@ export function Combobox<T extends string>({
 
   return (
     <div className="flex flex-col gap-1 w-full min-w-[150px]">
-      {label && <LabelBase>{label}</LabelBase>}
+      {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
 
       <ComboboxBase
         items={items}

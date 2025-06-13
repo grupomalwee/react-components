@@ -80,7 +80,7 @@ const ButtonGroupBase = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
         className={cn(
           "inline-flex",
           orientation === "vertical" ? "flex-col" : "flex-row",
-          "rounded-md overflow-hidden shadow-sm isolate",
+          "rounded-md overflow-hidden isolate",
           className
         )}
         {...props}

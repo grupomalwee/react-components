@@ -14,7 +14,6 @@ import {
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
 import { CaretDown, Check } from "phosphor-react";
-
 import { ReactNode, useState } from "react";
 
 export interface ComboboxItem<T extends string> {
@@ -29,6 +28,7 @@ export interface ComboboxBaseProps<T extends string> {
   checkIsSelected: (value: T) => boolean;
   searchPlaceholder?: string;
   errorMessage?: string;
+
 }
 
 export function ComboboxBase<T extends string>({
@@ -38,11 +38,12 @@ export function ComboboxBase<T extends string>({
   checkIsSelected,
   searchPlaceholder,
   errorMessage,
+
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="col-span-1 w-full ">
+    <div className="col-span-1 w-full">
       <PopoverBase open={open} onOpenChange={setOpen} modal>
         <PopoverTriggerBase
           asChild
@@ -61,6 +62,7 @@ export function ComboboxBase<T extends string>({
             <CaretDown size={16} className="mt-1" />
           </ButtonBase>
         </PopoverTriggerBase>
+
         <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none">
           <CommandBase className="dark:text-white">
             <CommandInputBase
