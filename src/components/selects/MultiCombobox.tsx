@@ -9,7 +9,7 @@ interface MultiComboboxProps<T extends string>
   label?: string;
   selected: T[];
   onChange: (value: T[]) => void;
-  labelClassname?: string
+  labelClassname?: string;
 }
 
 export function MultiCombobox<T extends string>({
@@ -19,13 +19,13 @@ export function MultiCombobox<T extends string>({
   placeholder,
   searchPlaceholder,
   label,
-  labelClassname
+  labelClassname,
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
   const checkIsSelected = useCallback(
     (value: T) => selected.includes(value),
-    [selected],
+    [selected]
   );
 
   const handleSelection = useCallback(
@@ -41,8 +41,13 @@ export function MultiCombobox<T extends string>({
   );
 
   const renderSelected = useMemo(() => {
-    if (selectedItems.length === 0)
-      return placeholder ?? "Selecione uma opção...";
+    if (selectedItems.length === 0) {
+      return (
+        <span className="text-gray-500">
+          {placeholder ?? "Selecione uma opção..."}
+        </span>
+      );
+    }
 
     const items = selectedItems.map((item) => (
       <div

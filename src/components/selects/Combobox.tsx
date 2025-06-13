@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { ComboboxBase, ComboboxItem } from "./ComboboxBase";
 import LabelBase from "../ui/LabelBase";
-
+import { cn } from "@/lib/utils";
 export interface ComboboxProps<T extends string> {
   items: ComboboxItem<T>[];
   selected: ComboboxItem<T>["value"] | null;
@@ -23,10 +23,16 @@ export function Combobox<T extends string>({
 }: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
-  const renderSelected = useMemo(
-    () => selectedItem?.label ?? placeholder ?? "Selecione uma opção...",
-    [placeholder, selectedItem]
+  const renderSelected = useMemo(() => {
+  const isEmpty = !selectedItem;
+
+  return (
+    <span className={cn("truncate", isEmpty ? "text-gray-500" : "text-black")}>
+      {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}
+    </span>
   );
+}, [placeholder, selectedItem]);
+
 
   const checkIsSelected = useCallback(
     (value: T) => (selected == null ? false : selected == value),
