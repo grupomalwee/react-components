@@ -5,7 +5,7 @@ import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
-const iconBaseClass = "w-7 h-auto";
+const iconBaseClass = "w-5 h-auto";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
