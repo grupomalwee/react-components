@@ -48,7 +48,7 @@ const DropDownMenuSubContentBase = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      " min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -59,29 +59,30 @@ const DropDownMenuContentBase = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
-    <DropdownMenuPrimitive.Content
-      sideOffset={sideOffset}
-      forceMount={true}
-      ref={ref}
-      {...props}
-      className={cn("p-0", className)} 
-    >
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 5 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 5 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className={cn(
-            "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-            className
-          )}
-        >
-          {props.children}
-        </motion.div>
-      </AnimatePresence>
-    </DropdownMenuPrimitive.Content>
-  </DropdownMenuPrimitive.Portal>
+  <DropdownMenuPrimitive.Content
+    sideOffset={sideOffset}
+    forceMount={true}
+    ref={ref}
+    className={cn("z-[9999] p-0", className)}
+    {...props}
+  >
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 5 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 5 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className={cn(
+          "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          className
+        )}
+      >
+        {props.children}
+      </motion.div>
+    </AnimatePresence>
+  </DropdownMenuPrimitive.Content>
+</DropdownMenuPrimitive.Portal>
+
 ));
 
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;

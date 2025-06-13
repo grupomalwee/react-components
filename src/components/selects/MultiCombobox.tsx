@@ -9,6 +9,7 @@ interface MultiComboboxProps<T extends string>
   label?: string;
   selected: T[];
   onChange: (value: T[]) => void;
+  labelClassname?: string
 }
 
 export function MultiCombobox<T extends string>({
@@ -18,6 +19,7 @@ export function MultiCombobox<T extends string>({
   placeholder,
   searchPlaceholder,
   label,
+  labelClassname
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
@@ -75,7 +77,7 @@ export function MultiCombobox<T extends string>({
 
   return (
     <div className="flex flex-col gap-1 w-full min-w-[150px]">
-      {label && <LabelBase>{label}</LabelBase>}
+      {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
       <ComboboxBase
         items={items}
         renderSelected={renderSelected}
