@@ -23,41 +23,27 @@ function ComparisonRowGrid({
   setInputValue,
 }: Props) {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-4 gap-6 place-items-end w-full">
-      <div className="w-full">
-        <label className="block mb-1 text-sm font-medium">ComboBox</label>
-        <Combobox
-          items={cargos}
-          selected={selected}
-          onChange={setSelected}
-          placeholder="Escolha uma opção"
-          searchPlaceholder="Buscar cargo..."
-        />
-      </div>
-
-      <div className="w-full">
-        <label className="block mb-1 text-sm font-medium">MultiComboBox</label>
-        <MultiCombobox
-          items={cargos}
-          selected={selectedMulti}
-          onChange={setSelectedMulti}
-          placeholder="Escolha os cargos"
-          searchPlaceholder="Buscar cargo..."
-        />
-      </div>
-
-      <div className="w-full">
-        <InputBase
-          label="Input de Tamanho"
-          placeholder="Digite algo..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      </div>
-
-      <div className="w-full flex justify-end">
-        <ButtonBase className="px-6">Comparar</ButtonBase>
-      </div>
+    <section className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full bg-red-500">
+      <Combobox
+        items={cargos}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Escolha uma opção"
+        searchPlaceholder="Buscar cargo..."
+      />
+      <MultiCombobox
+        items={cargos}
+        selected={selectedMulti}
+        onChange={setSelectedMulti}
+        placeholder="Escolha os cargos"
+        searchPlaceholder="Buscar cargo..."
+      />
+      <InputBase
+        placeholder="Digite algo..."
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <ButtonBase>Comparar</ButtonBase>
     </section>
   );
 }
@@ -71,42 +57,29 @@ function ComparisonRowFlex({
   setInputValue,
 }: Props) {
   return (
-    <section className="flex flex-wrap gap-6 w-full items-end">
-      <div className="flex-1 min-w-[200px]">
-        <label className="block mb-1 text-sm font-medium">ComboBox</label>
-        <Combobox
-          items={cargos}
-          selected={selected}
-          onChange={setSelected}
-          placeholder="Escolha uma opção"
-          searchPlaceholder="Buscar cargo..."
-        />
-      </div>
+    <section className="flex gap-6 w-full bg-red-500">
+      <Combobox
+        items={cargos}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Escolha uma opção"
+        searchPlaceholder="Buscar cargo..."
+      />
 
-      <div className="flex-1 min-w-[200px]">
-        <label className="block mb-1 text-sm font-medium">MultiComboBox</label>
-        <MultiCombobox
-          items={cargos}
-          selected={selectedMulti}
-          onChange={setSelectedMulti}
-          placeholder="Escolha os cargos"
-          searchPlaceholder="Buscar cargo..."
-        />
-      </div>
-
-      <div className="flex-1 min-w-[200px]">
-        <InputBase
+      <MultiCombobox
+        items={cargos}
+        selected={selectedMulti}
+        onChange={setSelectedMulti}
+        placeholder="Escolha os cargos"
+        searchPlaceholder="Buscar cargo..."
+      />
+      <InputBase
         type="number"
-          label="Input de Tamanho"
-          placeholder="Digite algo..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      </div>
-
-      <div className="w-fit">
-        <ButtonBase className="px-6">Comparar</ButtonBase>
-      </div>
+        placeholder="Digite algo..."
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <ButtonBase>Comparar</ButtonBase>
     </section>
   );
 }

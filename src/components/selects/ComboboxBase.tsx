@@ -54,7 +54,7 @@ export function ComboboxBase<T extends string>({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "flex-wrap items-start gap-2 justify-between h-full",
+              "flex items-start gap-2 justify-between h-full",
               errorMessage && "border-red-500"
             )}
           >
