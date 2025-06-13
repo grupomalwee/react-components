@@ -16,18 +16,36 @@ const Toaster = ({ ...props }: ToasterProps) => {
         classNames: {
           toast: `
             group toast
-            group-[.toaster]:bg-background group-[.toaster]:text-foreground 
-            group-[.toaster]:border group-[.toaster]:shadow-xl
-            data-[type=success]:border-green-500
-            data-[type=error]:border-red-500
-            data-[type=warning]:border-yellow-500 
-            data-[type=info]:border-blue-500
+            bg-white dark:bg-gray-900
+            text-gray-900 dark:text-gray-100
+            shadow-lg rounded-md
+            border-l-8
+            border-border
+            flex items-center gap-3
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 dark:data-[type=success]:bg-green-900/30 dark:data-[type=success]:text-green-400
+            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 dark:data-[type=error]:bg-red-900/30 dark:data-[type=error]:text-red-400
+            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 dark:data-[type=warning]:bg-yellow-900/30 dark:data-[type=warning]:text-yellow-400
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 dark:data-[type=info]:bg-blue-900/30 dark:data-[type=info]:text-blue-400
           `,
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          description: `
+            text-sm
+            group-[.toast]:text-muted-foreground
+            dark:group-[.toast]:text-muted-foreground/80
+          `,
+          actionButton: `
+            ml-auto
+            rounded-md px-3 py-1 text-sm font-semibold
+            bg-primary text-primary-foreground
+            hover:bg-primary/80
+            transition-colors duration-200
+          `,
+          cancelButton: `
+            ml-2
+            rounded-md px-3 py-1 text-sm font-semibold
+            bg-muted text-muted-foreground
+            hover:bg-muted/80
+            transition-colors duration-200
+          `,
         },
       }}
       {...props}

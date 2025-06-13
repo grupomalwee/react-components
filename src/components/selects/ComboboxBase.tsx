@@ -29,7 +29,6 @@ export interface ComboboxBaseProps<T extends string> {
   checkIsSelected: (value: T) => boolean;
   searchPlaceholder?: string;
   errorMessage?: string;
-  labelClassname?: string;
   label?: string;
 }
 
@@ -40,7 +39,6 @@ export function ComboboxBase<T extends string>({
   checkIsSelected,
   searchPlaceholder,
   errorMessage,
-  labelClassname,
   label,
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
@@ -49,10 +47,7 @@ export function ComboboxBase<T extends string>({
     <div className="col-span-1 w-full">
       {label && (
         <LabelBase
-          className={cn(
-            "mb-1 block text-sm font-medium text-foreground",
-            labelClassname
-          )}
+          className={cn("mb-1 block text-sm font-medium text-foreground")}
         >
           {label}
         </LabelBase>
