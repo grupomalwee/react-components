@@ -18,7 +18,6 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as SliderPrimitive from '@radix-ui/react-slider';
-import * as sonner from 'sonner';
 import { Toaster as Toaster$1 } from 'sonner';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
@@ -376,51 +375,12 @@ declare const SlideBase: React$1.ForwardRefExoticComponent<SliderBaseProps & Rea
 
 type ToasterProps = React.ComponentProps<typeof Toaster$1>;
 declare const Toaster: ({ ...props }: ToasterProps) => react_jsx_runtime.JSX.Element;
-declare const toast: ((message: React$1.ReactNode | (() => React.ReactNode), data?: sonner.ExternalToast) => string | number) & {
-    success: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-    info: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-    warning: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-    error: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-    custom: (jsx: (id: number | string) => React.ReactElement, data?: sonner.ExternalToast) => string | number;
-    message: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-    promise: <ToastData>(promise: Promise<ToastData> | (() => Promise<ToastData>), data?: {
-        icon?: React$1.ReactNode;
-        className?: string | undefined;
-        id?: number | string | undefined;
-        style?: React.CSSProperties | undefined;
-        onDismiss?: ((toast: sonner.ToastT) => void) | undefined;
-        position?: ("top-center" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "bottom-center") | undefined;
-        duration?: number | undefined;
-        cancel?: React$1.ReactNode | sonner.Action;
-        invert?: boolean | undefined;
-        richColors?: boolean | undefined;
-        closeButton?: boolean | undefined;
-        dismissible?: boolean | undefined;
-        action?: React$1.ReactNode | sonner.Action;
-        onAutoClose?: ((toast: sonner.ToastT) => void) | undefined;
-        cancelButtonStyle?: React.CSSProperties | undefined;
-        actionButtonStyle?: React.CSSProperties | undefined;
-        unstyled?: boolean | undefined;
-        classNames?: sonner.ToastClassnames | undefined;
-        descriptionClassName?: string | undefined;
-    } & {
-        loading?: string | React.ReactNode;
-        success?: React$1.ReactNode | ((data: ToastData) => React.ReactNode | string | Promise<React.ReactNode | string>);
-        error?: React$1.ReactNode | ((data: any) => React.ReactNode | string | Promise<React.ReactNode | string>);
-        description?: React$1.ReactNode | ((data: any) => React.ReactNode | string | Promise<React.ReactNode | string>);
-        finally?: () => void | Promise<void>;
-    }) => (string & {
-        unwrap: () => Promise<ToastData>;
-    }) | (number & {
-        unwrap: () => Promise<ToastData>;
-    }) | {
-        unwrap: () => Promise<ToastData>;
-    };
-    dismiss: (id?: number | string) => string | number;
-    loading: (message: (React$1.ReactNode | (() => React.ReactNode)) | React.ReactNode, data?: sonner.ExternalToast) => string | number;
-} & {
-    getHistory: () => (sonner.ToastT | sonner.ToastToDismiss)[];
-    getToasts: () => (sonner.ToastT | sonner.ToastToDismiss)[];
+declare const toast: {
+    success: (message: string) => string | number;
+    error: (message: string) => string | number;
+    warning: (message: string) => string | number;
+    info: (message: string) => string | number;
+    loading: (message: string) => string | number;
 };
 
 declare const SwitchBase: React$1.ForwardRefExoticComponent<Omit<SwitchPrimitives.SwitchProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
@@ -503,15 +463,17 @@ interface ComboboxProps<T extends string> {
     placeholder?: string;
     searchPlaceholder?: string;
     label?: string;
+    labelClassname?: string;
 }
-declare function Combobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function Combobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface MultiComboboxProps<T extends string> extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
     label?: string;
     selected: T[];
     onChange: (value: T[]) => void;
+    labelClassname?: string;
 }
-declare function MultiCombobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function MultiCombobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface SelectItem$1<T extends string> {
     label: string;

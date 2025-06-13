@@ -72,7 +72,7 @@ var ButtonGroupBase = React.forwardRef(
         className: cn(
           "inline-flex",
           orientation === "vertical" ? "flex-col" : "flex-row",
-          "rounded-md overflow-hidden shadow-sm isolate",
+          "rounded-md overflow-hidden isolate",
           className
         ),
         ...props,
@@ -439,8 +439,7 @@ var InputBase = React6.forwardRef(
         {
           className: cn(
             "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
-            type !== "number" && type !== "file" && "border border-input",
-            (type === "file" || type === "number") && "border-none"
+            type !== "number" && type !== "file" && "border border-input"
           ),
           children: [
             leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
@@ -885,7 +884,7 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
   {
     ref,
     className: cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      " min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     ),
     ...props
@@ -897,8 +896,8 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
     sideOffset,
     forceMount: true,
     ref,
+    className: cn("z-[9999] p-0", className),
     ...props,
-    className: cn("p-0", className),
     children: /* @__PURE__ */ jsx11(AnimatePresence, { children: /* @__PURE__ */ jsx11(
       motion.div,
       {
@@ -907,7 +906,7 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
         exit: { opacity: 0, scale: 0.95, y: 5 },
         transition: { duration: 0.2, ease: "easeOut" },
         className: cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+          "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
           className
         ),
         children: props.children
@@ -1237,7 +1236,7 @@ function ComboboxBase({
   errorMessage
 }) {
   const [open, setOpen] = useState4(false);
-  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full ", children: /* @__PURE__ */ jsxs9(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
+  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs9(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
     /* @__PURE__ */ jsx16(
       PopoverTriggerBase,
       {
@@ -1308,7 +1307,8 @@ function Combobox({
   onChange,
   placeholder,
   searchPlaceholder,
-  label
+  label,
+  labelClassname
 }) {
   const selectedItem = items.find((item) => item.value === selected);
   const renderSelected = useMemo(
@@ -1326,7 +1326,7 @@ function Combobox({
     [selected, onChange]
   );
   return /* @__PURE__ */ jsxs10("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-    label && /* @__PURE__ */ jsx17(LabelBase_default, { children: label }),
+    label && /* @__PURE__ */ jsx17(LabelBase_default, { className: labelClassname, children: label }),
     /* @__PURE__ */ jsx17(
       ComboboxBase,
       {
@@ -1350,7 +1350,8 @@ function MultiCombobox({
   onChange,
   placeholder,
   searchPlaceholder,
-  label
+  label,
+  labelClassname
 }) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = useCallback2(
@@ -1403,7 +1404,7 @@ function MultiCombobox({
     return /* @__PURE__ */ jsx18("div", { className: "flex flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
   return /* @__PURE__ */ jsxs11("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-    label && /* @__PURE__ */ jsx18(LabelBase_default, { children: label }),
+    label && /* @__PURE__ */ jsx18(LabelBase_default, { className: labelClassname, children: label }),
     /* @__PURE__ */ jsx18(
       ComboboxBase,
       {
@@ -2834,8 +2835,10 @@ var SlideBase = React23.forwardRef(
 SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
+import { CheckCircle, XCircle, Info, Warning, Spinner } from "phosphor-react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 import { jsx as jsx33 } from "react/jsx-runtime";
+var iconBaseClass = "w-7 h-auto";
 var Toaster = ({ ...props }) => {
   return /* @__PURE__ */ jsx33(
     Sonner,
@@ -2844,19 +2847,91 @@ var Toaster = ({ ...props }) => {
       position: "top-center",
       toastOptions: {
         classNames: {
-          toast: `group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg
-            data-[type=success]:text-green-500 
-            data-[type=error]:text-red-500`,
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground"
+          toast: `
+            group toast
+            bg-white dark:bg-gray-900
+            text-gray-900 dark:text-gray-100
+            shadow-lg rounded-md
+            border-l-8
+            border-border
+            flex items-center gap-3
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 dark:data-[type=success]:bg-green-900/30 dark:data-[type=success]:text-green-400
+            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 dark:data-[type=error]:bg-red-900/30 dark:data-[type=error]:text-red-400
+            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 dark:data-[type=warning]:bg-yellow-900/30 dark:data-[type=warning]:text-yellow-400
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 dark:data-[type=info]:bg-blue-900/30 dark:data-[type=info]:text-blue-400
+          `,
+          description: `
+            text-sm
+            group-[.toast]:text-muted-foreground
+            dark:group-[.toast]:text-muted-foreground/80
+          `,
+          actionButton: `
+            ml-auto
+            rounded-md px-3 py-1 text-sm font-semibold
+            bg-primary text-primary-foreground
+            hover:bg-primary/80
+            transition-colors duration-200
+          `,
+          cancelButton: `
+            ml-2
+            rounded-md px-3 py-1 text-sm font-semibold
+            bg-muted text-muted-foreground
+            hover:bg-muted/80
+            transition-colors duration-200
+          `
         }
       },
       ...props
     }
   );
 };
-var toast = sonnertoast;
+var toast = {
+  success: (message) => sonnertoast.success(message, {
+    icon: /* @__PURE__ */ jsx33(
+      CheckCircle,
+      {
+        className: `${iconBaseClass} text-green-600 dark:text-green-400`,
+        weight: "fill"
+      }
+    )
+  }),
+  error: (message) => sonnertoast.error(message, {
+    icon: /* @__PURE__ */ jsx33(
+      XCircle,
+      {
+        className: `${iconBaseClass} text-red-600 dark:text-red-400`,
+        weight: "fill"
+      }
+    )
+  }),
+  warning: (message) => sonnertoast.warning(message, {
+    icon: /* @__PURE__ */ jsx33(
+      Warning,
+      {
+        className: `${iconBaseClass} text-yellow-600 dark:text-yellow-400`,
+        weight: "fill"
+      }
+    )
+  }),
+  info: (message) => sonnertoast.info(message, {
+    icon: /* @__PURE__ */ jsx33(
+      Info,
+      {
+        className: `${iconBaseClass} text-blue-600 dark:text-blue-400`,
+        weight: "fill"
+      }
+    )
+  }),
+  loading: (message) => sonnertoast(message, {
+    icon: /* @__PURE__ */ jsx33(
+      Spinner,
+      {
+        className: `${iconBaseClass} animate-spin text-zinc-500 dark:text-zinc-400`,
+        weight: "fill"
+      }
+    )
+  })
+};
 
 // src/components/ui/SwitchBase.tsx
 import * as React24 from "react";
@@ -2869,7 +2944,7 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
       ...props,
       ref,
       className: cn(
-        "peer relative inline-flex h-[16px] w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
+        "peer relative inline-flex  w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
       children: /* @__PURE__ */ jsx34(
