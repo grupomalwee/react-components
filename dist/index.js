@@ -217,7 +217,7 @@ var buttonVariantsBase = (0, import_class_variance_authority.cva)(
     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
     disabled:pointer-events-none disabled:opacity-50
     active:scale-[0.97]
-    [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+    [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-transparent
   `,
   {
     variants: {
@@ -230,9 +230,9 @@ var buttonVariantsBase = (0, import_class_variance_authority.cva)(
         link: "text-primary underline-offset-4 hover:underline"
       },
       size: {
-        default: "h-9 px-4 py-1.5",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
+        default: "px-4 py-1.5",
+        sm: "rounded-md px-3 text-xs",
+        lg: "rounded-md px-8",
         icon: "h-9 w-9"
       }
     },
@@ -632,7 +632,7 @@ var InputBase = React6.forwardRef(
         {
           className: cn(
             "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
-            type !== "number" && type !== "file" && "border border-input"
+            type !== "file" && "border"
           ),
           children: [
             leftIcon && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
@@ -641,7 +641,7 @@ var InputBase = React6.forwardRef(
               {
                 type,
                 className: cn(
-                  "w-full flex-1 text-sm leading-tight py-2 px-3 focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 bg-white dark:bg-[hsl(231,15%,19%)]",
+                  "w-full flex-1 text-sm py-1.5 px-3 focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 bg-white dark:bg-[hsl(231,15%,19%)]",
                   className
                 ),
                 ref,
@@ -1442,7 +1442,7 @@ function ComboboxBase({
             role: "combobox",
             "aria-expanded": open,
             className: cn(
-              "flex-wrap items-start gap-2 justify-between h-full",
+              "flex items-start gap-2 justify-between h-full",
               errorMessage && "border-red-500"
             ),
             children: [
@@ -1504,10 +1504,9 @@ function Combobox({
   labelClassname
 }) {
   const selectedItem = items.find((item) => item.value === selected);
-  const renderSelected = (0, import_react5.useMemo)(
-    () => selectedItem?.label ?? placeholder ?? "Selecione uma op\xE7\xE3o...",
-    [placeholder, selectedItem]
-  );
+  const renderSelected = (0, import_react5.useMemo)(() => {
+    return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)("span", { className: cn("truncate", !selectedItem && "text-gray-500"), children: selectedItem?.label ?? placeholder ?? "Selecione uma op\xE7\xE3o..." });
+  }, [placeholder, selectedItem]);
   const checkIsSelected = (0, import_react5.useCallback)(
     (value) => selected == null ? false : selected == value,
     [selected]
@@ -1563,8 +1562,9 @@ function MultiCombobox({
     [selected, onChange]
   );
   const renderSelected = (0, import_react6.useMemo)(() => {
-    if (selectedItems.length === 0)
-      return placeholder ?? "Selecione uma op\xE7\xE3o...";
+    if (selectedItems.length === 0) {
+      return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("span", { className: "text-gray-500", children: placeholder ?? "Selecione uma op\xE7\xE3o..." });
+    }
     const items2 = selectedItems.map((item) => /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)(
       "div",
       {
@@ -3027,7 +3027,7 @@ SlideBase.displayName = "SlideBase";
 var import_phosphor_react15 = require("phosphor-react");
 var import_sonner = require("sonner");
 var import_jsx_runtime33 = require("react/jsx-runtime");
-var iconBaseClass = "w-7 h-auto";
+var iconBaseClass = "w-5 h-auto";
 var Toaster = ({ ...props }) => {
   return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
     import_sonner.Toaster,

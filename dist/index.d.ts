@@ -473,7 +473,7 @@ interface MultiComboboxProps<T extends string> extends Omit<ComboboxProps<T>, "s
     onChange: (value: T[]) => void;
     labelClassname?: string;
 }
-declare function MultiCombobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function MultiCombobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface SelectItem$1<T extends string> {
     label: string;
