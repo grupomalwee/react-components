@@ -56,7 +56,7 @@ export function MultiCombobox<T extends string>({
         key={item.value}
         className="flex items-center gap-1 rounded-md border p-1"
       >
-        <span className="truncate whitespace-break-spaces text-xs">
+        <span className="whitespace-break-spaces text-xs">
           {item.label}
         </span>
         <span
@@ -66,12 +66,7 @@ export function MultiCombobox<T extends string>({
             e.stopPropagation();
             handleSelection(item.value);
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleSelection(item.value);
-            }
-          }}
+          
           className="cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all"
         >
           <X size={14} />
@@ -79,7 +74,7 @@ export function MultiCombobox<T extends string>({
       </div>
     ));
 
-    return <div className="flex flex-wrap gap-2">{items}</div>;
+    return <div className="flex w-full flex-wrap gap-2">{items}</div>;
   }, [handleSelection, placeholder, selectedItems]);
 
   return (

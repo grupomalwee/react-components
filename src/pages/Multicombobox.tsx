@@ -13,7 +13,10 @@ export const MultiComboboxPage = () => {
           label="Selecione os cargos"
           className="w-40"
           items={[
-            { label: "Desenvolvedor junio eduardo ronchi de araujo", value: "dev" },
+            {
+              label: "Desenvolvedor junio eduardo ronchi de araujo",
+              value: "dev",
+            },
             { label: "Designer", value: "designer" },
             { label: "Product Owner", value: "po" },
             { label: "Scrum Master", value: "scrum" },
