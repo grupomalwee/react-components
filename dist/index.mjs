@@ -1379,7 +1379,7 @@ function MultiCombobox({
       {
         className: "flex items-center gap-1 rounded-md border p-1",
         children: [
-          /* @__PURE__ */ jsx18("span", { className: "truncate whitespace-break-spaces text-xs", children: item.label }),
+          /* @__PURE__ */ jsx18("span", { className: "whitespace-break-spaces text-xs", children: item.label }),
           /* @__PURE__ */ jsx18(
             "span",
             {
@@ -1389,12 +1389,6 @@ function MultiCombobox({
                 e.stopPropagation();
                 handleSelection(item.value);
               },
-              onKeyDown: (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleSelection(item.value);
-                }
-              },
               className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
               children: /* @__PURE__ */ jsx18(X2, { size: 14 })
             }
@@ -1403,7 +1397,7 @@ function MultiCombobox({
       },
       item.value
     ));
-    return /* @__PURE__ */ jsx18("div", { className: "flex flex-wrap gap-2", children: items2 });
+    return /* @__PURE__ */ jsx18("div", { className: "flex w-full flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
   return /* @__PURE__ */ jsxs11("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
     label && /* @__PURE__ */ jsx18(LabelBase_default, { className: labelClassname, children: label }),
