@@ -3,12 +3,13 @@ import { ComboboxProps } from "./Combobox";
 import { ComboboxBase } from "./ComboboxBase";
 import { X } from "phosphor-react";
 import LabelBase from "../ui/LabelBase";
+import { cn } from "@/lib/utils";
 
 interface MultiComboboxProps<T extends string>
   extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
-  label?: string;
-  selected: T[];
-  onChange: (value: T[]) => void;
+    selected: T[];
+    onChange: (value: T[]) => void;
+    label?: string;
   labelClassname?: string;
 }
 
@@ -16,6 +17,7 @@ export function MultiCombobox<T extends string>({
   items,
   selected,
   onChange,
+  className,
   placeholder,
   searchPlaceholder,
   label,
@@ -81,7 +83,7 @@ export function MultiCombobox<T extends string>({
   }, [handleSelection, placeholder, selectedItems]);
 
   return (
-    <div className="flex flex-col gap-1 w-full min-w-[150px]">
+    <div className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
       <ComboboxBase
         items={items}

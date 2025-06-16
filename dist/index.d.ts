@@ -3,6 +3,7 @@ import * as React$1 from 'react';
 import React__default from 'react';
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import * as class_variance_authority_dist_types from 'class-variance-authority/dist/types';
 import { VariantProps } from 'class-variance-authority';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -45,12 +46,10 @@ declare const AvatarBase: React$1.ForwardRefExoticComponent<Omit<AvatarPrimitive
 declare const AvatarImageBase: React$1.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarImageProps & React$1.RefAttributes<HTMLImageElement>, "ref"> & React$1.RefAttributes<HTMLImageElement>>;
 declare const AvatarFallbackBase: React$1.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarFallbackProps & React$1.RefAttributes<HTMLSpanElement>, "ref"> & React$1.RefAttributes<HTMLSpanElement>>;
 
-declare const buttonVariantsBase: (props?: (Partial<{
-    variant: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-    size: "default" | "sm" | "lg" | "icon";
-}> & {
-    className?: string;
-}) | undefined) => string;
+declare const buttonVariantsBase: (props?: ({
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
+    size?: "default" | "sm" | "lg" | "icon" | null | undefined;
+} & class_variance_authority_dist_types.ClassProp) | undefined) => string;
 interface ButtonProps extends React$1.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariantsBase> {
     asChild?: boolean;
 }
@@ -275,11 +274,9 @@ declare const SheetTriggerBase: React$1.ForwardRefExoticComponent<DialogPrimitiv
 declare const SheetCloseBase: React$1.ForwardRefExoticComponent<DialogPrimitive.DialogCloseProps & React$1.RefAttributes<HTMLButtonElement>>;
 declare const SheetPortalBase: React$1.FC<DialogPrimitive.DialogPortalProps>;
 declare const SheetOverlayBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogOverlayProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const sheetVariants: (props?: (Partial<{
-    side: "bottom" | "left" | "right" | "top";
-}> & {
-    className?: string;
-}) | undefined) => string;
+declare const sheetVariants: (props?: ({
+    side?: "bottom" | "left" | "right" | "top" | null | undefined;
+} & class_variance_authority_dist_types.ClassProp) | undefined) => string;
 interface SheetContentProps extends React$1.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>, VariantProps<typeof sheetVariants> {
 }
 declare const SheetContentBase: React$1.ForwardRefExoticComponent<SheetContentProps & React$1.RefAttributes<HTMLDivElement>>;
@@ -342,12 +339,10 @@ declare const SidebarMenuButtonBase: React$1.ForwardRefExoticComponent<Omit<Reac
     asChild?: boolean;
     isActive?: boolean;
     tooltip?: string | React$1.ComponentProps<typeof TooltipContentBase>;
-} & Partial<{
-    variant: "default" | "outline";
-    size: "default" | "sm" | "lg";
-}> & {
-    className?: string;
-}, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
+} & VariantProps<(props?: ({
+    variant?: "default" | "outline" | null | undefined;
+    size?: "default" | "sm" | "lg" | null | undefined;
+} & class_variance_authority_dist_types.ClassProp) | undefined) => string>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
 declare const SidebarMenuActionBase: React$1.ForwardRefExoticComponent<Omit<React$1.ClassAttributes<HTMLButtonElement> & React$1.ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean;
     showOnHover?: boolean;
@@ -460,20 +455,21 @@ interface ComboboxProps<T extends string> {
     items: ComboboxItem<T>[];
     selected: ComboboxItem<T>["value"] | null;
     onChange: (value: ComboboxItem<T>["value"] | null) => void;
+    className?: string;
     placeholder?: string;
     searchPlaceholder?: string;
     label?: string;
     labelClassname?: string;
 }
-declare function Combobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function Combobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface MultiComboboxProps<T extends string> extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
-    label?: string;
     selected: T[];
     onChange: (value: T[]) => void;
+    label?: string;
     labelClassname?: string;
 }
-declare function MultiCombobox<T extends string>({ items, selected, onChange, placeholder, searchPlaceholder, label, labelClassname, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function MultiCombobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface SelectItem$1<T extends string> {
     label: string;

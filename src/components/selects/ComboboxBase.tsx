@@ -58,8 +58,8 @@ export function ComboboxBase<T extends string>({
               errorMessage && "border-red-500"
             )}
           >
-            <div className="flex flex-wrap gap-2 flex-1">{renderSelected}</div>
-            <CaretDown size={16} className="mt-1" />
+            {renderSelected}
+            <CaretDown size={16} className="mt-0.5" />
           </ButtonBase>
         </PopoverTriggerBase>
 

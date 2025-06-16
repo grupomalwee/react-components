@@ -10,9 +10,13 @@ export const ComboboxPage = () => {
     <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
       <div className="flex gap-5 justify-center">
         <Combobox
+          className="w-40"
           label="Selecione seu cargo"
           items={[
-            { label: "Desenvolvedor", value: "dev" },
+            {
+              label: "Desenvolvedor junio eduardo ronchi de araujo",
+              value: "dev",
+            },
             { label: "Designer", value: "designer" },
             { label: "Product Owner", value: "po" },
             { label: "Scrum Master", value: "scrum" },

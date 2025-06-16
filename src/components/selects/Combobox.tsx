@@ -6,6 +6,7 @@ export interface ComboboxProps<T extends string> {
   items: ComboboxItem<T>[];
   selected: ComboboxItem<T>["value"] | null;
   onChange: (value: ComboboxItem<T>["value"] | null) => void;
+  className?: string;
   placeholder?: string;
   searchPlaceholder?: string;
   label?: string;
@@ -16,6 +17,7 @@ export function Combobox<T extends string>({
   items,
   selected,
   onChange,
+  className,
   placeholder,
   searchPlaceholder,
   label,
@@ -45,7 +47,7 @@ export function Combobox<T extends string>({
   );
 
   return (
-    <div className="flex flex-col gap-1 w-full min-w-[150px]">
+    <div className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
 
       <ComboboxBase
