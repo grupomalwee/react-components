@@ -101,7 +101,7 @@ export default function DrawerPage() {
                           setIsEditing(false);
                         }
                       }}
-                      className="text-3xl font-extrabold leading-none tracking-tight text-primary dark:text-primary-light bg-transparent border-none focus:outline-none text-center w-full"
+                      className="text-[28.5px] font-extrabold leading-none tracking-tight text-primary dark:text-primary-light bg-transparent border-none focus:outline-none text-center w-full"
                       min={200}
                       max={400}
                       autoFocus
