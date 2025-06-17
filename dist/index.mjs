@@ -2831,7 +2831,13 @@ var SlideBase = React23.forwardRef(
 SlideBase.displayName = "SlideBase";
 
 // src/components/ui/SonnerBase.tsx
-import { CheckCircle, XCircle, Info, Warning, Spinner } from "phosphor-react";
+import {
+  CheckCircle,
+  XCircle,
+  Info,
+  Warning,
+  Spinner
+} from "phosphor-react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 import { jsx as jsx33 } from "react/jsx-runtime";
 var iconBaseClass = "w-5 h-auto";
@@ -2845,34 +2851,34 @@ var Toaster = ({ ...props }) => {
         classNames: {
           toast: `
             group toast
-            bg-white dark:bg-gray-900
-            text-gray-900 dark:text-gray-100
+            bg-white
+            text-neutral-800
             shadow-lg rounded-md
             border-l-8
-            border-border
+            border-neutral-200
             flex items-center gap-3
-            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 dark:data-[type=success]:bg-green-900/30 dark:data-[type=success]:text-green-400
-            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 dark:data-[type=error]:bg-red-900/30 dark:data-[type=error]:text-red-400
-            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 dark:data-[type=warning]:bg-yellow-900/30 dark:data-[type=warning]:text-yellow-400
-            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 dark:data-[type=info]:bg-blue-900/30 dark:data-[type=info]:text-blue-400
+
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800
+            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800
+            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 data-[type=info]:text-blue-800
           `,
           description: `
             text-sm
-            group-[.toast]:text-muted-foreground
-            dark:group-[.toast]:text-muted-foreground/80
+            group-[.toast]:text-neutral-600
           `,
           actionButton: `
             ml-auto
             rounded-md px-3 py-1 text-sm font-semibold
-            bg-primary text-primary-foreground
-            hover:bg-primary/80
+            bg-neutral-800 text-white
+            hover:bg-neutral-700
             transition-colors duration-200
           `,
           cancelButton: `
             ml-2
             rounded-md px-3 py-1 text-sm font-semibold
-            bg-muted text-muted-foreground
-            hover:bg-muted/80
+            bg-neutral-100 text-neutral-700
+            hover:bg-neutral-200
             transition-colors duration-200
           `
         }
@@ -2883,46 +2889,22 @@ var Toaster = ({ ...props }) => {
 };
 var toast = {
   success: (message) => sonnertoast.success(message, {
-    icon: /* @__PURE__ */ jsx33(
-      CheckCircle,
-      {
-        className: `${iconBaseClass} text-green-600 dark:text-green-400`,
-        weight: "fill"
-      }
-    )
+    icon: /* @__PURE__ */ jsx33(CheckCircle, { className: `${iconBaseClass} text-green-600`, weight: "fill" })
   }),
   error: (message) => sonnertoast.error(message, {
-    icon: /* @__PURE__ */ jsx33(
-      XCircle,
-      {
-        className: `${iconBaseClass} text-red-600 dark:text-red-400`,
-        weight: "fill"
-      }
-    )
+    icon: /* @__PURE__ */ jsx33(XCircle, { className: `${iconBaseClass} text-red-600`, weight: "fill" })
   }),
   warning: (message) => sonnertoast.warning(message, {
-    icon: /* @__PURE__ */ jsx33(
-      Warning,
-      {
-        className: `${iconBaseClass} text-yellow-600 dark:text-yellow-400`,
-        weight: "fill"
-      }
-    )
+    icon: /* @__PURE__ */ jsx33(Warning, { className: `${iconBaseClass} text-yellow-600`, weight: "fill" })
   }),
   info: (message) => sonnertoast.info(message, {
-    icon: /* @__PURE__ */ jsx33(
-      Info,
-      {
-        className: `${iconBaseClass} text-blue-600 dark:text-blue-400`,
-        weight: "fill"
-      }
-    )
+    icon: /* @__PURE__ */ jsx33(Info, { className: `${iconBaseClass} text-blue-600`, weight: "fill" })
   }),
   loading: (message) => sonnertoast(message, {
     icon: /* @__PURE__ */ jsx33(
       Spinner,
       {
-        className: `${iconBaseClass} animate-spin text-zinc-500 dark:text-zinc-400`,
+        className: `${iconBaseClass} animate-spin text-neutral-500`,
         weight: "fill"
       }
     )

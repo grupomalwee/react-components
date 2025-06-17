@@ -1,23 +1,33 @@
-"use client"
+"use client";
 
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselNextBase, CarouselPrevious } from "@/components/ui/CarouselBase"
-import { CardBase, CardContentBase } from "@/components/ui/CardBase"
+import {
+  CarouselBase,
+  CarouselContentBase,
+  CarouselItemBase,
+  CarouselNextBase,
+  CarouselPrevious,
+} from "@/components/ui/CarouselBase";
+import { CardBase, CardContentBase } from "@/components/ui/CardBase";
 
 export function CarouselPage() {
   return (
     <div className="p-8 space-y-16">
-      
       <div className="flex flex-col md:flex-row md:space-x-44 space-y-12 md:space-y-0 justify-center">
-        
         <section className="w-full max-w-xs mx-auto md:mx-0">
-          <h2 className="mb-2 text-center text-lg font-semibold">CarouselBase Base</h2>
+          <h2 className="mb-2 text-center text-lg font-semibold">
+            Carousel Base
+          </h2>
           <CarouselBase className="w-full max-w-xs">
             <CarouselContentBase>
               {Array.from({ length: 5 }).map((_, index) => (
                 <CarouselItemBase key={index}>
                   <CardBase>
                     <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-4xl font-semibold">{index + 1}</span>
+                      <img
+                        src="/pwa-512x512.png"
+                        alt={`Imagem ${index + 1}`}
+                        className="rounded-xl object-cover w-40 h-40"
+                      />
                     </CardContentBase>
                   </CardBase>
                 </CarouselItemBase>
@@ -29,14 +39,21 @@ export function CarouselPage() {
         </section>
 
         <section className="w-full max-w-sm mx-auto md:mx-0">
-          <h2 className="mb-2 text-center text-lg font-semibold">CarouselBase</h2>
+          <h2 className="mb-2 text-center text-lg font-semibold">Carousel</h2>
           <CarouselBase opts={{ align: "start" }} className="w-full max-w-sm">
             <CarouselContentBase>
               {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItemBase key={index} className="md:basis-1/2 lg:basis-1/3">
+                <CarouselItemBase
+                  key={index}
+                  className="md:basis-1/2 lg:basis-1/3"
+                >
                   <CardBase>
                     <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-3xl font-semibold">{index + 1}</span>
+                      <img
+                        src="/pwa-512x512.png"
+                        alt={`Imagem ${index + 1}`}
+                        className="rounded-xl object-cover"
+                      />
                     </CardContentBase>
                   </CardBase>
                 </CarouselItemBase>
@@ -48,18 +65,24 @@ export function CarouselPage() {
         </section>
 
         <section className="w-full max-w-xs mx-auto md:mx-0">
-          <h2 className="mb-2 text-center text-lg font-semibold">CarouselBase Vertical</h2>
+          <h2 className="mb-2 text-center text-lg font-semibold">
+            Carousel Vertical
+          </h2>
           <CarouselBase
             opts={{ align: "start" }}
             orientation="vertical"
             className="w-full max-w-xs mt-20"
           >
-            <CarouselContentBase className="-mt-1 h-[200px]">
+            <CarouselContentBase className="-mt-1 h-[220px]">
               {Array.from({ length: 5 }).map((_, index) => (
                 <CarouselItemBase key={index} className="pt-1 md:basis-1/2">
                   <CardBase>
-                    <CardContentBase className="flex items-center justify-center p-6">
-                      <span className="text-3xl font-semibold">{index + 1}</span>
+                    <CardContentBase className="flex aspect-square items-center justify-center p-6">
+                      <img
+                        src="/pwa-512x512.png"
+                        alt={`Imagem ${index + 1}`}
+                        className="rounded-xl object-cover w-40 h-40"
+                      />
                     </CardContentBase>
                   </CardBase>
                 </CarouselItemBase>
@@ -113,7 +136,6 @@ export function CarouselPage() {
           </pre>
         </div>
       </div>
-
     </div>
-  )
+  );
 }
