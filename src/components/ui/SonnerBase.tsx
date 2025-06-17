@@ -25,14 +25,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
             bg-white
             text-neutral-800
             shadow-lg rounded-md
-            border-l-8
+            border-l-4
             border-neutral-200
             flex items-center gap-3
 
-            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800
-            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800
-            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800
-            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 data-[type=info]:text-blue-800
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
+            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500
+            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 data-[type=info]:text-blue-800 data-[type=info]:border-blue-500
           `,
           description: `
             text-sm
