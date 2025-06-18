@@ -1,16 +1,24 @@
 "use client";
 
-
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { CaretLeft, CaretRight } from "phosphor-react";
+import { CaretLeft, CaretRight, X, Calendar } from "phosphor-react";
 import { cn } from "@/lib/utils";
 import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 import { motion } from "framer-motion";
-
+import {
+  PopoverBase,
+  PopoverTriggerBase,
+  PopoverContentBase,
+} from "@/components/ui/PopoverBase";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+interface CalendarPopoverProps {
+  selected?: Date;
+  onSelect?: (date: Date | undefined) => void;
+  label?: string;
+}
 
 const variants = {
   enter: (direction: number) => ({
@@ -27,7 +35,6 @@ const variants = {
   }),
 };
 
-
 export function CalendarBase({
   className,
   classNames,
@@ -39,14 +46,12 @@ export function CalendarBase({
   );
   const [direction, setDirection] = React.useState(1); // 1 pra frente, -1 pra trás
 
-
   const handleMonthChange = (newMonth: Date) => {
     const isNext = newMonth > month ? 1 : -1;
     setDirection(isNext);
     setMonth(newMonth);
     props.onMonthChange?.(newMonth);
   };
-
 
   return (
     <div
@@ -125,8 +130,46 @@ export function CalendarBase({
     </div>
   );
 }
-
-
 CalendarBase.displayName = "CalendarBase";
 
+export const CalendarPopover = ({
+  selected,
+  onSelect,
+  label = "Selecionar data",
+}: CalendarPopoverProps) => {
+  const [open, setOpen] = React.useState(false);
 
+  return (
+    <PopoverBase open={open} onOpenChange={setOpen}>
+      <PopoverTriggerBase asChild>
+        <button
+          aria-label="Abrir calendário"
+          className={cn(
+            buttonVariantsBase({ variant: "outline" }),
+            "flex items-center gap-2"
+          )}
+          type="button"
+        >
+          <Calendar className="w-4 h-4" />
+          <span className="text-sm">{label}</span>
+        </button>
+      </PopoverTriggerBase>
+
+      <PopoverContentBase className="w-auto max-w-96">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-medium text-sm">Selecione a data</span>
+          <button
+            className="p-1 rounded-md hover:bg-muted"
+            onClick={() => setOpen(false)}
+            aria-label="Fechar calendário"
+            type="button"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <CalendarBase mode="single" selected={selected} onSelect={onSelect} />
+      </PopoverContentBase>
+    </PopoverBase>
+  );
+};

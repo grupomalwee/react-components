@@ -30,7 +30,7 @@ import { ComboboxPage } from "@/pages/Combobox";
 import { CarouselPage } from "@/pages/Carousel";
 import { MultiComboboxPage } from "@/pages/Multicombobox";
 import { DialogPage } from "@/pages/Dialog";
-import  DrawerPage  from "@/pages/Drawer";
+import DrawerPage from "@/pages/Drawer";
 import { DropDownMenuPage } from "@/pages/Dropdown-menu";
 import Filter from "@/pages/Filter";
 import { ProfileForm } from "@/pages/Form";
@@ -52,16 +52,24 @@ import { TextareaPage } from "@/pages/Textarea";
 import RootLayout from "@/pages/Sonner";
 import { TooltipPage } from "@/pages/Tooltip";
 import Home from "@/pages/Home";
-import Comparison from "@/pages/Comparasion"; 
+import Comparison from "@/pages/Comparasion";
+import { BadgePage } from "@/pages/Badge";
+import { BreadcrumbPage } from "@/pages/Breadcrumb";
+import { ContextMenuPage } from "@/pages/ContextMenu";
+import { HoverCardPage } from "@/pages/HoverCard";
+import { NavigationMenuPage } from "@/pages/NavigationMenu";
 
 // Menu items
 const items = [
   { title: "Home", url: "/", icon: House },
   { title: "Alert Dialog", url: "/alert-dialog", icon: House },
   { title: "Avatar", url: "/avatar", icon: Envelope },
+  { title: "Bagde", url: "/badge", icon: Envelope },
+  { title: "Breadcrumb", url: "/breadcrumb", icon: Envelope },
   { title: "Button", url: "/button", icon: Calendar },
   { title: "Calendar", url: "/calender", icon: Calendar },
   { title: "Card", url: "/card", icon: Calendar },
+  { title: "ContextMenu", url: "/contextmenu", icon: Calendar },
   { title: "Checkbox", url: "/checkbox", icon: MagnifyingGlass },
   { title: "Command", url: "/command", icon: Gear },
   { title: "Combobox", url: "/combobox", icon: MagnifyingGlass },
@@ -72,10 +80,13 @@ const items = [
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
   { title: "Filter", url: "/Filter", icon: Calendar },
   { title: "Form", url: "/form", icon: Gear },
+  { title: "HoverCard", url: "/hovercard", icon: Gear },
+
   { title: "Input", url: "/input", icon: Envelope },
   { title: "InputOTP", url: "/inputOTP", icon: Envelope },
   { title: "Label", url: "/label", icon: Calendar },
   { title: "MultiCombobox", url: "/multicombobox", icon: Gear },
+  { title: "Navigation", url: "/navigationmenu", icon: Gear },
   { title: "Popover", url: "/popover", icon: MagnifyingGlass },
   { title: "Progress", url: "/progress", icon: Gear },
   { title: "Scrollarea", url: "/scrollarea", icon: House },
@@ -131,9 +142,12 @@ export function AppSidebar() {
           <Route path="/" element={<Home />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
+          <Route path="/badge" element={<BadgePage />} />
           <Route path="/button" element={<ButtonPage />} />
+          <Route path="/breadcrumb" element={<BreadcrumbPage />} />
           <Route path="/calender" element={<CalendarPage />} />
           <Route path="/card" element={<CardPage />} />
+          <Route path="/contextmenu" element={<ContextMenuPage />} />
           <Route path="/checkbox" element={<CheckBoxPage />} />
           <Route path="/command" element={<CommandPage />} />
           <Route path="/combobox" element={<ComboboxPage />} />
@@ -143,10 +157,12 @@ export function AppSidebar() {
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
           <Route path="/filter" element={<Filter />} />
           <Route path="/form" element={<ProfileForm />} />
+          <Route path="/hovercard" element={<HoverCardPage />} />
           <Route path="/input" element={<InputPage />} />
           <Route path="/inputOTP" element={<InputOTPPage />} />
           <Route path="/label" element={<LabelPage />} />
           <Route path="/multicombobox" element={<MultiComboboxPage />} />
+          <Route path="/navigationmenu" element={<NavigationMenuPage />} />
           <Route path="/popover" element={<PopoverPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/scrollarea" element={<ScrollareaPage />} />
