@@ -22,7 +22,7 @@ import {
 import { AlertDialogPage } from "@/pages/Alert-dialog";
 import { AvatarPage } from "@/pages/Avatar";
 import { ButtonPage } from "@/pages/Button";
-import { CalenderPage } from "@/pages/Calendar";
+import { CalendarPage } from "@/pages/Calendar";
 import { CardPage } from "@/pages/Card";
 import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
@@ -132,7 +132,7 @@ export function AppSidebar() {
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/button" element={<ButtonPage />} />
-          <Route path="/calender" element={<CalenderPage />} />
+          <Route path="/calender" element={<CalendarPage />} />
           <Route path="/card" element={<CardPage />} />
           <Route path="/checkbox" element={<CheckBoxPage />} />
           <Route path="/command" element={<CommandPage />} />
