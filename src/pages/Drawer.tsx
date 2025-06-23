@@ -9,7 +9,7 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { Minus, Plus } from "phosphor-react";
+import { Minus, Plus } from "phosphor-react"
 
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
