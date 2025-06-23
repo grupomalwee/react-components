@@ -16,12 +16,12 @@
     "preview": "vite preview",
     "deploy:patch": "npm version patch && npm publish",
     "deploy:minor": "npm version minor && npm publish",
-    "deploy:major": "npm version major && npm publish"
+    "deploy:major": "npm version major && npm publish",
+    "prepare": "husky install"
   },
   "lint-staged": {
   "*.{js,jsx,ts,tsx}": "eslint --max-warnings=0"
 },
-
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-alert-dialog": "^1.1.5",
@@ -82,7 +82,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "lint-staged": "^16.1.2",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.5.1",
