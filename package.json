@@ -20,7 +20,9 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-  "*.{js,jsx,ts,tsx}": "eslint --max-warnings=0"
+  "*.{js,jsx,ts,tsx}": "eslint --max-warnings=0 --max-errors=0"
+
+
 },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
