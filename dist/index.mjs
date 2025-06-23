@@ -239,75 +239,158 @@ AvatarFallbackBase.displayName = AvatarPrimitive.Fallback.displayName;
 import { add, format } from "date-fns";
 
 // src/components/date-time-picker/calendar.tsx
-import { CaretLeft, CaretRight } from "phosphor-react";
+import * as React5 from "react";
 import { DayPicker } from "react-day-picker";
+import { CaretLeft, CaretRight, X, Calendar } from "phosphor-react";
+import { motion } from "framer-motion";
+
+// src/components/ui/PopoverBase.tsx
+import * as React4 from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { jsx as jsx4 } from "react/jsx-runtime";
+var PopoverBase = PopoverPrimitive.Root;
+var PopoverTriggerBase = PopoverPrimitive.Trigger;
+var PopoverAnchorBase = PopoverPrimitive.Anchor;
+var PopoverContentBase = React4.forwardRef(({ className, align = "center", sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx4(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx4(
+  PopoverPrimitive.Content,
+  {
+    ref,
+    align,
+    sideOffset,
+    className: cn(
+      "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    ),
+    ...props
+  }
+) }));
+PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
+
+// src/components/date-time-picker/calendar.tsx
+import { jsx as jsx5, jsxs as jsxs2 } from "react/jsx-runtime";
+var variants = {
+  enter: (direction) => ({
+    opacity: 0,
+    x: direction > 0 ? 30 : -30
+  }),
+  center: {
+    opacity: 1,
+    x: 0
+  },
+  exit: (direction) => ({
+    opacity: 0,
+    x: direction > 0 ? -30 : 30
+  })
+};
 function CalendarBase({
   className,
   classNames,
   showOutsideDays = true,
   ...props
 }) {
-  return /* @__PURE__ */ jsx4(
-    DayPicker,
+  const [month, setMonth] = React5.useState(
+    props.month || props.defaultMonth || /* @__PURE__ */ new Date()
+  );
+  const [direction, setDirection] = React5.useState(1);
+  const handleMonthChange = (newMonth) => {
+    const isNext = newMonth > month ? 1 : -1;
+    setDirection(isNext);
+    setMonth(newMonth);
+    props.onMonthChange?.(newMonth);
+  };
+  return /* @__PURE__ */ jsx5(
+    "div",
     {
-      showOutsideDays,
-      className: cn("bg-background p-3", className),
-      classNames: {
-        months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "space-x-1 flex items-center",
-        nav_button: cn(
-          buttonVariantsBase({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0  opacity-50 hover:opacity-100"
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell: "text-slate-500 rounded-md w-9 font-normal text-[0.8rem] dark:text-slate-400",
-        row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-slate-100/50 [&:has([aria-selected])]:bg-slate-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 dark:[&:has([aria-selected].day-outside)]:bg-slate-800/50 dark:[&:has([aria-selected])]:bg-slate-800",
-        day: cn(
-          buttonVariantsBase({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
-        ),
-        day_range_end: "day-range-end",
-        day_selected: "bg-purple text-slate-50 hover:bg-primary hover:text-slate-50 focus:bg-purple-500 focus:text-slate-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50 dark:hover:text-slate-900 dark:focus:bg-slate-50 dark:focus:text-slate-900",
-        day_today: "bg-slate-100 text-slate-900 dark:bg-primary dark:text-slate-50",
-        day_outside: "day-outside text-slate-500 opacity-50 aria-selected:bg-slate-100/50 aria-selected:text-slate-500 aria-selected:opacity-30 dark:text-slate-400 dark:aria-selected:bg-slate-800/50 dark:aria-selected:text-slate-400",
-        day_disabled: "text-slate-500 opacity-50 dark:text-slate-400",
-        day_range_middle: "aria-selected:bg-slate-100 aria-selected:text-slate-900 dark:aria-selected:bg-primary dark:aria-selected:text-primary",
-        day_hidden: "invisible",
-        ...classNames
-      },
-      components: {
-        IconLeft: () => /* @__PURE__ */ jsx4(CaretLeft, { className: "h-4 w-4" }),
-        IconRight: () => /* @__PURE__ */ jsx4(CaretRight, { className: "h-4 w-4" })
-      },
-      ...props
+      className: cn(
+        "rounded-xl border bg-background p-3 shadow-sm overflow-hidden",
+        className
+      ),
+      children: /* @__PURE__ */ jsx5(
+        motion.div,
+        {
+          variants,
+          initial: "enter",
+          animate: "center",
+          exit: "exit",
+          custom: direction,
+          transition: { duration: 0.3, ease: "easeInOut" },
+          style: { position: "relative" },
+          children: /* @__PURE__ */ jsx5(
+            DayPicker,
+            {
+              showOutsideDays,
+              month,
+              onMonthChange: handleMonthChange,
+              className: "w-full",
+              classNames: {
+                months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                month: "space-y-4",
+                caption: "flex justify-center pt-1 relative items-center",
+                caption_label: "text-sm font-medium",
+                nav: "space-x-1 flex items-center",
+                nav_button: cn(
+                  buttonVariantsBase({ variant: "outline" }),
+                  "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+                ),
+                nav_button_previous: "absolute left-1",
+                nav_button_next: "absolute right-1",
+                table: "w-full border-collapse space-y-1",
+                head_row: "flex",
+                head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                row: "flex w-full mt-2",
+                cell: cn(
+                  "h-9 w-9 text-center text-sm p-0 relative",
+                  "[&:has([aria-selected].day-range-end)]:rounded-r-md",
+                  "[&:has([aria-selected].day-range-start)]:rounded-l-md",
+                  "[&:has([aria-selected].day-outside)]:bg-muted/50",
+                  "[&:has([aria-selected])]:bg-muted",
+                  "first:[&:has([aria-selected])]:rounded-l-md",
+                  "last:[&:has([aria-selected])]:rounded-r-md",
+                  "focus-within:relative focus-within:z-20"
+                ),
+                day: cn(
+                  buttonVariantsBase({ variant: "ghost" }),
+                  "h-9 w-9 p-0 font-normal rounded-md",
+                  "aria-selected:opacity-100 hover:bg-muted"
+                ),
+                day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90",
+                day_today: "bg-muted text-foreground dark:bg-muted dark:text-foreground",
+                day_outside: "day-outside text-gray-500 opacity-50 aria-selected:bg-muted/50 aria-selected:text-black",
+                day_disabled: "text-gray-500",
+                day_range_middle: "aria-selected:bg-muted aria-selected:text-foreground",
+                day_hidden: "invisible",
+                ...classNames
+              },
+              components: {
+                IconLeft: () => /* @__PURE__ */ jsx5(CaretLeft, { className: "h-4 w-4" }),
+                IconRight: () => /* @__PURE__ */ jsx5(CaretRight, { className: "h-4 w-4" })
+              },
+              ...props
+            }
+          )
+        },
+        month.toISOString()
+      )
     }
   );
 }
-CalendarBase.displayName = "Calendar";
+CalendarBase.displayName = "CalendarBase";
 
 // src/components/date-time-picker/DateTimePicker.tsx
-import { Calendar } from "phosphor-react";
+import { Calendar as Calendar2 } from "phosphor-react";
 import { ptBR } from "date-fns/locale";
-import { useEffect, useState } from "react";
+import { useEffect, useState as useState2 } from "react";
 
 // src/components/ui/DialogBase.tsx
-import * as React4 from "react";
+import * as React6 from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "phosphor-react";
-import { jsx as jsx5, jsxs as jsxs2 } from "react/jsx-runtime";
+import { X as X2 } from "phosphor-react";
+import { jsx as jsx6, jsxs as jsxs3 } from "react/jsx-runtime";
 var DialogBase = DialogPrimitive.Root;
 var DialogTriggerBase = DialogPrimitive.Trigger;
 var DialogPortalBase = DialogPrimitive.Portal;
 var DialogCloseBase = DialogPrimitive.Close;
-var DialogOverlayBase = React4.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx5(
+var DialogOverlayBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Overlay,
   {
     ref,
@@ -319,9 +402,9 @@ var DialogOverlayBase = React4.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 DialogOverlayBase.displayName = DialogPrimitive.Overlay.displayName;
-var DialogContentBase = React4.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs2(DialogPortalBase, { children: [
-  /* @__PURE__ */ jsx5(DialogOverlayBase, {}),
-  /* @__PURE__ */ jsxs2(
+var DialogContentBase = React6.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs3(DialogPortalBase, { children: [
+  /* @__PURE__ */ jsx6(DialogOverlayBase, {}),
+  /* @__PURE__ */ jsxs3(
     DialogPrimitive.Content,
     {
       ref,
@@ -332,9 +415,9 @@ var DialogContentBase = React4.forwardRef(({ className, children, ...props }, re
       ...props,
       children: [
         children,
-        /* @__PURE__ */ jsxs2(DialogPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground", children: [
-          /* @__PURE__ */ jsx5(X, { className: "h-4 w-4" }),
-          /* @__PURE__ */ jsx5("span", { className: "sr-only", children: "Close" })
+        /* @__PURE__ */ jsxs3(DialogPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground", children: [
+          /* @__PURE__ */ jsx6(X2, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx6("span", { className: "sr-only", children: "Close" })
         ] })
       ]
     }
@@ -344,7 +427,7 @@ DialogContentBase.displayName = DialogPrimitive.Content.displayName;
 var DialogHeaderBase = ({
   className,
   ...props
-}) => /* @__PURE__ */ jsx5(
+}) => /* @__PURE__ */ jsx6(
   "div",
   {
     className: cn(
@@ -358,7 +441,7 @@ DialogHeaderBase.displayName = "DialogHeader";
 var DialogFooterBase = ({
   className,
   ...props
-}) => /* @__PURE__ */ jsx5(
+}) => /* @__PURE__ */ jsx6(
   "div",
   {
     className: cn(
@@ -369,7 +452,7 @@ var DialogFooterBase = ({
   }
 );
 DialogFooterBase.displayName = "DialogFooter";
-var DialogTitleBase = React4.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx5(
+var DialogTitleBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Title,
   {
     ref,
@@ -381,7 +464,7 @@ var DialogTitleBase = React4.forwardRef(({ className, ...props }, ref) => /* @__
   }
 ));
 DialogTitleBase.displayName = DialogPrimitive.Title.displayName;
-var DialogDescriptionBase = React4.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx5(
+var DialogDescriptionBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Description,
   {
     ref,
@@ -392,14 +475,14 @@ var DialogDescriptionBase = React4.forwardRef(({ className, ...props }, ref) => 
 DialogDescriptionBase.displayName = DialogPrimitive.Description.displayName;
 
 // src/components/ui/LabelBase.tsx
-import * as React5 from "react";
+import * as React7 from "react";
 import { Label as RadixLabel } from "@radix-ui/react-label";
 import { Slot as Slot2 } from "@radix-ui/react-slot";
-import { jsx as jsx6 } from "react/jsx-runtime";
-var LabelBase = React5.forwardRef(
+import { jsx as jsx7 } from "react/jsx-runtime";
+var LabelBase = React7.forwardRef(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot2 : "label";
-    return /* @__PURE__ */ jsx6(RadixLabel, { children: /* @__PURE__ */ jsx6(
+    return /* @__PURE__ */ jsx7(RadixLabel, { children: /* @__PURE__ */ jsx7(
       Comp,
       {
         ref,
@@ -417,12 +500,12 @@ var LabelBase_default = LabelBase;
 
 // src/components/date-time-picker/TimePicker.tsx
 import { Clock } from "phosphor-react";
-import * as React8 from "react";
+import * as React10 from "react";
 
 // src/components/ui/InputBase.tsx
-import * as React6 from "react";
-import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
-var InputBase = React6.forwardRef(
+import * as React8 from "react";
+import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
+var InputBase = React8.forwardRef(
   ({
     className,
     type = "text",
@@ -432,9 +515,9 @@ var InputBase = React6.forwardRef(
     rightIcon,
     ...props
   }, ref) => {
-    return /* @__PURE__ */ jsxs3("div", { className: "flex flex-col w-full min-w-[150px]", children: [
-      label && /* @__PURE__ */ jsx7(LabelBase_default, { className: labelClassname, children: label }),
-      /* @__PURE__ */ jsxs3(
+    return /* @__PURE__ */ jsxs4("div", { className: "flex flex-col w-full min-w-[150px]", children: [
+      label && /* @__PURE__ */ jsx8(LabelBase_default, { className: labelClassname, children: label }),
+      /* @__PURE__ */ jsxs4(
         "div",
         {
           className: cn(
@@ -442,8 +525,8 @@ var InputBase = React6.forwardRef(
             type !== "file" && "border"
           ),
           children: [
-            leftIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
-            /* @__PURE__ */ jsx7(
+            leftIcon && /* @__PURE__ */ jsx8("div", { className: "flex items-center justify-center px-2", children: leftIcon }),
+            /* @__PURE__ */ jsx8(
               "input",
               {
                 type,
@@ -455,7 +538,7 @@ var InputBase = React6.forwardRef(
                 ...props
               }
             ),
-            rightIcon && /* @__PURE__ */ jsx7("div", { className: "flex items-center justify-center px-2", children: rightIcon })
+            rightIcon && /* @__PURE__ */ jsx8("div", { className: "flex items-center justify-center px-2", children: rightIcon })
           ]
         }
       )
@@ -465,7 +548,7 @@ var InputBase = React6.forwardRef(
 InputBase.displayName = "Input";
 
 // src/components/date-time-picker/TimePickerInput.tsx
-import React7 from "react";
+import React9 from "react";
 
 // src/components/date-time-picker/time-picker-utils.ts
 function isValidHour(value) {
@@ -607,8 +690,8 @@ function display12HourValue(hours) {
 }
 
 // src/components/date-time-picker/TimePickerInput.tsx
-import { jsx as jsx8 } from "react/jsx-runtime";
-var TimePickerInput = React7.forwardRef(
+import { jsx as jsx9 } from "react/jsx-runtime";
+var TimePickerInput = React9.forwardRef(
   ({
     className,
     type = "tel",
@@ -625,9 +708,9 @@ var TimePickerInput = React7.forwardRef(
     onRightFocus,
     ...props
   }, ref) => {
-    const [flag, setFlag] = React7.useState(false);
-    const [prevIntKey, setPrevIntKey] = React7.useState("0");
-    React7.useEffect(() => {
+    const [flag, setFlag] = React9.useState(false);
+    const [prevIntKey, setPrevIntKey] = React9.useState("0");
+    React9.useEffect(() => {
       if (flag) {
         const timer = setTimeout(() => {
           setFlag(false);
@@ -635,7 +718,7 @@ var TimePickerInput = React7.forwardRef(
         return () => clearTimeout(timer);
       }
     }, [flag]);
-    const calculatedValue = React7.useMemo(() => {
+    const calculatedValue = React9.useMemo(() => {
       return getDateByType(date, picker);
     }, [date, picker]);
     const calculateNewValue = (key) => {
@@ -666,7 +749,7 @@ var TimePickerInput = React7.forwardRef(
         setDate(setDateByType(tempDate, newValue, picker, period));
       }
     };
-    return /* @__PURE__ */ jsx8(
+    return /* @__PURE__ */ jsx9(
       InputBase,
       {
         ref,
@@ -695,15 +778,15 @@ var TimePickerInput = React7.forwardRef(
 TimePickerInput.displayName = "TimePickerInput";
 
 // src/components/date-time-picker/TimePicker.tsx
-import { jsx as jsx9, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs5 } from "react/jsx-runtime";
 function TimePicker({ date, setDate, hideSeconds }) {
-  const minuteRef = React8.useRef(null);
-  const hourRef = React8.useRef(null);
-  const secondRef = React8.useRef(null);
-  return /* @__PURE__ */ jsxs4("div", { className: "flex items-end gap-2", children: [
-    /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
-      /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "hours", className: "text-xs", children: "Horas" }),
-      /* @__PURE__ */ jsx9(
+  const minuteRef = React10.useRef(null);
+  const hourRef = React10.useRef(null);
+  const secondRef = React10.useRef(null);
+  return /* @__PURE__ */ jsxs5("div", { className: "flex items-end gap-2", children: [
+    /* @__PURE__ */ jsxs5("div", { className: "grid gap-1 text-center", children: [
+      /* @__PURE__ */ jsx10(LabelBase_default, { htmlFor: "hours", className: "text-xs", children: "Horas" }),
+      /* @__PURE__ */ jsx10(
         TimePickerInput,
         {
           picker: "hours",
@@ -714,9 +797,9 @@ function TimePicker({ date, setDate, hideSeconds }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
-      /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "minutes", className: "text-xs", children: "Minutos" }),
-      /* @__PURE__ */ jsx9(
+    /* @__PURE__ */ jsxs5("div", { className: "grid gap-1 text-center", children: [
+      /* @__PURE__ */ jsx10(LabelBase_default, { htmlFor: "minutes", className: "text-xs", children: "Minutos" }),
+      /* @__PURE__ */ jsx10(
         TimePickerInput,
         {
           picker: "minutes",
@@ -728,9 +811,9 @@ function TimePicker({ date, setDate, hideSeconds }) {
         }
       )
     ] }),
-    !hideSeconds && /* @__PURE__ */ jsxs4("div", { className: "grid gap-1 text-center", children: [
-      /* @__PURE__ */ jsx9(LabelBase_default, { htmlFor: "seconds", className: "text-xs", children: "Segundos" }),
-      /* @__PURE__ */ jsx9(
+    !hideSeconds && /* @__PURE__ */ jsxs5("div", { className: "grid gap-1 text-center", children: [
+      /* @__PURE__ */ jsx10(LabelBase_default, { htmlFor: "seconds", className: "text-xs", children: "Segundos" }),
+      /* @__PURE__ */ jsx10(
         TimePickerInput,
         {
           picker: "seconds",
@@ -741,12 +824,12 @@ function TimePicker({ date, setDate, hideSeconds }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsx9("div", { className: "flex h-10 items-center", children: /* @__PURE__ */ jsx9(Clock, { className: "ml-2 h-4 w-4" }) })
+    /* @__PURE__ */ jsx10("div", { className: "flex h-10 items-center", children: /* @__PURE__ */ jsx10(Clock, { className: "ml-2 h-4 w-4" }) })
   ] });
 }
 
 // src/components/date-time-picker/DateTimePicker.tsx
-import { Fragment, jsx as jsx10, jsxs as jsxs5 } from "react/jsx-runtime";
+import { Fragment, jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
 function DateTimePicker({
   label,
   date,
@@ -757,7 +840,7 @@ function DateTimePicker({
   disabled,
   dialogTitle
 }) {
-  const [internalDate, setInternalDate] = useState(date);
+  const [internalDate, setInternalDate] = useState2(date);
   const handleSelect = (newDay) => {
     if (!newDay) return;
     if (!internalDate) {
@@ -769,16 +852,16 @@ function DateTimePicker({
     const newDateFull = add(internalDate, { days: Math.ceil(diffInDays) });
     setInternalDate(newDateFull);
   };
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState2(false);
   useEffect(() => {
     if (date) {
       setInternalDate(date);
     }
   }, [date, open]);
-  return /* @__PURE__ */ jsxs5(Fragment, { children: [
-    label && /* @__PURE__ */ jsx10(LabelBase_default, { className: "mb-[-1rem] pl-2", children: label }),
-    /* @__PURE__ */ jsxs5(DialogBase, { open, onOpenChange: setOpen, children: [
-      /* @__PURE__ */ jsx10(DialogTriggerBase, { disabled, asChild: true, children: /* @__PURE__ */ jsxs5(
+  return /* @__PURE__ */ jsxs6(Fragment, { children: [
+    label && /* @__PURE__ */ jsx11(LabelBase_default, { className: "mb-[-1rem] pl-2", children: label }),
+    /* @__PURE__ */ jsxs6(DialogBase, { open, onOpenChange: setOpen, children: [
+      /* @__PURE__ */ jsx11(DialogTriggerBase, { disabled, asChild: true, children: /* @__PURE__ */ jsxs6(
         ButtonBase,
         {
           variant: "default",
@@ -788,14 +871,14 @@ function DateTimePicker({
             !date && "text-muted-foreground"
           ),
           children: [
-            date ? format(date, "PPP - HH:mm", { locale: ptBR }) : /* @__PURE__ */ jsx10("span", { className: "text-zinc-400", children: "Pick a date" }),
-            /* @__PURE__ */ jsx10(Calendar, { className: "ml-auto text-gray-500", size: 24 })
+            date ? format(date, "PPP - HH:mm", { locale: ptBR }) : /* @__PURE__ */ jsx11("span", { className: "text-zinc-400", children: "Pick a date" }),
+            /* @__PURE__ */ jsx11(Calendar2, { className: "ml-auto text-gray-500", size: 24 })
           ]
         }
       ) }),
-      /* @__PURE__ */ jsxs5(DialogContentBase, { children: [
-        /* @__PURE__ */ jsx10(DialogHeaderBase, { children: /* @__PURE__ */ jsx10(DialogTitleBase, { className: "text-xl font-semibold", children: dialogTitle ?? "Selecione a data" }) }),
-        /* @__PURE__ */ jsx10(
+      /* @__PURE__ */ jsxs6(DialogContentBase, { children: [
+        /* @__PURE__ */ jsx11(DialogHeaderBase, { children: /* @__PURE__ */ jsx11(DialogTitleBase, { className: "text-xl font-semibold", children: dialogTitle ?? "Selecione a data" }) }),
+        /* @__PURE__ */ jsx11(
           CalendarBase,
           {
             mode: "single",
@@ -807,7 +890,7 @@ function DateTimePicker({
             toDate
           }
         ),
-        /* @__PURE__ */ jsx10("div", { className: "border-border flex justify-center border-t p-3", children: /* @__PURE__ */ jsx10(
+        /* @__PURE__ */ jsx11("div", { className: "border-border flex justify-center border-t p-3", children: /* @__PURE__ */ jsx11(
           TimePicker,
           {
             setDate: setInternalDate,
@@ -815,7 +898,7 @@ function DateTimePicker({
             hideSeconds
           }
         ) }),
-        /* @__PURE__ */ jsx10(
+        /* @__PURE__ */ jsx11(
           ButtonBase,
           {
             onClick: () => {
@@ -831,11 +914,11 @@ function DateTimePicker({
 }
 
 // src/hooks/use-mobile.tsx
-import * as React9 from "react";
+import * as React11 from "react";
 var MOBILE_BREAKPOINT = 768;
 function useIsMobile() {
-  const [isMobile, setIsMobile] = React9.useState(void 0);
-  React9.useEffect(() => {
+  const [isMobile, setIsMobile] = React11.useState(void 0);
+  React11.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
     const onChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
@@ -851,18 +934,18 @@ function useIsMobile() {
 import { Check as Check2, Moon, Sun } from "phosphor-react";
 
 // src/components/ui/DropDownMenuBase.tsx
-import * as React10 from "react";
+import * as React12 from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, CaretRight as CaretRight2, Circle } from "phosphor-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
+import { motion as motion2, AnimatePresence } from "framer-motion";
+import { jsx as jsx12, jsxs as jsxs7 } from "react/jsx-runtime";
 var DropDownMenuBase = DropdownMenuPrimitive.Root;
 var DropDownMenuTriggerBase = DropdownMenuPrimitive.Trigger;
 var DropDownMenuGroupBase = DropdownMenuPrimitive.Group;
 var DropDownMenuPortalBase = DropdownMenuPrimitive.Portal;
 var DropDownMenuSubBase = DropdownMenuPrimitive.Sub;
 var DropDownMenuRadioGroupBase = DropdownMenuPrimitive.RadioGroup;
-var DropDownMenuSubTriggerBase = React10.forwardRef(({ className, inset, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
+var DropDownMenuSubTriggerBase = React12.forwardRef(({ className, inset, children, ...props }, ref) => /* @__PURE__ */ jsxs7(
   DropdownMenuPrimitive.SubTrigger,
   {
     ref,
@@ -874,12 +957,12 @@ var DropDownMenuSubTriggerBase = React10.forwardRef(({ className, inset, childre
     ...props,
     children: [
       children,
-      /* @__PURE__ */ jsx11(CaretRight2, { className: "ml-auto" })
+      /* @__PURE__ */ jsx12(CaretRight2, { className: "ml-auto" })
     ]
   }
 ));
 DropDownMenuSubTriggerBase.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
-var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx11(
+var DropDownMenuSubContentBase = React12.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx12(
   DropdownMenuPrimitive.SubContent,
   {
     ref,
@@ -890,7 +973,7 @@ var DropDownMenuSubContentBase = React10.forwardRef(({ className, ...props }, re
     ...props
   }
 ));
-var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx11(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx11(
+var DropDownMenuContentBase = React12.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx12(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx12(
   DropdownMenuPrimitive.Content,
   {
     sideOffset,
@@ -898,8 +981,8 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
     ref,
     className: cn("z-[9999] p-0", className),
     ...props,
-    children: /* @__PURE__ */ jsx11(AnimatePresence, { children: /* @__PURE__ */ jsx11(
-      motion.div,
+    children: /* @__PURE__ */ jsx12(AnimatePresence, { children: /* @__PURE__ */ jsx12(
+      motion2.div,
       {
         initial: { opacity: 0, scale: 0.95, y: 5 },
         animate: { opacity: 1, scale: 1, y: 0 },
@@ -915,7 +998,7 @@ var DropDownMenuContentBase = React10.forwardRef(({ className, sideOffset = 4, .
   }
 ) }));
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;
-var DropDownMenuItemBase = React10.forwardRef(({ className, inset, leftIcon, rightIcon, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
+var DropDownMenuItemBase = React12.forwardRef(({ className, inset, leftIcon, rightIcon, children, ...props }, ref) => /* @__PURE__ */ jsxs7(
   DropdownMenuPrimitive.Item,
   {
     ref,
@@ -926,16 +1009,16 @@ var DropDownMenuItemBase = React10.forwardRef(({ className, inset, leftIcon, rig
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsxs6("div", { className: "flex items-center gap-2", children: [
-        leftIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: leftIcon }),
+      /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
+        leftIcon && /* @__PURE__ */ jsx12("span", { className: "[&>svg]:size-4", children: leftIcon }),
         children
       ] }),
-      rightIcon && /* @__PURE__ */ jsx11("span", { className: "[&>svg]:size-4", children: rightIcon })
+      rightIcon && /* @__PURE__ */ jsx12("span", { className: "[&>svg]:size-4", children: rightIcon })
     ]
   }
 ));
 DropDownMenuItemBase.displayName = DropdownMenuPrimitive.Item.displayName;
-var DropDownMenuCheckboxItemBase = React10.forwardRef(({ className, children, checked, ...props }, ref) => /* @__PURE__ */ jsxs6(
+var DropDownMenuCheckboxItemBase = React12.forwardRef(({ className, children, checked, ...props }, ref) => /* @__PURE__ */ jsxs7(
   DropdownMenuPrimitive.CheckboxItem,
   {
     ref,
@@ -946,13 +1029,13 @@ var DropDownMenuCheckboxItemBase = React10.forwardRef(({ className, children, ch
     checked,
     ...props,
     children: [
-      /* @__PURE__ */ jsx11("span", { className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx11(DropdownMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx11(Check, { className: "h-4 w-4" }) }) }),
+      /* @__PURE__ */ jsx12("span", { className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx12(DropdownMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx12(Check, { className: "h-4 w-4" }) }) }),
       children
     ]
   }
 ));
 DropDownMenuCheckboxItemBase.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
-var DropDownMenuRadioItemBase = React10.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs6(
+var DropDownMenuRadioItemBase = React12.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs7(
   DropdownMenuPrimitive.RadioItem,
   {
     ref,
@@ -962,13 +1045,13 @@ var DropDownMenuRadioItemBase = React10.forwardRef(({ className, children, ...pr
     ),
     ...props,
     children: [
-      /* @__PURE__ */ jsx11("span", { className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx11(DropdownMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx11(Circle, { className: "h-2 w-2 fill-current" }) }) }),
+      /* @__PURE__ */ jsx12("span", { className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center", children: /* @__PURE__ */ jsx12(DropdownMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx12(Circle, { className: "h-2 w-2 fill-current" }) }) }),
       children
     ]
   }
 ));
 DropDownMenuRadioItemBase.displayName = DropdownMenuPrimitive.RadioItem.displayName;
-var DropDownMenuLabelBase = React10.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ jsx11(
+var DropDownMenuLabelBase = React12.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ jsx12(
   DropdownMenuPrimitive.Label,
   {
     ref,
@@ -981,7 +1064,7 @@ var DropDownMenuLabelBase = React10.forwardRef(({ className, inset, ...props }, 
   }
 ));
 DropDownMenuLabelBase.displayName = DropdownMenuPrimitive.Label.displayName;
-var DropDownMenuSeparatorBase = React10.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx11(
+var DropDownMenuSeparatorBase = React12.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx12(
   DropdownMenuPrimitive.Separator,
   {
     ref,
@@ -994,7 +1077,7 @@ var DropDownMenuShortcutBase = ({
   className,
   ...props
 }) => {
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx12(
     "span",
     {
       className: cn("ml-auto text-xs tracking-widest opacity-60", className),
@@ -1005,8 +1088,8 @@ var DropDownMenuShortcutBase = ({
 DropDownMenuShortcutBase.displayName = "DropDownMenuShortcutBase";
 
 // src/components/theme-provider.tsx
-import { createContext, useContext, useEffect as useEffect3, useState as useState3 } from "react";
-import { jsx as jsx12 } from "react/jsx-runtime";
+import { createContext, useContext, useEffect as useEffect3, useState as useState4 } from "react";
+import { jsx as jsx13 } from "react/jsx-runtime";
 var initialState = {
   theme: "system",
   setTheme: () => null
@@ -1018,7 +1101,7 @@ function ThemeProviderBase({
   storageKey = "vite-ui-theme",
   ...props
 }) {
-  const [theme, setTheme] = useState3(() => defaultTheme || defaultTheme);
+  const [theme, setTheme] = useState4(() => defaultTheme || defaultTheme);
   useEffect3(() => {
     const root = window.document.documentElement;
     root.classList.remove(
@@ -1046,7 +1129,7 @@ function ThemeProviderBase({
       setTheme(theme2);
     }
   };
-  return /* @__PURE__ */ jsx12(ThemeProviderContext.Provider, { ...props, value, children });
+  return /* @__PURE__ */ jsx13(ThemeProviderContext.Provider, { ...props, value, children });
 }
 var useTheme = () => {
   const context = useContext(ThemeProviderContext);
@@ -1056,7 +1139,7 @@ var useTheme = () => {
 };
 
 // src/components/mode-toggle.tsx
-import { Fragment as Fragment2, jsx as jsx13, jsxs as jsxs7 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx14, jsxs as jsxs8 } from "react/jsx-runtime";
 var themeLabels = {
   light: "Light",
   dark: "Dark",
@@ -1072,30 +1155,30 @@ function ModeToggleBase({
   themes = ["light", "dark", "system"]
 }) {
   const { setTheme, theme: currentTheme } = useTheme();
-  return /* @__PURE__ */ jsxs7(DropDownMenuBase, { children: [
-    /* @__PURE__ */ jsx13(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ jsxs7(
+  return /* @__PURE__ */ jsxs8(DropDownMenuBase, { children: [
+    /* @__PURE__ */ jsx14(DropDownMenuTriggerBase, { asChild: true, children: /* @__PURE__ */ jsxs8(
       ButtonBase,
       {
         variant: "ghost",
         size: "icon",
         className: "relative overflow-hidden border-transparent",
         children: [
-          /* @__PURE__ */ jsxs7(Fragment2, { children: [
-            /* @__PURE__ */ jsx13(Sun, { className: "h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" }),
-            /* @__PURE__ */ jsx13(Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" })
+          /* @__PURE__ */ jsxs8(Fragment2, { children: [
+            /* @__PURE__ */ jsx14(Sun, { className: "h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" }),
+            /* @__PURE__ */ jsx14(Moon, { className: "absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" })
           ] }),
-          /* @__PURE__ */ jsx13("span", { className: "sr-only", children: "Toggle theme" })
+          /* @__PURE__ */ jsx14("span", { className: "sr-only", children: "Toggle theme" })
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx13(DropDownMenuContentBase, { align: "end", className: "dark:border-transparent", children: themes.map((theme) => /* @__PURE__ */ jsxs7(
+    /* @__PURE__ */ jsx14(DropDownMenuContentBase, { align: "end", className: "dark:border-transparent", children: themes.map((theme) => /* @__PURE__ */ jsxs8(
       DropDownMenuItemBase,
       {
         onClick: () => setTheme(theme),
         className: "flex items-center justify-between",
         children: [
           themeLabels[theme],
-          currentTheme === theme && /* @__PURE__ */ jsx13(Check2, { className: "h-4 w-4 opacity-100" })
+          currentTheme === theme && /* @__PURE__ */ jsx14(Check2, { className: "h-4 w-4 opacity-100" })
         ]
       },
       theme
@@ -1107,12 +1190,12 @@ function ModeToggleBase({
 import { useCallback, useMemo } from "react";
 
 // src/components/ui/CommandBase.tsx
-import * as React11 from "react";
+import * as React13 from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlass } from "phosphor-react";
-import { motion as motion2, AnimatePresence as AnimatePresence2 } from "framer-motion";
-import { jsx as jsx14, jsxs as jsxs8 } from "react/jsx-runtime";
-var CommandBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
+import { motion as motion3, AnimatePresence as AnimatePresence2 } from "framer-motion";
+import { jsx as jsx15, jsxs as jsxs9 } from "react/jsx-runtime";
+var CommandBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive,
   {
     ref,
@@ -1130,8 +1213,8 @@ var dialogVariants = {
   exit: { opacity: 0, scale: 0.95, y: -20 }
 };
 var CommandDialogBase = ({ children, open, ...props }) => {
-  return /* @__PURE__ */ jsx14(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx14(AnimatePresence2, { children: open && /* @__PURE__ */ jsx14(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx14(
-    motion2.div,
+  return /* @__PURE__ */ jsx15(DialogBase, { open, ...props, children: /* @__PURE__ */ jsx15(AnimatePresence2, { children: open && /* @__PURE__ */ jsx15(DialogContentBase, { asChild: true, forceMount: true, children: /* @__PURE__ */ jsx15(
+    motion3.div,
     {
       initial: "hidden",
       animate: "visible",
@@ -1139,14 +1222,14 @@ var CommandDialogBase = ({ children, open, ...props }) => {
       variants: dialogVariants,
       transition: { duration: 0.2, ease: "easeOut" },
       className: "overflow-hidden p-0",
-      children: /* @__PURE__ */ jsx14(CommandBase, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children })
+      children: /* @__PURE__ */ jsx15(CommandBase, { className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5", children })
     },
     "command-dialog"
   ) }) }) });
 };
-var CommandInputBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs8("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
-  /* @__PURE__ */ jsx14(MagnifyingGlass, { className: "mr-2 h-4 w-4 shrink-0 text-primary" }),
-  /* @__PURE__ */ jsx14(
+var CommandInputBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs9("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
+  /* @__PURE__ */ jsx15(MagnifyingGlass, { className: "mr-2 h-4 w-4 shrink-0 text-primary" }),
+  /* @__PURE__ */ jsx15(
     CommandPrimitive.Input,
     {
       ref,
@@ -1159,7 +1242,7 @@ var CommandInputBase = React11.forwardRef(({ className, ...props }, ref) => /* @
   )
 ] }));
 CommandInputBase.displayName = CommandPrimitive.Input.displayName;
-var CommandListBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
+var CommandListBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.List,
   {
     ref,
@@ -1168,9 +1251,9 @@ var CommandListBase = React11.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 CommandListBase.displayName = CommandPrimitive.List.displayName;
-var CommandEmptyBase = React11.forwardRef((props, ref) => /* @__PURE__ */ jsx14(CommandPrimitive.Empty, { ref, className: "py-6 text-center text-sm", ...props }));
+var CommandEmptyBase = React13.forwardRef((props, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Empty, { ref, className: "py-6 text-center text-sm", ...props }));
 CommandEmptyBase.displayName = CommandPrimitive.Empty.displayName;
-var CommandGroupBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
+var CommandGroupBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.Group,
   {
     ref,
@@ -1182,9 +1265,9 @@ var CommandGroupBase = React11.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 CommandGroupBase.displayName = CommandPrimitive.Group.displayName;
-var CommandSeparatorBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(CommandPrimitive.Separator, { ref, className: cn("-mx-1 h-px bg-border", className), ...props }));
+var CommandSeparatorBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Separator, { ref, className: cn("-mx-1 h-px bg-border", className), ...props }));
 CommandSeparatorBase.displayName = CommandPrimitive.Separator.displayName;
-var CommandItemBase = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx14(
+var CommandItemBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.Item,
   {
     ref,
@@ -1197,36 +1280,14 @@ var CommandItemBase = React11.forwardRef(({ className, ...props }, ref) => /* @_
 ));
 CommandItemBase.displayName = CommandPrimitive.Item.displayName;
 var CommandShortcutBase = ({ className, ...props }) => {
-  return /* @__PURE__ */ jsx14("span", { className: cn("ml-auto text-xs tracking-widest text-muted-foreground", className), ...props });
+  return /* @__PURE__ */ jsx15("span", { className: cn("ml-auto text-xs tracking-widest text-muted-foreground", className), ...props });
 };
 CommandShortcutBase.displayName = "CommandShortcut";
 
-// src/components/ui/PopoverBase.tsx
-import * as React12 from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { jsx as jsx15 } from "react/jsx-runtime";
-var PopoverBase = PopoverPrimitive.Root;
-var PopoverTriggerBase = PopoverPrimitive.Trigger;
-var PopoverAnchorBase = PopoverPrimitive.Anchor;
-var PopoverContentBase = React12.forwardRef(({ className, align = "center", sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx15(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx15(
-  PopoverPrimitive.Content,
-  {
-    ref,
-    align,
-    sideOffset,
-    className: cn(
-      "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      className
-    ),
-    ...props
-  }
-) }));
-PopoverContentBase.displayName = PopoverPrimitive.Content.displayName;
-
 // src/components/selects/ComboboxBase.tsx
 import { CaretDown, Check as Check3 } from "phosphor-react";
-import { useState as useState4 } from "react";
-import { jsx as jsx16, jsxs as jsxs9 } from "react/jsx-runtime";
+import { useState as useState5 } from "react";
+import { jsx as jsx16, jsxs as jsxs10 } from "react/jsx-runtime";
 function ComboboxBase({
   items,
   renderSelected,
@@ -1235,14 +1296,14 @@ function ComboboxBase({
   searchPlaceholder,
   errorMessage
 }) {
-  const [open, setOpen] = useState4(false);
-  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs9(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
+  const [open, setOpen] = useState5(false);
+  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs10(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
     /* @__PURE__ */ jsx16(
       PopoverTriggerBase,
       {
         asChild: true,
         className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]",
-        children: /* @__PURE__ */ jsxs9(
+        children: /* @__PURE__ */ jsxs10(
           ButtonBase,
           {
             variant: "outline",
@@ -1260,7 +1321,7 @@ function ComboboxBase({
         )
       }
     ),
-    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ jsxs9(CommandBase, { className: "dark:text-white", children: [
+    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ jsxs10(CommandBase, { className: "dark:text-white", children: [
       /* @__PURE__ */ jsx16(
         CommandInputBase,
         {
@@ -1268,9 +1329,9 @@ function ComboboxBase({
           placeholder: searchPlaceholder ?? "Busque uma op\xE7\xE3o..."
         }
       ),
-      /* @__PURE__ */ jsxs9(CommandListBase, { children: [
+      /* @__PURE__ */ jsxs10(CommandListBase, { children: [
         /* @__PURE__ */ jsx16(CommandEmptyBase, { children: "Nenhum dado encontrado" }),
-        /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs9(
+        /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs10(
           CommandItemBase,
           {
             keywords: [item.label],
@@ -1300,7 +1361,7 @@ function ComboboxBase({
 }
 
 // src/components/selects/Combobox.tsx
-import { jsx as jsx17, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs11 } from "react/jsx-runtime";
 function Combobox({
   items,
   selected,
@@ -1325,7 +1386,7 @@ function Combobox({
     },
     [selected, onChange]
   );
-  return /* @__PURE__ */ jsxs10("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
+  return /* @__PURE__ */ jsxs11("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
     label && /* @__PURE__ */ jsx17(LabelBase_default, { className: labelClassname, children: label }),
     /* @__PURE__ */ jsx17(
       ComboboxBase,
@@ -1342,8 +1403,8 @@ function Combobox({
 
 // src/components/selects/MultiCombobox.tsx
 import { useCallback as useCallback2, useMemo as useMemo2 } from "react";
-import { X as X2 } from "phosphor-react";
-import { jsx as jsx18, jsxs as jsxs11 } from "react/jsx-runtime";
+import { X as X3 } from "phosphor-react";
+import { jsx as jsx18, jsxs as jsxs12 } from "react/jsx-runtime";
 function MultiCombobox({
   items,
   selected,
@@ -1374,7 +1435,7 @@ function MultiCombobox({
     if (selectedItems.length === 0) {
       return /* @__PURE__ */ jsx18("span", { className: "text-gray-500", children: placeholder ?? "Selecione uma op\xE7\xE3o..." });
     }
-    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs11(
+    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs12(
       "div",
       {
         className: "flex items-center gap-1 rounded-md border p-1",
@@ -1390,7 +1451,7 @@ function MultiCombobox({
                 handleSelection(item.value);
               },
               className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
-              children: /* @__PURE__ */ jsx18(X2, { size: 14 })
+              children: /* @__PURE__ */ jsx18(X3, { size: 14 })
             }
           )
         ]
@@ -1399,7 +1460,7 @@ function MultiCombobox({
     ));
     return /* @__PURE__ */ jsx18("div", { className: "flex w-full flex-wrap gap-2", children: items2 });
   }, [handleSelection, placeholder, selectedItems]);
-  return /* @__PURE__ */ jsxs11("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
+  return /* @__PURE__ */ jsxs12("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
     label && /* @__PURE__ */ jsx18(LabelBase_default, { className: labelClassname, children: label }),
     /* @__PURE__ */ jsx18(
       ComboboxBase,
@@ -1415,15 +1476,15 @@ function MultiCombobox({
 }
 
 // src/components/ui/SelectBase.tsx
-import * as React13 from "react";
+import * as React14 from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check as Check4, CaretDown as CaretDown2, CaretUp } from "phosphor-react";
-import { motion as motion3, AnimatePresence as AnimatePresence3 } from "framer-motion";
-import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs12 } from "react/jsx-runtime";
+import { motion as motion4, AnimatePresence as AnimatePresence3 } from "framer-motion";
+import { Fragment as Fragment3, jsx as jsx19, jsxs as jsxs13 } from "react/jsx-runtime";
 var SelectBase = SelectPrimitive.Root;
 var SelectGroupBase = SelectPrimitive.Group;
 var SelectValueBase = SelectPrimitive.Value;
-var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...props }, ref) => /* @__PURE__ */ jsxs12(
+var SelectTriggerBase = React14.forwardRef(({ className, children, open, ...props }, ref) => /* @__PURE__ */ jsxs13(
   SelectPrimitive.Trigger,
   {
     ref,
@@ -1435,7 +1496,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
     children: [
       children,
       /* @__PURE__ */ jsx19(
-        motion3.span,
+        motion4.span,
         {
           animate: { rotate: open ? 180 : 0 },
           transition: { duration: 0.3 },
@@ -1447,7 +1508,7 @@ var SelectTriggerBase = React13.forwardRef(({ className, children, open, ...prop
   }
 ));
 SelectTriggerBase.displayName = SelectPrimitive.Trigger.displayName;
-var SelectScrollUpButtonBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
+var SelectScrollUpButtonBase = React14.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
   SelectPrimitive.ScrollUpButton,
   {
     ref,
@@ -1460,7 +1521,7 @@ var SelectScrollUpButtonBase = React13.forwardRef(({ className, ...props }, ref)
   }
 ));
 SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
-var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
+var SelectScrollDownButtonBase = React14.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
   SelectPrimitive.ScrollDownButton,
   {
     ref,
@@ -1473,7 +1534,7 @@ var SelectScrollDownButtonBase = React13.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React13.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
+var SelectContentBase = React14.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
   SelectPrimitive.Content,
   {
     ref,
@@ -1485,13 +1546,13 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
     ...props,
     asChild: true,
     children: /* @__PURE__ */ jsx19(
-      motion3.div,
+      motion4.div,
       {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
         exit: { opacity: 0, scale: 0.95 },
         transition: { duration: 0.2 },
-        children: /* @__PURE__ */ jsxs12(Fragment3, { children: [
+        children: /* @__PURE__ */ jsxs13(Fragment3, { children: [
           /* @__PURE__ */ jsx19(SelectScrollUpButtonBase, {}),
           /* @__PURE__ */ jsx19(
             SelectPrimitive.Viewport,
@@ -1510,7 +1571,7 @@ var SelectContentBase = React13.forwardRef(({ className, children, position = "p
   }
 ) }) }));
 SelectContentBase.displayName = SelectPrimitive.Content.displayName;
-var SelectLabelBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
+var SelectLabelBase = React14.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
   SelectPrimitive.Label,
   {
     ref,
@@ -1519,7 +1580,7 @@ var SelectLabelBase = React13.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 SelectLabelBase.displayName = SelectPrimitive.Label.displayName;
-var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs12(
+var SelectItemBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs13(
   SelectPrimitive.Item,
   {
     ref,
@@ -1535,7 +1596,7 @@ var SelectItemBase = React13.forwardRef(({ className, children, ...props }, ref)
   }
 ));
 SelectItemBase.displayName = SelectPrimitive.Item.displayName;
-var SelectSeparatorBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
+var SelectSeparatorBase = React14.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx19(
   SelectPrimitive.Separator,
   {
     ref,
@@ -1546,10 +1607,10 @@ var SelectSeparatorBase = React13.forwardRef(({ className, ...props }, ref) => /
 SelectSeparatorBase.displayName = SelectPrimitive.Separator.displayName;
 
 // src/components/ui/ScrollareaBase.tsx
-import * as React14 from "react";
+import * as React15 from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { jsx as jsx20, jsxs as jsxs13 } from "react/jsx-runtime";
-var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs13(
+import { jsx as jsx20, jsxs as jsxs14 } from "react/jsx-runtime";
+var ScrollAreaBase = React15.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs14(
   ScrollAreaPrimitive.Root,
   {
     ref,
@@ -1563,7 +1624,7 @@ var ScrollAreaBase = React14.forwardRef(({ className, children, ...props }, ref)
   }
 ));
 ScrollAreaBase.displayName = ScrollAreaPrimitive.Root.displayName;
-var ScrollBarBase = React14.forwardRef(({ className, orientation = "vertical", ...props }, ref) => /* @__PURE__ */ jsx20(
+var ScrollBarBase = React15.forwardRef(({ className, orientation = "vertical", ...props }, ref) => /* @__PURE__ */ jsx20(
   ScrollAreaPrimitive.ScrollAreaScrollbar,
   {
     ref,
@@ -1581,7 +1642,7 @@ var ScrollBarBase = React14.forwardRef(({ className, orientation = "vertical", .
 ScrollBarBase.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
 // src/components/selects/Select.tsx
-import { Fragment as Fragment4, jsx as jsx21, jsxs as jsxs14 } from "react/jsx-runtime";
+import { Fragment as Fragment4, jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
 function Select({
   items,
   groupItems,
@@ -1589,8 +1650,8 @@ function Select({
   onChange,
   errorMessage
 }) {
-  return /* @__PURE__ */ jsxs14("div", { children: [
-    /* @__PURE__ */ jsxs14(SelectBase, { onValueChange: onChange, children: [
+  return /* @__PURE__ */ jsxs15("div", { children: [
+    /* @__PURE__ */ jsxs15(SelectBase, { onValueChange: onChange, children: [
       /* @__PURE__ */ jsx21(
         SelectTriggerBase,
         {
@@ -1601,7 +1662,7 @@ function Select({
           children: /* @__PURE__ */ jsx21(SelectValueBase, { placeholder })
         }
       ),
-      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs14(SelectGroupBase, { children: [
+      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs15(SelectGroupBase, { children: [
         /* @__PURE__ */ jsx21(SelectLabelBase, { children: key }),
         groupItems[key].map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value))
       ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
@@ -1624,7 +1685,7 @@ function CalendarBase2({
     DayPicker2,
     {
       showOutsideDays,
-      className: cn("bg-black-50 p-3", className),
+      className: cn("bg-background p-3", className),
       classNames: {
         months: "flex items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -1632,7 +1693,7 @@ function CalendarBase2({
         caption_label: "text-sm font-medium",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          /* @__PURE__ */ jsx22(ButtonBase, { variant: "outline" }),
+          buttonVariantsBase({ variant: "outline" }),
           "h-7 w-7 bg-transparent p-0  opacity-50 hover:opacity-100"
         ),
         nav_button_previous: "absolute left-1",
@@ -1643,15 +1704,15 @@ function CalendarBase2({
         row: "flex w-full mt-2",
         cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-slate-100/50 [&:has([aria-selected])]:bg-slate-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 dark:[&:has([aria-selected].day-outside)]:bg-slate-800/50 dark:[&:has([aria-selected])]:bg-slate-800",
         day: cn(
-          /* @__PURE__ */ jsx22(ButtonBase, { variant: "ghost" }),
+          buttonVariantsBase({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",
-        day_selected: "bg-purple text-slate-50 hover:bg-slate-900 hover:text-slate-50 focus:bg-purple-500 focus:text-slate-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50 dark:hover:text-slate-900 dark:focus:bg-slate-50 dark:focus:text-slate-900",
-        day_today: "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50",
+        day_selected: "bg-purple text-slate-50 hover:bg-primary hover:text-slate-50 focus:bg-purple-500 focus:text-slate-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50 dark:hover:text-slate-900 dark:focus:bg-slate-50 dark:focus:text-slate-900",
+        day_today: "bg-slate-100 text-slate-900 dark:bg-primary dark:text-slate-50",
         day_outside: "day-outside text-slate-500 opacity-50 aria-selected:bg-slate-100/50 aria-selected:text-slate-500 aria-selected:opacity-30 dark:text-slate-400 dark:aria-selected:bg-slate-800/50 dark:aria-selected:text-slate-400",
         day_disabled: "text-slate-500 opacity-50 dark:text-slate-400",
-        day_range_middle: "aria-selected:bg-slate-100 aria-selected:text-slate-900 dark:aria-selected:bg-slate-800 dark:aria-selected:text-slate-50",
+        day_range_middle: "aria-selected:bg-slate-100 aria-selected:text-slate-900 dark:aria-selected:bg-primary dark:aria-selected:text-primary",
         day_hidden: "invisible",
         ...classNames
       },
@@ -1663,12 +1724,12 @@ function CalendarBase2({
     }
   );
 }
-CalendarBase2.displayName = "CalendarBase";
+CalendarBase2.displayName = "Calendar";
 
 // src/components/ui/CardBase.tsx
-import * as React15 from "react";
+import * as React16 from "react";
 import { jsx as jsx23 } from "react/jsx-runtime";
-var CardBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1680,7 +1741,7 @@ var CardBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__
   }
 ));
 CardBase.displayName = "Card";
-var CardHeaderBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardHeaderBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1689,7 +1750,7 @@ var CardHeaderBase = React15.forwardRef(({ className, ...props }, ref) => /* @__
   }
 ));
 CardHeaderBase.displayName = "CardHeader";
-var CardTitleBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardTitleBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1698,7 +1759,7 @@ var CardTitleBase = React15.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 CardTitleBase.displayName = "CardTitle";
-var CardDescriptionBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardDescriptionBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1707,9 +1768,9 @@ var CardDescriptionBase = React15.forwardRef(({ className, ...props }, ref) => /
   }
 ));
 CardDescriptionBase.displayName = "CardDescription";
-var CardContentBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+var CardContentBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23("div", { ref, className: cn("p-6 pt-0", className), ...props }));
 CardContentBase.displayName = "CardContent";
-var CardFooterBase = React15.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardFooterBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1720,12 +1781,12 @@ var CardFooterBase = React15.forwardRef(({ className, ...props }, ref) => /* @__
 CardFooterBase.displayName = "CardFooter";
 
 // src/components/ui/CheckBoxBase.tsx
-import * as React16 from "react";
+import * as React17 from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check as Check5 } from "phosphor-react";
-import { motion as motion4 } from "framer-motion";
+import { motion as motion5 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
-var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
+var CheckboxBase = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
   {
     ref,
@@ -1735,7 +1796,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
     ),
     ...props,
     children: /* @__PURE__ */ jsx24(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ jsx24(
-      motion4.div,
+      motion5.div,
       {
         initial: { scale: 0, opacity: 0, rotate: -90 },
         animate: { scale: 1, opacity: 1, rotate: 0 },
@@ -1750,7 +1811,7 @@ var CheckboxBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PU
 CheckboxBase.displayName = CheckboxPrimitive.Root.displayName;
 
 // src/components/ui/FormBase.tsx
-import * as React17 from "react";
+import * as React18 from "react";
 import { Slot as Slot3 } from "@radix-ui/react-slot";
 import {
   Controller,
@@ -1759,7 +1820,7 @@ import {
 } from "react-hook-form";
 import { jsx as jsx25 } from "react/jsx-runtime";
 var FormBase = FormProvider;
-var FormFieldBaseContext = React17.createContext(
+var FormFieldBaseContext = React18.createContext(
   {}
 );
 var FormFieldBase = ({
@@ -1768,8 +1829,8 @@ var FormFieldBase = ({
   return /* @__PURE__ */ jsx25(FormFieldBaseContext.Provider, { value: { name: props.name }, children: /* @__PURE__ */ jsx25(Controller, { ...props }) });
 };
 var useFormFieldBase = () => {
-  const fieldContext = React17.useContext(FormFieldBaseContext);
-  const itemContext = React17.useContext(FormItemBaseContext);
+  const fieldContext = React18.useContext(FormFieldBaseContext);
+  const itemContext = React18.useContext(FormItemBaseContext);
   const { getFieldState, formState } = useFormContext();
   const fieldState = getFieldState(fieldContext.name, formState);
   if (!fieldContext) {
@@ -1785,15 +1846,15 @@ var useFormFieldBase = () => {
     ...fieldState
   };
 };
-var FormItemBaseContext = React17.createContext(
+var FormItemBaseContext = React18.createContext(
   {}
 );
-var FormItemBase = React17.forwardRef(({ className, ...props }, ref) => {
-  const id = React17.useId();
+var FormItemBase = React18.forwardRef(({ className, ...props }, ref) => {
+  const id = React18.useId();
   return /* @__PURE__ */ jsx25(FormItemBaseContext.Provider, { value: { id }, children: /* @__PURE__ */ jsx25("div", { ref, className: cn("space-y-2", className), ...props }) });
 });
 FormItemBase.displayName = "FormItemBase";
-var FormLabelBase = React17.forwardRef(
+var FormLabelBase = React18.forwardRef(
   ({ className, ...props }, ref) => {
     const { error, FormItemId } = useFormFieldBase();
     return /* @__PURE__ */ jsx25(
@@ -1808,7 +1869,7 @@ var FormLabelBase = React17.forwardRef(
   }
 );
 FormLabelBase.displayName = "FormLabelBase";
-var FormControlBase = React17.forwardRef(({ ...props }, ref) => {
+var FormControlBase = React18.forwardRef(({ ...props }, ref) => {
   const { error, FormItemId, FormDescriptionId, FormMessageId } = useFormFieldBase();
   return /* @__PURE__ */ jsx25(
     Slot3,
@@ -1822,7 +1883,7 @@ var FormControlBase = React17.forwardRef(({ ...props }, ref) => {
   );
 });
 FormControlBase.displayName = "FormControlBase";
-var FormDescriptionBase = React17.forwardRef(({ className, ...props }, ref) => {
+var FormDescriptionBase = React18.forwardRef(({ className, ...props }, ref) => {
   const { FormDescriptionId } = useFormFieldBase();
   return /* @__PURE__ */ jsx25(
     "p",
@@ -1835,7 +1896,7 @@ var FormDescriptionBase = React17.forwardRef(({ className, ...props }, ref) => {
   );
 });
 FormDescriptionBase.displayName = "FormDescriptionBase";
-var FormMessageBase = React17.forwardRef(({ className, children, ...props }, ref) => {
+var FormMessageBase = React18.forwardRef(({ className, children, ...props }, ref) => {
   const { error, FormMessageId } = useFormFieldBase();
   const body = error ? String(error?.message) : children;
   if (!body) {
@@ -1855,13 +1916,13 @@ var FormMessageBase = React17.forwardRef(({ className, children, ...props }, ref
 FormMessageBase.displayName = "FormMessageBase";
 
 // src/components/ui/ProgressBase.tsx
-import * as React18 from "react";
+import * as React19 from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
-import { jsx as jsx26, jsxs as jsxs15 } from "react/jsx-runtime";
-var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
-  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+import { jsx as jsx26, jsxs as jsxs16 } from "react/jsx-runtime";
+var ProgressBase = React19.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
+  return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
     label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
-    /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-2", children: [
+    /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-2", children: [
       leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: leftIcon }),
       /* @__PURE__ */ jsx26(
         ProgressPrimitive.Root,
@@ -1893,7 +1954,7 @@ var ProgressSegmentsBase = ({
   value
 }) => {
   const filled = Math.round(value / 100 * segments);
-  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
+  return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
     label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
     /* @__PURE__ */ jsx26("div", { className: "flex gap-1 w-full", children: Array.from({ length: segments }).map((_, idx) => /* @__PURE__ */ jsx26(
       "div",
@@ -1924,13 +1985,13 @@ var ProgressPanelsBase = ({
   steps,
   currentStep
 }) => {
-  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-1 w-full", children: [
+  return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full", children: [
     label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
     /* @__PURE__ */ jsx26("div", { className: "flex w-full gap-1 rounded-lg overflow-hidden", children: steps.map((step, idx) => {
       const isActive = idx === currentStep;
       const isLast = idx === steps.length - 1;
-      return /* @__PURE__ */ jsxs15(React18.Fragment, { children: [
-        /* @__PURE__ */ jsxs15(
+      return /* @__PURE__ */ jsxs16(React19.Fragment, { children: [
+        /* @__PURE__ */ jsxs16(
           "div",
           {
             className: cn(
@@ -1956,9 +2017,9 @@ var ProgressCirclesBase = ({
   steps,
   currentStep
 }) => {
-  return /* @__PURE__ */ jsxs15("div", { className: "flex flex-col gap-2 w-full", children: [
+  return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-2 w-full", children: [
     label && /* @__PURE__ */ jsx26("label", { className: "py-2 text-base font-semibold text-gray-700 dark:text-gray-300", children: label }),
-    /* @__PURE__ */ jsxs15("div", { className: "relative flex items-center justify-between w-full", children: [
+    /* @__PURE__ */ jsxs16("div", { className: "relative flex items-center justify-between w-full", children: [
       /* @__PURE__ */ jsx26("div", { className: "absolute top-5 left-0 w-full h-1 bg-zinc-200 dark:bg-zinc-700" }),
       /* @__PURE__ */ jsx26(
         "div",
@@ -1971,7 +2032,7 @@ var ProgressCirclesBase = ({
       ),
       steps.map((step, idx) => {
         const isActive = idx <= currentStep;
-        return /* @__PURE__ */ jsxs15(
+        return /* @__PURE__ */ jsxs16(
           "div",
           {
             className: "relative flex flex-col items-center w-10",
@@ -1998,11 +2059,11 @@ var ProgressCirclesBase = ({
 };
 
 // src/components/ui/SeparatorBase.tsx
-import * as React19 from "react";
+import * as React20 from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { motion as motion5 } from "framer-motion";
+import { motion as motion6 } from "framer-motion";
 import { jsx as jsx27 } from "react/jsx-runtime";
-var SeparatorBase = React19.forwardRef(
+var SeparatorBase = React20.forwardRef(
   ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
     const isHorizontal = orientation === "horizontal";
     return /* @__PURE__ */ jsx27(
@@ -2014,7 +2075,7 @@ var SeparatorBase = React19.forwardRef(
         asChild: true,
         ...props,
         children: /* @__PURE__ */ jsx27(
-          motion5.div,
+          motion6.div,
           {
             className: cn(
               "shrink-0 bg-border",
@@ -2033,16 +2094,16 @@ var SeparatorBase = React19.forwardRef(
 SeparatorBase.displayName = SeparatorPrimitive.Root.displayName;
 
 // src/components/ui/SheetBase.tsx
-import * as React20 from "react";
+import * as React21 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
-import { X as X3 } from "phosphor-react";
-import { jsx as jsx28, jsxs as jsxs16 } from "react/jsx-runtime";
+import { X as X4 } from "phosphor-react";
+import { jsx as jsx28, jsxs as jsxs17 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
 var SheetCloseBase = SheetPrimitive.Close;
 var SheetPortalBase = SheetPrimitive.Portal;
-var SheetOverlayBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetOverlayBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
   SheetPrimitive.Overlay,
   {
     className: cn(
@@ -2070,17 +2131,17 @@ var sheetVariants = cva2(
     }
   }
 );
-var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs16(SheetPortalBase, { children: [
+var SheetContentBase = React21.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs17(SheetPortalBase, { children: [
   /* @__PURE__ */ jsx28(SheetOverlayBase, {}),
-  /* @__PURE__ */ jsxs16(
+  /* @__PURE__ */ jsxs17(
     SheetPrimitive.Content,
     {
       ref,
       className: cn(sheetVariants({ side }), className),
       ...props,
       children: [
-        /* @__PURE__ */ jsxs16(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
-          /* @__PURE__ */ jsx28(X3, { className: "h-4 w-4" }),
+        /* @__PURE__ */ jsxs17(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
+          /* @__PURE__ */ jsx28(X4, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
         ] }),
         children
@@ -2117,7 +2178,7 @@ var SheetFooterBase = ({
   }
 );
 SheetFooterBase.displayName = "SheetFooterBase";
-var SheetTitleBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetTitleBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
   SheetPrimitive.Title,
   {
     ref,
@@ -2126,7 +2187,7 @@ var SheetTitleBase = React20.forwardRef(({ className, ...props }, ref) => /* @__
   }
 ));
 SheetTitleBase.displayName = SheetPrimitive.Title.displayName;
-var SheetDescriptionBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetDescriptionBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
   SheetPrimitive.Description,
   {
     ref,
@@ -2137,7 +2198,7 @@ var SheetDescriptionBase = React20.forwardRef(({ className, ...props }, ref) => 
 SheetDescriptionBase.displayName = SheetPrimitive.Description.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import * as React22 from "react";
+import * as React23 from "react";
 import { Slot as Slot4 } from "@radix-ui/react-slot";
 import { cva as cva3 } from "class-variance-authority";
 
@@ -2160,13 +2221,13 @@ function SkeletonBase({
 import { SidebarSimple } from "phosphor-react";
 
 // src/components/ui/TooltipBase.tsx
-import * as React21 from "react";
+import * as React22 from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { jsx as jsx30 } from "react/jsx-runtime";
 var TooltipProviderBase = TooltipPrimitive.Provider;
 var TooltipBase = TooltipPrimitive.Root;
 var TooltipTriggerBase = TooltipPrimitive.Trigger;
-var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx30(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsx30(
+var TooltipContentBase = React22.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx30(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsx30(
   TooltipPrimitive.Content,
   {
     ref,
@@ -2181,16 +2242,16 @@ var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...pro
 TooltipContentBase.displayName = TooltipPrimitive.Content.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import { jsx as jsx31, jsxs as jsxs17 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs18 } from "react/jsx-runtime";
 var SIDEBAR_COOKIE_NAME = "sidebar:state";
 var SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 var SIDEBAR_WIDTH = "16rem";
 var SIDEBAR_WIDTH_MOBILE = "18rem";
 var SIDEBAR_WIDTH_ICON = "3rem";
 var SIDEBAR_KEYBOARD_SHORTCUT = "b";
-var SidebarContext = React22.createContext(null);
+var SidebarContext = React23.createContext(null);
 function UseSideBarBase() {
-  const context = React22.useContext(SidebarContext);
+  const context = React23.useContext(SidebarContext);
   if (!context) {
     throw new Error(
       "UseSideBarBase must be used within a SidebarProviderBase."
@@ -2198,7 +2259,7 @@ function UseSideBarBase() {
   }
   return context;
 }
-var SidebarProviderBase = React22.forwardRef(
+var SidebarProviderBase = React23.forwardRef(
   ({
     defaultOpen = true,
     open: openProp,
@@ -2209,10 +2270,10 @@ var SidebarProviderBase = React22.forwardRef(
     ...props
   }, ref) => {
     const isMobile = useIsMobile();
-    const [openMobile, setOpenMobile] = React22.useState(false);
-    const [_open, _setOpen] = React22.useState(defaultOpen);
+    const [openMobile, setOpenMobile] = React23.useState(false);
+    const [_open, _setOpen] = React23.useState(defaultOpen);
     const open = openProp ?? _open;
-    const setOpen = React22.useCallback(
+    const setOpen = React23.useCallback(
       (value) => {
         const openState = typeof value === "function" ? value(open) : value;
         if (setOpenProp) {
@@ -2224,10 +2285,10 @@ var SidebarProviderBase = React22.forwardRef(
       },
       [setOpenProp, open]
     );
-    const toggleSidebar = React22.useCallback(() => {
+    const toggleSidebar = React23.useCallback(() => {
       return isMobile ? setOpenMobile((open2) => !open2) : setOpen((open2) => !open2);
     }, [isMobile, setOpen, setOpenMobile]);
-    React22.useEffect(() => {
+    React23.useEffect(() => {
       const handleKeyDown = (event) => {
         if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
           event.preventDefault();
@@ -2238,7 +2299,7 @@ var SidebarProviderBase = React22.forwardRef(
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggleSidebar]);
     const state = open ? "expanded" : "collapsed";
-    const contextValue = React22.useMemo(
+    const contextValue = React23.useMemo(
       () => ({
         state,
         open,
@@ -2270,7 +2331,7 @@ var SidebarProviderBase = React22.forwardRef(
   }
 );
 SidebarProviderBase.displayName = "SidebarProviderBase";
-var SidebarBase = React22.forwardRef(
+var SidebarBase = React23.forwardRef(
   ({
     side = "left",
     variant = "sidebar",
@@ -2309,7 +2370,7 @@ var SidebarBase = React22.forwardRef(
         }
       ) });
     }
-    return /* @__PURE__ */ jsxs17(
+    return /* @__PURE__ */ jsxs18(
       "div",
       {
         ref,
@@ -2357,9 +2418,9 @@ var SidebarBase = React22.forwardRef(
   }
 );
 SidebarBase.displayName = "SidebarBase";
-var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, ref) => {
+var SidebarTriggerBase = React23.forwardRef(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs17(
+  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs18(
     ButtonBase,
     {
       ref,
@@ -2380,7 +2441,7 @@ var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, r
   ) });
 });
 SidebarTriggerBase.displayName = "SidebarTriggerBase";
-var SidebarRailBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarRailBase = React23.forwardRef(({ className, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
   return /* @__PURE__ */ jsx31(
     "button",
@@ -2405,7 +2466,7 @@ var SidebarRailBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarRailBase.displayName = "SidebarRailBase";
-var SidebarInsetBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarInsetBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     "main",
     {
@@ -2420,7 +2481,7 @@ var SidebarInsetBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarInsetBase.displayName = "SidebarInsetBase";
-var SidebarInputBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarInputBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     InputBase,
     {
@@ -2435,7 +2496,7 @@ var SidebarInputBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarInputBase.displayName = "SidebarInputBase";
-var SidebarHeaderBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarHeaderBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     "div",
     {
@@ -2447,7 +2508,7 @@ var SidebarHeaderBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarHeaderBase.displayName = "SidebarHeaderBase";
-var SidebarFooterBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarFooterBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     "div",
     {
@@ -2459,7 +2520,7 @@ var SidebarFooterBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarFooterBase.displayName = "SidebarFooterBase";
-var SidebarSeparatorBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarSeparatorBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     SeparatorBase,
     {
@@ -2471,7 +2532,7 @@ var SidebarSeparatorBase = React22.forwardRef(({ className, ...props }, ref) => 
   );
 });
 SidebarSeparatorBase.displayName = "SidebarSeparatorBase";
-var SidebarContentBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarContentBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     "div",
     {
@@ -2486,7 +2547,7 @@ var SidebarContentBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarContentBase.displayName = "SidebarContentBase";
-var SidebarGroupBase = React22.forwardRef(({ className, ...props }, ref) => {
+var SidebarGroupBase = React23.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx31(
     "div",
     {
@@ -2498,7 +2559,7 @@ var SidebarGroupBase = React22.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarGroupBase.displayName = "SidebarGroupBase";
-var SidebarGroupLabelBase = React22.forwardRef(({ className, asChild = false, ...props }, ref) => {
+var SidebarGroupLabelBase = React23.forwardRef(({ className, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot4 : "div";
   return /* @__PURE__ */ jsx31(
     Comp,
@@ -2515,7 +2576,7 @@ var SidebarGroupLabelBase = React22.forwardRef(({ className, asChild = false, ..
   );
 });
 SidebarGroupLabelBase.displayName = "SidebarGroupLabelBase";
-var SidebarGroupActionBase = React22.forwardRef(({ className, asChild = false, ...props }, ref) => {
+var SidebarGroupActionBase = React23.forwardRef(({ className, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot4 : "button";
   return /* @__PURE__ */ jsx31(
     Comp,
@@ -2534,7 +2595,7 @@ var SidebarGroupActionBase = React22.forwardRef(({ className, asChild = false, .
   );
 });
 SidebarGroupActionBase.displayName = "SidebarGroupActionBase";
-var SidebarGroupContentBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarGroupContentBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
   "div",
   {
     ref,
@@ -2544,7 +2605,7 @@ var SidebarGroupContentBase = React22.forwardRef(({ className, ...props }, ref) 
   }
 ));
 SidebarGroupContentBase.displayName = "SidebarGroupContentBase";
-var SidebarMenuBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
   "ul",
   {
     ref,
@@ -2554,7 +2615,7 @@ var SidebarMenuBase = React22.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 SidebarMenuBase.displayName = "SidebarMenuBase";
-var SidebarMenuItemBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuItemBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
   "li",
   {
     ref,
@@ -2584,7 +2645,7 @@ var sidebarMenuButtonVariants = cva3(
     }
   }
 );
-var SidebarMenuButtonBase = React22.forwardRef(
+var SidebarMenuButtonBase = React23.forwardRef(
   ({
     asChild = false,
     isActive = false,
@@ -2615,7 +2676,7 @@ var SidebarMenuButtonBase = React22.forwardRef(
         children: tooltip
       };
     }
-    return /* @__PURE__ */ jsxs17(TooltipBase, { children: [
+    return /* @__PURE__ */ jsxs18(TooltipBase, { children: [
       /* @__PURE__ */ jsx31(TooltipTriggerBase, { asChild: true, children: button }),
       /* @__PURE__ */ jsx31(
         TooltipContentBase,
@@ -2630,7 +2691,7 @@ var SidebarMenuButtonBase = React22.forwardRef(
   }
 );
 SidebarMenuButtonBase.displayName = "SidebarMenuButtonBase";
-var SidebarMenuActionBase = React22.forwardRef(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+var SidebarMenuActionBase = React23.forwardRef(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
   const Comp = asChild ? Slot4 : "button";
   return /* @__PURE__ */ jsx31(
     Comp,
@@ -2653,7 +2714,7 @@ var SidebarMenuActionBase = React22.forwardRef(({ className, asChild = false, sh
   );
 });
 SidebarMenuActionBase.displayName = "SidebarMenuActionBase";
-var SidebarMenuBadgeBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuBadgeBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
   "div",
   {
     ref,
@@ -2671,11 +2732,11 @@ var SidebarMenuBadgeBase = React22.forwardRef(({ className, ...props }, ref) => 
   }
 ));
 SidebarMenuBadgeBase.displayName = "SidebarMenuBadgeBase";
-var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false, ...props }, ref) => {
-  const width = React22.useMemo(() => {
+var SidebarMenuSkeletonBase = React23.forwardRef(({ className, showIcon = false, ...props }, ref) => {
+  const width = React23.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
-  return /* @__PURE__ */ jsxs17(
+  return /* @__PURE__ */ jsxs18(
     "div",
     {
       ref,
@@ -2705,7 +2766,7 @@ var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false,
   );
 });
 SidebarMenuSkeletonBase.displayName = "SidebarMenuSkeletonBase";
-var SidebarMenuSubBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuSubBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
   "ul",
   {
     ref,
@@ -2719,9 +2780,9 @@ var SidebarMenuSubBase = React22.forwardRef(({ className, ...props }, ref) => /*
   }
 ));
 SidebarMenuSubBase.displayName = "SidebarMenuSubBase";
-var SidebarMenuSubItemBase = React22.forwardRef(({ ...props }, ref) => /* @__PURE__ */ jsx31("li", { ref, ...props }));
+var SidebarMenuSubItemBase = React23.forwardRef(({ ...props }, ref) => /* @__PURE__ */ jsx31("li", { ref, ...props }));
 SidebarMenuSubItemBase.displayName = "SidebarMenuSubItemBase";
-var SidebarMenuSubButtonBase = React22.forwardRef(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+var SidebarMenuSubButtonBase = React23.forwardRef(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
   const Comp = asChild ? Slot4 : "a";
   return /* @__PURE__ */ jsx31(
     Comp,
@@ -2745,10 +2806,10 @@ var SidebarMenuSubButtonBase = React22.forwardRef(({ asChild = false, size = "md
 SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 
 // src/components/ui/SliderBase.tsx
-import * as React23 from "react";
+import * as React24 from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { jsx as jsx32, jsxs as jsxs18 } from "react/jsx-runtime";
-var SlideBase = React23.forwardRef(
+import { jsx as jsx32, jsxs as jsxs19 } from "react/jsx-runtime";
+var SlideBase = React24.forwardRef(
   ({
     className,
     orientation = "horizontal",
@@ -2758,7 +2819,7 @@ var SlideBase = React23.forwardRef(
     ...props
   }, ref) => {
     const isVertical = orientation === "vertical";
-    return /* @__PURE__ */ jsxs18(
+    return /* @__PURE__ */ jsxs19(
       "div",
       {
         className: cn(
@@ -2767,7 +2828,7 @@ var SlideBase = React23.forwardRef(
         ),
         children: [
           label && /* @__PURE__ */ jsx32(LabelBase_default, { className: "py-2", children: label }),
-          /* @__PURE__ */ jsxs18(
+          /* @__PURE__ */ jsxs19(
             "div",
             {
               className: cn(
@@ -2776,7 +2837,7 @@ var SlideBase = React23.forwardRef(
               ),
               children: [
                 leftIcon && /* @__PURE__ */ jsx32("div", { className: "flex items-center justify-center", children: leftIcon }),
-                /* @__PURE__ */ jsxs18(
+                /* @__PURE__ */ jsxs19(
                   SliderPrimitive.Root,
                   {
                     ref,
@@ -2912,10 +2973,10 @@ var toast = {
 };
 
 // src/components/ui/SwitchBase.tsx
-import * as React24 from "react";
+import * as React25 from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { jsx as jsx34 } from "react/jsx-runtime";
-var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
+var SwitchBase = React25.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx34(
     SwitchPrimitives.Root,
     {
@@ -2943,9 +3004,9 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
 SwitchBase.displayName = SwitchPrimitives.Root.displayName;
 
 // src/components/ui/TableBase.tsx
-import * as React25 from "react";
+import * as React26 from "react";
 import { jsx as jsx35 } from "react/jsx-runtime";
-var TableBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("div", { className: "relative w-full overflow-auto", children: /* @__PURE__ */ jsx35(
+var TableBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("div", { className: "relative w-full overflow-auto", children: /* @__PURE__ */ jsx35(
   "table",
   {
     ref,
@@ -2954,9 +3015,9 @@ var TableBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE_
   }
 ) }));
 TableBase.displayName = "TableBase";
-var TableHeaderBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("thead", { ref, className: cn("[&_tr]:border-b", className), ...props }));
+var TableHeaderBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("thead", { ref, className: cn("[&_tr]:border-b", className), ...props }));
 TableHeaderBase.displayName = "TableHeaderBase";
-var TableBodyBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableBodyBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "tbody",
   {
     ref,
@@ -2965,7 +3026,7 @@ var TableBodyBase = React25.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableBodyBase.displayName = "TableBodyBase";
-var TableFooterBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableFooterBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "tfoot",
   {
     ref,
@@ -2977,7 +3038,7 @@ var TableFooterBase = React25.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 TableFooterBase.displayName = "TableFooterBase";
-var TableRowBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableRowBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "tr",
   {
     ref,
@@ -2989,7 +3050,7 @@ var TableRowBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 TableRowBase.displayName = "TableRowBase";
-var TableHeadBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableHeadBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "th",
   {
     ref,
@@ -3001,7 +3062,7 @@ var TableHeadBase = React25.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableHeadBase.displayName = "TableHeadBase";
-var TableCellBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableCellBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "td",
   {
     ref,
@@ -3013,7 +3074,7 @@ var TableCellBase = React25.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableCellBase.displayName = "TableCellBase";
-var TableCaptionBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableCaptionBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   "caption",
   {
     ref,
@@ -3024,11 +3085,11 @@ var TableCaptionBase = React25.forwardRef(({ className, ...props }, ref) => /* @
 TableCaptionBase.displayName = "TableCaptionBase";
 
 // src/components/ui/TabsBase.tsx
-import * as React26 from "react";
+import * as React27 from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { jsx as jsx36 } from "react/jsx-runtime";
 var TabsBase = TabsPrimitive.Root;
-var TabsListBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsListBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
   TabsPrimitive.List,
   {
     ref,
@@ -3040,7 +3101,7 @@ var TabsListBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 TabsListBase.displayName = TabsPrimitive.List.displayName;
-var TabsTriggerBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsTriggerBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
   TabsPrimitive.Trigger,
   {
     ref,
@@ -3058,7 +3119,7 @@ var TabsTriggerBase = React26.forwardRef(({ className, ...props }, ref) => /* @_
     ...props
   }
 ));
-var TabsContentBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsContentBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
   TabsPrimitive.Content,
   {
     ref,
@@ -3073,9 +3134,9 @@ var TabsContentBase = React26.forwardRef(({ className, ...props }, ref) => /* @_
 TabsContentBase.displayName = TabsPrimitive.Content.displayName;
 
 // src/components/ui/TextAreaBase.tsx
-import * as React27 from "react";
+import * as React28 from "react";
 import { jsx as jsx37 } from "react/jsx-runtime";
-var TextAreaBase = React27.forwardRef(({ className, ...props }, ref) => {
+var TextAreaBase = React28.forwardRef(({ className, ...props }, ref) => {
   return /* @__PURE__ */ jsx37(
     "textarea",
     {
