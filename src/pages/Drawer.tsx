@@ -21,7 +21,7 @@ import {
   DrawerDescriptionBase,
   DrawerFooterBase,
   DrawerCloseBase,
-} from "@/components/ui/DrawerBa6se";
+} from "@/components/ui/DrawerBase";
 import { InputBase } from "@/components/ui/InputBase";
 
 export default function DrawerPage() {

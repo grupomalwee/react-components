@@ -5,7 +5,7 @@ import {
   TooltipContentBase,
   TooltipProviderBase,
   TooltipTriggerBase,
-} from "@/components/ui/TooltipBase";
+} from "@/components/ui/TooltBase";
 import { ButtonBase } from "@/componets/ui/ButtonBase";
 import { Info } from "phosphor-react";
 
