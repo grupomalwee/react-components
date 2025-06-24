@@ -3,7 +3,7 @@ name: CI on Dev
 on:
   push:
     branches:
-      - dev
+      - ci/eslint-deploy-pipeline
   workflow_dispatch: 
 
 jobs:
