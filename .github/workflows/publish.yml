@@ -1,35 +1,36 @@
-name: CI — Lint + Build + Publish NPM
+name: CI on Dev
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  
+    branches:
+      - dev
+  workflow_dispatch: 
 
 jobs:
-  publish:
+  lint-test-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org/'
-          cache: npm
+          node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
+      - name: Run Lint
         run: npm run lint
 
-      - name: Build package
-        run: npm run build
+      - name: Run Tests
+        run: npm test
 
-      - name: Publish package to NPM
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Build CSS (Tailwind)
+        run: npm run build-css
+
+      - name: Build JS (Tsup)
+        run: npm run build
