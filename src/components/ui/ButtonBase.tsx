@@ -50,15 +50,16 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-// Botão individual
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    const dataTestId = variant ? `button-${variant}` : "button-default";
 
     return (
       <Comp
         className={cn(buttonVariantsBase({ variant, size, className }))}
         ref={ref}
+        data-testid={dataTestId}
         {...props}
       />
     );

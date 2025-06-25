@@ -6,8 +6,8 @@ import { cn } from "../../lib/utils";
 
 const SwitchBase = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { "data-testid"?: string }
+>(({ className, "data-testid": dataTestId = "switch-base", ...props }, ref) => {
   return (
     <SwitchPrimitives.Root
       {...props}
@@ -20,6 +20,7 @@ const SwitchBase = React.forwardRef<
           "data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       )}
+      data-testid={dataTestId}
     >
       <SwitchPrimitives.Thumb
         className={cn(

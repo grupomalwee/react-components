@@ -38,12 +38,11 @@ export function ComboboxBase<T extends string>({
   checkIsSelected,
   searchPlaceholder,
   errorMessage,
-
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="col-span-1 w-full">
+    <div className="col-span-1 w-full" data-testid="combobox-base-root">
       <PopoverBase open={open} onOpenChange={setOpen} modal>
         <PopoverTriggerBase
           asChild
@@ -57,21 +56,26 @@ export function ComboboxBase<T extends string>({
               "flex items-start gap-2 justify-between h-full",
               errorMessage && "border-red-500"
             )}
+            data-testid="combobox-trigger"
           >
             {renderSelected}
             <CaretDown size={16} className="mt-0.5" />
           </ButtonBase>
         </PopoverTriggerBase>
 
-        <PopoverContentBase className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none">
-          <CommandBase className="dark:text-white">
+        <PopoverContentBase
+          className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none"
+          data-testid="combobox-popover"
+        >
+          <CommandBase className="dark:text-white" data-testid="combobox-command">
             <CommandInputBase
               tabIndex={-1}
               placeholder={searchPlaceholder ?? "Busque uma opção..."}
+              data-testid="combobox-search"
             />
-            <CommandListBase>
-              <CommandEmptyBase>Nenhum dado encontrado</CommandEmptyBase>
-              <CommandGroupBase>
+            <CommandListBase data-testid="combobox-list">
+              <CommandEmptyBase data-testid="combobox-empty">Nenhum dado encontrado</CommandEmptyBase>
+              <CommandGroupBase data-testid="combobox-group">
                 {items.map((item) => (
                   <CommandItemBase
                     key={item.value}
@@ -81,6 +85,7 @@ export function ComboboxBase<T extends string>({
                       handleSelection(value as T);
                       setOpen(false);
                     }}
+                    data-testid="combobox-option"
                   >
                     {item.label}
                     <Check
@@ -90,6 +95,11 @@ export function ComboboxBase<T extends string>({
                           ? "opacity-100"
                           : "opacity-0"
                       )}
+                      data-testid={
+                        checkIsSelected(item.value as T)
+                          ? "combobox-option-check"
+                          : undefined
+                      }
                     />
                   </CommandItemBase>
                 ))}
@@ -101,3 +111,4 @@ export function ComboboxBase<T extends string>({
     </div>
   );
 }
+// ...existing

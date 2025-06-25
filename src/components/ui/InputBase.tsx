@@ -7,6 +7,7 @@ export interface InputBaseProps extends React.ComponentProps<"input"> {
   labelClassname?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  "data-testid"?: string;
 }
 
 const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
@@ -18,6 +19,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
       labelClassname,
       leftIcon,
       rightIcon,
+      "data-testid": dataTestId,
       ...props
     },
     ref
@@ -45,6 +47,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
               className
             )}
             ref={ref}
+            data-testid={dataTestId ?? "input-base"}
             {...props}
           />
 

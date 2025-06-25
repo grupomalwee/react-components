@@ -42,15 +42,15 @@ export function MultiCombobox<T extends string>({
     [selected, onChange]
   );
 
-  const renderSelected = useMemo(() => {
+    const renderSelected = useMemo(() => {
     if (selectedItems.length === 0) {
       return (
-        <span className="text-gray-500">
+        <span data-testid="combobox-selected" className="text-gray-500">
           {placeholder ?? "Selecione uma opção..."}
         </span>
       );
     }
-
+  
     const items = selectedItems.map((item) => (
       <div
         key={item.value}
@@ -66,17 +66,19 @@ export function MultiCombobox<T extends string>({
             e.stopPropagation();
             handleSelection(item.value);
           }}
-          
           className="cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all"
         >
           <X size={14} />
         </span>
       </div>
     ));
-
-    return <div className="flex w-full flex-wrap gap-2">{items}</div>;
+  
+    return (
+      <div data-testid="combobox-selected" className="flex w-full flex-wrap gap-2">
+        {items}
+      </div>
+    );
   }, [handleSelection, placeholder, selectedItems]);
-
   return (
     <div className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}

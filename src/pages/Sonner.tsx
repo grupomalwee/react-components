@@ -10,25 +10,34 @@ export default function RootLayout() {
 
       <div className="flex flex-wrap gap-4">
         <ButtonBase
+          data-testid="button-success"
           onClick={() => toast.success("Operação concluída com sucesso!")}
         >
           Sucesso
         </ButtonBase>
-
-        <ButtonBase onClick={() => toast.error("Opa! Algo deu errado.")}>
+      
+        <ButtonBase
+          data-testid="button-error"
+          onClick={() => toast.error("Opa! Algo deu errado.")}
+        >
           Erro
         </ButtonBase>
-
-        <ButtonBase onClick={() => toast.warning("Atenção! Confira os dados.")}>
+      
+        <ButtonBase
+          data-testid="button-warning"
+          onClick={() => toast.warning("Atenção! Confira os dados.")}
+        >
           Aviso
         </ButtonBase>
-
+      
         <ButtonBase
+          data-testid="button-info"
           onClick={() => toast.info("Informação: nada demais, só avisando.")}
         >
           Info
         </ButtonBase>
         <ButtonBase
+          data-testid="button-loading"
           onClick={() =>
             toast.loading("Loading: baixando  C: /System/system32.")
           }

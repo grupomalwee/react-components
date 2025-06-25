@@ -58,31 +58,34 @@ const Toaster = ({ ...props }: ToasterProps) => {
     />
   );
 };
-
 const toast = {
   success: (message: string) =>
     sonnertoast.success(message, {
       icon: (
         <CheckCircle className={`${iconBaseClass} text-green-600`} weight="fill" />
       ),
+      className: "sonner-success",
     }),
   error: (message: string) =>
     sonnertoast.error(message, {
       icon: (
         <XCircle className={`${iconBaseClass} text-red-600`} weight="fill" />
       ),
+      className: "sonner-error",
     }),
   warning: (message: string) =>
     sonnertoast.warning(message, {
       icon: (
         <Warning className={`${iconBaseClass} text-yellow-600`} weight="fill" />
       ),
+      className: "sonner-warning",
     }),
   info: (message: string) =>
     sonnertoast.info(message, {
       icon: (
         <Info className={`${iconBaseClass} text-blue-600`} weight="fill" />
       ),
+      className: "sonner-info",
     }),
   loading: (message: string) =>
     sonnertoast(message, {
@@ -92,6 +95,7 @@ const toast = {
           weight="fill"
         />
       ),
+      className: "sonner-loading",
     }),
 };
 

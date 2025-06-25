@@ -72,20 +72,25 @@ const FormItemBaseContext = React.createContext<FormItemBaseContextValue>(
 
 const FormItemBase = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { "data-testid"?: string }
+>(({ className, "data-testid": dataTestId = "form-item-base", ...props }, ref) => {
   const id = React.useId();
 
   return (
     <FormItemBaseContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div
+        ref={ref}
+        className={cn("space-y-2", className)}
+        data-testid={dataTestId}
+        {...props}
+      />
     </FormItemBaseContext.Provider>
   );
 });
 FormItemBase.displayName = "FormItemBase";
 
-const FormLabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
-  ({ className, ...props }, ref) => {
+const FormLabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps & { "data-testid"?: string }>(
+  ({ className, "data-testid": dataTestId = "form-label-base", ...props }, ref) => {
     const { error, FormItemId } = useFormFieldBase();
 
     return (
@@ -93,6 +98,7 @@ const FormLabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
         ref={ref}
         className={cn(error && "text-destructive", className)}
         htmlFor={FormItemId}
+        data-testid={dataTestId}
         {...props}
       />
     );
@@ -102,8 +108,8 @@ FormLabelBase.displayName = "FormLabelBase";
 
 const FormControlBase = React.forwardRef<
   React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Slot> & { "data-testid"?: string }
+>(({ "data-testid": dataTestId = "form-control-base", ...props }, ref) => {
   const { error, FormItemId, FormDescriptionId, FormMessageId } =
     useFormFieldBase();
 
@@ -117,6 +123,7 @@ const FormControlBase = React.forwardRef<
           : `${FormDescriptionId} ${FormMessageId}`
       }
       aria-invalid={!!error}
+      data-testid={dataTestId}
       {...props}
     />
   );
@@ -125,8 +132,8 @@ FormControlBase.displayName = "FormControlBase";
 
 const FormDescriptionBase = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLParagraphElement> & { "data-testid"?: string }
+>(({ className, "data-testid": dataTestId = "form-description-base", ...props }, ref) => {
   const { FormDescriptionId } = useFormFieldBase();
 
   return (
@@ -134,6 +141,7 @@ const FormDescriptionBase = React.forwardRef<
       ref={ref}
       id={FormDescriptionId}
       className={cn("text-[0.8rem] text-muted-foreground", className)}
+      data-testid={dataTestId}
       {...props}
     />
   );
@@ -142,8 +150,8 @@ FormDescriptionBase.displayName = "FormDescriptionBase";
 
 const FormMessageBase = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLParagraphElement> & { "data-testid"?: string }
+>(({ className, children, "data-testid": dataTestId = "form-message-base", ...props }, ref) => {
   const { error, FormMessageId } = useFormFieldBase();
   const body = error ? String(error?.message) : children;
 
@@ -156,6 +164,7 @@ const FormMessageBase = React.forwardRef<
       ref={ref}
       id={FormMessageId}
       className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      data-testid={dataTestId}
       {...props}
     >
       {body}
