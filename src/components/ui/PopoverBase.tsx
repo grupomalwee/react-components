@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
-import { cn } from "../..//lib/utils";
+import { cn } from "../../lib/utils";
 
 const PopoverBase = PopoverPrimitive.Root;
 
@@ -11,10 +11,12 @@ const PopoverTriggerBase = PopoverPrimitive.Trigger;
 
 const PopoverAnchorBase = PopoverPrimitive.Anchor;
 
+type TestIdProps = { testid?: string };
+
 const PopoverContentBase = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & { "data-testid"?: string }
->(({ className, align = "center", sideOffset = 4, "data-testid": dataTestId = "popover-content", ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & TestIdProps
+>(({ className, align = "center", sideOffset = 4, testid: dataTestId = "popover-content", ...props }, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}

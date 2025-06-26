@@ -73,8 +73,8 @@ SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displa
 
 const SelectContentBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & { "data-testid"?: string }
->(({ className, children, position = "popper", "data-testid": dataTestId = "select-content", ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & { testid?: string }
+>(({ className, children, position = "popper", testid: dataTestId = "select-content", ...props }, ref) => (
   <SelectPrimitive.Portal>
     <AnimatePresence>
       <SelectPrimitive.Content

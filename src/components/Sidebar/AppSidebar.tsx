@@ -39,7 +39,6 @@ import {
   SpinnerGap,
   Ruler,
   Spinner,
-  SpeakerHigh,
   ToggleRight,
   Table,
   ListDashes,
@@ -50,6 +49,7 @@ import {
   Cursor,
   Image,
   ChatCentered,
+  Skull,
 } from "phosphor-react";
 
 import { AlertDialogPage } from "@/pages/Alert-dialog";
@@ -124,7 +124,7 @@ const items = [
   { title: "Select", url: "/select", icon: Spinner },
   { title: "Separator", url: "/separator", icon: LinkIcon },
   { title: "Sheet", url: "/sheet", icon: ArchiveBox },
-  { title: "Skeleton", url: "/skeleton", icon: SpeakerHigh },
+  { title: "Skeleton", url: "/skeleton", icon: Skull },
   { title: "Slider", url: "/slider", icon: SlidersHorizontal },
   { title: "Sonner", url: "/sonner", icon: ChatCentered },
   { title: "Switch", url: "/switch", icon: ToggleRight },

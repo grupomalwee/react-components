@@ -56,8 +56,8 @@ const DropDownMenuSubContentBase = React.forwardRef<
 ));
 const DropDownMenuContentBase = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & { "data-testid"?: string }
->(({ className, sideOffset = 4, "data-testid": dataTestId = "dropdown-content", ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & { testid?: string }
+>(({ className, sideOffset = 4, testid: dataTestId = "dropdown-content", ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       sideOffset={sideOffset}

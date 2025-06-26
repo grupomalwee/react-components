@@ -26,6 +26,12 @@ export const ComboboxPage = () => {
           onChange={setSelected}
           placeholder="Escolha uma opção"
           searchPlaceholder="Buscar cargo..."
+          testIds={{
+            root: "combobox-root",
+            selected: "combobox-selected",
+            group: "combobox-group",
+            popover: "combobox-popover",
+          }}
         />
       </div>
 

@@ -1,38 +1,41 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "phosphor-react";
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { X } from "phosphor-react"
+import { cn } from "../../lib/utils"
 
-import { cn } from "../..//lib/utils";
+// Tipo utilitário para reaproveitar a prop `data-testid`
+type TestIdProps = { testid?: string }
 
-const DialogBase = DialogPrimitive.Root;
+const DialogBase = DialogPrimitive.Root
 
-const DialogTriggerBase = DialogPrimitive.Trigger;
+const DialogTriggerBase = DialogPrimitive.Trigger
 
-const DialogPortalBase = DialogPrimitive.Portal;
+const DialogPortalBase = DialogPrimitive.Portal
 
-const DialogCloseBase = DialogPrimitive.Close;
+const DialogCloseBase = DialogPrimitive.Close
 
 const DialogOverlayBase = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & TestIdProps
+>(({ className, testid: dataTestId = "dialog-overlay", ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
+    data-testid={dataTestId}
     {...props}
   />
-));
-DialogOverlayBase.displayName = DialogPrimitive.Overlay.displayName;
+))
+DialogOverlayBase.displayName = DialogPrimitive.Overlay.displayName
 
 const DialogContentBase = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { "data-testid"?: string }
->(({ className, children, "data-testid": dataTestId = "dialog-content", ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & TestIdProps
+>(({ className, children, testid: dataTestId = "dialog-content", ...props }, ref) => (
   <DialogPortalBase>
     <DialogOverlayBase />
     <DialogPrimitive.Content
@@ -51,63 +54,60 @@ const DialogContentBase = React.forwardRef<
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortalBase>
-));
-DialogContentBase.displayName = DialogPrimitive.Content.displayName;
+))
+DialogContentBase.displayName = DialogPrimitive.Content.displayName
 
-const DialogHeaderBase = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogHeaderBase = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & TestIdProps
+>(({ className, testid: dataTestId = "dialog-header", ...props }, ref) => (
   <div
-    className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
-    )}
+    ref={ref}
+    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
+    data-testid={dataTestId}
     {...props}
   />
-);
-DialogHeaderBase.displayName = "DialogHeader";
+))
+DialogHeaderBase.displayName = "DialogHeader"
 
-const DialogFooterBase = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogFooterBase = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & TestIdProps
+>(({ className, testid: dataTestId = "dialog-footer", ...props }, ref) => (
   <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
-    )}
+    ref={ref}
+    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    data-testid={dataTestId}
     {...props}
   />
-);
-DialogFooterBase.displayName = "DialogFooter";
+))
+DialogFooterBase.displayName = "DialogFooter"
 
 const DialogTitleBase = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title> & TestIdProps
+>(({ className, testid: dataTestId = "dialog-title", ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
+    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    data-testid={dataTestId}
     {...props}
   />
-));
-DialogTitleBase.displayName = DialogPrimitive.Title.displayName;
+))
+DialogTitleBase.displayName = DialogPrimitive.Title.displayName
 
 const DialogDescriptionBase = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> & TestIdProps
+>(({ className, testid: dataTestId = "dialog-description", ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
+    data-testid={dataTestId}
     {...props}
   />
-));
-DialogDescriptionBase.displayName = DialogPrimitive.Description.displayName;
+))
+DialogDescriptionBase.displayName = DialogPrimitive.Description.displayName
 
 export {
   DialogBase,
@@ -120,4 +120,4 @@ export {
   DialogFooterBase,
   DialogTitleBase,
   DialogDescriptionBase,
-};
+}

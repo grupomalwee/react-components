@@ -22,7 +22,7 @@ export const SelectPage = () => {
             <SelectTriggerBase open={open} className="w-[180px]" data-testid="select-trigger">
               <SelectValueBase placeholder="Select a fruit" data-testid="select-value" />
             </SelectTriggerBase>
-            <SelectContentBase data-testid="select-content">
+            <SelectContentBase>
               <SelectGroupBase data-testid="select-group">
                 <SelectLabelBase data-testid="select-label">Fruits</SelectLabelBase>
                 <SelectItemBase value="apple" data-testid="select-item">Apple</SelectItemBase>

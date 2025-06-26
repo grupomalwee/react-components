@@ -21,6 +21,19 @@ export interface ComboboxItem<T extends string> {
   value: T;
 }
 
+export interface ComboboxTestIds {
+  root?: string;
+  trigger?: string;
+  popover?: string;
+  command?: string;
+  search?: string;
+  list?: string;
+  empty?: string;
+  group?: string;
+  option?: string;
+  check?: string;
+}
+
 export interface ComboboxBaseProps<T extends string> {
   items: ComboboxItem<T>[];
   renderSelected: ReactNode;
@@ -28,7 +41,7 @@ export interface ComboboxBaseProps<T extends string> {
   checkIsSelected: (value: T) => boolean;
   searchPlaceholder?: string;
   errorMessage?: string;
-
+  testIds?: ComboboxTestIds;
 }
 
 export function ComboboxBase<T extends string>({
@@ -38,11 +51,15 @@ export function ComboboxBase<T extends string>({
   checkIsSelected,
   searchPlaceholder,
   errorMessage,
+  testIds = {},
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="col-span-1 w-full" data-testid="combobox-base-root">
+    <div
+      className="col-span-1 w-full"
+      data-testid={testIds.root ?? "combobox-base-root"}
+    >
       <PopoverBase open={open} onOpenChange={setOpen} modal>
         <PopoverTriggerBase
           asChild
@@ -56,7 +73,7 @@ export function ComboboxBase<T extends string>({
               "flex items-start gap-2 justify-between h-full",
               errorMessage && "border-red-500"
             )}
-            data-testid="combobox-trigger"
+            data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
             <CaretDown size={16} className="mt-0.5" />
@@ -65,44 +82,50 @@ export function ComboboxBase<T extends string>({
 
         <PopoverContentBase
           className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none"
-          data-testid="combobox-popover"
+          data-testid={testIds.popover ?? "combobox-popover"}
         >
-          <CommandBase className="dark:text-white" data-testid="combobox-command">
+          <CommandBase
+            className="dark:text-white"
+            data-testid={testIds.command ?? "combobox-command"}
+          >
             <CommandInputBase
               tabIndex={-1}
               placeholder={searchPlaceholder ?? "Busque uma opção..."}
-              data-testid="combobox-search"
+              data-testid={testIds.search ?? "combobox-search"}
             />
-            <CommandListBase data-testid="combobox-list">
-              <CommandEmptyBase data-testid="combobox-empty">Nenhum dado encontrado</CommandEmptyBase>
-              <CommandGroupBase data-testid="combobox-group">
-                {items.map((item) => (
-                  <CommandItemBase
-                    key={item.value}
-                    keywords={[item.label]}
-                    value={item.value}
-                    onSelect={(value) => {
-                      handleSelection(value as T);
-                      setOpen(false);
-                    }}
-                    data-testid="combobox-option"
-                  >
-                    {item.label}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        checkIsSelected(item.value as T)
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                      data-testid={
-                        checkIsSelected(item.value as T)
-                          ? "combobox-option-check"
-                          : undefined
-                      }
-                    />
-                  </CommandItemBase>
-                ))}
+            <CommandListBase data-testid={testIds.list ?? "combobox-list"}>
+              <CommandEmptyBase data-testid={testIds.empty ?? "combobox-empty"}>
+                Nenhum dado encontrado
+              </CommandEmptyBase>
+              <CommandGroupBase data-testid={testIds.group ?? "combobox-group"}>
+                {items.map((item) => {
+                  const isSelected = checkIsSelected(item.value);
+                  return (
+                    <CommandItemBase
+                      key={item.value}
+                      keywords={[item.label]}
+                      value={item.value}
+                      onSelect={(value) => {
+                        handleSelection(value as T);
+                        setOpen(false);
+                      }}
+                      data-testid={testIds.option ?? "combobox-option"}
+                    >
+                      {item.label}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          isSelected ? "opacity-100" : "opacity-0"
+                        )}
+                        data-testid={
+                          isSelected
+                            ? testIds.check ?? "combobox-option-check"
+                            : undefined
+                        }
+                      />
+                    </CommandItemBase>
+                  );
+                })}
               </CommandGroupBase>
             </CommandListBase>
           </CommandBase>
@@ -111,4 +134,3 @@ export function ComboboxBase<T extends string>({
     </div>
   );
 }
-// ...existing

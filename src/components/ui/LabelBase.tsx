@@ -6,11 +6,11 @@ import { cn } from "../../lib/utils";
 
 export type LabelBaseProps = React.ComponentPropsWithoutRef<"label"> & {
   asChild?: boolean;
-  "data-testid"?: string;
+  testid?: string;
 };
 
 const LabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
-  ({ className, asChild = false, "data-testid": dataTestId = "label-base", ...props }, ref) => {
+  ({ className, asChild = false, testid = "label-base", ...props }, ref) => {
     const Comp = asChild ? Slot : "label";
 
     return (
@@ -21,7 +21,7 @@ const LabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps>(
             "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
             className
           )}
-          data-testid={dataTestId}
+          data-testid={testid}
           {...props}
         />
       </RadixLabel>

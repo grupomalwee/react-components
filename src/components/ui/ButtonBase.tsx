@@ -1,8 +1,9 @@
-// components/ui/ButtonBase.tsx
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+"use client"
+
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../../lib/utils"
 
 // Variantes base do botão
 const buttonVariantsBase = cva(
@@ -41,36 +42,35 @@ const buttonVariantsBase = cva(
       size: "default",
     },
   }
-);
+)
 
-// Props base do botão
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariantsBase> {
-  asChild?: boolean;
+  asChild?: boolean
+  testid?: string 
 }
 
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    const dataTestId = variant ? `button-${variant}` : "button-default";
+  ({ className, variant, size, asChild = false, testid = `button-${variant ?? "default"}`, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
 
     return (
       <Comp
         className={cn(buttonVariantsBase({ variant, size, className }))}
         ref={ref}
-        data-testid={dataTestId}
+        data-testid={testid ?? `button-${variant ?? "default"}`}
         {...props}
       />
-    );
+    )
   }
-);
-ButtonBase.displayName = "Button";
+)
+ButtonBase.displayName = "Button"
 
-// Group de botões (horizontal)
+// Group de botões
 interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  orientation?: "horizontal" | "vertical";
+  children: React.ReactNode
+  orientation?: "horizontal" | "vertical"
 }
 
 const ButtonGroupBase = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
@@ -87,11 +87,9 @@ const ButtonGroupBase = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
         {...props}
       >
         {React.Children.map(children, (child, index) => {
-          if (!React.isValidElement(child)) return child;
+          if (!React.isValidElement(child)) return child
 
-          const typedChild = child as React.ReactElement<{
-            className?: string;
-          }>;
+          const typedChild = child as React.ReactElement<{ className?: string }>
 
           return React.cloneElement(typedChild, {
             className: cn(
@@ -106,12 +104,12 @@ const ButtonGroupBase = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
                 orientation === "vertical" &&
                 "rounded-b-md"
             ),
-          });
+          })
         })}
       </div>
-    );
+    )
   }
-);
-ButtonGroupBase.displayName = "ButtonGroup";
+)
+ButtonGroupBase.displayName = "ButtonGroup"
 
-export { ButtonBase, ButtonGroupBase, buttonVariantsBase };
+export { ButtonBase, ButtonGroupBase, buttonVariantsBase }

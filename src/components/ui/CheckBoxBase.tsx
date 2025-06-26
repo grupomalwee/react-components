@@ -8,13 +8,13 @@ import { motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 type CheckboxBaseProps = React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
-  "data-testid"?: string;
+  testid?: string;
 };
 
 const CheckboxBase = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxBaseProps
->(({ className, "data-testid": dataTestId = "checkbox-base", ...props }, ref) => (
+>(({ className, testid: dataTestId = "checkbox-base", ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(

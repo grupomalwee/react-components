@@ -72,8 +72,8 @@ const FormItemBaseContext = React.createContext<FormItemBaseContextValue>(
 
 const FormItemBase = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { "data-testid"?: string }
->(({ className, "data-testid": dataTestId = "form-item-base", ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { testid?: string }
+>(({ className, testid: dataTestId = "form-item-base", ...props }, ref) => {
   const id = React.useId();
 
   return (
@@ -89,8 +89,8 @@ const FormItemBase = React.forwardRef<
 });
 FormItemBase.displayName = "FormItemBase";
 
-const FormLabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps & { "data-testid"?: string }>(
-  ({ className, "data-testid": dataTestId = "form-label-base", ...props }, ref) => {
+const FormLabelBase = React.forwardRef<HTMLLabelElement, LabelBaseProps & { testid?: string }>(
+  ({ className, testid: dataTestId = "form-label-base", ...props }, ref) => {
     const { error, FormItemId } = useFormFieldBase();
 
     return (
@@ -108,8 +108,8 @@ FormLabelBase.displayName = "FormLabelBase";
 
 const FormControlBase = React.forwardRef<
   React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot> & { "data-testid"?: string }
->(({ "data-testid": dataTestId = "form-control-base", ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Slot> & { testid?: string }
+>(({ testid: dataTestId = "form-control-base", ...props }, ref) => {
   const { error, FormItemId, FormDescriptionId, FormMessageId } =
     useFormFieldBase();
 
@@ -132,8 +132,8 @@ FormControlBase.displayName = "FormControlBase";
 
 const FormDescriptionBase = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement> & { "data-testid"?: string }
->(({ className, "data-testid": dataTestId = "form-description-base", ...props }, ref) => {
+  React.HTMLAttributes<HTMLParagraphElement> & { testid?: string }
+>(({ className, testid: dataTestId = "form-description-base", ...props }, ref) => {
   const { FormDescriptionId } = useFormFieldBase();
 
   return (
@@ -150,8 +150,8 @@ FormDescriptionBase.displayName = "FormDescriptionBase";
 
 const FormMessageBase = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement> & { "data-testid"?: string }
->(({ className, children, "data-testid": dataTestId = "form-message-base", ...props }, ref) => {
+  React.HTMLAttributes<HTMLParagraphElement> & { testid?: string }
+>(({ className, children, testid: dataTestId = "form-message-base", ...props }, ref) => {
   const { error, FormMessageId } = useFormFieldBase();
   const body = error ? String(error?.message) : children;
 

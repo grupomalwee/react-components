@@ -6,8 +6,8 @@ import { cn } from "../../lib/utils";
 
 const SwitchBase = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { "data-testid"?: string }
->(({ className, "data-testid": dataTestId = "switch-base", ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & { testid?: string }
+>(({ className, testid: dataTestId = "switch-base", ...props }, ref) => {
   return (
     <SwitchPrimitives.Root
       {...props}
