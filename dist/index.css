@@ -1701,6 +1701,10 @@ body {
   padding-left: 2rem;
   padding-right: 2rem;
 }
+.px-96 {
+  padding-left: 24rem;
+  padding-right: 24rem;
+}
 .py-0\.5 {
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
@@ -1751,9 +1755,6 @@ body {
 }
 .pl-8 {
   padding-left: 2rem;
-}
-.pl-96 {
-  padding-left: 24rem;
 }
 .pr-2 {
   padding-right: 0.5rem;
