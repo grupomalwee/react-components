@@ -1,26 +1,28 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
+  entry: ["src/index.ts"],
+  format: ["esm", "cjs"],
   dts: true,
-  outDir: 'dist',
+  outDir: "dist",
   clean: true,
   sourcemap: false,
   banner: {
-    js: "import './index.css';",
+    js: `"use client";\nimport './index.css';`,
   },
+
   external: [
     "react",
     "react-dom",
     "react-hook-form",
     "@radix-ui/react-slot",
-    "@radix-ui/react-*"
+    "@radix-ui/react-*",
   ],
   esbuildOptions(options) {
+    options.platform = "browser";
     options.loader = {
       ...options.loader,
-      '.css': 'copy',
+      ".css": "copy",
     };
   },
 });
