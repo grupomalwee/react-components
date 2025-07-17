@@ -33,7 +33,7 @@ import { DialogPage } from "@/pages/Dialog";
 import DrawerPage from "@/pages/Drawer";
 import { DropDownMenuPage } from "@/pages/Dropdown-menu";
 import Filter from "@/pages/Filter";
-import { ProfileForm } from "@/pages/Form";
+// import { ProfileForm } from "@/pages/Form";
 import { InputPage } from "@/pages/Input";
 import InputOTPPage from "@/pages/InputOTP";
 import { LabelPage } from "@/pages/Label";
@@ -79,7 +79,7 @@ const items = [
   { title: "Drawer", url: "/drawer", icon: Envelope },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
   { title: "Filter", url: "/Filter", icon: Calendar },
-  { title: "Form", url: "/form", icon: Gear },
+  // { title: "Form", url: "/form", icon: Gear },
   { title: "HoverCard", url: "/hovercard", icon: Gear },
 
   { title: "Input", url: "/input", icon: Envelope },
@@ -156,7 +156,7 @@ export function AppSidebar() {
           <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
           <Route path="/filter" element={<Filter />} />
-          <Route path="/form" element={<ProfileForm />} />
+          {/* <Route path="/form" element={<ProfileForm />} /> */}
           <Route path="/hovercard" element={<HoverCardPage />} />
           <Route path="/input" element={<InputPage />} />
           <Route path="/inputOTP" element={<InputOTPPage />} />

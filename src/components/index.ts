@@ -6,7 +6,6 @@ export * from "./ui/CheckBoxBase";
 export * from "./ui/CommandBase";
 export * from "./ui/DialogBase";
 export * from "./ui/DropDownMenuBase";
-export * from "./ui/FormBase";
 export * from "./ui/InputBase";
 export * from "./ui/PopoverBase";
 export * from "./ui/ProgressBase";
