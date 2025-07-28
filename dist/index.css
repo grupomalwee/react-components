@@ -950,9 +950,6 @@ body {
 .w-\[300px\] {
   width: 300px;
 }
-.w-\[320px\] {
-  width: 320px;
-}
 .w-\[350px\] {
   width: 350px;
 }
@@ -1042,9 +1039,6 @@ body {
 .max-w-max {
   max-width: -moz-max-content;
   max-width: max-content;
-}
-.max-w-md {
-  max-width: 28rem;
 }
 .max-w-sm {
   max-width: 24rem;
@@ -1559,10 +1553,6 @@ body {
 .bg-neutral-800 {
   --tw-bg-opacity: 1;
   background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));
-}
-.bg-neutral-950 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(10 10 10 / var(--tw-bg-opacity, 1));
 }
 .bg-popover {
   background-color: hsl(var(--popover));

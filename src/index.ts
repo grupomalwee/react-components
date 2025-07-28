@@ -17,7 +17,6 @@ export * from "./components/ui/CheckBoxBase";
 export * from "./components/ui/CommandBase";
 export * from "./components/ui/DialogBase";
 export * from "./components/ui/DropDownMenuBase";
-export * from "./components/ui/FormBase";
 export * from "./components/ui/InputBase";
 export * from "./components/ui/PopoverBase";
 export * from "./components/ui/ProgressBase";

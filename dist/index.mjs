@@ -1,3 +1,4 @@
+"use client";
 import './index.css';
 
 // src/components/ui/AlertDialogBase.tsx
@@ -1810,121 +1811,16 @@ var CheckboxBase = React17.forwardRef(({ className, ...props }, ref) => /* @__PU
 ));
 CheckboxBase.displayName = CheckboxPrimitive.Root.displayName;
 
-// src/components/ui/FormBase.tsx
-import * as React18 from "react";
-import { Slot as Slot3 } from "@radix-ui/react-slot";
-import {
-  Controller,
-  FormProvider,
-  useFormContext
-} from "react-hook-form";
-import { jsx as jsx25 } from "react/jsx-runtime";
-var FormBase = FormProvider;
-var FormFieldBaseContext = React18.createContext(
-  {}
-);
-var FormFieldBase = ({
-  ...props
-}) => {
-  return /* @__PURE__ */ jsx25(FormFieldBaseContext.Provider, { value: { name: props.name }, children: /* @__PURE__ */ jsx25(Controller, { ...props }) });
-};
-var useFormFieldBase = () => {
-  const fieldContext = React18.useContext(FormFieldBaseContext);
-  const itemContext = React18.useContext(FormItemBaseContext);
-  const { getFieldState, formState } = useFormContext();
-  const fieldState = getFieldState(fieldContext.name, formState);
-  if (!fieldContext) {
-    throw new Error("useFormFieldBase should be used within <FormFieldBase>");
-  }
-  const { id } = itemContext;
-  return {
-    id,
-    name: fieldContext.name,
-    FormItemId: `${id}-form-item`,
-    FormDescriptionId: `${id}-form-item-description`,
-    FormMessageId: `${id}-form-item-message`,
-    ...fieldState
-  };
-};
-var FormItemBaseContext = React18.createContext(
-  {}
-);
-var FormItemBase = React18.forwardRef(({ className, ...props }, ref) => {
-  const id = React18.useId();
-  return /* @__PURE__ */ jsx25(FormItemBaseContext.Provider, { value: { id }, children: /* @__PURE__ */ jsx25("div", { ref, className: cn("space-y-2", className), ...props }) });
-});
-FormItemBase.displayName = "FormItemBase";
-var FormLabelBase = React18.forwardRef(
-  ({ className, ...props }, ref) => {
-    const { error, FormItemId } = useFormFieldBase();
-    return /* @__PURE__ */ jsx25(
-      LabelBase_default,
-      {
-        ref,
-        className: cn(error && "text-destructive", className),
-        htmlFor: FormItemId,
-        ...props
-      }
-    );
-  }
-);
-FormLabelBase.displayName = "FormLabelBase";
-var FormControlBase = React18.forwardRef(({ ...props }, ref) => {
-  const { error, FormItemId, FormDescriptionId, FormMessageId } = useFormFieldBase();
-  return /* @__PURE__ */ jsx25(
-    Slot3,
-    {
-      ref,
-      id: FormItemId,
-      "aria-describedby": !error ? `${FormDescriptionId}` : `${FormDescriptionId} ${FormMessageId}`,
-      "aria-invalid": !!error,
-      ...props
-    }
-  );
-});
-FormControlBase.displayName = "FormControlBase";
-var FormDescriptionBase = React18.forwardRef(({ className, ...props }, ref) => {
-  const { FormDescriptionId } = useFormFieldBase();
-  return /* @__PURE__ */ jsx25(
-    "p",
-    {
-      ref,
-      id: FormDescriptionId,
-      className: cn("text-[0.8rem] text-muted-foreground", className),
-      ...props
-    }
-  );
-});
-FormDescriptionBase.displayName = "FormDescriptionBase";
-var FormMessageBase = React18.forwardRef(({ className, children, ...props }, ref) => {
-  const { error, FormMessageId } = useFormFieldBase();
-  const body = error ? String(error?.message) : children;
-  if (!body) {
-    return null;
-  }
-  return /* @__PURE__ */ jsx25(
-    "p",
-    {
-      ref,
-      id: FormMessageId,
-      className: cn("text-[0.8rem] font-medium text-destructive", className),
-      ...props,
-      children: body
-    }
-  );
-});
-FormMessageBase.displayName = "FormMessageBase";
-
 // src/components/ui/ProgressBase.tsx
-import * as React19 from "react";
+import * as React18 from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
-import { jsx as jsx26, jsxs as jsxs16 } from "react/jsx-runtime";
-var ProgressBase = React19.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
+import { jsx as jsx25, jsxs as jsxs16 } from "react/jsx-runtime";
+var ProgressBase = React18.forwardRef(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
   return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
+    label && /* @__PURE__ */ jsx25(LabelBase_default, { className: "py-2", children: label }),
     /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-2", children: [
-      leftIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: leftIcon }),
-      /* @__PURE__ */ jsx26(
+      leftIcon && /* @__PURE__ */ jsx25("div", { className: "flex items-center justify-center", children: leftIcon }),
+      /* @__PURE__ */ jsx25(
         ProgressPrimitive.Root,
         {
           ref,
@@ -1934,7 +1830,7 @@ var ProgressBase = React19.forwardRef(({ className, value, label, leftIcon, righ
           ),
           value,
           ...props,
-          children: /* @__PURE__ */ jsx26(
+          children: /* @__PURE__ */ jsx25(
             ProgressPrimitive.Indicator,
             {
               className: "h-full w-full flex-1 bg-primary transition-all duration-500 ease-in-out",
@@ -1943,7 +1839,7 @@ var ProgressBase = React19.forwardRef(({ className, value, label, leftIcon, righ
           )
         }
       ),
-      rightIcon && /* @__PURE__ */ jsx26("div", { className: "flex items-center justify-center", children: rightIcon })
+      rightIcon && /* @__PURE__ */ jsx25("div", { className: "flex items-center justify-center", children: rightIcon })
     ] })
   ] });
 });
@@ -1955,8 +1851,8 @@ var ProgressSegmentsBase = ({
 }) => {
   const filled = Math.round(value / 100 * segments);
   return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full min-w-[150px]", children: [
-    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
-    /* @__PURE__ */ jsx26("div", { className: "flex gap-1 w-full", children: Array.from({ length: segments }).map((_, idx) => /* @__PURE__ */ jsx26(
+    label && /* @__PURE__ */ jsx25(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsx25("div", { className: "flex gap-1 w-full", children: Array.from({ length: segments }).map((_, idx) => /* @__PURE__ */ jsx25(
       "div",
       {
         className: cn(
@@ -1968,7 +1864,7 @@ var ProgressSegmentsBase = ({
     )) })
   ] });
 };
-var ArrowRightIcon = () => /* @__PURE__ */ jsx26(
+var ArrowRightIcon = () => /* @__PURE__ */ jsx25(
   "svg",
   {
     className: "w-6 h-6 text-zinc-400 transition-transform duration-300 group-hover:translate-x-1",
@@ -1977,7 +1873,7 @@ var ArrowRightIcon = () => /* @__PURE__ */ jsx26(
     strokeWidth: 2,
     viewBox: "0 0 24 24",
     xmlns: "http://www.w3.org/2000/svg",
-    children: /* @__PURE__ */ jsx26("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 5l7 7-7 7" })
+    children: /* @__PURE__ */ jsx25("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 5l7 7-7 7" })
   }
 );
 var ProgressPanelsBase = ({
@@ -1986,11 +1882,11 @@ var ProgressPanelsBase = ({
   currentStep
 }) => {
   return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-1 w-full", children: [
-    label && /* @__PURE__ */ jsx26(LabelBase_default, { className: "py-2", children: label }),
-    /* @__PURE__ */ jsx26("div", { className: "flex w-full gap-1 rounded-lg overflow-hidden", children: steps.map((step, idx) => {
+    label && /* @__PURE__ */ jsx25(LabelBase_default, { className: "py-2", children: label }),
+    /* @__PURE__ */ jsx25("div", { className: "flex w-full gap-1 rounded-lg overflow-hidden", children: steps.map((step, idx) => {
       const isActive = idx === currentStep;
       const isLast = idx === steps.length - 1;
-      return /* @__PURE__ */ jsxs16(React19.Fragment, { children: [
+      return /* @__PURE__ */ jsxs16(React18.Fragment, { children: [
         /* @__PURE__ */ jsxs16(
           "div",
           {
@@ -2002,12 +1898,12 @@ var ProgressPanelsBase = ({
             ),
             style: { flex: "1 1 0" },
             children: [
-              /* @__PURE__ */ jsx26("span", { className: "truncate", children: step }),
-              isActive && /* @__PURE__ */ jsx26("div", { className: "absolute bottom-0 left-0 h-1 w-full animate-pulse rounded-b-lg" })
+              /* @__PURE__ */ jsx25("span", { className: "truncate", children: step }),
+              isActive && /* @__PURE__ */ jsx25("div", { className: "absolute bottom-0 left-0 h-1 w-full animate-pulse rounded-b-lg" })
             ]
           }
         ),
-        !isLast && /* @__PURE__ */ jsx26("div", { className: "flex items-center px-2 group", children: /* @__PURE__ */ jsx26(ArrowRightIcon, {}) })
+        !isLast && /* @__PURE__ */ jsx25("div", { className: "flex items-center px-2 group", children: /* @__PURE__ */ jsx25(ArrowRightIcon, {}) })
       ] }, idx);
     }) })
   ] });
@@ -2018,10 +1914,10 @@ var ProgressCirclesBase = ({
   currentStep
 }) => {
   return /* @__PURE__ */ jsxs16("div", { className: "flex flex-col gap-2 w-full", children: [
-    label && /* @__PURE__ */ jsx26("label", { className: "py-2 text-base font-semibold text-gray-700 dark:text-gray-300", children: label }),
+    label && /* @__PURE__ */ jsx25("label", { className: "py-2 text-base font-semibold text-gray-700 dark:text-gray-300", children: label }),
     /* @__PURE__ */ jsxs16("div", { className: "relative flex items-center justify-between w-full", children: [
-      /* @__PURE__ */ jsx26("div", { className: "absolute top-5 left-0 w-full h-1 bg-zinc-200 dark:bg-zinc-700" }),
-      /* @__PURE__ */ jsx26(
+      /* @__PURE__ */ jsx25("div", { className: "absolute top-5 left-0 w-full h-1 bg-zinc-200 dark:bg-zinc-700" }),
+      /* @__PURE__ */ jsx25(
         "div",
         {
           className: "absolute top-5 left-0 h-1 bg-primary transition-all duration-300",
@@ -2038,7 +1934,7 @@ var ProgressCirclesBase = ({
             className: "relative flex flex-col items-center w-10",
             style: { zIndex: isActive ? 10 : 1 },
             children: [
-              /* @__PURE__ */ jsx26(
+              /* @__PURE__ */ jsx25(
                 "div",
                 {
                   className: cn(
@@ -2048,7 +1944,7 @@ var ProgressCirclesBase = ({
                   children: idx + 1
                 }
               ),
-              /* @__PURE__ */ jsx26("span", { className: "text-xs text-center font-medium mt-1 max-w-[80px] break-words", children: step })
+              /* @__PURE__ */ jsx25("span", { className: "text-xs text-center font-medium mt-1 max-w-[80px] break-words", children: step })
             ]
           },
           idx
@@ -2059,14 +1955,14 @@ var ProgressCirclesBase = ({
 };
 
 // src/components/ui/SeparatorBase.tsx
-import * as React20 from "react";
+import * as React19 from "react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { motion as motion6 } from "framer-motion";
-import { jsx as jsx27 } from "react/jsx-runtime";
-var SeparatorBase = React20.forwardRef(
+import { jsx as jsx26 } from "react/jsx-runtime";
+var SeparatorBase = React19.forwardRef(
   ({ className, orientation = "horizontal", decorative = true, ...props }, ref) => {
     const isHorizontal = orientation === "horizontal";
-    return /* @__PURE__ */ jsx27(
+    return /* @__PURE__ */ jsx26(
       SeparatorPrimitive.Root,
       {
         ref,
@@ -2074,7 +1970,7 @@ var SeparatorBase = React20.forwardRef(
         orientation,
         asChild: true,
         ...props,
-        children: /* @__PURE__ */ jsx27(
+        children: /* @__PURE__ */ jsx26(
           motion6.div,
           {
             className: cn(
@@ -2094,16 +1990,16 @@ var SeparatorBase = React20.forwardRef(
 SeparatorBase.displayName = SeparatorPrimitive.Root.displayName;
 
 // src/components/ui/SheetBase.tsx
-import * as React21 from "react";
+import * as React20 from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva as cva2 } from "class-variance-authority";
 import { X as X4 } from "phosphor-react";
-import { jsx as jsx28, jsxs as jsxs17 } from "react/jsx-runtime";
+import { jsx as jsx27, jsxs as jsxs17 } from "react/jsx-runtime";
 var SheetBase = SheetPrimitive.Root;
 var SheetTriggerBase = SheetPrimitive.Trigger;
 var SheetCloseBase = SheetPrimitive.Close;
 var SheetPortalBase = SheetPrimitive.Portal;
-var SheetOverlayBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetOverlayBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx27(
   SheetPrimitive.Overlay,
   {
     className: cn(
@@ -2131,8 +2027,8 @@ var sheetVariants = cva2(
     }
   }
 );
-var SheetContentBase = React21.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs17(SheetPortalBase, { children: [
-  /* @__PURE__ */ jsx28(SheetOverlayBase, {}),
+var SheetContentBase = React20.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ jsxs17(SheetPortalBase, { children: [
+  /* @__PURE__ */ jsx27(SheetOverlayBase, {}),
   /* @__PURE__ */ jsxs17(
     SheetPrimitive.Content,
     {
@@ -2141,8 +2037,8 @@ var SheetContentBase = React21.forwardRef(({ side = "right", className, children
       ...props,
       children: [
         /* @__PURE__ */ jsxs17(SheetPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary", children: [
-          /* @__PURE__ */ jsx28(X4, { className: "h-4 w-4" }),
-          /* @__PURE__ */ jsx28("span", { className: "sr-only", children: "Close" })
+          /* @__PURE__ */ jsx27(X4, { className: "h-4 w-4" }),
+          /* @__PURE__ */ jsx27("span", { className: "sr-only", children: "Close" })
         ] }),
         children
       ]
@@ -2153,7 +2049,7 @@ SheetContentBase.displayName = SheetPrimitive.Content.displayName;
 var SheetHeaderBase = ({
   className,
   ...props
-}) => /* @__PURE__ */ jsx28(
+}) => /* @__PURE__ */ jsx27(
   "div",
   {
     className: cn(
@@ -2167,7 +2063,7 @@ SheetHeaderBase.displayName = "SheetHeaderBase";
 var SheetFooterBase = ({
   className,
   ...props
-}) => /* @__PURE__ */ jsx28(
+}) => /* @__PURE__ */ jsx27(
   "div",
   {
     className: cn(
@@ -2178,7 +2074,7 @@ var SheetFooterBase = ({
   }
 );
 SheetFooterBase.displayName = "SheetFooterBase";
-var SheetTitleBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetTitleBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx27(
   SheetPrimitive.Title,
   {
     ref,
@@ -2187,7 +2083,7 @@ var SheetTitleBase = React21.forwardRef(({ className, ...props }, ref) => /* @__
   }
 ));
 SheetTitleBase.displayName = SheetPrimitive.Title.displayName;
-var SheetDescriptionBase = React21.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx28(
+var SheetDescriptionBase = React20.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx27(
   SheetPrimitive.Description,
   {
     ref,
@@ -2198,17 +2094,17 @@ var SheetDescriptionBase = React21.forwardRef(({ className, ...props }, ref) => 
 SheetDescriptionBase.displayName = SheetPrimitive.Description.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import * as React23 from "react";
-import { Slot as Slot4 } from "@radix-ui/react-slot";
+import * as React22 from "react";
+import { Slot as Slot3 } from "@radix-ui/react-slot";
 import { cva as cva3 } from "class-variance-authority";
 
 // src/components/ui/SkeletonBase.tsx
-import { jsx as jsx29 } from "react/jsx-runtime";
+import { jsx as jsx28 } from "react/jsx-runtime";
 function SkeletonBase({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx29(
+  return /* @__PURE__ */ jsx28(
     "div",
     {
       className: cn("animate-pulse  bg-primary/10", className),
@@ -2221,13 +2117,13 @@ function SkeletonBase({
 import { SidebarSimple } from "phosphor-react";
 
 // src/components/ui/TooltipBase.tsx
-import * as React22 from "react";
+import * as React21 from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { jsx as jsx30 } from "react/jsx-runtime";
+import { jsx as jsx29 } from "react/jsx-runtime";
 var TooltipProviderBase = TooltipPrimitive.Provider;
 var TooltipBase = TooltipPrimitive.Root;
 var TooltipTriggerBase = TooltipPrimitive.Trigger;
-var TooltipContentBase = React22.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx30(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsx30(
+var TooltipContentBase = React21.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx29(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsx29(
   TooltipPrimitive.Content,
   {
     ref,
@@ -2242,16 +2138,16 @@ var TooltipContentBase = React22.forwardRef(({ className, sideOffset = 4, ...pro
 TooltipContentBase.displayName = TooltipPrimitive.Content.displayName;
 
 // src/components/ui/SidebarBase.tsx
-import { jsx as jsx31, jsxs as jsxs18 } from "react/jsx-runtime";
+import { jsx as jsx30, jsxs as jsxs18 } from "react/jsx-runtime";
 var SIDEBAR_COOKIE_NAME = "sidebar:state";
 var SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 var SIDEBAR_WIDTH = "16rem";
 var SIDEBAR_WIDTH_MOBILE = "18rem";
 var SIDEBAR_WIDTH_ICON = "3rem";
 var SIDEBAR_KEYBOARD_SHORTCUT = "b";
-var SidebarContext = React23.createContext(null);
+var SidebarContext = React22.createContext(null);
 function UseSideBarBase() {
-  const context = React23.useContext(SidebarContext);
+  const context = React22.useContext(SidebarContext);
   if (!context) {
     throw new Error(
       "UseSideBarBase must be used within a SidebarProviderBase."
@@ -2259,7 +2155,7 @@ function UseSideBarBase() {
   }
   return context;
 }
-var SidebarProviderBase = React23.forwardRef(
+var SidebarProviderBase = React22.forwardRef(
   ({
     defaultOpen = true,
     open: openProp,
@@ -2270,10 +2166,10 @@ var SidebarProviderBase = React23.forwardRef(
     ...props
   }, ref) => {
     const isMobile = useIsMobile();
-    const [openMobile, setOpenMobile] = React23.useState(false);
-    const [_open, _setOpen] = React23.useState(defaultOpen);
+    const [openMobile, setOpenMobile] = React22.useState(false);
+    const [_open, _setOpen] = React22.useState(defaultOpen);
     const open = openProp ?? _open;
-    const setOpen = React23.useCallback(
+    const setOpen = React22.useCallback(
       (value) => {
         const openState = typeof value === "function" ? value(open) : value;
         if (setOpenProp) {
@@ -2285,10 +2181,10 @@ var SidebarProviderBase = React23.forwardRef(
       },
       [setOpenProp, open]
     );
-    const toggleSidebar = React23.useCallback(() => {
+    const toggleSidebar = React22.useCallback(() => {
       return isMobile ? setOpenMobile((open2) => !open2) : setOpen((open2) => !open2);
     }, [isMobile, setOpen, setOpenMobile]);
-    React23.useEffect(() => {
+    React22.useEffect(() => {
       const handleKeyDown = (event) => {
         if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
           event.preventDefault();
@@ -2299,7 +2195,7 @@ var SidebarProviderBase = React23.forwardRef(
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggleSidebar]);
     const state = open ? "expanded" : "collapsed";
-    const contextValue = React23.useMemo(
+    const contextValue = React22.useMemo(
       () => ({
         state,
         open,
@@ -2311,7 +2207,7 @@ var SidebarProviderBase = React23.forwardRef(
       }),
       [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
     );
-    return /* @__PURE__ */ jsx31(SidebarContext.Provider, { value: contextValue, children: /* @__PURE__ */ jsx31(TooltipProviderBase, { delayDuration: 0, children: /* @__PURE__ */ jsx31(
+    return /* @__PURE__ */ jsx30(SidebarContext.Provider, { value: contextValue, children: /* @__PURE__ */ jsx30(TooltipProviderBase, { delayDuration: 0, children: /* @__PURE__ */ jsx30(
       "div",
       {
         style: {
@@ -2331,7 +2227,7 @@ var SidebarProviderBase = React23.forwardRef(
   }
 );
 SidebarProviderBase.displayName = "SidebarProviderBase";
-var SidebarBase = React23.forwardRef(
+var SidebarBase = React22.forwardRef(
   ({
     side = "left",
     variant = "sidebar",
@@ -2342,7 +2238,7 @@ var SidebarBase = React23.forwardRef(
   }, ref) => {
     const { isMobile, state, openMobile, setOpenMobile } = UseSideBarBase();
     if (collapsible === "none") {
-      return /* @__PURE__ */ jsx31(
+      return /* @__PURE__ */ jsx30(
         "div",
         {
           className: cn(
@@ -2356,7 +2252,7 @@ var SidebarBase = React23.forwardRef(
       );
     }
     if (isMobile) {
-      return /* @__PURE__ */ jsx31(SheetBase, { open: openMobile, onOpenChange: setOpenMobile, ...props, children: /* @__PURE__ */ jsx31(
+      return /* @__PURE__ */ jsx30(SheetBase, { open: openMobile, onOpenChange: setOpenMobile, ...props, children: /* @__PURE__ */ jsx30(
         SheetContentBase,
         {
           "data-sidebar": "sidebar",
@@ -2366,7 +2262,7 @@ var SidebarBase = React23.forwardRef(
             "--sidebar-width": SIDEBAR_WIDTH_MOBILE
           },
           side,
-          children: /* @__PURE__ */ jsx31("div", { className: "flex h-full w-full flex-col", children })
+          children: /* @__PURE__ */ jsx30("div", { className: "flex h-full w-full flex-col", children })
         }
       ) });
     }
@@ -2380,7 +2276,7 @@ var SidebarBase = React23.forwardRef(
         "data-variant": variant,
         "data-side": side,
         children: [
-          /* @__PURE__ */ jsx31(
+          /* @__PURE__ */ jsx30(
             "div",
             {
               className: cn(
@@ -2391,7 +2287,7 @@ var SidebarBase = React23.forwardRef(
               )
             }
           ),
-          /* @__PURE__ */ jsx31(
+          /* @__PURE__ */ jsx30(
             "div",
             {
               className: cn(
@@ -2402,7 +2298,7 @@ var SidebarBase = React23.forwardRef(
                 className
               ),
               ...props,
-              children: /* @__PURE__ */ jsx31(
+              children: /* @__PURE__ */ jsx30(
                 "div",
                 {
                   "data-sidebar": "sidebar",
@@ -2418,9 +2314,9 @@ var SidebarBase = React23.forwardRef(
   }
 );
 SidebarBase.displayName = "SidebarBase";
-var SidebarTriggerBase = React23.forwardRef(({ className, onClick, ...props }, ref) => {
+var SidebarTriggerBase = React22.forwardRef(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31("div", { children: /* @__PURE__ */ jsxs18(
+  return /* @__PURE__ */ jsx30("div", { children: /* @__PURE__ */ jsxs18(
     ButtonBase,
     {
       ref,
@@ -2434,16 +2330,16 @@ var SidebarTriggerBase = React23.forwardRef(({ className, onClick, ...props }, r
       },
       ...props,
       children: [
-        /* @__PURE__ */ jsx31("span", { className: "sr-only", children: "Toggle SidebarBase" }),
-        /* @__PURE__ */ jsx31(SidebarSimple, {})
+        /* @__PURE__ */ jsx30("span", { className: "sr-only", children: "Toggle SidebarBase" }),
+        /* @__PURE__ */ jsx30(SidebarSimple, {})
       ]
     }
   ) });
 });
 SidebarTriggerBase.displayName = "SidebarTriggerBase";
-var SidebarRailBase = React23.forwardRef(({ className, ...props }, ref) => {
+var SidebarRailBase = React22.forwardRef(({ className, ...props }, ref) => {
   const { toggleSidebar } = UseSideBarBase();
-  return /* @__PURE__ */ jsx31(
+  return /* @__PURE__ */ jsx30(
     "button",
     {
       ref,
@@ -2466,8 +2362,8 @@ var SidebarRailBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarRailBase.displayName = "SidebarRailBase";
-var SidebarInsetBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarInsetBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     "main",
     {
       ref,
@@ -2481,8 +2377,8 @@ var SidebarInsetBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarInsetBase.displayName = "SidebarInsetBase";
-var SidebarInputBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarInputBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     InputBase,
     {
       ref,
@@ -2496,8 +2392,8 @@ var SidebarInputBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarInputBase.displayName = "SidebarInputBase";
-var SidebarHeaderBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarHeaderBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     "div",
     {
       ref,
@@ -2508,8 +2404,8 @@ var SidebarHeaderBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarHeaderBase.displayName = "SidebarHeaderBase";
-var SidebarFooterBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarFooterBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     "div",
     {
       ref,
@@ -2520,8 +2416,8 @@ var SidebarFooterBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarFooterBase.displayName = "SidebarFooterBase";
-var SidebarSeparatorBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarSeparatorBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     SeparatorBase,
     {
       ref,
@@ -2532,8 +2428,8 @@ var SidebarSeparatorBase = React23.forwardRef(({ className, ...props }, ref) => 
   );
 });
 SidebarSeparatorBase.displayName = "SidebarSeparatorBase";
-var SidebarContentBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarContentBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     "div",
     {
       ref,
@@ -2547,8 +2443,8 @@ var SidebarContentBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarContentBase.displayName = "SidebarContentBase";
-var SidebarGroupBase = React23.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx31(
+var SidebarGroupBase = React22.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx30(
     "div",
     {
       ref,
@@ -2559,9 +2455,9 @@ var SidebarGroupBase = React23.forwardRef(({ className, ...props }, ref) => {
   );
 });
 SidebarGroupBase.displayName = "SidebarGroupBase";
-var SidebarGroupLabelBase = React23.forwardRef(({ className, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot4 : "div";
-  return /* @__PURE__ */ jsx31(
+var SidebarGroupLabelBase = React22.forwardRef(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot3 : "div";
+  return /* @__PURE__ */ jsx30(
     Comp,
     {
       ref,
@@ -2576,9 +2472,9 @@ var SidebarGroupLabelBase = React23.forwardRef(({ className, asChild = false, ..
   );
 });
 SidebarGroupLabelBase.displayName = "SidebarGroupLabelBase";
-var SidebarGroupActionBase = React23.forwardRef(({ className, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot4 : "button";
-  return /* @__PURE__ */ jsx31(
+var SidebarGroupActionBase = React22.forwardRef(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot3 : "button";
+  return /* @__PURE__ */ jsx30(
     Comp,
     {
       ref,
@@ -2595,7 +2491,7 @@ var SidebarGroupActionBase = React23.forwardRef(({ className, asChild = false, .
   );
 });
 SidebarGroupActionBase.displayName = "SidebarGroupActionBase";
-var SidebarGroupContentBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarGroupContentBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx30(
   "div",
   {
     ref,
@@ -2605,7 +2501,7 @@ var SidebarGroupContentBase = React23.forwardRef(({ className, ...props }, ref) 
   }
 ));
 SidebarGroupContentBase.displayName = "SidebarGroupContentBase";
-var SidebarMenuBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx30(
   "ul",
   {
     ref,
@@ -2615,7 +2511,7 @@ var SidebarMenuBase = React23.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 SidebarMenuBase.displayName = "SidebarMenuBase";
-var SidebarMenuItemBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuItemBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx30(
   "li",
   {
     ref,
@@ -2645,7 +2541,7 @@ var sidebarMenuButtonVariants = cva3(
     }
   }
 );
-var SidebarMenuButtonBase = React23.forwardRef(
+var SidebarMenuButtonBase = React22.forwardRef(
   ({
     asChild = false,
     isActive = false,
@@ -2655,9 +2551,9 @@ var SidebarMenuButtonBase = React23.forwardRef(
     className,
     ...props
   }, ref) => {
-    const Comp = asChild ? Slot4 : "button";
+    const Comp = asChild ? Slot3 : "button";
     const { isMobile, state } = UseSideBarBase();
-    const button = /* @__PURE__ */ jsx31(
+    const button = /* @__PURE__ */ jsx30(
       Comp,
       {
         ref,
@@ -2677,8 +2573,8 @@ var SidebarMenuButtonBase = React23.forwardRef(
       };
     }
     return /* @__PURE__ */ jsxs18(TooltipBase, { children: [
-      /* @__PURE__ */ jsx31(TooltipTriggerBase, { asChild: true, children: button }),
-      /* @__PURE__ */ jsx31(
+      /* @__PURE__ */ jsx30(TooltipTriggerBase, { asChild: true, children: button }),
+      /* @__PURE__ */ jsx30(
         TooltipContentBase,
         {
           side: "right",
@@ -2691,9 +2587,9 @@ var SidebarMenuButtonBase = React23.forwardRef(
   }
 );
 SidebarMenuButtonBase.displayName = "SidebarMenuButtonBase";
-var SidebarMenuActionBase = React23.forwardRef(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
-  const Comp = asChild ? Slot4 : "button";
-  return /* @__PURE__ */ jsx31(
+var SidebarMenuActionBase = React22.forwardRef(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+  const Comp = asChild ? Slot3 : "button";
+  return /* @__PURE__ */ jsx30(
     Comp,
     {
       ref,
@@ -2714,7 +2610,7 @@ var SidebarMenuActionBase = React23.forwardRef(({ className, asChild = false, sh
   );
 });
 SidebarMenuActionBase.displayName = "SidebarMenuActionBase";
-var SidebarMenuBadgeBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuBadgeBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx30(
   "div",
   {
     ref,
@@ -2732,8 +2628,8 @@ var SidebarMenuBadgeBase = React23.forwardRef(({ className, ...props }, ref) => 
   }
 ));
 SidebarMenuBadgeBase.displayName = "SidebarMenuBadgeBase";
-var SidebarMenuSkeletonBase = React23.forwardRef(({ className, showIcon = false, ...props }, ref) => {
-  const width = React23.useMemo(() => {
+var SidebarMenuSkeletonBase = React22.forwardRef(({ className, showIcon = false, ...props }, ref) => {
+  const width = React22.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
   return /* @__PURE__ */ jsxs18(
@@ -2744,14 +2640,14 @@ var SidebarMenuSkeletonBase = React23.forwardRef(({ className, showIcon = false,
       className: cn("flex h-8 items-center gap-2 rounded-md px-2", className),
       ...props,
       children: [
-        showIcon && /* @__PURE__ */ jsx31(
+        showIcon && /* @__PURE__ */ jsx30(
           SkeletonBase,
           {
             className: "size-4 rounded-md",
             "data-sidebar": "menu-skeleton-icon"
           }
         ),
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx30(
           SkeletonBase,
           {
             className: "h-4 max-w-[--skeleton-width] flex-1",
@@ -2766,7 +2662,7 @@ var SidebarMenuSkeletonBase = React23.forwardRef(({ className, showIcon = false,
   );
 });
 SidebarMenuSkeletonBase.displayName = "SidebarMenuSkeletonBase";
-var SidebarMenuSubBase = React23.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx31(
+var SidebarMenuSubBase = React22.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx30(
   "ul",
   {
     ref,
@@ -2780,11 +2676,11 @@ var SidebarMenuSubBase = React23.forwardRef(({ className, ...props }, ref) => /*
   }
 ));
 SidebarMenuSubBase.displayName = "SidebarMenuSubBase";
-var SidebarMenuSubItemBase = React23.forwardRef(({ ...props }, ref) => /* @__PURE__ */ jsx31("li", { ref, ...props }));
+var SidebarMenuSubItemBase = React22.forwardRef(({ ...props }, ref) => /* @__PURE__ */ jsx30("li", { ref, ...props }));
 SidebarMenuSubItemBase.displayName = "SidebarMenuSubItemBase";
-var SidebarMenuSubButtonBase = React23.forwardRef(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
-  const Comp = asChild ? Slot4 : "a";
-  return /* @__PURE__ */ jsx31(
+var SidebarMenuSubButtonBase = React22.forwardRef(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+  const Comp = asChild ? Slot3 : "a";
+  return /* @__PURE__ */ jsx30(
     Comp,
     {
       ref,
@@ -2806,10 +2702,10 @@ var SidebarMenuSubButtonBase = React23.forwardRef(({ asChild = false, size = "md
 SidebarMenuSubButtonBase.displayName = "SidebarMenuSubButtonBase";
 
 // src/components/ui/SliderBase.tsx
-import * as React24 from "react";
+import * as React23 from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { jsx as jsx32, jsxs as jsxs19 } from "react/jsx-runtime";
-var SlideBase = React24.forwardRef(
+import { jsx as jsx31, jsxs as jsxs19 } from "react/jsx-runtime";
+var SlideBase = React23.forwardRef(
   ({
     className,
     orientation = "horizontal",
@@ -2827,7 +2723,7 @@ var SlideBase = React24.forwardRef(
           isVertical ? "h-full " : "w-full"
         ),
         children: [
-          label && /* @__PURE__ */ jsx32(LabelBase_default, { className: "py-2", children: label }),
+          label && /* @__PURE__ */ jsx31(LabelBase_default, { className: "py-2", children: label }),
           /* @__PURE__ */ jsxs19(
             "div",
             {
@@ -2836,7 +2732,7 @@ var SlideBase = React24.forwardRef(
                 isVertical ? "flex-col  h-full" : "flex-row items-center w-full"
               ),
               children: [
-                leftIcon && /* @__PURE__ */ jsx32("div", { className: "flex items-center justify-center", children: leftIcon }),
+                leftIcon && /* @__PURE__ */ jsx31("div", { className: "flex items-center justify-center", children: leftIcon }),
                 /* @__PURE__ */ jsxs19(
                   SliderPrimitive.Root,
                   {
@@ -2849,14 +2745,14 @@ var SlideBase = React24.forwardRef(
                     ),
                     ...props,
                     children: [
-                      /* @__PURE__ */ jsx32(
+                      /* @__PURE__ */ jsx31(
                         SliderPrimitive.Track,
                         {
                           className: cn(
                             "relative overflow-hidden bg-primary/20 rounded-full",
                             isVertical ? "w-1.5 h-full" : "h-1.5 w-full"
                           ),
-                          children: /* @__PURE__ */ jsx32(
+                          children: /* @__PURE__ */ jsx31(
                             SliderPrimitive.Range,
                             {
                               className: cn(
@@ -2867,7 +2763,7 @@ var SlideBase = React24.forwardRef(
                           )
                         }
                       ),
-                      /* @__PURE__ */ jsx32(
+                      /* @__PURE__ */ jsx31(
                         SliderPrimitive.Thumb,
                         {
                           className: cn(
@@ -2880,7 +2776,7 @@ var SlideBase = React24.forwardRef(
                     ]
                   }
                 ),
-                rightIcon && /* @__PURE__ */ jsx32("div", { className: "flex items-center justify-center", children: rightIcon })
+                rightIcon && /* @__PURE__ */ jsx31("div", { className: "flex items-center justify-center", children: rightIcon })
               ]
             }
           )
@@ -2900,10 +2796,10 @@ import {
   Spinner
 } from "phosphor-react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
-import { jsx as jsx33 } from "react/jsx-runtime";
+import { jsx as jsx32 } from "react/jsx-runtime";
 var iconBaseClass = "w-5 h-auto";
 var Toaster = ({ ...props }) => {
-  return /* @__PURE__ */ jsx33(
+  return /* @__PURE__ */ jsx32(
     Sonner,
     {
       className: "toaster group",
@@ -2950,19 +2846,19 @@ var Toaster = ({ ...props }) => {
 };
 var toast = {
   success: (message) => sonnertoast.success(message, {
-    icon: /* @__PURE__ */ jsx33(CheckCircle, { className: `${iconBaseClass} text-green-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(CheckCircle, { className: `${iconBaseClass} text-green-600`, weight: "fill" })
   }),
   error: (message) => sonnertoast.error(message, {
-    icon: /* @__PURE__ */ jsx33(XCircle, { className: `${iconBaseClass} text-red-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(XCircle, { className: `${iconBaseClass} text-red-600`, weight: "fill" })
   }),
   warning: (message) => sonnertoast.warning(message, {
-    icon: /* @__PURE__ */ jsx33(Warning, { className: `${iconBaseClass} text-yellow-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(Warning, { className: `${iconBaseClass} text-yellow-600`, weight: "fill" })
   }),
   info: (message) => sonnertoast.info(message, {
-    icon: /* @__PURE__ */ jsx33(Info, { className: `${iconBaseClass} text-blue-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(Info, { className: `${iconBaseClass} text-blue-600`, weight: "fill" })
   }),
   loading: (message) => sonnertoast(message, {
-    icon: /* @__PURE__ */ jsx33(
+    icon: /* @__PURE__ */ jsx32(
       Spinner,
       {
         className: `${iconBaseClass} animate-spin text-neutral-500`,
@@ -2973,11 +2869,11 @@ var toast = {
 };
 
 // src/components/ui/SwitchBase.tsx
-import * as React25 from "react";
+import * as React24 from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
-import { jsx as jsx34 } from "react/jsx-runtime";
-var SwitchBase = React25.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx34(
+import { jsx as jsx33 } from "react/jsx-runtime";
+var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx33(
     SwitchPrimitives.Root,
     {
       ...props,
@@ -2986,7 +2882,7 @@ var SwitchBase = React25.forwardRef(({ className, ...props }, ref) => {
         "peer relative inline-flex w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
-      children: /* @__PURE__ */ jsx34(
+      children: /* @__PURE__ */ jsx33(
         SwitchPrimitives.Thumb,
         {
           className: cn(
@@ -3004,9 +2900,9 @@ var SwitchBase = React25.forwardRef(({ className, ...props }, ref) => {
 SwitchBase.displayName = SwitchPrimitives.Root.displayName;
 
 // src/components/ui/TableBase.tsx
-import * as React26 from "react";
-import { jsx as jsx35 } from "react/jsx-runtime";
-var TableBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("div", { className: "relative w-full overflow-auto", children: /* @__PURE__ */ jsx35(
+import * as React25 from "react";
+import { jsx as jsx34 } from "react/jsx-runtime";
+var TableBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34("div", { className: "relative w-full overflow-auto", children: /* @__PURE__ */ jsx34(
   "table",
   {
     ref,
@@ -3015,9 +2911,9 @@ var TableBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE_
   }
 ) }));
 TableBase.displayName = "TableBase";
-var TableHeaderBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35("thead", { ref, className: cn("[&_tr]:border-b", className), ...props }));
+var TableHeaderBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34("thead", { ref, className: cn("[&_tr]:border-b", className), ...props }));
 TableHeaderBase.displayName = "TableHeaderBase";
-var TableBodyBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableBodyBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "tbody",
   {
     ref,
@@ -3026,7 +2922,7 @@ var TableBodyBase = React26.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableBodyBase.displayName = "TableBodyBase";
-var TableFooterBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableFooterBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "tfoot",
   {
     ref,
@@ -3038,7 +2934,7 @@ var TableFooterBase = React26.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 TableFooterBase.displayName = "TableFooterBase";
-var TableRowBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableRowBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "tr",
   {
     ref,
@@ -3050,7 +2946,7 @@ var TableRowBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 TableRowBase.displayName = "TableRowBase";
-var TableHeadBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableHeadBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "th",
   {
     ref,
@@ -3062,7 +2958,7 @@ var TableHeadBase = React26.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableHeadBase.displayName = "TableHeadBase";
-var TableCellBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableCellBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "td",
   {
     ref,
@@ -3074,7 +2970,7 @@ var TableCellBase = React26.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 TableCellBase.displayName = "TableCellBase";
-var TableCaptionBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
+var TableCaptionBase = React25.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx34(
   "caption",
   {
     ref,
@@ -3085,11 +2981,11 @@ var TableCaptionBase = React26.forwardRef(({ className, ...props }, ref) => /* @
 TableCaptionBase.displayName = "TableCaptionBase";
 
 // src/components/ui/TabsBase.tsx
-import * as React27 from "react";
+import * as React26 from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { jsx as jsx36 } from "react/jsx-runtime";
+import { jsx as jsx35 } from "react/jsx-runtime";
 var TabsBase = TabsPrimitive.Root;
-var TabsListBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsListBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   TabsPrimitive.List,
   {
     ref,
@@ -3101,7 +2997,7 @@ var TabsListBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 TabsListBase.displayName = TabsPrimitive.List.displayName;
-var TabsTriggerBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsTriggerBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   TabsPrimitive.Trigger,
   {
     ref,
@@ -3119,7 +3015,7 @@ var TabsTriggerBase = React27.forwardRef(({ className, ...props }, ref) => /* @_
     ...props
   }
 ));
-var TabsContentBase = React27.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx36(
+var TabsContentBase = React26.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx35(
   TabsPrimitive.Content,
   {
     ref,
@@ -3134,10 +3030,10 @@ var TabsContentBase = React27.forwardRef(({ className, ...props }, ref) => /* @_
 TabsContentBase.displayName = TabsPrimitive.Content.displayName;
 
 // src/components/ui/TextAreaBase.tsx
-import * as React28 from "react";
-import { jsx as jsx37 } from "react/jsx-runtime";
-var TextAreaBase = React28.forwardRef(({ className, ...props }, ref) => {
-  return /* @__PURE__ */ jsx37(
+import * as React27 from "react";
+import { jsx as jsx36 } from "react/jsx-runtime";
+var TextAreaBase = React27.forwardRef(({ className, ...props }, ref) => {
+  return /* @__PURE__ */ jsx36(
     "textarea",
     {
       className: cn(
@@ -3332,13 +3228,6 @@ export {
   DropDownMenuSubContentBase,
   DropDownMenuSubTriggerBase,
   DropDownMenuTriggerBase,
-  FormBase,
-  FormControlBase,
-  FormDescriptionBase,
-  FormFieldBase,
-  FormItemBase,
-  FormLabelBase,
-  FormMessageBase,
   InputBase,
   LabelBase_default as LabelBase,
   ModeToggleBase,
@@ -3428,7 +3317,6 @@ export {
   buttonVariantsBase,
   defaultStringConditions,
   toast,
-  useFormFieldBase,
   useIsMobile,
   useTheme
 };

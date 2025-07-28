@@ -3,55 +3,18 @@
 import React from "react";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { z } from "zod";
-
-import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
   InputOTPBase,
   InputOTPGroupBase,
   InputOTPSeparatorBase,
   InputOTPSlotBase,
 } from "@/components/ui/Input-OTP-Base";
-import {
-  FormBase,
-  FormControlBase,
-  FormDescriptionBase,
-  FormFieldBase,
-  FormItemBase,
-  FormLabelBase,
-  FormMessageBase,
-} from "@/components/ui/FormBase";
-
-const FormSchema = z.object({
-  pin: z
-    .string()
-    .min(6, { message: "Your one-time password must be 6 characters." }),
-});
 
 export default function InputOTPPage() {
   const [controlledValue, setControlledValue] = React.useState("");
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: { pin: "" },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
-
   return (
     <main className="p-8 max-w-6xl mx-auto space-y-16">
-      
       {/* Grid layout: 2 col on md+, 1 col on sm */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Basic InputOTP */}
@@ -94,7 +57,9 @@ export default function InputOTPPage() {
       {/* Separators example + Controlled input side by side */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
         <div>
-          <h2 className="text-2xl font-semibold mb-6">InputOTP with Separators</h2>
+          <h2 className="text-2xl font-semibold mb-6">
+            InputOTP with Separators
+          </h2>
           <InputOTPBase maxLength={6} className="flex justify-center gap-1">
             <InputOTPGroupBase className="flex gap-1">
               <InputOTPSlotBase index={0} />
@@ -135,43 +100,6 @@ export default function InputOTPPage() {
             </p>
           </div>
         </div>
-      </section>
-
-      {/* React Hook Form section */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-6">InputOTP with React Hook Form</h2>
-        <FormBase {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="max-w-md  space-y-6"
-          >
-            <FormFieldBase
-              control={form.control}
-              name="pin"
-              render={({ field }) => (
-                <FormItemBase>
-                  <FormLabelBase>One-Time Password</FormLabelBase>
-                  <FormControlBase>
-                    <InputOTPBase maxLength={6} {...field} className="flex justify-center gap-1">
-                      <InputOTPGroupBase className="flex gap-1">
-                        {[0, 1, 2, 3, 4, 5].map((i) => (
-                          <InputOTPSlotBase key={i} index={i} />
-                        ))}
-                      </InputOTPGroupBase>
-                    </InputOTPBase>
-                  </FormControlBase>
-                  <FormDescriptionBase>
-                    Please enter the one-time password sent to your phone.
-                  </FormDescriptionBase>
-                  <FormMessageBase />
-                </FormItemBase>
-              )}
-            />
-            <ButtonBase type="submit" className="w-full">
-              Submit
-            </ButtonBase>
-          </form>
-        </FormBase>
       </section>
 
       {/* Documentação embutida */}
