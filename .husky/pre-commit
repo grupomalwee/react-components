@@ -1,0 +1,10 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx eslint . --max-warnings=9999
+
+if [ $? -ne 0 ]; then
+  echo "ESLint encontrou erro(s). Commit abortado."
+  exit 1
+fi
+echo "ESLint passou sem erros. Commit permitido."
