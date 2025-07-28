@@ -51,13 +51,14 @@ var buttonVariantsBase = cva(
   }
 );
 var ButtonBase = React.forwardRef(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, testid = `button-${variant ?? "default"}`, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return /* @__PURE__ */ jsx(
       Comp,
       {
         className: cn(buttonVariantsBase({ variant, size, className })),
         ref,
+        "data-testid": testid ?? `button-${variant ?? "default"}`,
         ...props
       }
     );
@@ -102,19 +103,20 @@ import { jsx as jsx2, jsxs } from "react/jsx-runtime";
 var AlertDialogBase = AlertDialogPrimitive.Root;
 var AlertDialogTriggerBase = AlertDialogPrimitive.Trigger;
 var AlertDialogPortalBase = AlertDialogPrimitive.Portal;
-var AlertDialogOverlayBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx2(
+var AlertDialogOverlayBase = React2.forwardRef(({ className, testid = "alertdialog-overlay", ...props }, ref) => /* @__PURE__ */ jsx2(
   AlertDialogPrimitive.Overlay,
   {
     className: cn(
       "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     ),
+    "data-testid": testid,
     ...props,
     ref
   }
 ));
 AlertDialogOverlayBase.displayName = AlertDialogPrimitive.Overlay.displayName;
-var AlertDialogContentBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs(AlertDialogPortalBase, { children: [
+var AlertDialogContentBase = React2.forwardRef(({ className, testid = "alertdialog-content", ...props }, ref) => /* @__PURE__ */ jsxs(AlertDialogPortalBase, { children: [
   /* @__PURE__ */ jsx2(AlertDialogOverlayBase, {}),
   /* @__PURE__ */ jsx2(
     AlertDialogPrimitive.Content,
@@ -124,6 +126,7 @@ var AlertDialogContentBase = React2.forwardRef(({ className, ...props }, ref) =>
         "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
         className
       ),
+      "data-testid": testid,
       ...props
     }
   )
@@ -157,34 +160,37 @@ var AlertDialogFooterBase = ({
   }
 );
 AlertDialogFooterBase.displayName = "AlertDialogFooterBase";
-var AlertDialogTitleBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx2(
+var AlertDialogTitleBase = React2.forwardRef(({ className, testid = "alertdialog-title", ...props }, ref) => /* @__PURE__ */ jsx2(
   AlertDialogPrimitive.Title,
   {
     ref,
     className: cn("text-lg font-semibold", className),
+    "data-testid": testid,
     ...props
   }
 ));
 AlertDialogTitleBase.displayName = AlertDialogPrimitive.Title.displayName;
-var AlertDialogDescriptionBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx2(
+var AlertDialogDescriptionBase = React2.forwardRef(({ className, testid = "alertdialog-description", ...props }, ref) => /* @__PURE__ */ jsx2(
   AlertDialogPrimitive.Description,
   {
     ref,
     className: cn("text-sm text-muted-foreground", className),
+    "data-testid": testid,
     ...props
   }
 ));
 AlertDialogDescriptionBase.displayName = AlertDialogPrimitive.Description.displayName;
-var AlertDialogActionBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx2(
+var AlertDialogActionBase = React2.forwardRef(({ className, testid = "alertdialog-action", ...props }, ref) => /* @__PURE__ */ jsx2(
   AlertDialogPrimitive.Action,
   {
     ref,
     className: cn(buttonVariantsBase(), className),
+    "data-testid": testid,
     ...props
   }
 ));
 AlertDialogActionBase.displayName = AlertDialogPrimitive.Action.displayName;
-var AlertDialogCancelBase = React2.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx2(
+var AlertDialogCancelBase = React2.forwardRef(({ className, testid = "alertdialog-cancel", ...props }, ref) => /* @__PURE__ */ jsx2(
   AlertDialogPrimitive.Cancel,
   {
     ref,
@@ -193,6 +199,7 @@ var AlertDialogCancelBase = React2.forwardRef(({ className, ...props }, ref) => 
       "mt-2 sm:mt-0",
       className
     ),
+    "data-testid": testid,
     ...props
   }
 ));
@@ -252,7 +259,7 @@ import { jsx as jsx4 } from "react/jsx-runtime";
 var PopoverBase = PopoverPrimitive.Root;
 var PopoverTriggerBase = PopoverPrimitive.Trigger;
 var PopoverAnchorBase = PopoverPrimitive.Anchor;
-var PopoverContentBase = React4.forwardRef(({ className, align = "center", sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx4(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx4(
+var PopoverContentBase = React4.forwardRef(({ className, align = "center", sideOffset = 4, testid: dataTestId = "popover-content", ...props }, ref) => /* @__PURE__ */ jsx4(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx4(
   PopoverPrimitive.Content,
   {
     ref,
@@ -262,6 +269,7 @@ var PopoverContentBase = React4.forwardRef(({ className, align = "center", sideO
       "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ) }));
@@ -391,19 +399,20 @@ var DialogBase = DialogPrimitive.Root;
 var DialogTriggerBase = DialogPrimitive.Trigger;
 var DialogPortalBase = DialogPrimitive.Portal;
 var DialogCloseBase = DialogPrimitive.Close;
-var DialogOverlayBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
+var DialogOverlayBase = React6.forwardRef(({ className, testid: dataTestId = "dialog-overlay", ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Overlay,
   {
     ref,
     className: cn(
-      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 DialogOverlayBase.displayName = DialogPrimitive.Overlay.displayName;
-var DialogContentBase = React6.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs3(DialogPortalBase, { children: [
+var DialogContentBase = React6.forwardRef(({ className, children, testid: dataTestId = "dialog-content", ...props }, ref) => /* @__PURE__ */ jsxs3(DialogPortalBase, { children: [
   /* @__PURE__ */ jsx6(DialogOverlayBase, {}),
   /* @__PURE__ */ jsxs3(
     DialogPrimitive.Content,
@@ -413,6 +422,7 @@ var DialogContentBase = React6.forwardRef(({ className, children, ...props }, re
         "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
         className
       ),
+      "data-testid": dataTestId,
       ...props,
       children: [
         children,
@@ -425,51 +435,42 @@ var DialogContentBase = React6.forwardRef(({ className, children, ...props }, re
   )
 ] }));
 DialogContentBase.displayName = DialogPrimitive.Content.displayName;
-var DialogHeaderBase = ({
-  className,
-  ...props
-}) => /* @__PURE__ */ jsx6(
+var DialogHeaderBase = React6.forwardRef(({ className, testid: dataTestId = "dialog-header", ...props }, ref) => /* @__PURE__ */ jsx6(
   "div",
   {
-    className: cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
-    ),
+    ref,
+    className: cn("flex flex-col space-y-1.5 text-center sm:text-left", className),
+    "data-testid": dataTestId,
     ...props
   }
-);
+));
 DialogHeaderBase.displayName = "DialogHeader";
-var DialogFooterBase = ({
-  className,
-  ...props
-}) => /* @__PURE__ */ jsx6(
+var DialogFooterBase = React6.forwardRef(({ className, testid: dataTestId = "dialog-footer", ...props }, ref) => /* @__PURE__ */ jsx6(
   "div",
   {
-    className: cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
-    ),
+    ref,
+    className: cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
+    "data-testid": dataTestId,
     ...props
   }
-);
+));
 DialogFooterBase.displayName = "DialogFooter";
-var DialogTitleBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
+var DialogTitleBase = React6.forwardRef(({ className, testid: dataTestId = "dialog-title", ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Title,
   {
     ref,
-    className: cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    ),
+    className: cn("text-lg font-semibold leading-none tracking-tight", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 DialogTitleBase.displayName = DialogPrimitive.Title.displayName;
-var DialogDescriptionBase = React6.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx6(
+var DialogDescriptionBase = React6.forwardRef(({ className, testid: dataTestId = "dialog-description", ...props }, ref) => /* @__PURE__ */ jsx6(
   DialogPrimitive.Description,
   {
     ref,
     className: cn("text-sm text-muted-foreground", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
@@ -481,7 +482,7 @@ import { Label as RadixLabel } from "@radix-ui/react-label";
 import { Slot as Slot2 } from "@radix-ui/react-slot";
 import { jsx as jsx7 } from "react/jsx-runtime";
 var LabelBase = React7.forwardRef(
-  ({ className, asChild = false, ...props }, ref) => {
+  ({ className, asChild = false, testid = "label-base", ...props }, ref) => {
     const Comp = asChild ? Slot2 : "label";
     return /* @__PURE__ */ jsx7(RadixLabel, { children: /* @__PURE__ */ jsx7(
       Comp,
@@ -491,6 +492,7 @@ var LabelBase = React7.forwardRef(
           "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
           className
         ),
+        "data-testid": testid,
         ...props
       }
     ) });
@@ -514,6 +516,7 @@ var InputBase = React8.forwardRef(
     labelClassname,
     leftIcon,
     rightIcon,
+    "data-testid": dataTestId,
     ...props
   }, ref) => {
     return /* @__PURE__ */ jsxs4("div", { className: "flex flex-col w-full min-w-[150px]", children: [
@@ -536,6 +539,7 @@ var InputBase = React8.forwardRef(
                   className
                 ),
                 ref,
+                "data-testid": dataTestId ?? "input-base",
                 ...props
               }
             ),
@@ -974,13 +978,14 @@ var DropDownMenuSubContentBase = React12.forwardRef(({ className, ...props }, re
     ...props
   }
 ));
-var DropDownMenuContentBase = React12.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ jsx12(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx12(
+var DropDownMenuContentBase = React12.forwardRef(({ className, sideOffset = 4, testid: dataTestId = "dropdown-content", ...props }, ref) => /* @__PURE__ */ jsx12(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx12(
   DropdownMenuPrimitive.Content,
   {
     sideOffset,
     forceMount: true,
     ref,
     className: cn("z-[9999] p-0", className),
+    "data-testid": dataTestId,
     ...props,
     children: /* @__PURE__ */ jsx12(AnimatePresence, { children: /* @__PURE__ */ jsx12(
       motion2.div,
@@ -1196,7 +1201,7 @@ import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlass } from "phosphor-react";
 import { motion as motion3, AnimatePresence as AnimatePresence2 } from "framer-motion";
 import { jsx as jsx15, jsxs as jsxs9 } from "react/jsx-runtime";
-var CommandBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
+var CommandBase = React13.forwardRef(({ className, testid: dataTestId = "command-base", ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive,
   {
     ref,
@@ -1204,6 +1209,7 @@ var CommandBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PUR
       "flex h-full w-full flex-col overflow-hidden rounded-md bg-background text-popover-foreground",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ));
@@ -1228,7 +1234,7 @@ var CommandDialogBase = ({ children, open, ...props }) => {
     "command-dialog"
   ) }) }) });
 };
-var CommandInputBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxs9("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
+var CommandInputBase = React13.forwardRef(({ className, testid: dataTestId = "command-input", ...props }, ref) => /* @__PURE__ */ jsxs9("div", { className: "flex items-center border-b px-3", "cmdk-input-wrapper": "", children: [
   /* @__PURE__ */ jsx15(MagnifyingGlass, { className: "mr-2 h-4 w-4 shrink-0 text-primary" }),
   /* @__PURE__ */ jsx15(
     CommandPrimitive.Input,
@@ -1238,23 +1244,25 @@ var CommandInputBase = React13.forwardRef(({ className, ...props }, ref) => /* @
         "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className
       ),
+      "data-testid": dataTestId,
       ...props
     }
   )
 ] }));
 CommandInputBase.displayName = CommandPrimitive.Input.displayName;
-var CommandListBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
+var CommandListBase = React13.forwardRef(({ className, testid: dataTestId = "command-list", ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.List,
   {
     ref,
     className: cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CommandListBase.displayName = CommandPrimitive.List.displayName;
-var CommandEmptyBase = React13.forwardRef((props, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Empty, { ref, className: "py-6 text-center text-sm", ...props }));
+var CommandEmptyBase = React13.forwardRef(({ testid: dataTestId = "command-empty", ...props }, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Empty, { ref, className: "py-6 text-center text-sm", "data-testid": dataTestId, ...props }));
 CommandEmptyBase.displayName = CommandPrimitive.Empty.displayName;
-var CommandGroupBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
+var CommandGroupBase = React13.forwardRef(({ className, testid: dataTestId = "command-group", ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.Group,
   {
     ref,
@@ -1262,13 +1270,14 @@ var CommandGroupBase = React13.forwardRef(({ className, ...props }, ref) => /* @
       "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CommandGroupBase.displayName = CommandPrimitive.Group.displayName;
-var CommandSeparatorBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Separator, { ref, className: cn("-mx-1 h-px bg-border", className), ...props }));
+var CommandSeparatorBase = React13.forwardRef(({ className, testid: dataTestId = "command-separator", ...props }, ref) => /* @__PURE__ */ jsx15(CommandPrimitive.Separator, { ref, className: cn("-mx-1 h-px bg-border", className), "data-testid": dataTestId, ...props }));
 CommandSeparatorBase.displayName = CommandPrimitive.Separator.displayName;
-var CommandItemBase = React13.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx15(
+var CommandItemBase = React13.forwardRef(({ className, testid: dataTestId = "command-item", ...props }, ref) => /* @__PURE__ */ jsx15(
   CommandPrimitive.Item,
   {
     ref,
@@ -1276,6 +1285,7 @@ var CommandItemBase = React13.forwardRef(({ className, ...props }, ref) => /* @_
       "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary data-[selected=true]:text-background data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.02] active:scale-[0.98]",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ));
@@ -1295,70 +1305,99 @@ function ComboboxBase({
   handleSelection,
   checkIsSelected,
   searchPlaceholder,
-  errorMessage
+  errorMessage,
+  testIds = {}
 }) {
   const [open, setOpen] = useState5(false);
-  return /* @__PURE__ */ jsx16("div", { className: "col-span-1 w-full", children: /* @__PURE__ */ jsxs10(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
-    /* @__PURE__ */ jsx16(
-      PopoverTriggerBase,
-      {
-        asChild: true,
-        className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]",
-        children: /* @__PURE__ */ jsxs10(
-          ButtonBase,
+  return /* @__PURE__ */ jsx16(
+    "div",
+    {
+      className: "col-span-1 w-full",
+      "data-testid": testIds.root ?? "combobox-base-root",
+      children: /* @__PURE__ */ jsxs10(PopoverBase, { open, onOpenChange: setOpen, modal: true, children: [
+        /* @__PURE__ */ jsx16(
+          PopoverTriggerBase,
           {
-            variant: "outline",
-            role: "combobox",
-            "aria-expanded": open,
-            className: cn(
-              "flex items-start gap-2 justify-between h-full",
-              errorMessage && "border-red-500"
-            ),
-            children: [
-              renderSelected,
-              /* @__PURE__ */ jsx16(CaretDown, { size: 16, className: "mt-0.5" })
-            ]
+            asChild: true,
+            className: "flex w-full justify-between dark:bg-[hsl(231,15%,19%)]",
+            children: /* @__PURE__ */ jsxs10(
+              ButtonBase,
+              {
+                variant: "outline",
+                role: "combobox",
+                "aria-expanded": open,
+                className: cn(
+                  "flex items-start gap-2 justify-between h-full",
+                  errorMessage && "border-red-500"
+                ),
+                "data-testid": testIds.trigger ?? "combobox-trigger",
+                children: [
+                  renderSelected,
+                  /* @__PURE__ */ jsx16(CaretDown, { size: 16, className: "mt-0.5" })
+                ]
+              }
+            )
+          }
+        ),
+        /* @__PURE__ */ jsx16(
+          PopoverContentBase,
+          {
+            className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none",
+            "data-testid": testIds.popover ?? "combobox-popover",
+            children: /* @__PURE__ */ jsxs10(
+              CommandBase,
+              {
+                className: "dark:text-white",
+                "data-testid": testIds.command ?? "combobox-command",
+                children: [
+                  /* @__PURE__ */ jsx16(
+                    CommandInputBase,
+                    {
+                      tabIndex: -1,
+                      placeholder: searchPlaceholder ?? "Busque uma op\xE7\xE3o...",
+                      "data-testid": testIds.search ?? "combobox-search"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs10(CommandListBase, { "data-testid": testIds.list ?? "combobox-list", children: [
+                    /* @__PURE__ */ jsx16(CommandEmptyBase, { "data-testid": testIds.empty ?? "combobox-empty", children: "Nenhum dado encontrado" }),
+                    /* @__PURE__ */ jsx16(CommandGroupBase, { "data-testid": testIds.group ?? "combobox-group", children: items.map((item) => {
+                      const isSelected = checkIsSelected(item.value);
+                      return /* @__PURE__ */ jsxs10(
+                        CommandItemBase,
+                        {
+                          keywords: [item.label],
+                          value: item.value,
+                          onSelect: (value) => {
+                            handleSelection(value);
+                            setOpen(false);
+                          },
+                          "data-testid": testIds.option ?? "combobox-option",
+                          children: [
+                            item.label,
+                            /* @__PURE__ */ jsx16(
+                              Check3,
+                              {
+                                className: cn(
+                                  "ml-auto",
+                                  isSelected ? "opacity-100" : "opacity-0"
+                                ),
+                                "data-testid": isSelected ? testIds.check ?? "combobox-option-check" : void 0
+                              }
+                            )
+                          ]
+                        },
+                        item.value
+                      );
+                    }) })
+                  ] })
+                ]
+              }
+            )
           }
         )
-      }
-    ),
-    /* @__PURE__ */ jsx16(PopoverContentBase, { className: "max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none", children: /* @__PURE__ */ jsxs10(CommandBase, { className: "dark:text-white", children: [
-      /* @__PURE__ */ jsx16(
-        CommandInputBase,
-        {
-          tabIndex: -1,
-          placeholder: searchPlaceholder ?? "Busque uma op\xE7\xE3o..."
-        }
-      ),
-      /* @__PURE__ */ jsxs10(CommandListBase, { children: [
-        /* @__PURE__ */ jsx16(CommandEmptyBase, { children: "Nenhum dado encontrado" }),
-        /* @__PURE__ */ jsx16(CommandGroupBase, { children: items.map((item) => /* @__PURE__ */ jsxs10(
-          CommandItemBase,
-          {
-            keywords: [item.label],
-            value: item.value,
-            onSelect: (value) => {
-              handleSelection(value);
-              setOpen(false);
-            },
-            children: [
-              item.label,
-              /* @__PURE__ */ jsx16(
-                Check3,
-                {
-                  className: cn(
-                    "ml-auto",
-                    checkIsSelected(item.value) ? "opacity-100" : "opacity-0"
-                  )
-                }
-              )
-            ]
-          },
-          item.value
-        )) })
       ] })
-    ] }) })
-  ] }) });
+    }
+  );
 }
 
 // src/components/selects/Combobox.tsx
@@ -1371,12 +1410,20 @@ function Combobox({
   placeholder,
   searchPlaceholder,
   label,
-  labelClassname
+  labelClassname,
+  testIds
 }) {
   const selectedItem = items.find((item) => item.value === selected);
   const renderSelected = useMemo(() => {
-    return /* @__PURE__ */ jsx17("span", { className: cn("truncate", !selectedItem && "text-gray-500"), children: selectedItem?.label ?? placeholder ?? "Selecione uma op\xE7\xE3o..." });
-  }, [placeholder, selectedItem]);
+    return /* @__PURE__ */ jsx17(
+      "span",
+      {
+        "data-testid": testIds?.selected ?? "combobox-selected",
+        className: cn("truncate", !selectedItem && "text-gray-500"),
+        children: selectedItem?.label ?? placeholder ?? "Selecione uma op\xE7\xE3o..."
+      }
+    );
+  }, [placeholder, selectedItem, testIds?.selected]);
   const checkIsSelected = useCallback(
     (value) => selected == null ? false : selected == value,
     [selected]
@@ -1396,7 +1443,8 @@ function Combobox({
         renderSelected,
         handleSelection,
         checkIsSelected,
-        searchPlaceholder
+        searchPlaceholder,
+        testIds
       }
     )
   ] });
@@ -1414,7 +1462,8 @@ function MultiCombobox({
   placeholder,
   searchPlaceholder,
   label,
-  labelClassname
+  labelClassname,
+  testIds = {}
 }) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = useCallback2(
@@ -1434,46 +1483,74 @@ function MultiCombobox({
   );
   const renderSelected = useMemo2(() => {
     if (selectedItems.length === 0) {
-      return /* @__PURE__ */ jsx18("span", { className: "text-gray-500", children: placeholder ?? "Selecione uma op\xE7\xE3o..." });
+      return /* @__PURE__ */ jsx18(
+        "span",
+        {
+          "data-testid": testIds.emptyPlaceholder ?? "combobox-selected-empty",
+          className: "text-gray-500",
+          children: placeholder ?? "Selecione uma op\xE7\xE3o..."
+        }
+      );
     }
-    const items2 = selectedItems.map((item) => /* @__PURE__ */ jsxs12(
+    return /* @__PURE__ */ jsx18(
       "div",
       {
-        className: "flex items-center gap-1 rounded-md border p-1",
-        children: [
-          /* @__PURE__ */ jsx18("span", { className: "whitespace-break-spaces text-xs", children: item.label }),
-          /* @__PURE__ */ jsx18(
-            "span",
-            {
-              role: "button",
-              tabIndex: 0,
-              onClick: (e) => {
-                e.stopPropagation();
-                handleSelection(item.value);
-              },
-              className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
-              children: /* @__PURE__ */ jsx18(X3, { size: 14 })
-            }
-          )
-        ]
-      },
-      item.value
-    ));
-    return /* @__PURE__ */ jsx18("div", { className: "flex w-full flex-wrap gap-2", children: items2 });
-  }, [handleSelection, placeholder, selectedItems]);
-  return /* @__PURE__ */ jsxs12("div", { className: cn("flex flex-col gap-1 w-full min-w-[150px]", className), children: [
-    label && /* @__PURE__ */ jsx18(LabelBase_default, { className: labelClassname, children: label }),
-    /* @__PURE__ */ jsx18(
-      ComboboxBase,
-      {
-        items,
-        renderSelected,
-        handleSelection,
-        checkIsSelected,
-        searchPlaceholder
+        "data-testid": testIds.selectedWrapper ?? "combobox-selected-wrapper",
+        className: "flex w-full flex-wrap gap-2",
+        children: selectedItems.map((item) => /* @__PURE__ */ jsxs12(
+          "div",
+          {
+            className: "flex items-center gap-1 rounded-md border p-1",
+            "data-testid": testIds.selectedItem?.(item.value) ?? `combobox-selected-${item.value}`,
+            children: [
+              /* @__PURE__ */ jsx18("span", { className: "whitespace-break-spaces text-xs", children: item.label }),
+              /* @__PURE__ */ jsx18(
+                "span",
+                {
+                  role: "button",
+                  tabIndex: 0,
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    handleSelection(item.value);
+                  },
+                  className: "cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all",
+                  children: /* @__PURE__ */ jsx18(X3, { size: 14 })
+                }
+              )
+            ]
+          },
+          item.value
+        ))
       }
-    )
-  ] });
+    );
+  }, [handleSelection, placeholder, selectedItems, testIds]);
+  return /* @__PURE__ */ jsxs12(
+    "div",
+    {
+      className: cn("flex flex-col gap-1 w-full min-w-[150px]", className),
+      "data-testid": testIds.root ?? "multi-combobox-root",
+      children: [
+        label && /* @__PURE__ */ jsx18(
+          LabelBase_default,
+          {
+            className: labelClassname,
+            "data-testid": testIds.label ?? "multi-combobox-label",
+            children: label
+          }
+        ),
+        /* @__PURE__ */ jsx18(
+          ComboboxBase,
+          {
+            items,
+            renderSelected,
+            handleSelection,
+            checkIsSelected,
+            searchPlaceholder
+          }
+        )
+      ]
+    }
+  );
 }
 
 // src/components/ui/SelectBase.tsx
@@ -1535,7 +1612,7 @@ var SelectScrollDownButtonBase = React14.forwardRef(({ className, ...props }, re
   }
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
-var SelectContentBase = React14.forwardRef(({ className, children, position = "popper", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
+var SelectContentBase = React14.forwardRef(({ className, children, position = "popper", testid: dataTestId = "select-content", ...props }, ref) => /* @__PURE__ */ jsx19(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx19(AnimatePresence3, { children: /* @__PURE__ */ jsx19(
   SelectPrimitive.Content,
   {
     ref,
@@ -1544,6 +1621,7 @@ var SelectContentBase = React14.forwardRef(({ className, children, position = "p
       className
     ),
     position,
+    "data-testid": dataTestId,
     ...props,
     asChild: true,
     children: /* @__PURE__ */ jsx19(
@@ -1649,10 +1727,11 @@ function Select({
   groupItems,
   placeholder,
   onChange,
-  errorMessage
+  errorMessage,
+  testIds = {}
 }) {
-  return /* @__PURE__ */ jsxs15("div", { children: [
-    /* @__PURE__ */ jsxs15(SelectBase, { onValueChange: onChange, children: [
+  return /* @__PURE__ */ jsxs15("div", { "data-testid": testIds.root ?? "select-root", children: [
+    /* @__PURE__ */ jsxs15(SelectBase, { onValueChange: onChange, "data-testid": testIds.base ?? "select-base", children: [
       /* @__PURE__ */ jsx21(
         SelectTriggerBase,
         {
@@ -1660,15 +1739,45 @@ function Select({
             "flex h-12 w-full content-start text-lg shadow-md",
             errorMessage && "border-red-500"
           ),
-          children: /* @__PURE__ */ jsx21(SelectValueBase, { placeholder })
+          "data-testid": testIds.trigger ?? "select-trigger",
+          children: /* @__PURE__ */ jsx21(
+            SelectValueBase,
+            {
+              placeholder,
+              "data-testid": testIds.value ?? "select-value"
+            }
+          )
         }
       ),
-      /* @__PURE__ */ jsx21(ScrollAreaBase, { children: /* @__PURE__ */ jsx21(SelectContentBase, { children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs15(SelectGroupBase, { children: [
-        /* @__PURE__ */ jsx21(SelectLabelBase, { children: key }),
-        groupItems[key].map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value))
-      ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { children: items.map((item) => /* @__PURE__ */ jsx21(SelectItemBase, { value: item.value, children: item.label }, item.value)) }) }) })
+      /* @__PURE__ */ jsx21(ScrollAreaBase, { "data-testid": testIds.scrollarea ?? "select-scrollarea", children: /* @__PURE__ */ jsx21(SelectContentBase, { "data-testid": testIds.content ?? "select-content", children: groupItems ? /* @__PURE__ */ jsx21(Fragment4, { children: Object.keys(groupItems).map((key) => /* @__PURE__ */ jsxs15(SelectGroupBase, { "data-testid": testIds.group ?? "select-group", children: [
+        /* @__PURE__ */ jsx21(SelectLabelBase, { "data-testid": testIds.label ?? "select-label", children: key }),
+        groupItems[key].map((item) => /* @__PURE__ */ jsx21(
+          SelectItemBase,
+          {
+            value: item.value,
+            "data-testid": testIds.item?.(item.value) ?? `select-item-${item.value}`,
+            children: item.label
+          },
+          item.value
+        ))
+      ] }, key)) }) : /* @__PURE__ */ jsx21(SelectGroupBase, { "data-testid": testIds.group ?? "select-group", children: items.map((item) => /* @__PURE__ */ jsx21(
+        SelectItemBase,
+        {
+          value: item.value,
+          "data-testid": testIds.item?.(item.value) ?? `select-item-${item.value}`,
+          children: item.label
+        },
+        item.value
+      )) }) }) })
     ] }),
-    errorMessage && /* @__PURE__ */ jsx21("p", { className: "text-sm text-red-500", children: errorMessage })
+    errorMessage && /* @__PURE__ */ jsx21(
+      "p",
+      {
+        className: "text-sm text-red-500",
+        "data-testid": testIds.error ?? "select-error",
+        children: errorMessage
+      }
+    )
   ] });
 }
 
@@ -1730,7 +1839,7 @@ CalendarBase2.displayName = "Calendar";
 // src/components/ui/CardBase.tsx
 import * as React16 from "react";
 import { jsx as jsx23 } from "react/jsx-runtime";
-var CardBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardBase = React16.forwardRef(({ className, testid: dataTestId = "card-base", ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
@@ -1738,44 +1847,49 @@ var CardBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__
       "rounded-xl border bg-card text-card-foreground shadow",
       className
     ),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CardBase.displayName = "Card";
-var CardHeaderBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardHeaderBase = React16.forwardRef(({ className, testid: dataTestId = "card-header", ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
     className: cn("flex flex-col space-y-1.5 p-6", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CardHeaderBase.displayName = "CardHeader";
-var CardTitleBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardTitleBase = React16.forwardRef(({ className, testid: dataTestId = "card-title", ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
     className: cn("font-semibold leading-none tracking-tight", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CardTitleBase.displayName = "CardTitle";
-var CardDescriptionBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardDescriptionBase = React16.forwardRef(({ className, testid: dataTestId = "card-description", ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
     className: cn("text-sm text-muted-foreground", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
 CardDescriptionBase.displayName = "CardDescription";
-var CardContentBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+var CardContentBase = React16.forwardRef(({ className, testid: dataTestId = "card-content", ...props }, ref) => /* @__PURE__ */ jsx23("div", { ref, className: cn("p-6 pt-0", className), "data-testid": dataTestId, ...props }));
 CardContentBase.displayName = "CardContent";
-var CardFooterBase = React16.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx23(
+var CardFooterBase = React16.forwardRef(({ className, testid: dataTestId = "card-footer", ...props }, ref) => /* @__PURE__ */ jsx23(
   "div",
   {
     ref,
     className: cn("flex items-center p-6 pt-0", className),
+    "data-testid": dataTestId,
     ...props
   }
 ));
@@ -1787,7 +1901,7 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check as Check5 } from "phosphor-react";
 import { motion as motion5 } from "framer-motion";
 import { jsx as jsx24 } from "react/jsx-runtime";
-var CheckboxBase = React17.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx24(
+var CheckboxBase = React17.forwardRef(({ className, testid: dataTestId = "checkbox-base", ...props }, ref) => /* @__PURE__ */ jsx24(
   CheckboxPrimitive.Root,
   {
     ref,
@@ -1795,6 +1909,7 @@ var CheckboxBase = React17.forwardRef(({ className, ...props }, ref) => /* @__PU
       "peer h-4 w-4 shrink-0 rounded-md border border-primary shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-colors",
       className
     ),
+    "data-testid": dataTestId,
     ...props,
     children: /* @__PURE__ */ jsx24(CheckboxPrimitive.Indicator, { asChild: true, children: /* @__PURE__ */ jsx24(
       motion5.div,
@@ -2798,7 +2913,7 @@ import {
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 import { jsx as jsx32 } from "react/jsx-runtime";
 var iconBaseClass = "w-5 h-auto";
-var Toaster = ({ ...props }) => {
+var Toaster = ({ testId, ...props }) => {
   return /* @__PURE__ */ jsx32(
     Sonner,
     {
@@ -2814,7 +2929,6 @@ var Toaster = ({ ...props }) => {
             border-l-4
             border-neutral-200
             flex items-center gap-3
-
             data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500
             data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
@@ -2840,31 +2954,31 @@ var Toaster = ({ ...props }) => {
           `
         }
       },
+      "data-testid": testId,
       ...props
     }
   );
 };
 var toast = {
   success: (message) => sonnertoast.success(message, {
-    icon: /* @__PURE__ */ jsx32(CheckCircle, { className: `${iconBaseClass} text-green-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(CheckCircle, { className: `${iconBaseClass} text-green-600`, weight: "fill" }),
+    className: "sonner-success"
   }),
   error: (message) => sonnertoast.error(message, {
-    icon: /* @__PURE__ */ jsx32(XCircle, { className: `${iconBaseClass} text-red-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(XCircle, { className: `${iconBaseClass} text-red-600`, weight: "fill" }),
+    className: "sonner-error"
   }),
   warning: (message) => sonnertoast.warning(message, {
-    icon: /* @__PURE__ */ jsx32(Warning, { className: `${iconBaseClass} text-yellow-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(Warning, { className: `${iconBaseClass} text-yellow-600`, weight: "fill" }),
+    className: "sonner-warning"
   }),
   info: (message) => sonnertoast.info(message, {
-    icon: /* @__PURE__ */ jsx32(Info, { className: `${iconBaseClass} text-blue-600`, weight: "fill" })
+    icon: /* @__PURE__ */ jsx32(Info, { className: `${iconBaseClass} text-blue-600`, weight: "fill" }),
+    className: "sonner-info"
   }),
   loading: (message) => sonnertoast(message, {
-    icon: /* @__PURE__ */ jsx32(
-      Spinner,
-      {
-        className: `${iconBaseClass} animate-spin text-neutral-500`,
-        weight: "fill"
-      }
-    )
+    icon: /* @__PURE__ */ jsx32(Spinner, { className: `${iconBaseClass} animate-spin text-neutral-500`, weight: "fill" }),
+    className: "sonner-loading"
   })
 };
 
@@ -2872,7 +2986,7 @@ var toast = {
 import * as React24 from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { jsx as jsx33 } from "react/jsx-runtime";
-var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
+var SwitchBase = React24.forwardRef(({ className, testid: dataTestId = "switch-base", ...props }, ref) => {
   return /* @__PURE__ */ jsx33(
     SwitchPrimitives.Root,
     {
@@ -2882,6 +2996,7 @@ var SwitchBase = React24.forwardRef(({ className, ...props }, ref) => {
         "peer relative inline-flex w-12 cursor-pointer items-center rounded-full border-2 border-transparent shadow-md transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input data-[state=checked]:shadow-[0_0_15px_4px_var(--tw-shadow-color)] data-[state=checked]:shadow-primary/30",
         className
       ),
+      "data-testid": dataTestId,
       children: /* @__PURE__ */ jsx33(
         SwitchPrimitives.Thumb,
         {

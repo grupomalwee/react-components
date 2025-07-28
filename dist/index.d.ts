@@ -24,8 +24,12 @@ import { DayPicker } from 'react-day-picker';
 declare const AlertDialogBase: React$1.FC<AlertDialogPrimitive.AlertDialogProps>;
 declare const AlertDialogTriggerBase: React$1.ForwardRefExoticComponent<AlertDialogPrimitive.AlertDialogTriggerProps & React$1.RefAttributes<HTMLButtonElement>>;
 declare const AlertDialogPortalBase: React$1.FC<AlertDialogPrimitive.AlertDialogPortalProps>;
-declare const AlertDialogOverlayBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogOverlayProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const AlertDialogContentBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+declare const AlertDialogOverlayBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogOverlayProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const AlertDialogContentBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const AlertDialogHeaderBase: {
     ({ className, ...props }: React$1.HTMLAttributes<HTMLDivElement>): react_jsx_runtime.JSX.Element;
     displayName: string;
@@ -34,10 +38,18 @@ declare const AlertDialogFooterBase: {
     ({ className, ...props }: React$1.HTMLAttributes<HTMLDivElement>): react_jsx_runtime.JSX.Element;
     displayName: string;
 };
-declare const AlertDialogTitleBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogTitleProps & React$1.RefAttributes<HTMLHeadingElement>, "ref"> & React$1.RefAttributes<HTMLHeadingElement>>;
-declare const AlertDialogDescriptionBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogDescriptionProps & React$1.RefAttributes<HTMLParagraphElement>, "ref"> & React$1.RefAttributes<HTMLParagraphElement>>;
-declare const AlertDialogActionBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogActionProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
-declare const AlertDialogCancelBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogCancelProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
+declare const AlertDialogTitleBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogTitleProps & React$1.RefAttributes<HTMLHeadingElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLHeadingElement>>;
+declare const AlertDialogDescriptionBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogDescriptionProps & React$1.RefAttributes<HTMLParagraphElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLParagraphElement>>;
+declare const AlertDialogActionBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogActionProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLButtonElement>>;
+declare const AlertDialogCancelBase: React$1.ForwardRefExoticComponent<Omit<AlertDialogPrimitive.AlertDialogCancelProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLButtonElement>>;
 
 declare const AvatarBase: React$1.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarProps & React$1.RefAttributes<HTMLSpanElement>, "ref"> & React$1.RefAttributes<HTMLSpanElement>>;
 declare const AvatarImageBase: React$1.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarImageProps & React$1.RefAttributes<HTMLImageElement>, "ref"> & React$1.RefAttributes<HTMLImageElement>>;
@@ -49,6 +61,7 @@ declare const buttonVariantsBase: (props?: ({
 } & class_variance_authority_dist_types.ClassProp) | undefined) => string;
 interface ButtonProps extends React$1.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariantsBase> {
     asChild?: boolean;
+    testid?: string;
 }
 declare const ButtonBase: React$1.ForwardRefExoticComponent<ButtonProps & React$1.RefAttributes<HTMLButtonElement>>;
 interface ButtonGroupProps extends React$1.HTMLAttributes<HTMLDivElement> {
@@ -57,14 +70,28 @@ interface ButtonGroupProps extends React$1.HTMLAttributes<HTMLDivElement> {
 }
 declare const ButtonGroupBase: React$1.ForwardRefExoticComponent<ButtonGroupProps & React$1.RefAttributes<HTMLDivElement>>;
 
-declare const CardBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
-declare const CardHeaderBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
-declare const CardTitleBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
-declare const CardDescriptionBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
-declare const CardContentBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
-declare const CardFooterBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardHeaderBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardTitleBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardDescriptionBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardContentBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
+declare const CardFooterBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 
-declare const CheckboxBase: React$1.ForwardRefExoticComponent<Omit<CheckboxPrimitive.CheckboxProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
+declare const CheckboxBase: React$1.ForwardRefExoticComponent<Omit<CheckboxPrimitive.CheckboxProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLButtonElement>>;
 
 declare const CommandBase: React$1.ForwardRefExoticComponent<Omit<{
     children?: React$1.ReactNode;
@@ -82,7 +109,9 @@ declare const CommandBase: React$1.ForwardRefExoticComponent<Omit<{
     loop?: boolean;
     disablePointerSelection?: boolean;
     vimBindings?: boolean;
-} & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+} & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandDialogBase: ({ children, open, ...props }: DialogProps) => react_jsx_runtime.JSX.Element;
 declare const CommandInputBase: React$1.ForwardRefExoticComponent<Omit<Omit<Pick<Pick<React$1.DetailedHTMLProps<React$1.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "key" | keyof React$1.InputHTMLAttributes<HTMLInputElement>> & {
     ref?: React$1.Ref<HTMLInputElement>;
@@ -91,7 +120,9 @@ declare const CommandInputBase: React$1.ForwardRefExoticComponent<Omit<Omit<Pick
 }, "asChild" | "key" | keyof React$1.InputHTMLAttributes<HTMLInputElement>>, "type" | "value" | "onChange"> & {
     value?: string;
     onValueChange?: (search: string) => void;
-} & React$1.RefAttributes<HTMLInputElement>, "ref"> & React$1.RefAttributes<HTMLInputElement>>;
+} & React$1.RefAttributes<HTMLInputElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLInputElement>>;
 declare const CommandListBase: React$1.ForwardRefExoticComponent<Omit<{
     children?: React$1.ReactNode;
 } & Pick<Pick<React$1.DetailedHTMLProps<React$1.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
@@ -100,14 +131,18 @@ declare const CommandListBase: React$1.ForwardRefExoticComponent<Omit<{
     asChild?: boolean;
 }, "asChild" | "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
     label?: string;
-} & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+} & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandEmptyBase: React$1.ForwardRefExoticComponent<Omit<{
     children?: React$1.ReactNode;
 } & Pick<Pick<React$1.DetailedHTMLProps<React$1.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
     ref?: React$1.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, "asChild" | "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+}, "asChild" | "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandGroupBase: React$1.ForwardRefExoticComponent<Omit<{
     children?: React$1.ReactNode;
 } & Omit<Pick<Pick<React$1.DetailedHTMLProps<React$1.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
@@ -118,14 +153,18 @@ declare const CommandGroupBase: React$1.ForwardRefExoticComponent<Omit<{
     heading?: React$1.ReactNode;
     value?: string;
     forceMount?: boolean;
-} & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+} & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandSeparatorBase: React$1.ForwardRefExoticComponent<Omit<Pick<Pick<React$1.DetailedHTMLProps<React$1.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
     ref?: React$1.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
 }, "asChild" | "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
     alwaysRender?: boolean;
-} & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+} & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandItemBase: React$1.ForwardRefExoticComponent<Omit<{
     children?: React$1.ReactNode;
 } & Omit<Pick<Pick<React$1.DetailedHTMLProps<React$1.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React$1.HTMLAttributes<HTMLDivElement>> & {
@@ -138,28 +177,27 @@ declare const CommandItemBase: React$1.ForwardRefExoticComponent<Omit<{
     value?: string;
     keywords?: string[];
     forceMount?: boolean;
-} & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+} & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const CommandShortcutBase: {
     ({ className, ...props }: React$1.HTMLAttributes<HTMLSpanElement>): react_jsx_runtime.JSX.Element;
     displayName: string;
 };
 
+type TestIdProps$1 = {
+    testid?: string;
+};
 declare const DialogBase: React$1.FC<DialogPrimitive.DialogProps>;
 declare const DialogTriggerBase: React$1.ForwardRefExoticComponent<DialogPrimitive.DialogTriggerProps & React$1.RefAttributes<HTMLButtonElement>>;
 declare const DialogPortalBase: React$1.FC<DialogPrimitive.DialogPortalProps>;
 declare const DialogCloseBase: React$1.ForwardRefExoticComponent<DialogPrimitive.DialogCloseProps & React$1.RefAttributes<HTMLButtonElement>>;
-declare const DialogOverlayBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogOverlayProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const DialogContentBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const DialogHeaderBase: {
-    ({ className, ...props }: React$1.HTMLAttributes<HTMLDivElement>): react_jsx_runtime.JSX.Element;
-    displayName: string;
-};
-declare const DialogFooterBase: {
-    ({ className, ...props }: React$1.HTMLAttributes<HTMLDivElement>): react_jsx_runtime.JSX.Element;
-    displayName: string;
-};
-declare const DialogTitleBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogTitleProps & React$1.RefAttributes<HTMLHeadingElement>, "ref"> & React$1.RefAttributes<HTMLHeadingElement>>;
-declare const DialogDescriptionBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogDescriptionProps & React$1.RefAttributes<HTMLParagraphElement>, "ref"> & React$1.RefAttributes<HTMLParagraphElement>>;
+declare const DialogOverlayBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogOverlayProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & TestIdProps$1 & React$1.RefAttributes<HTMLDivElement>>;
+declare const DialogContentBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & TestIdProps$1 & React$1.RefAttributes<HTMLDivElement>>;
+declare const DialogHeaderBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & TestIdProps$1 & React$1.RefAttributes<HTMLDivElement>>;
+declare const DialogFooterBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLDivElement> & TestIdProps$1 & React$1.RefAttributes<HTMLDivElement>>;
+declare const DialogTitleBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogTitleProps & React$1.RefAttributes<HTMLHeadingElement>, "ref"> & TestIdProps$1 & React$1.RefAttributes<HTMLHeadingElement>>;
+declare const DialogDescriptionBase: React$1.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogDescriptionProps & React$1.RefAttributes<HTMLParagraphElement>, "ref"> & TestIdProps$1 & React$1.RefAttributes<HTMLParagraphElement>>;
 
 declare const DropDownMenuBase: React$1.FC<DropdownMenuPrimitive.DropdownMenuProps>;
 declare const DropDownMenuTriggerBase: React$1.ForwardRefExoticComponent<DropdownMenuPrimitive.DropdownMenuTriggerProps & React$1.RefAttributes<HTMLButtonElement>>;
@@ -171,7 +209,9 @@ declare const DropDownMenuSubTriggerBase: React$1.ForwardRefExoticComponent<Omit
     inset?: boolean;
 } & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuSubContentBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuSubContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const DropDownMenuContentBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+declare const DropDownMenuContentBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const DropDownMenuItemBase: React$1.ForwardRefExoticComponent<Omit<DropdownMenuPrimitive.DropdownMenuItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
     inset?: boolean;
     leftIcon?: React$1.ReactNode;
@@ -193,13 +233,17 @@ interface InputBaseProps extends React$1.ComponentProps<"input"> {
     labelClassname?: string;
     leftIcon?: React$1.ReactNode;
     rightIcon?: React$1.ReactNode;
+    "data-testid"?: string;
 }
 declare const InputBase: React$1.ForwardRefExoticComponent<Omit<InputBaseProps, "ref"> & React$1.RefAttributes<HTMLInputElement>>;
 
 declare const PopoverBase: React$1.FC<PopoverPrimitive.PopoverProps>;
 declare const PopoverTriggerBase: React$1.ForwardRefExoticComponent<PopoverPrimitive.PopoverTriggerProps & React$1.RefAttributes<HTMLButtonElement>>;
 declare const PopoverAnchorBase: React$1.ForwardRefExoticComponent<PopoverPrimitive.PopoverAnchorProps & React$1.RefAttributes<HTMLDivElement>>;
-declare const PopoverContentBase: React$1.ForwardRefExoticComponent<Omit<PopoverPrimitive.PopoverContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+type TestIdProps = {
+    testid?: string;
+};
+declare const PopoverContentBase: React$1.ForwardRefExoticComponent<Omit<PopoverPrimitive.PopoverContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & TestIdProps & React$1.RefAttributes<HTMLDivElement>>;
 
 interface ProgressBaseProps extends React$1.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
     label?: string;
@@ -237,7 +281,9 @@ declare const SelectTriggerBase: React$1.ForwardRefExoticComponent<Omit<SelectPr
 } & React$1.RefAttributes<HTMLButtonElement>>;
 declare const SelectScrollUpButtonBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectScrollUpButtonProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const SelectScrollDownButtonBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectScrollDownButtonProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
-declare const SelectContentBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
+declare const SelectContentBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectContentProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLDivElement>>;
 declare const SelectLabelBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectLabelProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const SelectItemBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectItemProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
 declare const SelectSeparatorBase: React$1.ForwardRefExoticComponent<Omit<SelectPrimitive.SelectSeparatorProps & React$1.RefAttributes<HTMLDivElement>, "ref"> & React$1.RefAttributes<HTMLDivElement>>;
@@ -343,8 +389,10 @@ interface SliderBaseProps extends React$1.ComponentPropsWithoutRef<typeof Slider
 }
 declare const SlideBase: React$1.ForwardRefExoticComponent<SliderBaseProps & React$1.RefAttributes<HTMLSpanElement>>;
 
-type ToasterProps = React.ComponentProps<typeof Toaster$1>;
-declare const Toaster: ({ ...props }: ToasterProps) => react_jsx_runtime.JSX.Element;
+type ToasterProps = React.ComponentProps<typeof Toaster$1> & {
+    testId?: string;
+};
+declare const Toaster: ({ testId, ...props }: ToasterProps) => react_jsx_runtime.JSX.Element;
 declare const toast: {
     success: (message: string) => string | number;
     error: (message: string) => string | number;
@@ -353,7 +401,9 @@ declare const toast: {
     loading: (message: string) => string | number;
 };
 
-declare const SwitchBase: React$1.ForwardRefExoticComponent<Omit<SwitchPrimitives.SwitchProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & React$1.RefAttributes<HTMLButtonElement>>;
+declare const SwitchBase: React$1.ForwardRefExoticComponent<Omit<SwitchPrimitives.SwitchProps & React$1.RefAttributes<HTMLButtonElement>, "ref"> & {
+    testid?: string;
+} & React$1.RefAttributes<HTMLButtonElement>>;
 
 declare const TableBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLTableElement> & React$1.RefAttributes<HTMLTableElement>>;
 declare const TableHeaderBase: React$1.ForwardRefExoticComponent<React$1.HTMLAttributes<HTMLTableSectionElement> & React$1.RefAttributes<HTMLTableSectionElement>>;
@@ -426,6 +476,19 @@ interface ComboboxItem<T extends string> {
     value: T;
 }
 
+interface ComboboxTestIds {
+    root?: string;
+    trigger?: string;
+    popover?: string;
+    command?: string;
+    search?: string;
+    list?: string;
+    empty?: string;
+    group?: string;
+    option?: string;
+    check?: string;
+    selected?: string;
+}
 interface ComboboxProps<T extends string> {
     items: ComboboxItem<T>[];
     selected: ComboboxItem<T>["value"] | null;
@@ -435,16 +498,25 @@ interface ComboboxProps<T extends string> {
     searchPlaceholder?: string;
     label?: string;
     labelClassname?: string;
+    testIds?: ComboboxTestIds;
 }
-declare function Combobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function Combobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname, testIds, }: ComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
+interface MultiComboboxTestIds {
+    root?: string;
+    label?: string;
+    selectedWrapper?: string;
+    emptyPlaceholder?: string;
+    selectedItem?: (value: string) => string;
+}
 interface MultiComboboxProps<T extends string> extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
     selected: T[];
     onChange: (value: T[]) => void;
     label?: string;
     labelClassname?: string;
+    testIds?: MultiComboboxTestIds;
 }
-declare function MultiCombobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
+declare function MultiCombobox<T extends string>({ items, selected, onChange, className, placeholder, searchPlaceholder, label, labelClassname, testIds, }: MultiComboboxProps<T>): react_jsx_runtime.JSX.Element;
 
 interface SelectItem$1<T extends string> {
     label: string;
@@ -455,24 +527,40 @@ interface DefaultSelectProps {
     onChange: (value: string) => void;
     errorMessage?: string;
 }
+interface SelectTestIds {
+    root?: string;
+    base?: string;
+    trigger?: string;
+    value?: string;
+    scrollarea?: string;
+    content?: string;
+    group?: string;
+    label?: string;
+    item?: (value: string) => string;
+    error?: string;
+}
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
     items: SelectItem$1<T>[];
     groupItems?: never;
+    testIds?: SelectTestIds;
 }
 interface SelectPropsWithGroupItems<T extends string> extends DefaultSelectProps {
     items?: never;
     groupItems: {
         [key: string]: SelectItem$1<T>[];
     };
+    testIds?: SelectTestIds;
 }
 type SelectProps<T extends string> = SelectPropsWithItems<T> | SelectPropsWithGroupItems<T>;
-declare function Select<T extends string>({ items, groupItems, placeholder, onChange, errorMessage, }: SelectProps<T>): react_jsx_runtime.JSX.Element;
+declare function Select<T extends string>({ items, groupItems, placeholder, onChange, errorMessage, testIds, }: SelectProps<T>): react_jsx_runtime.JSX.Element;
 
 type LabelBaseProps = React$1.ComponentPropsWithoutRef<"label"> & {
     asChild?: boolean;
+    testid?: string;
 };
 declare const LabelBase: React$1.ForwardRefExoticComponent<Omit<React$1.DetailedHTMLProps<React$1.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>, "ref"> & {
     asChild?: boolean;
+    testid?: string;
 } & React$1.RefAttributes<HTMLLabelElement>>;
 
 declare function useIsMobile(): boolean;
@@ -522,4 +610,4 @@ declare const defaultStringConditions: AvailableFilterConditions[];
 
 declare function buildFilterSummary<T extends Record<string, unknown>>(filter: Filter<T>, availableFilters: AvailableFilter<T>[]): string | null;
 
-export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, ButtonGroupBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxProps, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, InputBase, type InputBaseProps, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, type ProgressBaseProps, ProgressCirclesBase, type ProgressCirclesBaseProps, ProgressPanelsBase, type ProgressPanelsBaseProps, ProgressSegmentsBase, type ProgressSegmentsBaseProps, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem$1 as SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, type SliderBaseProps, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, type Theme, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, applyfilter, buildFilterSummary, buttonVariantsBase, defaultStringConditions, toast, useIsMobile, useTheme };
+export { AlertDialogActionBase, AlertDialogBase, AlertDialogCancelBase, AlertDialogContentBase, AlertDialogDescriptionBase, AlertDialogFooterBase, AlertDialogHeaderBase, AlertDialogOverlayBase, AlertDialogPortalBase, AlertDialogTitleBase, AlertDialogTriggerBase, AvatarBase, AvatarFallbackBase, AvatarImageBase, ButtonBase, ButtonGroupBase, type ButtonProps, CalendarBase, type CalendarProps, CardBase, CardContentBase, CardDescriptionBase, CardFooterBase, CardHeaderBase, CardTitleBase, CheckboxBase, Combobox, type ComboboxProps, type ComboboxTestIds, CommandBase, CommandDialogBase, CommandEmptyBase, CommandGroupBase, CommandInputBase, CommandItemBase, CommandListBase, CommandSeparatorBase, CommandShortcutBase, DateTimePicker, DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogOverlayBase, DialogPortalBase, DialogTitleBase, DialogTriggerBase, DropDownMenuBase, DropDownMenuCheckboxItemBase, DropDownMenuContentBase, DropDownMenuGroupBase, DropDownMenuItemBase, DropDownMenuLabelBase, DropDownMenuPortalBase, DropDownMenuRadioGroupBase, DropDownMenuRadioItemBase, DropDownMenuSeparatorBase, DropDownMenuShortcutBase, DropDownMenuSubBase, DropDownMenuSubContentBase, DropDownMenuSubTriggerBase, DropDownMenuTriggerBase, InputBase, type InputBaseProps, LabelBase, type LabelBaseProps, ModeToggleBase, MultiCombobox, PopoverAnchorBase, PopoverBase, PopoverContentBase, PopoverTriggerBase, ProgressBase, type ProgressBaseProps, ProgressCirclesBase, type ProgressCirclesBaseProps, ProgressPanelsBase, type ProgressPanelsBaseProps, ProgressSegmentsBase, type ProgressSegmentsBaseProps, ScrollAreaBase, ScrollBarBase, Select, SelectBase, SelectContentBase, SelectGroupBase, type SelectItem$1 as SelectItem, SelectItemBase, SelectLabelBase, SelectScrollDownButtonBase, SelectScrollUpButtonBase, SelectSeparatorBase, SelectTriggerBase, SelectValueBase, SeparatorBase, SheetBase, SheetCloseBase, SheetContentBase, SheetDescriptionBase, SheetFooterBase, SheetHeaderBase, SheetOverlayBase, SheetPortalBase, SheetTitleBase, SheetTriggerBase, SidebarBase, SidebarContentBase, SidebarFooterBase, SidebarGroupActionBase, SidebarGroupBase, SidebarGroupContentBase, SidebarGroupLabelBase, SidebarHeaderBase, SidebarInputBase, SidebarInsetBase, SidebarMenuActionBase, SidebarMenuBadgeBase, SidebarMenuBase, SidebarMenuButtonBase, SidebarMenuItemBase, SidebarMenuSkeletonBase, SidebarMenuSubBase, SidebarMenuSubButtonBase, SidebarMenuSubItemBase, SidebarProviderBase, SidebarRailBase, SidebarSeparatorBase, SidebarTriggerBase, SkeletonBase, SlideBase, type SliderBaseProps, SwitchBase, TableBase, TableBodyBase, TableCaptionBase, TableCellBase, TableFooterBase, TableHeadBase, TableHeaderBase, TableRowBase, TabsBase, TabsContentBase, TabsListBase, TabsTriggerBase, TextAreaBase, type Theme, ThemeProviderBase, TimePicker, TimePickerInput, type TimePickerInputProps, Toaster, TooltipBase, TooltipContentBase, TooltipProviderBase, TooltipTriggerBase, UseSideBarBase, applyfilter, buildFilterSummary, buttonVariantsBase, defaultStringConditions, toast, useIsMobile, useTheme };
