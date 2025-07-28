@@ -1,15 +1,28 @@
-name: CI on Dev
+name: CI & Release
 
 on:
-  push:
-    branches:
-      - ci/eslint-deploy-pipeline
-  workflow_dispatch: 
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Tipo de versionamento (patch, minor, major)'
+        required: false
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      publish:
+        description: 'Publicar no npm? (y/N)'
+        required: false
+        type: choice
+        options:
+          - y
+          - N
 
 jobs:
-  lint-test-build:
+  validate:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 60
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -34,3 +47,27 @@ jobs:
 
       - name: Build JS (Tsup)
         run: npm run build
+
+  ...
+    release:
+      needs: validate
+      runs-on: ubuntu-latest
+      if: ${{ github.event.inputs.version_type != '' }}
+      steps:
+        - name: Mostrar versão atual da lib
+          run: echo "Versão atual: $(node -p "require('./package.json').version")"
+  
+        - name: Versionamento manual
+          run: |
+            npm version ${{ github.event.inputs.version_type }}
+            echo "Nova versão: $(node -p "require('./package.json').version")"
+  
+        - name: Publicar no npm (condicional)
+          if: ${{ github.event.inputs.publish == 'y' }}
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          run: npm publish
+  
+        - name: Reverter versão se não publicar
+          if: ${{ github.event.inputs.publish != 'y' }}
+          run: git restore package.json
