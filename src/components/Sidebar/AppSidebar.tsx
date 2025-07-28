@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Importe os componentes do React Router
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {
   SidebarBase,
   SidebarContentBase,
@@ -10,15 +10,47 @@ import {
   SidebarMenuItemBase,
   SidebarTriggerBase,
 } from "@/components/ui/SidebarBase";
+
 import {
   House,
-  Envelope,
-  Calendar,
+  WarningCircle,
+  UserCircle,
+  Medal,
+  TreeStructure,
+  CalendarBlank,
+  SquaresFour,
+  ArchiveBox,
+  DotsThreeOutlineVertical,
+  CheckSquare,
+  TerminalWindow,
   MagnifyingGlass,
-  Gear,
+  Sidebar,
+  SlidersHorizontal,
+  FunnelSimple,
+  NotePencil,
+  TagChevron,
+  Link as LinkIcon,
+  Keyboard,
+  TextItalic,
+  Rows,
+  NavigationArrow,
+  DotsNine,
+  SpinnerGap,
+  Ruler,
+  Spinner,
+  ToggleRight,
+  Table,
+  ListDashes,
+  TextAlignLeft,
+  Info,
+  FileSearch,
+  Flask,
+  Cursor,
+  Image,
+  ChatCentered,
+  Skull,
 } from "phosphor-react";
 
-// Importando as páginas
 import { AlertDialogPage } from "@/pages/Alert-dialog";
 import { AvatarPage } from "@/pages/Avatar";
 import { ButtonPage } from "@/pages/Button";
@@ -58,58 +90,54 @@ import { BreadcrumbPage } from "@/pages/Breadcrumb";
 import { ContextMenuPage } from "@/pages/ContextMenu";
 import { HoverCardPage } from "@/pages/HoverCard";
 import { NavigationMenuPage } from "@/pages/NavigationMenu";
+import DocsTests from "@/pages/Docs-tests";
 
-// Menu items
 const items = [
   { title: "Home", url: "/", icon: House },
-  { title: "Alert Dialog", url: "/alert-dialog", icon: House },
-  { title: "Avatar", url: "/avatar", icon: Envelope },
-  { title: "Bagde", url: "/badge", icon: Envelope },
-  { title: "Breadcrumb", url: "/breadcrumb", icon: Envelope },
-  { title: "Button", url: "/button", icon: Calendar },
-  { title: "Calendar", url: "/calender", icon: Calendar },
-  { title: "Card", url: "/card", icon: Calendar },
-  { title: "ContextMenu", url: "/contextmenu", icon: Calendar },
-  { title: "Checkbox", url: "/checkbox", icon: MagnifyingGlass },
-  { title: "Command", url: "/command", icon: Gear },
+  { title: "Alert Dialog", url: "/alert-dialog", icon: WarningCircle },
+  { title: "Avatar", url: "/avatar", icon: UserCircle },
+  { title: "Bagde", url: "/badge", icon: Medal },
+  { title: "Breadcrumb", url: "/breadcrumb", icon: TreeStructure },
+  { title: "Button", url: "/button", icon: Cursor },
+  { title: "Calendar", url: "/calender", icon: CalendarBlank },
+  { title: "Card", url: "/card", icon: SquaresFour },
+  { title: "ContextMenu", url: "/contextmenu", icon: DotsThreeOutlineVertical },
+  { title: "Checkbox", url: "/checkbox", icon: CheckSquare },
+  { title: "Command", url: "/command", icon: TerminalWindow },
   { title: "Combobox", url: "/combobox", icon: MagnifyingGlass },
-  { title: "Carousel", url: "/carousel", icon: Gear },
-  // { title: "Debounce Input", url: "/debounce-input", icon: House },
-  { title: "Dialog", url: "/dialog", icon: Envelope },
-  { title: "Drawer", url: "/drawer", icon: Envelope },
-  { title: "Dropdown Menu", url: "/dropdown-menu", icon: Calendar },
-  { title: "Filter", url: "/Filter", icon: Calendar },
-  // { title: "Form", url: "/form", icon: Gear },
-  { title: "HoverCard", url: "/hovercard", icon: Gear },
-
-  { title: "Input", url: "/input", icon: Envelope },
-  { title: "InputOTP", url: "/inputOTP", icon: Envelope },
-  { title: "Label", url: "/label", icon: Calendar },
-  { title: "MultiCombobox", url: "/multicombobox", icon: Gear },
-  { title: "Navigation", url: "/navigationmenu", icon: Gear },
-  { title: "Popover", url: "/popover", icon: MagnifyingGlass },
-  { title: "Progress", url: "/progress", icon: Gear },
-  { title: "Scrollarea", url: "/scrollarea", icon: House },
-  { title: "Select", url: "/select", icon: Envelope },
-  { title: "Separator", url: "/separator", icon: Calendar },
-  { title: "Sheet", url: "/sheet", icon: MagnifyingGlass },
-  { title: "Skeleton", url: "/skeleton", icon: Gear },
-  { title: "Slider", url: "/slider", icon: House },
-  { title: "Sonner", url: "/sonner", icon: Envelope },
-  // { title: "Switch Input", url: "/switch-input", icon: Envelope },
-  { title: "Switch", url: "/switch", icon: Calendar },
-  { title: "Table", url: "/table", icon: MagnifyingGlass },
-  { title: "Tabs", url: "/tabs", icon: Gear },
-  { title: "Textarea", url: "/textarea", icon: House },
-  { title: "Tooltip", url: "/tooltip", icon: MagnifyingGlass },
-  { title: "Comparação", url: "/comparison", icon: MagnifyingGlass },
+  { title: "Carousel", url: "/carousel", icon: Image },
+  { title: "Dialog", url: "/dialog", icon: ChatCentered },
+  { title: "Drawer", url: "/drawer", icon: Sidebar },
+  { title: "Dropdown Menu", url: "/dropdown-menu", icon: DotsNine },
+  { title: "Filter", url: "/Filter", icon: FunnelSimple },
+  { title: "HoverCard", url: "/hovercard", icon: TagChevron },
+  { title: "Input", url: "/input", icon: NotePencil },
+  { title: "InputOTP", url: "/inputOTP", icon: Keyboard },
+  { title: "Label", url: "/label", icon: TextItalic },
+  { title: "MultiCombobox", url: "/multicombobox", icon: Rows },
+  { title: "Navigation", url: "/navigationmenu", icon: NavigationArrow },
+  { title: "Popover", url: "/popover", icon: DotsThreeOutlineVertical },
+  { title: "Progress", url: "/progress", icon: SpinnerGap },
+  { title: "Scrollarea", url: "/scrollarea", icon: Ruler },
+  { title: "Select", url: "/select", icon: Spinner },
+  { title: "Separator", url: "/separator", icon: LinkIcon },
+  { title: "Sheet", url: "/sheet", icon: ArchiveBox },
+  { title: "Skeleton", url: "/skeleton", icon: Skull },
+  { title: "Slider", url: "/slider", icon: SlidersHorizontal },
+  { title: "Sonner", url: "/sonner", icon: ChatCentered },
+  { title: "Switch", url: "/switch", icon: ToggleRight },
+  { title: "Table", url: "/table", icon: Table },
+  { title: "Tabs", url: "/tabs", icon: ListDashes },
+  { title: "Textarea", url: "/textarea", icon: TextAlignLeft },
+  { title: "Tooltip", url: "/tooltip", icon: Info },
+  { title: "Comparação", url: "/comparison", icon: FileSearch },
+  { title: "Test Docs", url: "/test", icon: Flask },
 ];
 
 export function AppSidebar() {
   return (
     <Router>
       <div style={{ display: "flex" }}>
-        {/* Sidebar */}
         <SidebarBase>
           <SidebarContentBase>
             <SidebarGroupBase>
@@ -119,11 +147,8 @@ export function AppSidebar() {
                   {items.map((item) => (
                     <SidebarMenuItemBase key={item.title}>
                       <SidebarMenuButtonBase asChild>
-                        <Link
-                          to={item.url} // Use 'to' ao invés de 'href'
-                          style={{ display: "flex", alignItems: "center" }}
-                        >
-                          <item.icon style={{ marginRight: "8px" }} />
+                        <Link to={item.url} style={{ display: "flex", alignItems: "center" }}>
+                          <item.icon size={18} style={{ marginRight: 8 }} />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButtonBase>
@@ -134,9 +159,7 @@ export function AppSidebar() {
             </SidebarGroupBase>
           </SidebarContentBase>
         </SidebarBase>
-        <SidebarTriggerBase></SidebarTriggerBase>
-
-        {/* Main Content */}
+        <SidebarTriggerBase />
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -178,6 +201,7 @@ export function AppSidebar() {
           <Route path="/sonner" element={<RootLayout />} />
           <Route path="/tooltip" element={<TooltipPage />} />
           <Route path="/comparison" element={<Comparison />} />
+          <Route path="/test" element={<DocsTests />} />
         </Routes>
       </div>
     </Router>

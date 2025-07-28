@@ -1,7 +1,25 @@
+"use client";
+
 import { useCallback, useMemo } from "react";
 import { ComboboxBase, ComboboxItem } from "./ComboboxBase";
 import LabelBase from "../ui/LabelBase";
 import { cn } from "@/lib/utils";
+
+// Reutilizando tipagem já existente do Base
+export interface ComboboxTestIds {
+  root?: string;
+  trigger?: string;
+  popover?: string;
+  command?: string;
+  search?: string;
+  list?: string;
+  empty?: string;
+  group?: string;
+  option?: string;
+  check?: string;
+  selected?: string;
+}
+
 export interface ComboboxProps<T extends string> {
   items: ComboboxItem<T>[];
   selected: ComboboxItem<T>["value"] | null;
@@ -10,7 +28,8 @@ export interface ComboboxProps<T extends string> {
   placeholder?: string;
   searchPlaceholder?: string;
   label?: string;
-  labelClassname?:string
+  labelClassname?: string;
+  testIds?: ComboboxTestIds;
 }
 
 export function Combobox<T extends string>({
@@ -21,18 +40,21 @@ export function Combobox<T extends string>({
   placeholder,
   searchPlaceholder,
   label,
-  labelClassname
+  labelClassname,
+  testIds,
 }: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
   const renderSelected = useMemo(() => {
-  return (
-    <span className={cn("truncate", !selectedItem && "text-gray-500")}>
-      {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}
-    </span>
-  );
-}, [placeholder, selectedItem]);
-
+    return (
+      <span
+        data-testid={testIds?.selected ?? "combobox-selected"}
+        className={cn("truncate", !selectedItem && "text-gray-500")}
+      >
+        {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}
+      </span>
+    );
+  }, [placeholder, selectedItem, testIds?.selected]);
 
   const checkIsSelected = useCallback(
     (value: T) => (selected == null ? false : selected == value),
@@ -56,7 +78,9 @@ export function Combobox<T extends string>({
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
         searchPlaceholder={searchPlaceholder}
+        testIds={testIds}
       />
+      
     </div>
   );
 }

@@ -7,16 +7,21 @@ import { motion } from "framer-motion";
 
 import { cn } from "../../lib/utils";
 
+type CheckboxBaseProps = React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
+  testid?: string;
+};
+
 const CheckboxBase = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+  CheckboxBaseProps
+>(({ className, testid: dataTestId = "checkbox-base", ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
       "peer h-4 w-4 shrink-0 rounded-md border border-primary shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-colors",
       className
     )}
+    data-testid={dataTestId}
     {...props}
   >
     <CheckboxPrimitive.Indicator asChild>

@@ -17,23 +17,25 @@ export const SelectPage = () => {
   return (
     <div>
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
-        <SelectBase open={open} onOpenChange={setOpen}>
-          <SelectTriggerBase open={open} className="w-[180px]">
-            <SelectValueBase placeholder="Select a fruit" />
-          </SelectTriggerBase>
-          <SelectContentBase>
-            <SelectGroupBase>
-              <SelectLabelBase>Fruits</SelectLabelBase>
-              <SelectItemBase value="apple">Apple</SelectItemBase>
-              <SelectItemBase value="banana">Banana</SelectItemBase>
-              <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-              <SelectItemBase value="grapes">Grapes</SelectItemBase>
-              <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-            </SelectGroupBase>
-          </SelectContentBase>
-        </SelectBase>
+        <div data-testid="select-root">
+          <SelectBase open={open} onOpenChange={setOpen} data-testid="select-base">
+            <SelectTriggerBase open={open} className="w-[180px]" data-testid="select-trigger">
+              <SelectValueBase placeholder="Select a fruit" data-testid="select-value" />
+            </SelectTriggerBase>
+            <SelectContentBase>
+              <SelectGroupBase data-testid="select-group">
+                <SelectLabelBase data-testid="select-label">Fruits</SelectLabelBase>
+                <SelectItemBase value="apple" data-testid="select-item">Apple</SelectItemBase>
+                <SelectItemBase value="banana" data-testid="select-item">Banana</SelectItemBase>
+                <SelectItemBase value="blueberry" data-testid="select-item">Blueberry</SelectItemBase>
+                <SelectItemBase value="grapes" data-testid="select-item">Grapes</SelectItemBase>
+                <SelectItemBase value="pineapple" data-testid="select-item">Pineapple</SelectItemBase>
+              </SelectGroupBase>
+            </SelectContentBase>
+          </SelectBase>
+        </div>
       </div>
-
+ 
       {/* Documentation Section */}
       <div className="my-8 mx-5">
         <h3 className="text-xl font-semibold mb-3">Documentação</h3>

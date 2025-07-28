@@ -14,7 +14,7 @@ export const MultiComboboxPage = () => {
           className="w-40"
           items={[
             {
-              label: "Desenvolvedor eduardo ronchi de araujo",
+              label: "Desenvolvedor junior eduardo ronchi de araujo",
               value: "dev",
             },
             { label: "Designer", value: "designer" },

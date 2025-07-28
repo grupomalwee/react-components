@@ -16,8 +16,8 @@ export const AlertDialogPage = () => (
     <div className="flex flex-wrap gap-6 justify-between">
       <AlertDialogBase>
         <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
-        <AlertDialogContentBase>
-          <AlertDialogHeaderBase>
+        <AlertDialogContentBase >
+          <AlertDialogHeaderBase >
             <div className="flex items-center gap-2 text-destructive">
               <XCircle className="w-5 h-5" />
               <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>

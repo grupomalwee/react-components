@@ -56,33 +56,33 @@ const DropDownMenuSubContentBase = React.forwardRef<
 ));
 const DropDownMenuContentBase = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & { testid?: string }
+>(({ className, sideOffset = 4, testid: dataTestId = "dropdown-content", ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
-  <DropdownMenuPrimitive.Content
-    sideOffset={sideOffset}
-    forceMount={true}
-    ref={ref}
-    className={cn("z-[9999] p-0", className)}
-    {...props}
-  >
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 5 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 5 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className={cn(
-          "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-          className
-        )}
-      >
-        {props.children}
-      </motion.div>
-    </AnimatePresence>
-  </DropdownMenuPrimitive.Content>
-</DropdownMenuPrimitive.Portal>
-
+    <DropdownMenuPrimitive.Content
+      sideOffset={sideOffset}
+      forceMount={true}
+      ref={ref}
+      className={cn("z-[9999] p-0", className)}
+      data-testid={dataTestId}
+      {...props}
+    >
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 5 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 5 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className={cn(
+            "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+            className
+          )}
+        >
+          {props.children}
+        </motion.div>
+      </AnimatePresence>
+    </DropdownMenuPrimitive.Content>
+  </DropdownMenuPrimitive.Portal>
 ));
 
 DropDownMenuContentBase.displayName = DropdownMenuPrimitive.Content.displayName;

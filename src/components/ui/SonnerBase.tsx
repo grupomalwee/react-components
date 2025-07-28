@@ -9,11 +9,13 @@ import {
 } from "phosphor-react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 
-type ToasterProps = React.ComponentProps<typeof Sonner>;
+type ToasterProps = React.ComponentProps<typeof Sonner> & {
+  testId?: string; // só um data-testid no root do Toaster
+};
 
 const iconBaseClass = "w-5 h-auto";
 
-const Toaster = ({ ...props }: ToasterProps) => {
+const Toaster = ({ testId, ...props }: ToasterProps) => {
   return (
     <Sonner
       className="toaster group"
@@ -28,7 +30,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
             border-l-4
             border-neutral-200
             flex items-center gap-3
-
             data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500
             data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
@@ -54,6 +55,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           `,
         },
       }}
+      data-testid={testId}
       {...props}
     />
   );
@@ -62,36 +64,28 @@ const Toaster = ({ ...props }: ToasterProps) => {
 const toast = {
   success: (message: string) =>
     sonnertoast.success(message, {
-      icon: (
-        <CheckCircle className={`${iconBaseClass} text-green-600`} weight="fill" />
-      ),
+      icon: <CheckCircle className={`${iconBaseClass} text-green-600`} weight="fill" />,
+      className: "sonner-success",
     }),
   error: (message: string) =>
     sonnertoast.error(message, {
-      icon: (
-        <XCircle className={`${iconBaseClass} text-red-600`} weight="fill" />
-      ),
+      icon: <XCircle className={`${iconBaseClass} text-red-600`} weight="fill" />,
+      className: "sonner-error",
     }),
   warning: (message: string) =>
     sonnertoast.warning(message, {
-      icon: (
-        <Warning className={`${iconBaseClass} text-yellow-600`} weight="fill" />
-      ),
+      icon: <Warning className={`${iconBaseClass} text-yellow-600`} weight="fill" />,
+      className: "sonner-warning",
     }),
   info: (message: string) =>
     sonnertoast.info(message, {
-      icon: (
-        <Info className={`${iconBaseClass} text-blue-600`} weight="fill" />
-      ),
+      icon: <Info className={`${iconBaseClass} text-blue-600`} weight="fill" />,
+      className: "sonner-info",
     }),
   loading: (message: string) =>
     sonnertoast(message, {
-      icon: (
-        <Spinner
-          className={`${iconBaseClass} animate-spin text-neutral-500`}
-          weight="fill"
-        />
-      ),
+      icon: <Spinner className={`${iconBaseClass} animate-spin text-neutral-500`} weight="fill" />,
+      className: "sonner-loading",
     }),
 };
 

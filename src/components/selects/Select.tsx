@@ -1,6 +1,13 @@
-
-import {  SelectBase, SelectContentBase, SelectGroupBase, SelectItemBase, SelectLabelBase, SelectTriggerBase, SelectValueBase } from "@/components/ui/SelectBase";
-import {ScrollAreaBase} from "@/components/ui/ScrollareaBase"
+import {
+  SelectBase,
+  SelectContentBase,
+  SelectGroupBase,
+  SelectItemBase,
+  SelectLabelBase,
+  SelectTriggerBase,
+  SelectValueBase,
+} from "@/components/ui/SelectBase";
+import { ScrollAreaBase } from "@/components/ui/ScrollareaBase";
 import { cn } from "@/lib/utils";
 
 export interface SelectItem<T extends string> {
@@ -14,19 +21,37 @@ interface DefaultSelectProps {
   errorMessage?: string;
 }
 
+interface SelectTestIds {
+  root?: string;
+  base?: string;
+  trigger?: string;
+  value?: string;
+  scrollarea?: string;
+  content?: string;
+  group?: string;
+  label?: string;
+  item?: (value: string) => string;
+  error?: string;
+}
+
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
   items: SelectItem<T>[];
   groupItems?: never;
+  testIds?: SelectTestIds;
 }
 
-interface SelectPropsWithGroupItems<T extends string> extends DefaultSelectProps {
+interface SelectPropsWithGroupItems<T extends string>
+  extends DefaultSelectProps {
   items?: never;
   groupItems: {
     [key: string]: SelectItem<T>[];
   };
+  testIds?: SelectTestIds;
 }
 
-type SelectProps<T extends string> = SelectPropsWithItems<T> | SelectPropsWithGroupItems<T>;
+type SelectProps<T extends string> =
+  | SelectPropsWithItems<T>
+  | SelectPropsWithGroupItems<T>;
 
 export function Select<T extends string>({
   items,
@@ -34,28 +59,41 @@ export function Select<T extends string>({
   placeholder,
   onChange,
   errorMessage,
+  testIds = {},
 }: SelectProps<T>) {
   return (
-    <div>
-      <SelectBase onValueChange={onChange}>
+    <div data-testid={testIds.root ?? "select-root"}>
+      <SelectBase onValueChange={onChange} data-testid={testIds.base ?? "select-base"}>
         <SelectTriggerBase
           className={cn(
             "flex h-12 w-full content-start text-lg shadow-md",
-            errorMessage && "border-red-500",
+            errorMessage && "border-red-500"
           )}
+          data-testid={testIds.trigger ?? "select-trigger"}
         >
-          <SelectValueBase placeholder={placeholder} />
+          <SelectValueBase
+            placeholder={placeholder}
+            data-testid={testIds.value ?? "select-value"}
+          />
         </SelectTriggerBase>
 
-        <ScrollAreaBase>
-          <SelectContentBase>
+        <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>
+          <SelectContentBase data-testid={testIds.content ?? "select-content"}>
             {groupItems ? (
               <>
                 {Object.keys(groupItems).map((key) => (
-                  <SelectGroupBase key={key}>
-                    <SelectLabelBase>{key}</SelectLabelBase>
+                  <SelectGroupBase key={key} data-testid={testIds.group ?? "select-group"}>
+                    <SelectLabelBase data-testid={testIds.label ?? "select-label"}>
+                      {key}
+                    </SelectLabelBase>
                     {groupItems[key].map((item) => (
-                      <SelectItemBase key={item.value} value={item.value}>
+                      <SelectItemBase
+                        key={item.value}
+                        value={item.value}
+                        data-testid={
+                          testIds.item?.(item.value) ?? `select-item-${item.value}`
+                        }
+                      >
                         {item.label}
                       </SelectItemBase>
                     ))}
@@ -63,9 +101,15 @@ export function Select<T extends string>({
                 ))}
               </>
             ) : (
-              <SelectGroupBase>
+              <SelectGroupBase data-testid={testIds.group ?? "select-group"}>
                 {items.map((item) => (
-                  <SelectItemBase key={item.value} value={item.value}>
+                  <SelectItemBase
+                    key={item.value}
+                    value={item.value}
+                    data-testid={
+                      testIds.item?.(item.value) ?? `select-item-${item.value}`
+                    }
+                  >
                     {item.label}
                   </SelectItemBase>
                 ))}
@@ -74,7 +118,15 @@ export function Select<T extends string>({
           </SelectContentBase>
         </ScrollAreaBase>
       </SelectBase>
-      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+
+      {errorMessage && (
+        <p
+          className="text-sm text-red-500"
+          data-testid={testIds.error ?? "select-error"}
+        >
+          {errorMessage}
+        </p>
+      )}
     </div>
   );
 }
