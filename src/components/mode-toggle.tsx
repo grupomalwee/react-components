@@ -29,6 +29,11 @@ export function ModeToggleBase({
 }: ModeToggleBaseProps) {
   const { setTheme, theme: currentTheme } = useTheme();
 
+  // Verifica se é um tema dark ou system com preferência dark
+  const isDark = currentTheme?.includes('dark') || 
+    (currentTheme === 'system' && typeof window !== 'undefined' && 
+     window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   return (
     <DropDownMenuBase>
       <DropDownMenuTriggerBase asChild>
@@ -38,18 +43,18 @@ export function ModeToggleBase({
           className="relative overflow-hidden border-transparent"
         >
           <>
-            <Sun className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
-            <Moon className="absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-90 scale-0" />
+            <Sun className={`h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
+            <Moon className={`absolute top-0 left-0 h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
           </>
           <span className="sr-only">Toggle theme</span>
         </ButtonBase>
       </DropDownMenuTriggerBase>
-      <DropDownMenuContentBase align="end" className="dark:border-transparent">
+      <DropDownMenuContentBase align="end" className="border-border bg-popover text-popover-foreground">
         {themes.map((theme) => (
           <DropDownMenuItemBase
             key={theme}
             onClick={() => setTheme(theme)}
-            className="flex items-center justify-between"
+            className="flex items-center justify-between hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
           >
             {themeLabels[theme]}
             {currentTheme === theme && <Check className="h-4 w-4 opacity-100" />}

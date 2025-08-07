@@ -30,8 +30,8 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
 
         <div
           className={cn(
-            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-white dark:bg-[hsl(231,15%,19%)] overflow-hidden",
-            type !== "file" && "border"
+            "flex items-center rounded-md transition focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-background overflow-hidden",
+            type !== "file" && "border border-input"
           )}
         >
           {leftIcon && (
@@ -43,7 +43,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
           <input
             type={type}
             className={cn(
-              "w-full flex-1 text-sm py-1.5 px-3 focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 bg-white dark:bg-[hsl(231,15%,19%)]",
+              "w-full flex-1 text-sm py-1.5 px-3 focus:outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 bg-background text-foreground",
               className
             )}
             ref={ref}
