@@ -68,8 +68,8 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Build CSS (Tailwind)
-        run: npm run build-css
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build JS (Tsup)
         run: npm run build
