@@ -69,6 +69,12 @@ jobs:
         run: |
           npm version ${{ github.event.inputs.version_type }}
           echo "Nova versão: $(node -p "require('./package.json').version")"
+      
+      - name: Install dependencies
+        run: npm ci
+ 
+      - name: Compile for errors
+        run: .husky/pre-commit
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
