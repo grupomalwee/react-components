@@ -87,8 +87,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
         run: npm publish --no-git-checks
 
-      - name: Reverter versão se não publicar
-        if: ${{ github.event.inputs.publish != 'y' }}
-        run: |
-          git restore package.json
-          echo "Versão revertida - alterações não foram commitadas"
+      - name: Push version changes
+        run: git push
