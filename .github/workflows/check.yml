@@ -47,6 +47,7 @@ jobs:
 
 
   release:
+    environment: prd
     needs: validate
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.version_type != '' }}
@@ -75,6 +76,19 @@ jobs:
         run: |
           npm version ${{ github.event.inputs.version_type }}
           echo "Nova versão: $(node -p "require('./package.json').version")"
+
+      - name: Build package
+        run: npm run build
+
+      - name: Check auth token (debug)
+        if: ${{ github.event.inputs.publish == 'y' }}
+        run: |
+          if [ -z "${{ secrets.NPM_API_TOKEN }}" ]; then
+            echo "❌ NPM_API_TOKEN secret is not set in repository settings"
+            exit 1
+          else
+            echo "✅ NPM_API_TOKEN secret is configured"
+          fi
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
