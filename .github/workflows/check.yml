@@ -68,9 +68,6 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: get-current-npm-version
         id: current-package-version
         uses: martinbeentjes/npm-get-version-action@main
@@ -90,10 +87,7 @@ jobs:
       - name: Commit version changes
         run: |
           git add package.json package-lock.yaml 2>/dev/null || git add package.json
-          git commit -m "chore: bump version to v${{ steps.current-package-version.outputs.current-version }}")" || echo "No changes to commit"
-
-      - name: Build package
-        run: npm run build
+          git commit -m "chore: bump version to v${{ steps.current-package-version.outputs.current-version }}" || echo "No changes to commit"
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
