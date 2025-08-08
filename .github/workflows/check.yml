@@ -77,7 +77,7 @@ jobs:
       - name: Versionamento manual
         run: |
           npm version ${{ github.event.inputs.version_type }}
-          echo "Nova versão: $(node -p 'require('./package.json').version'")"
+          echo "Nova versão: $(node -p 'require(\"./package.json\").version')"
 
       - name: Commit version changes
         run: |
