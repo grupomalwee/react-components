@@ -68,6 +68,12 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Build CSS (Tailwind)
+        run: npm run build-css
+
+      - name: Build JS (Tsup)
+        run: npm run build
+
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@main
