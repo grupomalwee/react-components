@@ -663,6 +663,113 @@ video {
   --radius: 0.5rem;
 }
 
+.light-green {
+  --background: 0 0% 100%;
+  /* Fundo branco */
+  --foreground: 222.2 47.4% 11.2%;
+  /* Texto escuro */
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --primary: 142 71% 45%;
+  /* green */
+  --primary-foreground: 0 0% 100%;
+  /* Texto branco */
+  --secondary: 142 71% 45%;
+  /* green */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 142 71% 45%;
+  /* green */
+  --accent-foreground: 0 0% 100%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 215 20.2% 65.1%;
+  --radius: 0.5rem;
+}
+
+/* Temas escuros */
+
+.dark-purple {
+  --background: 224 71% 4%;
+  /* Fundo escuro */
+  --foreground: 213 31% 91%;
+  /* Texto claro */
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 255 100% 70%;
+  /* Roxo */
+  --accent-foreground: 0 0% 100%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --primary: 255 100% 70%;
+  /* Roxo */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222.2 47.4% 11.2%;
+  --secondary-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 216 34% 17%;
+}
+
+.dark-blue {
+  --background: 224 71% 4%;
+  /* Fundo escuro */
+  --foreground: 213 31% 91%;
+  /* Texto claro */
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 215 76% 51%;
+  /* Blue */
+  --accent-foreground: 0 0% 100%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --primary: 215 76% 51%;
+  /* Blue */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222.2 47.4% 11.2%;
+  --secondary-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 216 34% 17%;
+}
+
+.dark-green {
+  --background: 224 71% 4%;
+  /* Fundo escuro */
+  --foreground: 213 31% 91%;
+  /* Texto claro */
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 142 71% 45%;
+  /* Green */
+  --accent-foreground: 0 0% 100%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --primary: 142 71% 45%;
+  /* Green */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222.2 47.4% 11.2%;
+  --secondary-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 216 34% 17%;
+}
+
 *{
   border-color: hsl(var(--border));
 }
@@ -675,6 +782,64 @@ body{
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Syne', sans-serif;
   /* Apply Syne font globally */
+}
+
+/* Aplicar estilos dark para todos os temas que contêm 'dark' */
+.dark,
+.dark-purple,
+.dark-blue,
+.dark-green {
+  color-scheme: dark;
+}
+
+.dark *,
+.dark-purple *,
+.dark-blue *,
+.dark-green * {
+  border-color: hsl(var(--border));
+}
+
+/* Garantir que componentes herdem as cores corretas */
+.dark .bg-background,
+.dark-purple .bg-background,
+.dark-blue .bg-background,
+.dark-green .bg-background {
+  background-color: hsl(var(--background));
+}
+
+.dark .text-foreground,
+.dark-purple .text-foreground,
+.dark-blue .text-foreground,
+.dark-green .text-foreground {
+  color: hsl(var(--foreground));
+}
+
+.dark .bg-card,
+.dark-purple .bg-card,
+.dark-blue .bg-card,
+.dark-green .bg-card {
+  background-color: hsl(var(--card));
+}
+
+.dark .text-card-foreground,
+.dark-purple .text-card-foreground,
+.dark-blue .text-card-foreground,
+.dark-green .text-card-foreground {
+  color: hsl(var(--card-foreground));
+}
+
+.dark .bg-popover,
+.dark-purple .bg-popover,
+.dark-blue .bg-popover,
+.dark-green .bg-popover {
+  background-color: hsl(var(--popover));
+}
+
+.dark .text-popover-foreground,
+.dark-purple .text-popover-foreground,
+.dark-blue .text-popover-foreground,
+.dark-green .text-popover-foreground {
+  color: hsl(var(--popover-foreground));
 }
 
 .sr-only{
@@ -3177,4 +3342,76 @@ body{
 
 [data-side=right] .\[\[data-side\=right\]_\&\]\:cursor-e-resize{
   cursor: e-resize;
+}
+
+/* Estilos específicos para temas dark - garante que todos os componentes funcionem */
+.dark,
+.dark-purple,
+.dark-blue,
+.dark-green {
+  /* Forçar cores de fundo e texto para todos os elementos */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.dark *,
+.dark-purple *,
+.dark-blue *,
+.dark-green * {
+  /* Garantir que elementos filhos herdem as cores corretas */
+  border-color: hsl(var(--border));
+}
+
+/* Componentes específicos que precisam de override */
+.dark input,
+.dark-purple input,
+.dark-blue input,
+.dark-green input,
+.dark textarea,
+.dark-purple textarea,
+.dark-blue textarea,
+.dark-green textarea,
+.dark select,
+.dark-purple select,
+.dark-blue select,
+.dark-green select {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark [data-radix-popper-content-wrapper],
+.dark-purple [data-radix-popper-content-wrapper],
+.dark-blue [data-radix-popper-content-wrapper],
+.dark-green [data-radix-popper-content-wrapper] {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.dark [role="dialog"],
+.dark-purple [role="dialog"],
+.dark-blue [role="dialog"],
+.dark-green [role="dialog"],
+.dark [role="menu"],
+.dark-purple [role="menu"],
+.dark-blue [role="menu"],
+.dark-green [role="menu"],
+.dark [role="listbox"],
+.dark-purple [role="listbox"],
+.dark-blue [role="listbox"],
+.dark-green [role="listbox"] {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Para dropdowns e menus */
+.dark [data-state="open"],
+.dark-purple [data-state="open"],
+.dark-blue [data-state="open"],
+.dark-green [data-state="open"] {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border-color: hsl(var(--border));
 }

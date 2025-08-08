@@ -19,10 +19,11 @@ const badgeVariants = cva(
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
       },
       status: {
-        online: "bg-green-500 border-white dark:border-zinc-900",
-        offline: "bg-gray-400 border-white dark:border-zinc-900",
-        busy: "bg-red-500 border-white dark:border-zinc-900",
+        success: "bg-green-500 border-white dark:border-zinc-900",
+        desactivated: "bg-gray-400 border-white dark:border-zinc-900",
+        destructive: "bg-red-500 border-white dark:border-zinc-900",
         away: "bg-yellow-400 border-white dark:border-zinc-900",
+        custom: "border-white dark:border-zinc-900",
       },
     },
     defaultVariants: {
@@ -31,13 +32,19 @@ const badgeVariants = cva(
   }
 );
 
-type StatusType = "online" | "offline" | "busy" | "away";
+type StatusType =
+  | "success"
+  | "desactivated"
+  | "destructive"
+  | "away"
+  | "custom";
 
 interface BadgeBaseProps
   extends React.ComponentProps<"span">,
     VariantProps<typeof badgeVariants> {
   asChild?: boolean;
   status?: StatusType;
+  statusColor?: string;
 }
 
 function BadgeBase({

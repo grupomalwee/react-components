@@ -24,11 +24,11 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
         classNames: {
           toast: `
             group toast
-            bg-white
-            text-neutral-800
+            bg-background
+            text-foreground
             shadow-lg rounded-md
             border-l-4
-            border-neutral-200
+            border-border
             flex items-center gap-3
             data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500

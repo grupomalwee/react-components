@@ -35,11 +35,14 @@ export function ThemeProviderBase({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => defaultTheme || defaultTheme);
+  const [theme, setTheme] = useState<Theme>(() => {
+    return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
 
+    // Remove todas as classes de tema
     root.classList.remove(
       "light",
       "light-purple",
@@ -59,10 +62,21 @@ export function ThemeProviderBase({
         : "light";
 
       root.classList.add(systemTheme);
+      
+      // Forçar re-render dos estilos
+      document.body.style.backgroundColor = '';
+      document.body.style.color = '';
       return;
     }
 
+    // Aplicar o tema selecionado
     root.classList.add(theme);
+    
+    // Forçar re-render dos estilos para temas dark
+    if (theme.includes('dark')) {
+      document.body.style.backgroundColor = '';
+      document.body.style.color = '';
+    }
   }, [theme]);
 
   const value = {
