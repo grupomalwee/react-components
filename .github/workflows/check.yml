@@ -72,17 +72,17 @@ jobs:
         run: npm ci
 
       - name: Mostrar versão atual da lib
-        run: 'echo "Versão atual: $(node -p ''require(''./package.json'').version'')"'
+        run: 'echo "Versão atual: $(node -p \"require(\"./package.json\").version\")"'
 
       - name: Versionamento manual
         run: |
           npm version ${{ github.event.inputs.version_type }}
-          echo "Nova versão: $(node -p 'require(\"./package.json\").version')"
+          echo "Nova versão: $(node -p "require(\"./package.json\").version")"
 
       - name: Commit version changes
         run: |
           git add package.json package-lock.yaml 2>/dev/null || git add package.json
-          git commit -m "chore: bump version to v$(node -p "require('./package.json').version")" || echo "No changes to commit"
+          git commit -m "chore: bump version to v$(node -p "require(\"./package.json\").version")" || echo "No changes to commit"
 
       - name: Build package
         run: npm run build
