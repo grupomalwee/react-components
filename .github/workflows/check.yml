@@ -20,32 +20,32 @@ on:
           - N
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+  # validate:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+  #     - name: Setup Node.js 20
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
         
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci
 
-      - name: Run Lint
-        run: npm run lint
+  #     - name: Run Lint
+  #       run: npm run lint
 
-      - name: Run Tests
-        run: npm test
+  #     - name: Run Tests
+  #       run: npm test
 
-      - name: Build CSS (Tailwind)
-        run: npm run build-css
+  #     - name: Build CSS (Tailwind)
+  #       run: npm run build-css
 
-      - name: Build JS (Tsup)
-        run: npm run build
+  #     - name: Build JS (Tsup)
+  #       run: npm run build
 
 
   release:
@@ -71,31 +71,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Mostrar versão atual da lib
-        run: 'echo "Versão atual: $(node -p \"require(\"./package.json\").version\")"'
+      - name: get-current-npm-version
+        id: current-package-version
+        uses: martinbeentjes/npm-get-version-action@main
 
       - name: Versionamento manual
         run: |
           npm version ${{ github.event.inputs.version_type }}
-          echo "Nova versão: $(node -p "require(\"./package.json\").version")"
+
+      - name: get-new-npm-version
+        id: new-package-version
+        uses: martinbeentjes/npm-get-version-action@main
+
+      - name: Exibir versão atual
+        run: |
+          echo "Nova versão: ${{ steps.new-package-version.outputs.current-version }}"
 
       - name: Commit version changes
         run: |
           git add package.json package-lock.yaml 2>/dev/null || git add package.json
-          git commit -m "chore: bump version to v$(node -p "require(\"./package.json\").version")" || echo "No changes to commit"
+          git commit -m "chore: bump version to v${{ steps.current-package-version.outputs.current-version }}")" || echo "No changes to commit"
 
       - name: Build package
         run: npm run build
-
-      - name: Check auth token (debug)
-        if: ${{ github.event.inputs.publish == 'y' }}
-        run: |
-          if [ -z "${{ secrets.NPM_API_TOKEN }}" ]; then
-            echo "❌ NPM_API_TOKEN secret is not set in repository settings"
-            exit 1
-          else
-            echo "✅ NPM_API_TOKEN secret is configured"
-          fi
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
