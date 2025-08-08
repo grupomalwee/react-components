@@ -27,31 +27,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
-
+        
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Run Lint
-        run: pnpm run lint
+        run: npm run lint
 
       - name: Run Tests
-        run: pnpm test
+        run: npm test
 
       - name: Build CSS (Tailwind)
-        run: pnpm run build-css
+        run: npm run build-css
 
       - name: Build JS (Tsup)
-        run: pnpm run build
+        run: npm run build
 
 
   release:
@@ -68,52 +62,30 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Mostrar versão atual da lib
-        run: 'echo "Versão atual: $(node -p ''require(''./package.json'').version'')"'
 
       - name: Versionamento manual
         run: |
-          pnpm version ${{ github.event.inputs.version_type }}
-          echo "Nova versão: $(node -p "require('./package.json').version")"
+          npm version ${{ github.event.inputs.version_type }}
+
+      - name: get-new-npm-version
+        id: new-package-version
+        uses: martinbeentjes/npm-get-version-action@main
 
       - name: Commit version changes
         run: |
-          git add package.json pnpm-lock.yaml 2>/dev/null || git add package.json
-          git commit -m "chore: bump version to v$(node -p "require('./package.json').version")" || echo "No changes to commit"
-
-      - name: Build package
-        run: pnpm run build
-
-      - name: Check auth token (debug)
-        if: ${{ github.event.inputs.publish == 'y' }}
-        run: |
-          if [ -z "${{ secrets.NPM_API_TOKEN }}" ]; then
-            echo "❌ NPM_API_TOKEN secret is not set in repository settings"
-            exit 1
-          else
-            echo "✅ NPM_API_TOKEN secret is configured"
-          fi
+          git add package.json package-lock.yaml 2>/dev/null || git add package.json
+          git commit -m "chore: bump version to v${{ steps.new-package-version.outputs.current-version }}" || echo "No changes to commit"
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
-        run: pnpm publish --no-git-checks
+        run: npm publish --no-git-checks
 
       - name: Reverter versão se não publicar
         if: ${{ github.event.inputs.publish != 'y' }}
