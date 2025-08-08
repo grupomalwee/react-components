@@ -22,7 +22,7 @@
     "deploy:patch": "npm version patch && npm publish",
     "deploy:minor": "npm version minor && npm publish",
     "deploy:major": "npm version major && npm publish",
-    "prepare": "husky install",
+    "prepare": "if [ \"$CI\" != \"true\" ]; then husky install; fi",
     "test": "echo \"No tests yet\" && exit 0"
   },
   "lint-staged": {

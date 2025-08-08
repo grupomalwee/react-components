@@ -47,6 +47,7 @@ jobs:
 
 
   release:
+    environment: prd
     needs: validate
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.version_type != '' }}
@@ -54,16 +55,40 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: git config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Mostrar versão atual da lib
         run: 'echo "Versão atual: $(node -p ''require(''./package.json'').version'')"'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Versionamento manual
         run: |
           npm version ${{ github.event.inputs.version_type }}
           echo "Nova versão: $(node -p "require('./package.json').version")"
+
+      - name: Build package
+        run: npm run build
+
+      - name: Check auth token (debug)
+        if: ${{ github.event.inputs.publish == 'y' }}
+        run: |
+          if [ -z "${{ secrets.NPM_API_TOKEN }}" ]; then
+            echo "❌ NPM_API_TOKEN secret is not set in repository settings"
+            exit 1
+          else
+            echo "✅ NPM_API_TOKEN secret is configured"
+          fi
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
