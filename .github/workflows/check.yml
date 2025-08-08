@@ -68,24 +68,12 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Versionamento manual
-        run: |
-          npm version ${{ github.event.inputs.version_type }}
-
-      - name: get-new-npm-version
-        id: new-package-version
+      - name: get-npm-version
+        id: package-version
         uses: martinbeentjes/npm-get-version-action@main
-
-      - name: Commit version changes
-        run: |
-          git add package.json package-lock.yaml 2>/dev/null || git add package.json
-          git commit -m "chore: bump version to v${{ steps.new-package-version.outputs.current-version }}" || echo "No changes to commit"
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
-        run: npm publish --no-git-checks
-
-      - name: Push version changes
-        run: git push
+        run: npm publish --tag ${{ steps.package-version.outputs.current-version }} --no-git-checks
