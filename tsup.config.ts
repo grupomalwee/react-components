@@ -1,4 +1,5 @@
 import { defineConfig } from "tsup";
+import path from "path";
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -24,5 +25,9 @@ export default defineConfig({
       ...options.loader,
       ".css": "copy",
     };
+    options.alias = {
+      "@": path.resolve(__dirname, "src"),
+    };
+    options.resolveExtensions = [".tsx", ".ts", ".jsx", ".js"];
   },
 });
