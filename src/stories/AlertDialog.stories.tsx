@@ -1,3 +1,4 @@
+// ...existing code from AlertDialogBase.stories.tsx...
 import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {

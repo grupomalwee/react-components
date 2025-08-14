@@ -20,7 +20,7 @@ export const SingleDate = {
 
 export const Range = {
   render: () => {
-    const [range, setRange] = useState<{ from?: Date; to?: Date } | undefined>(undefined);
+    const [range, setRange] = useState<{ from: Date | undefined; to?: Date | undefined } | undefined>(undefined);
     return <CalendarBase mode="range" selected={range} onSelect={setRange} />;
   },
 };
