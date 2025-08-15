@@ -18,7 +18,7 @@ import { CheckboxBase } from '../components/ui/CheckBoxBase';
 import { Copy, Trash, Warning } from 'phosphor-react';
 
 const meta: Meta<typeof DialogBase> = {
-  title: 'Components/DialogBase',
+  title: 'Components/Dialog',
   component: DialogBase,
   tags: ['autodocs'],
 };

@@ -12,7 +12,7 @@ import {
 import * as React from 'react';
 
 const meta: Meta<typeof SelectBase> = {
-  title: 'Components/SelectBase',
+  title: 'Components/Select',
   component: SelectBase,
   tags: ['autodocs'],
 };

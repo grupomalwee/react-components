@@ -4,7 +4,7 @@ import { CheckboxBase } from '../components/ui/CheckBoxBase';
 import LabelBase from '../components/ui/LabelBase';
 
 const meta: Meta<typeof CheckboxBase> = {
-  title: 'Components/CheckBoxBase',
+  title: 'Components/CheckBox',
   component: CheckboxBase,
   tags: ['autodocs'],
 };

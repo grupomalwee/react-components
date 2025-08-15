@@ -9,7 +9,7 @@ import {
 } from '../components/ui/CardBase';
 
 const meta: Meta<typeof CardBase> = {
-  title: 'Components/CardBase',
+  title: 'Components/Card',
   component: CardBase,
   tags: ['autodocs'],
 };

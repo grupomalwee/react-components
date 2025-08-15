@@ -11,7 +11,7 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import * as React from "react";
 
 const meta: Meta<typeof InputOTPBase> = {
-  title: 'Components/InputOTPBase',
+  title: 'Components/InputOTP',
   component: InputOTPBase,
   tags: ['autodocs'],
 };

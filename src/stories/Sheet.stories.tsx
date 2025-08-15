@@ -15,7 +15,7 @@ import {
 } from '../components/ui/SheetBase';
 
 const meta: Meta<typeof SheetBase> = {
-  title: 'Components/SheetBase',
+  title: 'Components/Sheet',
   component: SheetBase,
   tags: ['autodocs'],
 };

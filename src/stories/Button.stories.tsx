@@ -4,7 +4,7 @@ import { ButtonBase, ButtonGroupBase } from '../components/ui/ButtonBase';
 import React from 'react';
 
 const meta: Meta<typeof ButtonBase> = {
-  title: 'Components/ButtonBase',
+  title: 'Components/Button',
   component: ButtonBase,
   tags: ['autodocs'],
   argTypes: {

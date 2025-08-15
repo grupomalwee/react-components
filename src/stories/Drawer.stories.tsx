@@ -25,7 +25,7 @@ import {
 } from 'recharts';
 
 const meta: Meta<typeof DrawerBase> = {
-  title: 'Components/DrawerBase',
+  title: 'Components/Drawer',
   component: DrawerBase,
   tags: ['autodocs'],
 };

@@ -6,7 +6,7 @@ import type { FilterConditions } from "@/filter/services/types";
 import { AvailableFilter } from "@/filter/services/types";
 
 const meta: Meta<typeof FilterBase> = {
-  title: 'Components/FilterBase',
+  title: 'Components/Filter',
   component: FilterBase,
   tags: ['autodocs'],
 };

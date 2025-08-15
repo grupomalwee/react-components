@@ -1,4 +1,3 @@
-// ...existing code from AlertDialogBase.stories.tsx...
 import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
@@ -14,7 +13,7 @@ import {
 } from '../components/ui/AlertDialogBase';
 
 const meta: Meta<typeof AlertDialogBase> = {
-  title: 'Components/AlertDialogBase',
+  title: 'Components/AlertDialog',
   component: AlertDialogBase,
   tags: ['autodocs'],
 };

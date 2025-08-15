@@ -10,7 +10,7 @@ import { Sun, Moon, Bell, BellSlash } from 'phosphor-react';
  */
 
 const meta: Meta<typeof SwitchBase> = {
-  title: 'Components/SwitchBase',
+  title: 'Components/Switch',
   component: SwitchBase,
   tags: ['autodocs'],
 };
