@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/storybook
+  workflow_dispatch:
 
 env:
   GCP_PROJECT: ${{ vars.GCP_PROJECT }}
