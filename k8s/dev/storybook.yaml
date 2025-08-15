@@ -20,18 +20,20 @@ spec:
       labels:
         app.kubernetes.io/name: react-components-storybook
     spec:
+      containers:
       - name: react-components-storybook
         image: IMAGE_URI
         imagePullPolicy: Always
+
         env:
-          - name: KUBERNETES_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         ports:
-          - containerPort: 80
-            name: http
-            protocol: TCP
+        - containerPort: 80
+          name: http
+          protocol: TCP
         resources:
           limits:
             cpu: 100m
@@ -39,6 +41,8 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
+            ephemeral-storage: 1Gi
+      automountServiceAccountToken: false
 ---
 apiVersion: v1
 kind: Service
