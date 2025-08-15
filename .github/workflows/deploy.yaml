@@ -63,10 +63,10 @@ jobs:
 
       - name: Overwrite yaml files
         run: |-
-          sed -i "s|GKE_NAMESPACE|$GKE_NAMESPACE|g" k8s/storybook.yaml
-          sed -i "s|IMAGE_URI|$IMAGE_URI|g" k8s/storybook.yaml
+          sed -i "s|GKE_NAMESPACE|$GKE_NAMESPACE|g" k8s/dev/storybook.yaml
+          sed -i "s|IMAGE_URI|$IMAGE_URI|g" k8s/dev/storybook.yaml
 
       - name: Deploy services
         run: |-
-          kubectl apply -f k8s/storybook.yaml
+          kubectl apply -f k8s/dev/storybook.yaml
           kubectl rollout status -n $GKE_NAMESPACE deployment/react-components-storybook
