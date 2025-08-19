@@ -25,7 +25,7 @@ import {
 } from 'recharts';
 
 const meta: Meta<typeof DrawerBase> = {
-  title: 'Components/Drawer',
+  title: 'overlays/Drawer',
   component: DrawerBase,
   tags: ['autodocs'],
 };
@@ -59,7 +59,7 @@ export const WithGoalControls: Story = {
     }
 
     return (
-      <div className="min-h-screen bg-background p-8 text-foreground flex flex-col">
+      <div className=" bg-background p-8 text-foreground flex flex-col">
         <DrawerBase>
           <DrawerTriggerBase asChild>
             <ButtonBase variant="outline">Abrir Drawer</ButtonBase>

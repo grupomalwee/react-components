@@ -17,7 +17,7 @@ import {
 } from '../components/ui/DropDownMenuBase';
 
 const meta: Meta<typeof BreadcrumbBase> = {
-  title: 'Components/Breadcrumb',
+  title: 'navigation/Breadcrumb',
   component: BreadcrumbBase,
   tags: ['autodocs'],
 };

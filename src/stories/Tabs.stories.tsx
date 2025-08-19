@@ -10,7 +10,7 @@ import {
 
 
 const meta: Meta<typeof TabsBase> = {
-  title: 'Components/Tabs',
+  title: 'layout/Tabs',
   component: TabsBase,
   tags: ['autodocs'],
 };

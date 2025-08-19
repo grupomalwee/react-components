@@ -4,7 +4,7 @@ import { ComboboxBase, ComboboxItem } from "../components/selects/ComboboxBase";
 import React from "react";
 
 const meta: Meta<typeof ComboboxBase> = {
-  title: "Selects/ComboboxBase",
+  title: "selects/ComboboxBase",
   component: ComboboxBase,
   tags: ["autodocs"],
 };

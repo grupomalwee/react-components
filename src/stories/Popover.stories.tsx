@@ -6,7 +6,7 @@ import { InputBase } from '../components/ui/InputBase';
 import LabelBase from '../components/ui/LabelBase';
 
 const meta: Meta<typeof PopoverBase> = {
-  title: 'Components/Popover',
+  title: 'overlays/Popover',
   component: PopoverBase,
   tags: ['autodocs'],
 };

@@ -5,7 +5,7 @@ import { ButtonBase } from '../components/ui/ButtonBase';
 import { MapPinLine } from 'phosphor-react';
 
 const meta: Meta<typeof InputBase> = {
-  title: 'Components/Input',
+  title: 'forms/Input',
   component: InputBase,
   tags: ['autodocs'],
 };

@@ -10,7 +10,7 @@ import { Download } from 'phosphor-react';
 import * as React from 'react';
 
 const meta: Meta<typeof ProgressBase> = {
-  title: 'Components/Progress',
+  title: 'feedback/Progress',
   component: ProgressBase,
   tags: ['autodocs'],
 };

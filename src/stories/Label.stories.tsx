@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import LabelBase from '../components/ui/LabelBase';
 
 const meta: Meta<typeof LabelBase> = {
-  title: 'Components/Label',
+  title: 'forms/Label',
   component: LabelBase,
   tags: ['autodocs'],
 };

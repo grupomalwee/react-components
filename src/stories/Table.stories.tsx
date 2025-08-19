@@ -12,7 +12,7 @@ import {
 } from '../components/ui/TableBase';
 
 const meta: Meta<typeof TableBase> = {
-  title: 'Components/Table',
+  title: 'data/Table',
   component: TableBase,
   tags: ['autodocs'],
 };

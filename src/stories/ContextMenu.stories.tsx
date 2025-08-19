@@ -18,7 +18,7 @@ import {
 } from '../components/ui/ContextMenuBase';
 
 const meta: Meta<typeof ContextMenuBase> = {
-  title: 'Components/ContextMenu',
+  title: 'navigation/ContextMenu',
   component: ContextMenuBase,
   tags: ['autodocs'],
 };

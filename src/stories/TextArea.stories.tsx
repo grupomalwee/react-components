@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TextAreaBase } from '../components/ui/TextAreaBase';
 
 const meta: Meta<typeof TextAreaBase> = {
-  title: 'Components/TextArea',
+  title: 'forms/TextArea',
   component: TextAreaBase,
   tags: ['autodocs'],
 };

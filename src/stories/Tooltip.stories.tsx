@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TooltipBase, TooltipTriggerBase, TooltipContentBase, TooltipProviderBase } from '../components/ui/TooltipBase';
 
 const meta: Meta<typeof TooltipBase> = {
-  title: 'Components/Tooltip',
+  title: 'overlays/Tooltip',
   component: TooltipBase,
   tags: ['autodocs'],
 };

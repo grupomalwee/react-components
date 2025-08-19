@@ -4,13 +4,8 @@ import { SwitchBase } from '../components/ui/SwitchBase';
 import { useState } from 'react';
 import { Sun, Moon, Bell, BellSlash } from 'phosphor-react';
 
-/**
- * Exemplos de uso do SwitchBase conforme a página SwitchPage.
- * Cada story demonstra um cenário de uso prático e real.
- */
-
 const meta: Meta<typeof SwitchBase> = {
-  title: 'Components/Switch',
+  title: 'forms/Switch',
   component: SwitchBase,
   tags: ['autodocs'],
 };

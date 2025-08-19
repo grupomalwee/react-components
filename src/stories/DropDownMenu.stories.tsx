@@ -12,7 +12,7 @@ import {
 import { Check, List } from 'phosphor-react';
 
 const meta: Meta<typeof DropDownMenuBase> = {
-  title: 'Components/DropDownMenu',
+  title: 'navigation/DropDownMenu',
   component: DropDownMenuBase,
   tags: ['autodocs'],
 };

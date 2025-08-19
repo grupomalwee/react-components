@@ -9,7 +9,7 @@ import { ButtonBase } from '../components/ui/ButtonBase';
 import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '../components/ui/AvatarBase';
 
 const meta: Meta<typeof HoverCardBase> = {
-  title: 'Components/HoverCard',
+  title: 'overlays/HoverCard',
   component: HoverCardBase,
   tags: ['autodocs'],
 };

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Sun, Ladder } from 'phosphor-react';
 
 const meta: Meta<typeof SlideBase> = {
-  title: 'Components/Slider',
+  title: 'overlays/Slider',
   component: SlideBase,
   tags: ['autodocs'],
 };

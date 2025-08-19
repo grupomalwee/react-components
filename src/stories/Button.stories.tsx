@@ -1,10 +1,9 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ButtonBase, ButtonGroupBase } from '../components/ui/ButtonBase';
-import React from 'react';
 
 const meta: Meta<typeof ButtonBase> = {
-  title: 'Components/Button',
+  title: 'forms/Button',
   component: ButtonBase,
   tags: ['autodocs'],
   argTypes: {

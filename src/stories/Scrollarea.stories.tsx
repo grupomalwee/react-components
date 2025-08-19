@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ScrollAreaBase, ScrollBarBase } from '../components/ui/ScrollareaBase';
 
 const meta: Meta<typeof ScrollAreaBase> = {
-  title: 'Components/Scrollarea',
+  title: 'layout/Scrollarea',
   component: ScrollAreaBase,
   tags: ['autodocs'],
 };
@@ -28,7 +28,7 @@ export const Default: Story = {
       },
     ];
     return (
-      <div className="mt-5 ml-5 flex gap-5 h-11 p-3 rounded-sm">
+      <div className="mt-5 ml-5 h-auto flex gap-5 p-3 rounded-sm">
         <ScrollAreaBase className="w-96 h-72 whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-4 p-4">
             {works.map((artwork) => (

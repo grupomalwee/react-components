@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '../components/ui/AvatarBase';
 
 const meta: Meta<typeof AvatarBase> = {
-  title: 'Components/Avatar',
+  title: 'data/Avatar',
   component: AvatarBase,
   tags: ['autodocs'],
 };

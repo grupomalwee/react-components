@@ -4,7 +4,7 @@ import { ButtonBase } from '../components/ui/ButtonBase';
 import { Toaster, toast } from '../components/ui/SonnerBase';
 
 const meta: Meta<typeof Toaster> = {
-  title: 'Components/Toaster',
+  title: 'feedback/Sonner',
   component: Toaster,
   tags: ['autodocs'],
 };

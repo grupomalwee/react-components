@@ -13,7 +13,7 @@ import {
 } from '../components/ui/AlertDialogBase';
 
 const meta: Meta<typeof AlertDialogBase> = {
-  title: 'Components/AlertDialog',
+  title: 'feedback/AlertDialog',
   component: AlertDialogBase,
   tags: ['autodocs'],
 };

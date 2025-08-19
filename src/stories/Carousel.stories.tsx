@@ -10,7 +10,7 @@ import {
 import { CardBase, CardContentBase } from '../components/ui/CardBase';
 
 const meta: Meta<typeof CarouselBase> = {
-  title: 'Components/Carousel',
+  title: 'layout/Carousel',
   component: CarouselBase,
   tags: ['autodocs'],
 };

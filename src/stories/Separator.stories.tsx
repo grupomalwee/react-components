@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SeparatorBase } from '../components/ui/SeparatorBase';
 
 const meta: Meta<typeof SeparatorBase> = {
-  title: 'Components/Separator',
+  title: 'layout/Separator',
   component: SeparatorBase,
   tags: ['autodocs'],
 };

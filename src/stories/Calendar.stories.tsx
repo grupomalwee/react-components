@@ -4,7 +4,7 @@ import { CalendarBase, CalendarPopover } from '../components/date-time-picker/ca
 import { useState } from 'react';
 
 const meta: Meta<typeof CalendarBase> = {
-  title: 'Components/Calendar',
+  title: 'forms/Calendar',
   component: CalendarBase,
   tags: ['autodocs'],
 };
