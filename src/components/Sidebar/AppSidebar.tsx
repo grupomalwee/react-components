@@ -91,6 +91,7 @@ import { ContextMenuPage } from "@/pages/ContextMenu";
 import { HoverCardPage } from "@/pages/HoverCard";
 import { NavigationMenuPage } from "@/pages/NavigationMenu";
 import DocsTests from "@/pages/Docs-tests";
+import LoadingPage from "@/pages/Loading";
 
 const items = [
   { title: "Home", url: "/", icon: House },
@@ -114,6 +115,7 @@ const items = [
   { title: "Input", url: "/input", icon: NotePencil },
   { title: "InputOTP", url: "/inputOTP", icon: Keyboard },
   { title: "Label", url: "/label", icon: TextItalic },
+  { title: "Loading", url: "/loading", icon: SpinnerGap },
   { title: "MultiCombobox", url: "/multicombobox", icon: Rows },
   { title: "Navigation", url: "/navigationmenu", icon: NavigationArrow },
   { title: "Popover", url: "/popover", icon: DotsThreeOutlineVertical },
@@ -184,6 +186,7 @@ export function AppSidebar() {
           <Route path="/input" element={<InputPage />} />
           <Route path="/inputOTP" element={<InputOTPPage />} />
           <Route path="/label" element={<LabelPage />} />
+          <Route path="/loading" element={<LoadingPage />} />
           <Route path="/multicombobox" element={<MultiComboboxPage />} />
           <Route path="/navigationmenu" element={<NavigationMenuPage />} />
           <Route path="/popover" element={<PopoverPage />} />
