@@ -4,11 +4,18 @@ import { motion } from 'framer-motion';
 const meta: Meta = {
 	title: 'Home',
 	parameters: {
-		layout: 'fullscreen',
+		layout: 'centered',
 		docs: {
 			description: {
 				component: `\n# Bem-vindo ao Malwee React Components\n\nSistema de design componetizado, prático e escalável com React + Tailwind.\n`
 			}
+		},
+		backgrounds: {
+			default: 'light',
+			values: [
+				{ name: 'light', value: '#f6f6f6' },
+				{ name: 'dark', value: '#222' }
+			]
 		}
 	}
 };

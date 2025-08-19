@@ -7,6 +7,21 @@ const meta: Meta<typeof MultiCombobox> = {
   title: "selects/MultiCombobox",
   component: MultiCombobox,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: 'MultiCombobox para seleção múltipla de tags, com busca e visualização centralizada.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -21,12 +36,14 @@ export const Default: Story = {
     ];
     const [selected, setSelected] = React.useState<string[]>([items[0].value]);
     return (
-      <div className="flex flex-col items-center justify-center p-10">
-        <MultiCombobox
-          items={items}
-          selected={selected}
-          onChange={setSelected}
-        />
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+        <div className="flex flex-col items-center justify-center p-10">
+          <MultiCombobox
+            items={items}
+            selected={selected}
+            onChange={setSelected}
+          />
+        </div>
       </div>
     );
   },

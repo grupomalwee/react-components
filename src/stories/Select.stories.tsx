@@ -15,6 +15,21 @@ const meta: Meta<typeof SelectBase> = {
   title: 'selects/Select',
   component: SelectBase,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Select para seleção de opções, listas e agrupamentos.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -24,7 +39,7 @@ export const Default: Story = {
   render: () => {
     const [open, setOpen] = React.useState(false);
     return (
-      <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', padding: '32px 0' }}>
         <SelectBase open={open} onOpenChange={setOpen}>
           <SelectTriggerBase open={open} className="w-[180px]">
             <SelectValueBase placeholder="Select a fruit" />

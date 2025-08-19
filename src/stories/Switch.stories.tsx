@@ -8,13 +8,32 @@ const meta: Meta<typeof SwitchBase> = {
   title: 'forms/Switch',
   component: SwitchBase,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Switch para alternância de estados, modo escuro, notificações e energia.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof SwitchBase>;
 
 export const Default: Story = {
-  render: () => <SwitchBase defaultChecked />,
+  render: () => (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <SwitchBase defaultChecked />
+    </div>
+  ),
 };
 
 export const Basico: Story = {

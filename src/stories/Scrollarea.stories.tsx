@@ -6,6 +6,21 @@ const meta: Meta<typeof ScrollAreaBase> = {
   title: 'layout/Scrollarea',
   component: ScrollAreaBase,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Scrollarea para áreas roláveis, listas horizontais e navegação visual.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -28,7 +43,8 @@ export const Default: Story = {
       },
     ];
     return (
-      <div className="mt-5 ml-5 h-auto flex gap-5 p-3 rounded-sm">
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+        <div className="mt-5 ml-5 h-auto flex gap-5 p-3 rounded-sm">
         <ScrollAreaBase className="w-96 h-72 whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-4 p-4">
             {works.map((artwork) => (
@@ -53,6 +69,7 @@ export const Default: Story = {
           </div>
           <ScrollBarBase orientation="horizontal" />
         </ScrollAreaBase>
+        </div>
       </div>
     );
   },

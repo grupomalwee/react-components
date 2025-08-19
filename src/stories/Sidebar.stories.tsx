@@ -16,6 +16,20 @@ export default {
   title: "navigation/Sidebar",
   component: SidebarBase,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Sidebar para navegação entre seções, menus e agrupamentos. Veja exemplos de uso das props abaixo.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+  },
 };
 
 import {

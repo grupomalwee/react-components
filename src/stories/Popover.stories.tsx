@@ -9,6 +9,21 @@ const meta: Meta<typeof PopoverBase> = {
   title: 'overlays/Popover',
   component: PopoverBase,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Popover para exibir conteúdo flutuante, formulários e listas.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -16,7 +31,8 @@ type Story = StoryObj<typeof PopoverBase>;
 
 export const Default: Story = {
   render: () => (
-    <div className="flex flex-col gap-10 max-w-xl mt-5 ml-5">
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <div className="flex flex-col gap-10 max-w-xl mt-5 ml-5">
       {/* Exemplo 1: Popover com campos de dimensão */}
       <div className="flex gap-5 h-11 p-3 rounded-sm">
         <PopoverBase>
@@ -86,6 +102,7 @@ export const Default: Story = {
             ))}
           </PopoverContentBase>
         </PopoverBase>
+      </div>
       </div>
     </div>
   ),

@@ -13,15 +13,29 @@ const meta: Meta<typeof TabsBase> = {
   title: 'layout/Tabs',
   component: TabsBase,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Tabs para navegação entre seções, categorias ou conteúdos.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof TabsBase>;
 
 export const TabsSimples: Story = {
-  
   render: () => (
-    <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
       <TabsBase>
         <TabsListBase>
           <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>

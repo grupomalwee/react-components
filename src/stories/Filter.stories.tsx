@@ -12,6 +12,21 @@ export default {
   title: "diversos/FilterDialog",
   component: FilterDialog,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'FilterDialog para filtros avançados, seleção dinâmica e múltiplos tipos de campo.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 type FilterValues = {
@@ -143,14 +158,16 @@ const availableFilters: AvailableFilter<FilterValues>[] = [
 export const Default = () => {
   const [filters] = useState<AvailableFilter<FilterValues>[]>(availableFilters);
   return (
-    <MemoryRouter>
-      <TooltipProviderBase>
-        <div className="flex flex-col gap-4">
-          <div className="p-5">
-            <FilterDialog availableFilters={filters} />
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <MemoryRouter>
+        <TooltipProviderBase>
+          <div className="flex flex-col gap-4">
+            <div className="p-5">
+              <FilterDialog availableFilters={filters} />
+            </div>
           </div>
-        </div>
-      </TooltipProviderBase>
-    </MemoryRouter>
+        </TooltipProviderBase>
+      </MemoryRouter>
+    </div>
   );
 };

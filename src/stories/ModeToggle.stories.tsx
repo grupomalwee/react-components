@@ -8,6 +8,21 @@ const meta: Meta<typeof ModeToggleBase> = {
   title: "ModeToggle",
   component: ModeToggleBase,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: 'ModeToggle para alternância de temas, incluindo opções customizadas.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -17,8 +32,10 @@ type Story = StoryObj<typeof ModeToggleBase>;
 
 export const Default: Story = {
   render: () => (
-    <ThemeProviderBase>
-      <ModeToggleBase themes={["light", "dark", "system", "light-purple", "dark-purple", "light-blue", "dark-blue", "light-green", "dark-green"]} />
-    </ThemeProviderBase>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <ThemeProviderBase>
+        <ModeToggleBase themes={["light", "dark", "system", "light-purple", "dark-purple", "light-blue", "dark-blue", "light-green", "dark-green"]} />
+      </ThemeProviderBase>
+    </div>
   ),
 };

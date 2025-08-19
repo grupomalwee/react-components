@@ -14,6 +14,21 @@ const meta: Meta<typeof NavigationMenuBase> = {
   title: "navigation/NavigationMenu",
   component: NavigationMenuBase,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: 'NavigationMenu para navegação principal, com menus, submenus e links.'
+      }
+    },
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#f6f6f6' },
+        { name: 'dark', value: '#222' }
+      ]
+    },
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -21,7 +36,8 @@ type Story = StoryObj<typeof NavigationMenuBase>;
 
 export const Default: Story = {
   render: () => (
-    <div className="flex items-center justify-center min-h-[300px] p-6">
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <div className="flex items-center justify-center min-h-[300px] p-6">
       <NavigationMenuBase>
         <NavigationMenuListBase>
           <NavigationMenuItemBase>
@@ -61,6 +77,7 @@ export const Default: Story = {
         </NavigationMenuListBase>
         <NavigationMenuIndicatorBase />
       </NavigationMenuBase>
+      </div>
     </div>
   ),
 };
