@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - feature/storybook
+      - main
 
 env:
   GCP_PROJECT: ${{ vars.GCP_PROJECT }}
