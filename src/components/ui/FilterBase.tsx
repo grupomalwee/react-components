@@ -27,7 +27,6 @@ import {
 import { FunnelSimple, Plus, Trash } from "phosphor-react";
 import colors from "tailwindcss/colors";
 
-// FilterDialog component
 type FilterDialogProps<T extends Record<string, unknown>> = {
   availableFilters: AvailableFilter<T>[];
 };

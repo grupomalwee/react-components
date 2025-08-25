@@ -1,0 +1,72 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+  GCP_ZONE: ${{ vars.GCP_ZONE }}
+  GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE }}
+  IMAGE_URI: ${{ vars.GCP_ZONE }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/${{ vars.GKE_NAMESPACE }}/react-components-storybook:${{ github.sha }}
+  IMAGE_CACHE: ${{ vars.GCP_ZONE }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/${{ vars.GKE_NAMESPACE }}/react-components-storybook:cache
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      NODE_ENV: production
+      DOCKER_BUILDKIT: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+      - name: Configure docker
+        if: ${{ !env.ACT }}
+        run: |-
+          gcloud --quiet auth configure-docker $GCP_ZONE-docker.pkg.dev
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: image=moby/buildkit:latest
+      - name: Build & Push (with cache)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_URI }}
+          cache-from: type=registry,ref=${{ env.IMAGE_CACHE }}
+          cache-to: type=registry,ref=${{ env.IMAGE_CACHE }},mode=max
+
+  deploy:
+    environment: dev
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+      - uses: google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
+        with:
+          cluster_name: ${{ vars.GKE_CLUSTER }}
+          location: ${{ env.GCP_ZONE }}
+
+      - name: Overwrite yaml files
+        run: |-
+          sed -i "s|GKE_NAMESPACE|$GKE_NAMESPACE|g" k8s/dev/storybook.yaml
+          sed -i "s|IMAGE_URI|$IMAGE_URI|g" k8s/dev/storybook.yaml
+
+      - name: Deploy services
+        run: |-
+          kubectl apply -f k8s/dev/storybook.yaml
+          kubectl rollout status -n $GKE_NAMESPACE deployment/react-components-storybook

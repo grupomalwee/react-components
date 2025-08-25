@@ -1,0 +1,15 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: storybook-routes
+  namespace: react-components-storybook
+spec:
+  parentRefs:
+  - kind: Gateway
+    name: external-http
+  hostnames:
+  - "storybook.malwee.dev"
+  rules:
+  - backendRefs:
+    - name: react-components-storybook
+      port: 80
