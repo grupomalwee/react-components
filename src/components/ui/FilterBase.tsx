@@ -24,7 +24,7 @@ import {
   TooltipContentBase,
   TooltipTriggerBase,
 } from "./TooltipBase";
-import { FunnelSimple, Plus, Trash } from "phosphor-react";
+import { FunnelSimple, Plus, Trash } from "@phosphor-icons/react";
 import colors from "tailwindcss/colors";
 
 type FilterDialogProps<T extends Record<string, unknown>> = {

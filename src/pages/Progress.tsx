@@ -7,7 +7,7 @@ import {
   ProgressPanelsBase,
   ProgressCirclesBase,
 } from "@/components/ui/ProgressBase";
-import { Download } from "phosphor-react";
+import { Download } from "@phosphor-icons/react";
 
 export const ProgressPage = () => {
   const [progress, setProgress] = React.useState(13);

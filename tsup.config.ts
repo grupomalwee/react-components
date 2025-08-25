@@ -15,7 +15,6 @@ export default defineConfig({
   external: [
     "react",
     "react-dom",
-    "react-hook-form",
     "@radix-ui/react-slot",
     "@radix-ui/react-*",
   ],

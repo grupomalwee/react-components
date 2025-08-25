@@ -6,7 +6,7 @@ import {
   DropDownMenuSeparatorBase,
   DropDownMenuTriggerBase,
 } from "@/components/ui/DropDownMenuBase";
-import { Check, List } from "phosphor-react";
+import { Check, List } from "@phosphor-icons/react";
 
 export const DropDownMenuPage = () => {
   return (

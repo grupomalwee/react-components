@@ -1,7 +1,7 @@
 import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 
 import { cn } from "../..//lib/utils";
-import { CaretLeft, CaretRight } from "phosphor-react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
 

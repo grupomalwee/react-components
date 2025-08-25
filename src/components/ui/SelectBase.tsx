@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, CaretDown, CaretUp } from "phosphor-react";
+import { Check, CaretDown, CaretUp } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";

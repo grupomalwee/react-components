@@ -1,4 +1,4 @@
-import { Check, Moon, Sun } from "phosphor-react";
+import { Check, Moon, Sun } from "@phosphor-icons/react";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
   DropDownMenuBase,

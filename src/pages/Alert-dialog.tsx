@@ -9,7 +9,7 @@ import {
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
 } from "@/components/ui/AlertDialogBase";
-import { CheckCircle, Info, Warning, XCircle } from "phosphor-react";
+import { CheckCircle, Info, Warning, XCircle } from "@phosphor-icons/react";
 
 export const AlertDialogPage = () => (
   <div className="p-6 space-y-8">

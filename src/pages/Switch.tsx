@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { SwitchBase } from "@/components/ui/SwitchBase";
-import { Moon, Sun, Bell, BellSlash } from "phosphor-react";
+import { Moon, Sun, Bell, BellSlash } from "@phosphor-icons/react";
 
 export const SwitchPage = () => {
   const [darkMode, setDarkMode] = useState(false);

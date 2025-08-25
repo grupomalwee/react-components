@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Trash, Warning } from "phosphor-react";
+import { Copy, Trash, Warning } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast, Toaster } from "@/components/ui/SonnerBase";
 
@@ -182,7 +182,7 @@ export const DialogPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto">
             <code className="text-sm">
-              {`import { Copy, Trash, Warning } from "phosphor-react";
+              {`import { Copy, Trash, Warning } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 import {

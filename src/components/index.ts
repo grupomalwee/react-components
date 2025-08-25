@@ -16,7 +16,7 @@ export * from "./ui/FilterBase";
 export * from "./ui/HoverCardBase";
 export * from "./ui/Input-OTP-Base";
 export * from "./ui/InputBase";
-export * from "./ui/LabelBase";
+export { default as LabelBase } from "./ui/LabelBase";
 export * from "./ui/NavigationMenuBase";
 export * from "./ui/PopoverBase";
 export * from "./ui/ProgressBase";
