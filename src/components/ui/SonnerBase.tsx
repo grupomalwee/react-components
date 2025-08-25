@@ -6,7 +6,7 @@ import {
   Info,
   Warning,
   Spinner,
-} from "phosphor-react";
+} from "@phosphor-icons/react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner> & {

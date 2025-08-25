@@ -75,47 +75,47 @@ export const AvatarPage = () => {
             <span className="text-sm text-muted-foreground">Quadrado</span>
           </div>
 
+          {/* Badge Online */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative">
               <AvatarBase>
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="online" aria-label="Online" title="Online" />
+              <BadgeBase status="success" aria-label="Online" title="Online" />
             </div>
-            <span className="text-sm text-muted-foreground">
-              Badge (Online)
-            </span>
+            <span className="text-sm text-muted-foreground">Badge (Online)</span>
           </div>
+          {/* Badge Offline */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative">
               <AvatarBase>
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="offline" aria-label="Online" title="Online" />
+              <BadgeBase status="desactivated" aria-label="Offline" title="Offline" />
             </div>
-            <span className="text-sm text-muted-foreground">
-              Badge (Offline)
-            </span>
+            <span className="text-sm text-muted-foreground">Badge (Offline)</span>
           </div>
+          {/* Badge Busy */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative">
               <AvatarBase>
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="busy" aria-label="Online" title="Online" />
+              <BadgeBase status="destructive" aria-label="Busy" title="Busy" />
             </div>
             <span className="text-sm text-muted-foreground">Badge (Busy)</span>
           </div>
+          {/* Badge Away */}
           <div className="flex flex-col items-center gap-2">
             <div className="relative">
               <AvatarBase>
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="away" aria-label="Online" title="Online" />
+              <BadgeBase status="away" aria-label="Away" title="Away" />
             </div>
             <span className="text-sm text-muted-foreground">Badge (Away)</span>
           </div>

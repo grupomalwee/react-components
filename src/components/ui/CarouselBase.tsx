@@ -7,7 +7,7 @@ import useEmblaCarousel, {
 
 import { cn } from "@/lib/utils"
 import { ButtonBase } from "./ButtonBase"
-import { ArrowLeft, ArrowRight } from "phosphor-react"
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>

@@ -2,7 +2,7 @@
 
 import { SlideBase } from "@/components/ui/SliderBase";
 import { useState } from "react";
-import { Sun,  Ladder } from "phosphor-react";
+import { Sun,  Ladder } from "@phosphor-icons/react";
 
 export const SliderPage = () => {
   const [value1, setValue1] = useState<number[]>([20]);

@@ -11,7 +11,7 @@ import {
   NavigationMenuTriggerBase,
   navigationMenuTriggerStyle,
 } from "@/components/ui/NavigationMenuBase";
-import { Check, Circle } from "phosphor-react";
+import { Check, Circle } from "@phosphor-icons/react";
 
 const components = [
   {
@@ -223,7 +223,7 @@ import {
   NavigationMenuTriggerBase,
   navigationMenuTriggerStyle,
 } from "@/components/ui/NavigationMenuBase";
-import { Check, Circle } from "phosphor-react";
+import { Check, Circle } from "@phosphor-icons/react";
 `}
             </code>
           </pre>

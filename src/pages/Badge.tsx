@@ -1,5 +1,5 @@
 import { BadgeBase } from "@/components/ui/BadgeBase";
-import { Check, Star, Bell, Heart, Shield } from "phosphor-react";
+import { Check, Star, Bell, Heart, Shield } from "@phosphor-icons/react";
 
 export function BadgePage() {
   return (
@@ -274,7 +274,7 @@ export function BadgePage() {
           <h3 className="font-medium mb-2">Como importar:</h3>
           <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto">
             <code>{`import { BadgeBase } from "@/components/ui/BadgeBase";
-import { Check } from "phosphor-react";`}</code>
+import { Check } from "@phosphor-icons/react";`}</code>
           </pre>
         </div>
 

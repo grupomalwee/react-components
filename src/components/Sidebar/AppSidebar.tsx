@@ -19,7 +19,6 @@ import {
   TreeStructure,
   CalendarBlank,
   SquaresFour,
-  ArchiveBox,
   DotsThreeOutlineVertical,
   CheckSquare,
   TerminalWindow,
@@ -43,13 +42,10 @@ import {
   ListDashes,
   TextAlignLeft,
   Info,
-  FileSearch,
-  Flask,
   Cursor,
   Image,
   ChatCentered,
-  Skull,
-} from "phosphor-react";
+} from "@phosphor-icons/react";
 
 import { AlertDialogPage } from "@/pages/Alert-dialog";
 import { AvatarPage } from "@/pages/Avatar";
@@ -121,8 +117,8 @@ const items = [
   { title: "Scrollarea", url: "/scrollarea", icon: Ruler },
   { title: "Select", url: "/select", icon: Spinner },
   { title: "Separator", url: "/separator", icon: LinkIcon },
-  { title: "Sheet", url: "/sheet", icon: ArchiveBox },
-  { title: "Skeleton", url: "/skeleton", icon: Skull },
+  { title: "Sheet", url: "/sheet", icon: LinkIcon },
+  { title: "Skeleton", url: "/skeleton", icon: LinkIcon },
   { title: "Slider", url: "/slider", icon: SlidersHorizontal },
   { title: "Sonner", url: "/sonner", icon: ChatCentered },
   { title: "Switch", url: "/switch", icon: ToggleRight },
@@ -130,8 +126,8 @@ const items = [
   { title: "Tabs", url: "/tabs", icon: ListDashes },
   { title: "Textarea", url: "/textarea", icon: TextAlignLeft },
   { title: "Tooltip", url: "/tooltip", icon: Info },
-  { title: "Comparação", url: "/comparison", icon: FileSearch },
-  { title: "Test Docs", url: "/test", icon: Flask },
+  { title: "Comparação", url: "/comparison", icon: LinkIcon },
+  { title: "Test Docs", url: "/test", icon: LinkIcon },
 ];
 
 export function AppSidebar() {

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { ComboboxProps } from "./Combobox"
 import { ComboboxBase } from "./ComboboxBase"
-import { X } from "phosphor-react"
+import { X } from "@phosphor-icons/react"
 import LabelBase from "../ui/LabelBase"
 import { cn } from "@/lib/utils"
 

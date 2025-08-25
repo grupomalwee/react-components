@@ -5,7 +5,7 @@
 // import { z } from "zod";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { InputBase } from "@/components/ui/InputBase";
-import { MapPinLine } from "phosphor-react";
+import { MapPinLine } from "@phosphor-icons/react";
 
 // const FormSchema = z.object({
 //   username: z.string().min(2, {

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { CaretLeft, CaretRight, X, Calendar } from "phosphor-react";
+import { CaretLeft, CaretRight, X, Calendar } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 import { motion } from "framer-motion";

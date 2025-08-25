@@ -14,7 +14,7 @@ import {
   BreadcrumbPageBase,
   BreadcrumbSeparatorBase,
 } from "@/components/ui/BreadcrumbBase";
-import { House, Book, PuzzlePiece } from "phosphor-react";
+import { House, Book, PuzzlePiece } from "@phosphor-icons/react";
 
 function handleNavigate(path: string) {
   window.location.href = path;

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { Check } from "phosphor-react";
+import { Check } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 import { cn } from "../../lib/utils";

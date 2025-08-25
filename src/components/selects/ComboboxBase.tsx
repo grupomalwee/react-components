@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/PopoverBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
-import { CaretDown, Check } from "phosphor-react";
+import { CaretDown, Check } from "@phosphor-icons/react";
 import { ReactNode, useState } from "react";
 
 export interface ComboboxItem<T extends string> {
