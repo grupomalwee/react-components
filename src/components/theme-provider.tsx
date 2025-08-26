@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type Theme =
@@ -32,7 +34,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProviderBase({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = "app-ui-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
