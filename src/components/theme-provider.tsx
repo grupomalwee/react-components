@@ -37,9 +37,7 @@ export function ThemeProviderBase({
   storageKey = "app-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
-  });
+ const [theme, setThemeState] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -81,13 +79,19 @@ export function ThemeProviderBase({
     }
   }, [theme]);
 
-  const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
-  };
+useEffect(() => {
+  const stored = localStorage.getItem(storageKey) as Theme | null;
+  if (stored) setThemeState(stored);
+}, [storageKey]);
+
+const setTheme = (newTheme: Theme) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(storageKey, newTheme);
+  }
+  setThemeState(newTheme);
+};
+
+const value = { theme, setTheme };
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
