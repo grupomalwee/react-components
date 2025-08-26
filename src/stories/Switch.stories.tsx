@@ -2,7 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SwitchBase } from '../components/ui/SwitchBase';
 import { useState } from 'react';
-import { Sun, Moon, Bell, BellSlash } from 'phosphor-react';
+import { SunIcon, MoonIcon, BellIcon, BellSlashIcon } from '@phosphor-icons/react';
 
 const meta: Meta<typeof SwitchBase> = {
   title: 'forms/Switch',
@@ -86,9 +86,9 @@ export const DarkMode: Story = {
     const [darkMode, setDarkMode] = useState(false);
     return (
       <div className="flex items-center gap-4">
-        <Sun size={20} />
+        <SunIcon size={20} />
         <SwitchBase checked={darkMode} onCheckedChange={setDarkMode} />
-        <Moon size={20} />
+        <MoonIcon size={20} />
       </div>
     );
   },
@@ -128,13 +128,13 @@ export const NotificacoesIcone: Story = {
     const [notifications, setNotifications] = useState(true);
     return (
       <div className="flex items-center gap-4">
-        <Bell size={20} />
+        <BellIcon size={20} />
         <SwitchBase
           className="bg-gray-700 data-[state=checked]:bg-green-500"
           checked={notifications}
           onCheckedChange={setNotifications}
         />
-        <BellSlash size={20} />
+        <BellSlashIcon size={20} />
       </div>
     );
   },

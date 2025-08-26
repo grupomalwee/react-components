@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  CheckCircle,
-  XCircle,
-  Info,
-  Warning,
-  Spinner,
+  CheckCircleIcon,
+  XCircleIcon,
+  InfoIcon,
+  WarningIcon,
+  SpinnerIcon,
 } from "@phosphor-icons/react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 
@@ -32,8 +32,8 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
             flex items-center gap-3
             data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500
-            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
-            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50 data-[type=info]:text-blue-800 data-[type=info]:border-blue-500
+            data-[type=WarningIcon]:border-l-yellow-500 data-[type=WarningIcon]:bg-yellow-50 data-[type=WarningIcon]:text-yellow-800 data-[type=WarningIcon]:border-yellow-500
+            data-[type=InfoIcon]:border-l-blue-500 data-[type=InfoIcon]:bg-blue-50 data-[type=InfoIcon]:text-blue-800 data-[type=InfoIcon]:border-blue-500
           `,
           description: `
             text-sm
@@ -64,27 +64,27 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
 const toast = {
   success: (message: string) =>
     sonnertoast.success(message, {
-      icon: <CheckCircle className={`${iconBaseClass} text-green-600`} weight="fill" />,
+      icon: <CheckCircleIcon className={`${iconBaseClass} text-green-600`} weight="fill" />,
       className: "sonner-success",
     }),
   error: (message: string) =>
     sonnertoast.error(message, {
-      icon: <XCircle className={`${iconBaseClass} text-red-600`} weight="fill" />,
+      icon: <XCircleIcon className={`${iconBaseClass} text-red-600`} weight="fill" />,
       className: "sonner-error",
     }),
   warning: (message: string) =>
     sonnertoast.warning(message, {
-      icon: <Warning className={`${iconBaseClass} text-yellow-600`} weight="fill" />,
-      className: "sonner-warning",
+      icon: <WarningIcon className={`${iconBaseClass} text-yellow-600`} weight="fill" />,
+      className: "sonner-WarningIcon",
     }),
   info: (message: string) =>
     sonnertoast.info(message, {
-      icon: <Info className={`${iconBaseClass} text-blue-600`} weight="fill" />,
-      className: "sonner-info",
+      icon: <InfoIcon className={`${iconBaseClass} text-blue-600`} weight="fill" />,
+      className: "sonner-InfoIcon",
     }),
   loading: (message: string) =>
     sonnertoast(message, {
-      icon: <Spinner className={`${iconBaseClass} animate-spin text-neutral-500`} weight="fill" />,
+      icon: <SpinnerIcon className={`${iconBaseClass} animate-spin text-neutral-500`} weight="fill" />,
       className: "sonner-loading",
     }),
 };

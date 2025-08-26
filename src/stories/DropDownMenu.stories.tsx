@@ -9,7 +9,7 @@ import {
   DropDownMenuLabelBase,
   DropDownMenuSeparatorBase,
 } from '../components/ui/DropDownMenuBase';
-import { Check, List } from 'phosphor-react';
+import { CheckIcon, ListIcon } from '@phosphor-icons/react';
 
 const meta: Meta<typeof DropDownMenuBase> = {
   title: 'navigation/DropDownMenu',
@@ -42,15 +42,15 @@ export const Default: Story = {
         <DropDownMenuBase>
           <DropDownMenuTriggerBase className="flex items-center gap-2">
             Abrir menu
-            <List />
+            <ListIcon />
           </DropDownMenuTriggerBase>
           <DropDownMenuContentBase align="end">
             <DropDownMenuLabelBase>My Account</DropDownMenuLabelBase>
             <DropDownMenuSeparatorBase />
             <DropDownMenuItemBase>Profile</DropDownMenuItemBase>
             <DropDownMenuItemBase>Billing</DropDownMenuItemBase>
-            <DropDownMenuItemBase rightIcon={<Check />}>Team</DropDownMenuItemBase>
-            <DropDownMenuItemBase leftIcon={<Check />}>Subscription</DropDownMenuItemBase>
+            <DropDownMenuItemBase rightIcon={<CheckIcon />}>Team</DropDownMenuItemBase>
+            <DropDownMenuItemBase leftIcon={<CheckIcon />}>Subscription</DropDownMenuItemBase>
           </DropDownMenuContentBase>
         </DropDownMenuBase>
       </div>

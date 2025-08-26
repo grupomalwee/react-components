@@ -6,7 +6,7 @@ import {
   ProgressPanelsBase,
   ProgressCirclesBase,
 } from '../components/ui/ProgressBase';
-import { Download } from 'phosphor-react';
+import { DownloadIcon } from '@phosphor-icons/react';
 import * as React from 'react';
 
 const meta: Meta<typeof ProgressBase> = {
@@ -47,8 +47,8 @@ export const Default: Story = {
           <ProgressBase
             value={progress}
             className="w-full"
-            label="Download "
-            leftIcon={<Download />}
+            label="DownloadIcon "
+            leftIcon={<DownloadIcon />}
           />
           <ProgressSegmentsBase segments={10} value={progress} label="Segment" />
           <ProgressPanelsBase

@@ -2,7 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { InputBase } from '../components/ui/InputBase';
 import { ButtonBase } from '../components/ui/ButtonBase';
-import { MapPinLine } from 'phosphor-react';
+import { MapPinLineIcon } from '@phosphor-icons/react';
 
 const meta: Meta<typeof InputBase> = {
   title: 'forms/Input',
@@ -50,7 +50,7 @@ export const Default: Story = {
             type="text"
             placeholder="Localização"
             label="Local"
-            leftIcon={<MapPinLine size={16} />}
+            leftIcon={<MapPinLineIcon size={16} />}
           />
         </div>
         <div>
@@ -58,7 +58,7 @@ export const Default: Story = {
             type="text"
             placeholder="Localização"
             label="Local"
-            rightIcon={<MapPinLine size={16} />}
+            rightIcon={<MapPinLineIcon size={16} />}
           />
         </div>
       </div>

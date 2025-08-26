@@ -15,7 +15,7 @@ import { InputBase } from '../components/ui/InputBase';
 import LabelBase from '../components/ui/LabelBase';
 import { ButtonBase } from '../components/ui/ButtonBase';
 import { CheckboxBase } from '../components/ui/CheckBoxBase';
-import { Copy, Trash, Warning } from 'phosphor-react';
+import { CopyIcon, TrashIcon, WarningIcon } from '@phosphor-icons/react';
 
 const meta: Meta<typeof DialogBase> = {
   title: 'overlays/Dialog',
@@ -64,7 +64,7 @@ export const ShareDialog: Story = {
             </div>
             <ButtonBase type="button" size="sm" className="p-1.5 mt-1">
               <span className="sr-only">Copy</span>
-              <Copy size={16} />
+              <CopyIcon size={16} />
             </ButtonBase>
           </div>
           <DialogFooterBase className="sm:justify-start">
@@ -99,7 +99,7 @@ export const ConfirmDeleteDialog: Story = {
               <ButtonBase variant="outline">Cancel</ButtonBase>
             </DialogCloseBase>
             <ButtonBase variant="destructive">
-              <Trash className="mr-2" /> Delete
+              <TrashIcon className="mr-2" /> Delete
             </ButtonBase>
           </DialogFooterBase>
         </DialogContentBase>
@@ -164,7 +164,7 @@ export const AlertDialog: Story = {
         <DialogContentBase className="sm:max-w-sm">
           <DialogHeaderBase>
             <DialogTitleBase className="flex items-center gap-2">
-              <Warning className="text-yellow-500" /> Warning!
+              <WarningIcon className="text-yellow-500" /> Warning!
             </DialogTitleBase>
             <DialogDescriptionBase>
               This is a critical alert. Pay attention to this message.

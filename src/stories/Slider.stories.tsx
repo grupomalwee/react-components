@@ -2,7 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SlideBase } from '../components/ui/SliderBase';
 import { useState } from 'react';
-import { Sun, Ladder } from 'phosphor-react';
+import { SunIcon, LadderIcon } from '@phosphor-icons/react';
 
 const meta: Meta<typeof SlideBase> = {
   title: 'overlays/Slider',
@@ -65,7 +65,7 @@ export const SliderHorizontalIcon: Story = {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
         <div className="flex items-center gap-3 w-64">
-          <Sun size={24} />
+          <SunIcon size={24} />
           <SlideBase
             className="flex-1 h-6 rounded-ful"
             value={value}
@@ -118,7 +118,7 @@ export const SliderSteps: Story = {
             max={100}
             min={0}
             step={25}
-            rightIcon={<Ladder />}
+            rightIcon={<LadderIcon />}
           />
         </div>
       </div>

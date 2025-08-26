@@ -14,7 +14,7 @@ import {
 } from '../components/ui/DrawerBase';
 import { InputBase } from '../components/ui/InputBase';
 import { ButtonBase } from '../components/ui/ButtonBase';
-import { Minus, Plus } from 'phosphor-react';
+import { MinusIcon, PlusIcon } from '@phosphor-icons/react';
 import {
   Bar,
   BarChart,
@@ -100,7 +100,7 @@ export const WithGoalControls: Story = {
                       disabled={goal <= 200}
                       aria-label="Diminuir meta"
                     >
-                      <Minus size={20} />
+                      <MinusIcon size={20} />
                     </ButtonBase>
                     <div className="flex-1 text-center select-none">
                       {isEditing ? (
@@ -141,7 +141,7 @@ export const WithGoalControls: Story = {
                       disabled={goal >= 400}
                       aria-label="Aumentar meta"
                     >
-                      <Plus size={20} />
+                      <PlusIcon size={20} />
                     </ButtonBase>
                   </div>
                   <div className="mt-3 h-56 w-full max-w-full">

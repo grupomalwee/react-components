@@ -33,26 +33,26 @@ export default {
 };
 
 import {
-  House,
-  WarningCircle,
-  UserCircle,
-  Medal,
-  TreeStructure,
-  Cursor,
-  CalendarBlank,
-  SquaresFour,
-} from "phosphor-react";
+  HouseIcon,
+  WarningCircleIcon,
+  UserCircleIcon,
+  MedalIcon,
+  TreeStructureIcon,
+  CursorIcon,
+  CalendarBlankIcon,
+  SquaresFourIcon,
+} from "@phosphor-icons/react";
 
 export const Default = () => {
   const items = [
-    { title: "Home", url: "/", icon: House },
-    { title: "Alert Dialog", url: "/", icon: WarningCircle },
-    { title: "Avatar", url: "/", icon: UserCircle },
-    { title: "Bagde", url: "/", icon: Medal },
-    { title: "Breadcrumb", url: "/", icon: TreeStructure },
-    { title: "Button", url: "/", icon: Cursor },
-    { title: "Calendar", url: "/", icon: CalendarBlank },
-    { title: "Card", url: "/", icon: SquaresFour },
+    { title: "Home", url: "/", icon: HouseIcon },
+    { title: "Alert Dialog", url: "/", icon: WarningCircleIcon },
+    { title: "Avatar", url: "/", icon: UserCircleIcon },
+    { title: "Bagde", url: "/", icon: MedalIcon },
+    { title: "Breadcrumb", url: "/", icon: TreeStructureIcon },
+    { title: "Button", url: "/", icon: CursorIcon },
+    { title: "Calendar", url: "/", icon: CalendarBlankIcon },
+    { title: "Card", url: "/", icon: SquaresFourIcon },
   ];
 
   return (
