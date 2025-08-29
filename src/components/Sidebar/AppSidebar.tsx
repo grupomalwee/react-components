@@ -48,6 +48,7 @@ import {
 } from "@phosphor-icons/react";
 
 import { AlertDialogPage } from "@/pages/Alert-dialog";
+import DestructiveDialogPage from "@/pages/DestructiveDialog";
 import { AvatarPage } from "@/pages/Avatar";
 import { ButtonPage } from "@/pages/Button";
 import { CalendarPage } from "@/pages/Calendar";
@@ -91,6 +92,7 @@ import DocsTests from "@/pages/Docs-tests";
 const items = [
   { title: "Home", url: "/", icon: House },
   { title: "Alert Dialog", url: "/alert-dialog", icon: WarningCircle },
+  { title: "Destructive Dialog", url: "/destructive-dialog", icon: WarningCircle },
   { title: "Avatar", url: "/avatar", icon: UserCircle },
   { title: "Bagde", url: "/badge", icon: Medal },
   { title: "Breadcrumb", url: "/breadcrumb", icon: TreeStructure },
@@ -160,6 +162,7 @@ export function AppSidebar() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
+          <Route path="/destructive-dialog" element={<DestructiveDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/badge" element={<BadgePage />} />
           <Route path="/button" element={<ButtonPage />} />
