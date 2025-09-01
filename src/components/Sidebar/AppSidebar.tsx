@@ -56,6 +56,7 @@ import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
 import { ComboboxPage } from "@/pages/Combobox";
 import { CarouselPage } from "@/pages/Carousel";
+import { CollapsiblePage } from "@/pages/Collapsible";
 import { MultiComboboxPage } from "@/pages/Multicombobox";
 import { DialogPage } from "@/pages/Dialog";
 import DrawerPage from "@/pages/Drawer";
@@ -99,6 +100,7 @@ const items = [
   { title: "Card", url: "/card", icon: SquaresFour },
   { title: "ContextMenu", url: "/contextmenu", icon: DotsThreeOutlineVertical },
   { title: "Checkbox", url: "/checkbox", icon: CheckSquare },
+  { title: "Collapsible", url: "/collapsible", icon: ListDashes },
   { title: "Command", url: "/command", icon: TerminalWindow },
   { title: "Combobox", url: "/combobox", icon: MagnifyingGlass },
   { title: "Carousel", url: "/carousel", icon: Image },
@@ -168,6 +170,7 @@ export function AppSidebar() {
           <Route path="/card" element={<CardPage />} />
           <Route path="/contextmenu" element={<ContextMenuPage />} />
           <Route path="/checkbox" element={<CheckBoxPage />} />
+          <Route path="/collapsible" element={<CollapsiblePage />} />
           <Route path="/command" element={<CommandPage />} />
           <Route path="/combobox" element={<ComboboxPage />} />
           <Route path="/carousel" element={<CarouselPage />} />
