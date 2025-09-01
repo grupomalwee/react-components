@@ -25,7 +25,7 @@ const CollapsibleTriggerBase = React.forwardRef<
     <CollapsiblePrimitive.CollapsibleTrigger
       ref={ref}
       className={cn(
-        "flex w-full items-center justify-between p-3 text-left font-medium transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-accent hover:text-accent-foreground rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&[data-state=open]>*:last-child>svg]:rotate-180",
+        "flex w-full items-center justify-between p-3 text-left font-medium transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-accent hover:text-accent-foreground rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&[data-state=open]_.caret-icon]:rotate-180",
         className
       )}
       data-slot="collapsible-trigger"
@@ -36,7 +36,7 @@ const CollapsibleTriggerBase = React.forwardRef<
         <span>{children}</span>
       </div>
       {showCaret && (
-        <span className="flex-shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
+        <span className="caret-icon flex-shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
           <CaretUpDown className="h-4 w-4" />
         </span>
       )}
