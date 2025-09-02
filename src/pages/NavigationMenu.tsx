@@ -9,9 +9,8 @@ import {
   NavigationMenuLinkBase,
   NavigationMenuListBase,
   NavigationMenuTriggerBase,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/NavigationMenuBase";
-import { Check, Circle } from "@phosphor-icons/react";
+import { CheckIcon, CircleIcon } from "@phosphor-icons/react";
 
 const components = [
   {
@@ -110,7 +109,6 @@ export function NavigationMenuPage() {
           <NavigationMenuItemBase>
             <NavigationMenuLinkBase
               asChild
-              className={navigationMenuTriggerStyle()}
             >
               <a href="#">Docs</a>
             </NavigationMenuLinkBase>
@@ -179,19 +177,19 @@ export function NavigationMenuPage() {
                 <li>
                   <NavigationMenuLinkBase asChild>
                     <a href="#" className="flex items-center gap-2">
-                      <Circle />
+                      <CircleIcon />
                       Backlog
                     </a>
                   </NavigationMenuLinkBase>
                   <NavigationMenuLinkBase asChild>
                     <a href="#" className="flex items-center gap-2">
-                      <Circle />
+                      <CircleIcon />
                       To Do
                     </a>
                   </NavigationMenuLinkBase>
                   <NavigationMenuLinkBase asChild>
                     <a href="#" className="flex items-center gap-2">
-                      <Check />
+                      <CheckIcon />
                       Done
                     </a>
                   </NavigationMenuLinkBase>
@@ -221,7 +219,6 @@ import {
   NavigationMenuLinkBase,
   NavigationMenuListBase,
   NavigationMenuTriggerBase,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/NavigationMenuBase";
 import { Check, Circle } from "@phosphor-icons/react";
 `}
