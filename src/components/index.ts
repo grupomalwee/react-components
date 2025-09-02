@@ -7,6 +7,7 @@ export * from "./ui/CalendarBase";
 export * from "./ui/CardBase";
 export * from "./ui/CarouselBase";
 export * from "./ui/CheckBoxBase";
+export * from "./ui/CollapsibleBase";
 export * from "./ui/CommandBase";
 export * from "./ui/ContextMenuBase";
 export * from "./ui/DialogBase";
