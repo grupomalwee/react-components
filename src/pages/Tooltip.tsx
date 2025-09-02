@@ -7,7 +7,7 @@ import {
   TooltipTriggerBase,
 } from "@/components/ui/TooltipBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
-import { Info } from "@phosphor-icons/react";
+import { InfoIcon } from "@phosphor-icons/react";
 
 export const TooltipPage = () => {
   return (
@@ -23,7 +23,7 @@ export const TooltipPage = () => {
 
           <TooltipBase>
             <TooltipTriggerBase asChild className="mt-1">
-              <Info className="w-5 h-5 cursor-pointer text-muted-foreground" />
+              <InfoIcon className="w-5 h-5 cursor-pointer text-muted-foreground" />
             </TooltipTriggerBase>
             <TooltipContentBase>Informação rápida</TooltipContentBase>
           </TooltipBase>

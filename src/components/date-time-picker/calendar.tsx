@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { CaretLeft, CaretRight, X, Calendar } from "@phosphor-icons/react";
+import { CaretLeftIcon, CaretRightIcon, XIcon, CalendarIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 import { motion } from "framer-motion";
@@ -121,8 +121,8 @@ export function CalendarBase({
             ...classNames,
           }}
           components={{
-            IconLeft: () => <CaretLeft className="h-4 w-4" />,
-            IconRight: () => <CaretRight className="h-4 w-4" />,
+            IconLeft: () => <CaretLeftIcon className="h-4 w-4" />,
+            IconRight: () => <CaretRightIcon className="h-4 w-4" />,
           }}
           {...props}
         />
@@ -150,7 +150,7 @@ export const CalendarPopover = ({
           )}
           type="button"
         >
-          <Calendar className="w-4 h-4" />
+          <CalendarIcon className="w-4 h-4" />
           <span className="text-sm">{label}</span>
         </button>
       </PopoverTriggerBase>
@@ -164,7 +164,7 @@ export const CalendarPopover = ({
             aria-label="Fechar calendário"
             type="button"
           >
-            <X className="h-4 w-4" />
+            <XIcon className="h-4 w-4" />
           </button>
         </div>
 

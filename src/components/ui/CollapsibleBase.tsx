@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
-import { CaretUpDown } from "@phosphor-icons/react"
+import { CaretUpDownIcon } from "@phosphor-icons/react"
 
 import { cn } from "@/lib/utils"
 
@@ -37,7 +37,7 @@ const CollapsibleTriggerBase = React.forwardRef<
       </div>
       {showCaret && (
         <span className="caret-icon flex-shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
-          <CaretUpDown className="h-4 w-4" />
+          <CaretUpDownIcon className="h-4 w-4" />
         </span>
       )}
     </CollapsiblePrimitive.CollapsibleTrigger>

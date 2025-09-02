@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cn } from "../../lib/utils"
 import { ButtonBase, buttonVariantsBase } from "./ButtonBase"
-import { XCircle } from "@phosphor-icons/react"
+import { XCircleIcon } from "@phosphor-icons/react"
 import {
   AlertDialogBase,
   AlertDialogTriggerBase,
@@ -56,7 +56,7 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
       >
         <div className="flex items-start gap-4">
           <div className="flex items-center justify-center w-10 h-10 rounded-full ring-1 ring-destructive/30">
-            <XCircle className="w-6 h-6 text-destructive" />
+            <XCircleIcon className="w-6 h-6 text-destructive" />
           </div>
 
           <div className="flex-1">

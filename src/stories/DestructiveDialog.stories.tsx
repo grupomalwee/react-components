@@ -3,7 +3,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DestructiveDialog } from "../components/ui/DestructiveDialog";
 import { ButtonBase } from "../components/ui/ButtonBase";
-import { Trash } from "@phosphor-icons/react";
+import { TrashIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DestructiveDialog> = {
   title: "feedback/DestructiveDialog",
@@ -96,7 +96,7 @@ export const WithChildIcon: Story = {
       <div className="p-6">
         <DestructiveDialog {...args} onConfirm={handleConfirm} onCancel={() => console.log("Cancelado")}> 
           <ButtonBase>
-            <Trash />
+            <TrashIcon />
             Abrir
           </ButtonBase>
         </DestructiveDialog>

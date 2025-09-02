@@ -14,7 +14,7 @@ import {
   BreadcrumbPageBase,
   BreadcrumbSeparatorBase,
 } from "@/components/ui/BreadcrumbBase";
-import { House, Book, PuzzlePiece } from "@phosphor-icons/react";
+import { HouseIcon, BookIcon, PuzzlePieceIcon } from "@phosphor-icons/react";
 
 function handleNavigate(path: string) {
   window.location.href = path;
@@ -108,7 +108,7 @@ export function BreadcrumbPage() {
               onClick={() => handleNavigate("/")}
               className="cursor-pointer hover:underline flex items-center gap-1 transition-colors"
             >
-              <House size={16} /> Home
+              <HouseIcon size={16} /> Home
             </BreadcrumbLinkBase>
           </BreadcrumbItemBase>
 
@@ -119,7 +119,7 @@ export function BreadcrumbPage() {
               onClick={() => handleNavigate("/docs")}
               className="cursor-pointer hover:underline flex items-center gap-1 transition-colors"
             >
-              <Book size={16} /> Docs
+              <BookIcon size={16} /> Docs
             </BreadcrumbLinkBase>
           </BreadcrumbItemBase>
 
@@ -130,7 +130,7 @@ export function BreadcrumbPage() {
               onClick={() => handleNavigate("/docs/components")}
               className="cursor-pointer hover:underline flex items-center gap-1 transition-colors"
             >
-              <PuzzlePiece size={16} /> Components
+              <PuzzlePieceIcon size={16} /> Components
             </BreadcrumbLinkBase>
           </BreadcrumbItemBase>
 
@@ -138,7 +138,7 @@ export function BreadcrumbPage() {
 
           <BreadcrumbItemBase>
             <BreadcrumbPageBase className="flex items-center gap-1">
-              <PuzzlePiece size={16} /> Breadcrumb
+              <PuzzlePieceIcon size={16} /> Breadcrumb
             </BreadcrumbPageBase>
           </BreadcrumbItemBase>
         </BreadcrumbListBase>

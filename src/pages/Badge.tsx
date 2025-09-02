@@ -1,5 +1,5 @@
 import { BadgeBase } from "@/components/ui/BadgeBase";
-import { Check, Star, Bell, Heart, Shield } from "@phosphor-icons/react";
+import { CheckIcon, StarIcon, BellIcon, HeartIcon, ShieldIcon } from "@phosphor-icons/react";
 
 export function BadgePage() {
   return (
@@ -20,19 +20,19 @@ export function BadgePage() {
         <h2 className="text-2xl font-semibold">Badges com Ícones</h2>
         <div className="flex flex-wrap gap-4">
           <BadgeBase variant="default" className="flex items-center gap-1">
-            <Check className="w-4 h-4" aria-hidden="true" />
+            <CheckIcon className="w-4 h-4" aria-hidden="true" />
             Verified
           </BadgeBase>
           <BadgeBase variant="secondary" className="flex items-center gap-1">
-            <Star className="w-4 h-4" aria-hidden="true" />
+            <StarIcon className="w-4 h-4" aria-hidden="true" />
             Featured
           </BadgeBase>
           <BadgeBase variant="destructive" className="flex items-center gap-1">
-            <Bell className="w-4 h-4" aria-hidden="true" />
+            <BellIcon className="w-4 h-4" aria-hidden="true" />
             Alert
           </BadgeBase>
           <BadgeBase variant="outline" className="flex items-center gap-1">
-            <Heart className="w-4 h-4" aria-hidden="true" />
+            <HeartIcon className="w-4 h-4" aria-hidden="true" />
             Liked
           </BadgeBase>
         </div>
@@ -72,31 +72,31 @@ export function BadgePage() {
         <div className="flex gap-8">
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="success" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="desactivated" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="destructive" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="away" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-red-500" />
           </div>
@@ -110,31 +110,31 @@ export function BadgePage() {
         <div className="flex gap-8">
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-pink-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-purple-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-blue-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-red-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+              <ShieldIcon className="w-6 h-6" />
             </div>
             <BadgeBase status="custom" className="bg-pink-500" />
           </div>
@@ -230,7 +230,7 @@ export function BadgePage() {
             <div className="flex items-center gap-2 mb-2">
               <h3 className="font-semibold">Produto Premium</h3>
               <BadgeBase variant="default" className="flex items-center gap-1">
-                <Star className="w-3 h-3" />
+                <StarIcon className="w-3 h-3" />
                 Premium
               </BadgeBase>
               <BadgeBase variant="destructive">-50%</BadgeBase>

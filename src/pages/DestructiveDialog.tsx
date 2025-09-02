@@ -1,6 +1,6 @@
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { DestructiveDialog } from "@/components/ui/DestructiveDialog";
-import { Trash } from "@phosphor-icons/react";
+import { TrashIcon } from "@phosphor-icons/react";
 import React from "react";
 
 export const DestructiveDialogPage: React.FC = () => {
@@ -41,7 +41,7 @@ export const DestructiveDialogPage: React.FC = () => {
           onCancel={() => console.log("Cancelado")}
         >
           <ButtonBase>
-            <Trash />
+            <TrashIcon />
             Abrir
           </ButtonBase>
         </DestructiveDialog>

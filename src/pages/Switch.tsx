@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { SwitchBase } from "@/components/ui/SwitchBase";
-import { Moon, Sun, Bell, BellSlash } from "@phosphor-icons/react";
+import { MoonIcon, SunIcon, BellIcon, BellSlashIcon } from "@phosphor-icons/react";
 
 export const SwitchPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -25,9 +25,9 @@ export const SwitchPage = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <Sun size={20} />
+        <SunIcon size={20} />
         <SwitchBase checked={darkMode} onCheckedChange={setDarkMode} />
-        <Moon size={20} />
+        <MoonIcon size={20} />
       </div>
 
       <div className="flex items-center gap-4">
@@ -37,13 +37,13 @@ export const SwitchPage = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <Bell size={20} />
+        <BellIcon size={20} />
         <SwitchBase
           className="bg-gray-700 data-[state=checked]:bg-green-500"
           checked={notifications}
           onCheckedChange={setNotifications}
         />
-        <BellSlash size={20} />
+        <BellSlashIcon size={20} />
       </div>
 
       {/* Documentação */}

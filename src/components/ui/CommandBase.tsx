@@ -3,7 +3,7 @@
 import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../../lib/utils";
@@ -62,7 +62,7 @@ const CommandInputBase = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & { testid?: string }
 >(({ className, testid: dataTestId = "command-input", ...props }, ref) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <MagnifyingGlass className="mr-2 h-4 w-4 shrink-0 text-primary" />
+    <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(

@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Trash, Warning } from "@phosphor-icons/react";
+import { CopyIcon, TrashIcon, WarningIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast, Toaster } from "@/components/ui/SonnerBase";
 
@@ -57,7 +57,7 @@ export const DialogPage = () => {
                   onClick={handleCopy}
                 >
                   <span className="sr-only">Copy</span>
-                  <Copy size={16} />
+                  <CopyIcon size={16} />
                 </ButtonBase>
               </div>
               <DialogFooterBase className="sm:justify-start">
@@ -92,7 +92,7 @@ export const DialogPage = () => {
                   variant="destructive"
                   onClick={() => toast.error("Item deleted")}
                 >
-                  <Trash className="mr-2" /> Delete
+                  <TrashIcon className="mr-2" /> Delete
                 </ButtonBase>
               </DialogFooterBase>
             </DialogContentBase>
@@ -159,7 +159,7 @@ export const DialogPage = () => {
             <DialogContentBase className="sm:max-w-sm">
               <DialogHeaderBase>
                 <DialogTitleBase className="flex items-center gap-2">
-                  <Warning className="text-yellow-500" /> Warning!
+                  <WarningIcon className="text-yellow-500" /> Warning!
                 </DialogTitleBase>
                 <DialogDescriptionBase>
                   This is a critical alert. Pay attention to this message.

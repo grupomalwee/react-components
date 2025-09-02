@@ -9,7 +9,7 @@ import {
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
 } from "@/components/ui/AlertDialogBase";
-import { CheckCircle, Info, Warning, XCircle } from "@phosphor-icons/react";
+import { CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react";
 
 export const AlertDialogPage = () => (
   <div className="p-6 space-y-8">
@@ -19,7 +19,7 @@ export const AlertDialogPage = () => (
         <AlertDialogContentBase >
           <AlertDialogHeaderBase >
             <div className="flex items-center gap-2 text-destructive">
-              <XCircle className="w-5 h-5" />
+              <XCircleIcon className="w-5 h-5" />
               <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
@@ -40,7 +40,7 @@ export const AlertDialogPage = () => (
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-yellow-500">
-              <Warning className="w-5 h-5" />
+              <WarningIcon className="w-5 h-5" />
               <AlertDialogTitleBase>Olha, preste atenção!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
@@ -61,7 +61,7 @@ export const AlertDialogPage = () => (
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-emerald-600">
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircleIcon className="w-5 h-5" />
               <AlertDialogTitleBase>Operação bem-sucedida!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
@@ -81,7 +81,7 @@ export const AlertDialogPage = () => (
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-blue-600">
-              <Info className="w-5 h-5" />
+              <InfoIcon className="w-5 h-5" />
               <AlertDialogTitleBase>Importante saber!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>

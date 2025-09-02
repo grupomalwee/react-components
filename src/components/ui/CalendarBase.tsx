@@ -1,7 +1,7 @@
 import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 
 import { cn } from "../..//lib/utils";
-import { CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
 
@@ -54,8 +54,8 @@ function CalendarBase({
         ...classNames,
       }}
       components={{
-        IconLeft: () => <CaretLeft className="h-4 w-4" />,
-        IconRight: () => <CaretRight className="h-4 w-4" />,
+        IconLeft: () => <CaretLeftIcon className="h-4 w-4" />,
+        IconRight: () => <CaretRightIcon className="h-4 w-4" />,
       }}
       {...props}
     />

@@ -1,5 +1,5 @@
 import  LabelBase  from "../ui/LabelBase";
-import { Clock } from "@phosphor-icons/react";
+import { ClockIcon } from "@phosphor-icons/react";
 import * as React from "react";
 import { TimePickerInput } from "./TimePickerInput";
 
@@ -56,7 +56,7 @@ export function TimePicker({ date, setDate, hideSeconds }: TimePickerProps) {
         </div>
       )}
       <div className="flex h-10 items-center">
-        <Clock className="ml-2 h-4 w-4" />
+        <ClockIcon className="ml-2 h-4 w-4" />
       </div>
     </div>
   );
