@@ -31,8 +31,8 @@ const meta: Meta<typeof LoadingBase> = {
     },
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'success', 'warning'],
-      description: 'Variante de cor',
+      options: ['spinner', 'dots', 'pulse'],
+      description: 'Variante do loading',
     },
     message: {
       control: 'text',
@@ -45,7 +45,7 @@ const meta: Meta<typeof LoadingBase> = {
   },
   args: {
     size: 'md',
-    variant: 'default',
+    variant: 'spinner',
     overlay: false,
   },
 };
@@ -80,117 +80,83 @@ export const Sizes: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div style={{ display: 'flex', gap: 64, justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
       <div style={{ textAlign: 'center' }}>
-        <LoadingBase variant="default" />
-        <p style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>Default</p>
+        <LoadingBase variant="spinner" size="lg" />
+        <p style={{ fontSize: '14px', marginTop: '12px', color: '#666', fontWeight: '500' }}>Spinner</p>
       </div>
       <div style={{ textAlign: 'center' }}>
-        <LoadingBase variant="secondary" />
-        <p style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>Secondary</p>
-      </div>
-      <div style={{ textAlign: 'center' }}>
-        <LoadingBase variant="success" />
-        <p style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>Success</p>
-      </div>
-      <div style={{ textAlign: 'center' }}>
-        <LoadingBase variant="warning" />
-        <p style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>Warning</p>
-      </div>
-      <div style={{ textAlign: 'center' }}>
-        <LoadingBase variant="destructive" />
-        <p style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>Destructive</p>
+        <LoadingBase variant="dots" size="lg" />
+        <p style={{ fontSize: '14px', marginTop: '12px', color: '#666', fontWeight: '500' }}>Dots</p>
       </div>
     </div>
   ),
 };
+
 
 export const WithMessage: Story = {
   args: {
     message: 'Carregando dados...',
+    size: 'lg',
   },
 };
 
-export const WithMessages: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '32px 0', alignItems: 'center' }}>
-      <LoadingBase message="Carregando dados..." variant="default" />
-      <LoadingBase message="Salvando alterações..." variant="success" />
-      <LoadingBase message="Atenção: Conexão lenta" variant="warning" />
-      <LoadingBase message="Erro na conexão" variant="destructive" />
-    </div>
-  ),
+export const DotsWithMessage: Story = {
+  args: {
+    variant: 'dots',
+    message: 'Processando...',
+    size: 'lg',
+  },
 };
 
-export const InButtons: Story = {
-  render: () => (
-    <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
-      <ButtonBase disabled style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <LoadingBase size="sm" />
-        Salvando...
-      </ButtonBase>
-      
-      <ButtonBase variant="secondary" disabled style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <LoadingBase size="sm" variant="secondary" />
-        Processando
-      </ButtonBase>
-      
-      <ButtonBase variant="destructive" disabled style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <LoadingBase size="sm" variant="destructive" />
-        Deletando
-      </ButtonBase>
-    </div>
-  ),
-};
+
 
 export const LoadingOverlay: Story = {
   render: () => {
-    const [showOverlay, setShowOverlay] = React.useState(false);
+    const [showSpinnerOverlay, setShowSpinnerOverlay] = React.useState(false);
+    const [showDotsOverlay, setShowDotsOverlay] = React.useState(false);
     
-    const handleShowOverlay = () => {
-      setShowOverlay(true);
-      setTimeout(() => setShowOverlay(false), 3000);
+    const handleShowSpinnerOverlay = () => {
+      setShowSpinnerOverlay(true);
+      setTimeout(() => setShowSpinnerOverlay(false), 3000);
+    };
+
+    const handleShowDotsOverlay = () => {
+      setShowDotsOverlay(true);
+      setTimeout(() => setShowDotsOverlay(false), 3000);
     };
 
     return (
-      <div style={{ position: 'relative', padding: '32px', minHeight: '200px', textAlign: 'center' }}>
-        {showOverlay && (
+      <div style={{ position: 'relative', padding: '32px',  textAlign: 'center' }}>
+        {showSpinnerOverlay && (
           <LoadingBase 
             overlay 
-            message="Processando dados..." 
+            variant="spinner"
+            message="Carregando dados..." 
+            size="lg"
+          />
+        )}
+        
+        {showDotsOverlay && (
+          <LoadingBase 
+            overlay 
+            variant="dots"
+            message="Processando informações..." 
             size="lg"
           />
         )}
         
         <div>
-          <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: '600' }}>Loading Overlay</h3>
-          <p style={{ marginBottom: '24px', color: '#666', fontSize: '14px' }}>
-            Clique no botão para mostrar o overlay por 3 segundos
-          </p>
-          <ButtonBase onClick={handleShowOverlay}>
-            Mostrar Loading Overlay
-          </ButtonBase>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center',}}>
+            <ButtonBase onClick={handleShowSpinnerOverlay}>
+              Spinner Overlay
+            </ButtonBase>
+            <ButtonBase onClick={handleShowDotsOverlay} variant="outline">
+              Dots Overlay
+            </ButtonBase>
+          </div>
         </div>
       </div>
     );
   },
-};
-
-export const InCard: Story = {
-  render: () => (
-    <div style={{ padding: '32px', maxWidth: '400px' }}>
-      <div style={{ 
-        padding: '48px 32px', 
-        border: '1px solid #e5e7eb', 
-        borderRadius: '8px',
-        backgroundColor: '#fafafa',
-        textAlign: 'center'
-      }}>
-        <LoadingBase 
-          size="lg" 
-          message="Carregando informações do usuário..." 
-        />
-      </div>
-    </div>
-  ),
 };
