@@ -5,7 +5,7 @@ import {
   CollapsibleTriggerBase 
 } from "@/components/ui/CollapsibleBase"
 import { ButtonBase } from "@/components/ui/ButtonBase"
-import { Gear, Star, Question, Code, GitBranch } from "@phosphor-icons/react"
+import { GearIcon, StarIcon, QuestionIcon, CodeIcon, GitBranchIcon } from "@phosphor-icons/react"
 
 export function CollapsiblePage() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -20,7 +20,7 @@ export function CollapsiblePage() {
         <CollapsibleBase open={isOpen} onOpenChange={setIsOpen} className="w-[350px] border rounded-lg">
           <CollapsibleTriggerBase 
             className="flex items-center justify-between w-full p-4"
-            leftIcon={<GitBranch />}
+            leftIcon={<GitBranchIcon />}
           >
             @peduarte starred 3 repositories
           </CollapsibleTriggerBase>
@@ -53,7 +53,7 @@ export function CollapsiblePage() {
         >
           <CollapsibleTriggerBase 
             className="flex items-center justify-between w-full p-4"
-            leftIcon={<Gear />}
+            leftIcon={<GearIcon />}
           >
             Configurações Avançadas
           </CollapsibleTriggerBase>
@@ -100,17 +100,17 @@ export function CollapsiblePage() {
           {
             question: "O que é o Collapsible?",
             answer: "O Collapsible é um componente que permite mostrar e esconder conteúdo de forma animada.",
-            icon: <Question />
+            icon: <QuestionIcon />
           },
           {
             question: "Como usar o Collapsible?",
             answer: "Você pode usar o Collapsible importando os componentes CollapsibleBase, CollapsibleTriggerBase e CollapsibleContentBase.",
-            icon: <Code />
+            icon: <CodeIcon />
           },
           {
             question: "É possível customizar as animações?",
             answer: "Sim, as animações podem ser customizadas através de classes CSS ou modificando o Tailwind config.",
-            icon: <Star />
+            icon: <StarIcon />
           }
         ].map((item, index) => (
           <CollapsibleFAQItem 

@@ -1,4 +1,4 @@
-import { Check, Moon, Sun } from "@phosphor-icons/react";
+import { CheckIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
   DropDownMenuBase,
@@ -43,8 +43,8 @@ export function ModeToggleBase({
           className="relative overflow-hidden border-transparent"
         >
           <>
-            <Sun className={`h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
-            <Moon className={`absolute h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
+            <SunIcon className={`h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
+            <MoonIcon className={`absolute h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${isDark ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
           </>
           <span className="sr-only">Toggle theme</span>
         </ButtonBase>
@@ -57,7 +57,7 @@ export function ModeToggleBase({
             className="flex items-center justify-between hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
           >
             {themeLabels[theme]}
-            {currentTheme === theme && <Check className="h-4 w-4 opacity-100" />}
+            {currentTheme === theme && <CheckIcon className="h-4 w-4 opacity-100" />}
           </DropDownMenuItemBase>
         ))}
       </DropDownMenuContentBase>

@@ -24,7 +24,7 @@ import {
   TooltipContentBase,
   TooltipTriggerBase,
 } from "./TooltipBase";
-import { FunnelSimple, Plus, Trash } from "@phosphor-icons/react";
+import { FunnelSimpleIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import colors from "tailwindcss/colors";
 
 type FilterDialogProps<T extends Record<string, unknown>> = {
@@ -152,7 +152,7 @@ export default function FilterDialog<T extends Record<string, unknown>>({
               onClick={pushFilter}
             >
               <span>Adicionar condição</span>
-              <Plus size={20} />
+              <PlusIcon size={20} />
             </ButtonBase>
           </div>
         </section>
@@ -305,7 +305,7 @@ function FilterItem<T extends Record<string, unknown>>({
           />
         )}
       </div>
-      <Trash
+      <TrashIcon
         onClick={() => onFilterChange(null)}
         color="red"
         style={{ cursor: "pointer" }}
@@ -326,7 +326,7 @@ function FilterTrigger({
 }: FilterTriggerProps) {
   return (
     <div className="flex items-center gap-2">
-      <FunnelSimple size={20} />
+      <FunnelSimpleIcon size={20} />
       <span>Filtrar</span>
       <div className="group flex size-5 items-center justify-center rounded-md ">
         <span className="text-xs group-hover:hidden">
@@ -342,7 +342,7 @@ function FilterTrigger({
                 handleClean();
               }}
             >
-              <Trash color={colors.red[500]} size={14} />
+              <TrashIcon color={colors.red[500]} size={14} />
             </div>
           </TooltipTriggerBase>
           <TooltipContentBase side="top">

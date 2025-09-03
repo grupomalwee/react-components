@@ -9,7 +9,7 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { Minus, Plus } from "@phosphor-icons/react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import {
@@ -86,7 +86,7 @@ export default function DrawerPage() {
                     disabled={goal <= 200}
                     aria-label="Diminuir meta"
                   >
-                    <Minus size={20} />
+                    <MinusIcon size={20} />
                   </ButtonBase>
 
                   <div className="flex-1 text-center select-none">
@@ -129,7 +129,7 @@ export default function DrawerPage() {
                     disabled={goal >= 400}
                     aria-label="Aumentar meta"
                   >
-                    <Plus size={20} />
+                    <PlusIcon size={20} />
                   </ButtonBase>
                 </div>
 

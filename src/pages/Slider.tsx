@@ -2,7 +2,7 @@
 
 import { SlideBase } from "@/components/ui/SliderBase";
 import { useState } from "react";
-import { Sun,  Ladder } from "@phosphor-icons/react";
+import { SunIcon,  LadderIcon } from "@phosphor-icons/react";
 
 export const SliderPage = () => {
   const [value1, setValue1] = useState<number[]>([20]);
@@ -25,7 +25,7 @@ export const SliderPage = () => {
       </div>
 
       <div className="flex items-center gap-3 w-64">
-        <Sun size={24} />
+        <SunIcon size={24} />
         <SlideBase
           className="flex-1 h-6 rounded-ful"
           value={value2}
@@ -61,7 +61,7 @@ export const SliderPage = () => {
           max={100}
           min={0}
           step={25}
-          rightIcon={<Ladder />}
+          rightIcon={<LadderIcon />}
         />
       </div>
 

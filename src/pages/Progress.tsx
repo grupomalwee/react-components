@@ -7,7 +7,7 @@ import {
   ProgressPanelsBase,
   ProgressCirclesBase,
 } from "@/components/ui/ProgressBase";
-import { Download } from "@phosphor-icons/react";
+import { DownloadIcon } from "@phosphor-icons/react";
 
 export const ProgressPage = () => {
   const [progress, setProgress] = React.useState(13);
@@ -24,7 +24,7 @@ export const ProgressPage = () => {
           value={progress}
           className="w-full"
           label="Download "
-          leftIcon={<Download />}
+          leftIcon={<DownloadIcon />}
         />
         <ProgressSegmentsBase segments={10} value={progress} label="Segment"/>
         <ProgressPanelsBase

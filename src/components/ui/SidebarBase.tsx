@@ -11,7 +11,7 @@ import { InputBase } from "@/components/ui/InputBase";
 import { SeparatorBase } from "@/components/ui/SeparatorBase";
 import { SheetBase, SheetContentBase } from "@/components/ui/SheetBase";
 import { SkeletonBase } from "@/components/ui/SkeletonBase";
-import { SidebarSimple } from "@phosphor-icons/react";
+import { SidebarSimpleIcon } from "@phosphor-icons/react";
 
 import {
   TooltipBase,
@@ -282,7 +282,7 @@ const SidebarTriggerBase = React.forwardRef<
         {...props}
       >
         <span className="sr-only">Toggle SidebarBase</span>
-        <SidebarSimple />
+        <SidebarSimpleIcon />
       </ButtonBase>
     </div>
   );

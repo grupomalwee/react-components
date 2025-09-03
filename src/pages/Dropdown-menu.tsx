@@ -6,7 +6,7 @@ import {
   DropDownMenuSeparatorBase,
   DropDownMenuTriggerBase,
 } from "@/components/ui/DropDownMenuBase";
-import { Check, List } from "@phosphor-icons/react";
+import { CheckIcon, ListIcon } from "@phosphor-icons/react";
 
 export const DropDownMenuPage = () => {
   return (
@@ -16,7 +16,7 @@ export const DropDownMenuPage = () => {
         <DropDownMenuBase>
           <DropDownMenuTriggerBase className="flex items-center gap-2">
             Abrir menu
-            <List />
+            <ListIcon />
           </DropDownMenuTriggerBase>
           <DropDownMenuContentBase align="end">
             <DropDownMenuLabelBase>My Account</DropDownMenuLabelBase>
@@ -30,10 +30,10 @@ export const DropDownMenuPage = () => {
               Profile
             </DropDownMenuItemBase>
             <DropDownMenuItemBase>Billing</DropDownMenuItemBase>
-            <DropDownMenuItemBase rightIcon={<Check />}>
+            <DropDownMenuItemBase rightIcon={<CheckIcon />}>
               Team
             </DropDownMenuItemBase>
-            <DropDownMenuItemBase leftIcon={<Check />}>
+            <DropDownMenuItemBase leftIcon={<CheckIcon />}>
               Subscription
             </DropDownMenuItemBase>
           </DropDownMenuContentBase>

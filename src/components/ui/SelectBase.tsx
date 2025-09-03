@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, CaretDown, CaretUp } from "@phosphor-icons/react";
+import { CheckIcon, CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";
@@ -31,7 +31,7 @@ const SelectTriggerBase = React.forwardRef<
       transition={{ duration: 0.3 }}
       className="flex items-center"
     >
-      <CaretDown className="h-4 w-4 opacity-50" />
+      <CaretDownIcon className="h-4 w-4 opacity-50" />
     </motion.span>
   </SelectPrimitive.Trigger>
 ));
@@ -49,7 +49,7 @@ const SelectScrollUpButtonBase = React.forwardRef<
     )}
     {...props}
   >
-    <CaretUp className="h-4 w-4" />
+    <CaretUpIcon className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -66,7 +66,7 @@ const SelectScrollDownButtonBase = React.forwardRef<
     )}
     {...props}
   >
-    <CaretDown className="h-4 w-4" />
+    <CaretDownIcon className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -140,7 +140,7 @@ const SelectItemBase = React.forwardRef<
   >
     <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <CheckIcon className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

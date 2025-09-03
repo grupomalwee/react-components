@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { Check } from "@phosphor-icons/react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 import { cn } from "../../lib/utils";
@@ -32,7 +32,7 @@ const CheckboxBase = React.forwardRef<
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
         className="flex items-center justify-center text-current"
       >
-        <Check className="h-4 w-4" weight="bold" />
+        <CheckIcon className="h-4 w-4" weight="bold" />
       </motion.div>
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>

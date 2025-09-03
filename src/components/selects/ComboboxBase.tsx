@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/PopoverBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
-import { CaretDown, Check } from "@phosphor-icons/react";
+import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { ReactNode, useState } from "react";
 
 export interface ComboboxItem<T extends string> {
@@ -76,7 +76,7 @@ export function ComboboxBase<T extends string>({
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
-            <CaretDown size={16} className="mt-0.5" />
+            <CaretDownIcon size={16} className="mt-0.5" />
           </ButtonBase>
         </PopoverTriggerBase>
 
@@ -112,7 +112,7 @@ export function ComboboxBase<T extends string>({
                       data-testid={testIds.option ?? "combobox-option"}
                     >
                       {item.label}
-                      <Check
+                      <CheckIcon
                         className={cn(
                           "ml-auto",
                           isSelected ? "opacity-100" : "opacity-0"

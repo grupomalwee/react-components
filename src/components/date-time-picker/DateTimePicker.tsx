@@ -15,7 +15,7 @@ import {
 } from "../ui/DialogBase";
 import LabelBase from "../ui/LabelBase";
 import { TimePicker } from "./TimePicker";
-import { Calendar } from "@phosphor-icons/react";
+import { CalendarIcon } from "@phosphor-icons/react";
 
 interface DateTimePickerProps {
   label?: string;
@@ -80,7 +80,7 @@ export function DateTimePicker({
               <span className="text-zinc-400">Pick a date</span>
             )}
 
-            <Calendar className="ml-auto text-gray-500" size={24} />
+            <CalendarIcon className="ml-auto text-gray-500" size={24} />
           </ButtonBase>
         </DialogTriggerBase>
         <DialogContentBase>

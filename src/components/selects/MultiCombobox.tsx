@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { ComboboxProps } from "./Combobox"
 import { ComboboxBase } from "./ComboboxBase"
-import { X } from "@phosphor-icons/react"
+import { XIcon } from "@phosphor-icons/react"
 import LabelBase from "../ui/LabelBase"
 import { cn } from "@/lib/utils"
 
@@ -89,7 +89,7 @@ export function MultiCombobox<T extends string>({
               }}
               className="cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all"
             >
-              <X size={14} />
+              <XIcon size={14} />
             </span>
           </div>
         ))}
