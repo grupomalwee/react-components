@@ -13,15 +13,15 @@ import {
   AlertDialogDescriptionBase,
   AlertDialogActionBase,
   AlertDialogCancelBase,
-} from "./AlertDialogBase"
+} from "./AlertDialogBase";
 
 interface DestructiveDialogProps {
-  title: string
-  description: string
-  onConfirm: () => void
-  onCancel?: () => void
-  children?: React.ReactNode
-  triggerContent?: React.ReactNode
+  title: string;
+  description: string;
+  onConfirm: () => void;
+  onCancel?: () => void;
+  children?: React.ReactNode;
+  triggerContent?: React.ReactNode;
 }
 
 export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
@@ -32,16 +32,18 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
   children,
   triggerContent,
 }) => {
-  const titleId = "destructive-dialog-title"
-  const descriptionId = "destructive-dialog-description"
+  const titleId = "destructive-dialog-title";
+  const descriptionId = "destructive-dialog-description";
 
   const triggerEl = React.isValidElement(children) ? (
     <AlertDialogTriggerBase asChild>{children}</AlertDialogTriggerBase>
   ) : (
     <AlertDialogTriggerBase>
-  <ButtonBase variant="destructive">{triggerContent ?? "Excluir"}</ButtonBase>
+      <ButtonBase variant="destructive">
+        {triggerContent ?? "Excluir"}
+      </ButtonBase>
     </AlertDialogTriggerBase>
-  )
+  );
 
   return (
     <AlertDialogBase>
@@ -60,10 +62,16 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
           </div>
 
           <div className="flex-1">
-            <AlertDialogTitleBase id={titleId} className="text-lg sm:text-xl font-semibold text-destructive">
+            <AlertDialogTitleBase
+              id={titleId}
+              className="text-lg sm:text-xl font-semibold text-destructive"
+            >
               {title}
             </AlertDialogTitleBase>
-            <AlertDialogDescriptionBase id={descriptionId} className="mt-2 text-sm text-muted-foreground">
+            <AlertDialogDescriptionBase
+              id={descriptionId}
+              className="mt-2 text-sm text-muted-foreground"
+            >
               {description}
             </AlertDialogDescriptionBase>
           </div>
@@ -73,8 +81,7 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
           <AlertDialogCancelBase
             onClick={onCancel}
             className={cn(
-              buttonVariantsBase({ variant: "outline", size: "sm" }),
-              "px-4 py-2",
+              buttonVariantsBase({ variant: "outline", size: "default" }),
               "hover:bg-foreground/5 hover:text-primary hover:opacity-90 hover:shadow-none"
             )}
           >
@@ -83,14 +90,16 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
 
           <AlertDialogActionBase
             onClick={onConfirm}
-            className={cn(buttonVariantsBase({ variant: "destructive", size: "default" }), "px-5 py-2 shadow-lg")}
+            className={cn(
+              buttonVariantsBase({ variant: "destructive", size: "default" })
+            )}
           >
             Confirmar
           </AlertDialogActionBase>
         </AlertDialogFooterBase>
       </AlertDialogContentBase>
     </AlertDialogBase>
-  )
-}
+  );
+};
 
-export default DestructiveDialog
+export default DestructiveDialog;
