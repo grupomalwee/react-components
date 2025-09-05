@@ -48,7 +48,7 @@ type Story = StoryObj<typeof BarChart>;
 
 export const Default: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart {...args} />
     </div>
   ),
@@ -56,7 +56,7 @@ export const Default: Story = {
 
 export const CustomHexColors: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args}
         colors={["#ef4444", "#10b981", "#f59e0b"]}
@@ -67,7 +67,7 @@ export const CustomHexColors: Story = {
 
 export const CustomHslColors: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args}
         colors={["hsl(258, 88%, 66%)", "hsl(188, 94%, 43%)", "hsl(84, 81%, 44%)"]}
@@ -78,7 +78,7 @@ export const CustomHslColors: Story = {
 
 export const CustomRgbColors: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args}
         colors={["rgb(236, 72, 153)", "rgb(20, 184, 166)", "rgb(251, 146, 60)"]}
@@ -89,7 +89,7 @@ export const CustomRgbColors: Story = {
 
 export const CustomData: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args}
         data={[
@@ -106,7 +106,7 @@ export const CustomData: Story = {
 
 export const WithoutGrid: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args} 
         showGrid={false}
@@ -118,7 +118,7 @@ export const WithoutGrid: Story = {
 
 export const CustomGrid: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '400px' }}>
+    <div>
       <BarChart 
         {...args} 
         gridColor="#ff6b6b"
@@ -130,7 +130,7 @@ export const CustomGrid: Story = {
 
 export const Compact: Story = {
   render: (args) => (
-    <div style={{ width: '400px', height: '250px' }}>
+    <div>
       <BarChart 
         {...args} 
         height={200} 
