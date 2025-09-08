@@ -1,20 +1,22 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
+import * as React from "react";
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
-import { cn } from "../..//lib/utils"
-import { buttonVariantsBase } from "@/components/ui/ButtonBase"
+import { cn } from "../..//lib/utils";
+import { buttonVariantsBase } from "@/components/ui/ButtonBase";
 
-const AlertDialogBase = AlertDialogPrimitive.Root
+const AlertDialogBase = AlertDialogPrimitive.Root;
 
-const AlertDialogTriggerBase = AlertDialogPrimitive.Trigger
+const AlertDialogTriggerBase = AlertDialogPrimitive.Trigger;
 
-const AlertDialogPortalBase = AlertDialogPrimitive.Portal
+const AlertDialogPortalBase = AlertDialogPrimitive.Portal;
 
 const AlertDialogOverlayBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-overlay", ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
     className={cn(
@@ -25,12 +27,14 @@ const AlertDialogOverlayBase = React.forwardRef<
     {...props}
     ref={ref}
   />
-))
-AlertDialogOverlayBase.displayName = AlertDialogPrimitive.Overlay.displayName
+));
+AlertDialogOverlayBase.displayName = AlertDialogPrimitive.Overlay.displayName;
 
 const AlertDialogContentBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-content", ...props }, ref) => (
   <AlertDialogPortalBase>
     <AlertDialogOverlayBase />
@@ -44,8 +48,8 @@ const AlertDialogContentBase = React.forwardRef<
       {...props}
     />
   </AlertDialogPortalBase>
-))
-AlertDialogContentBase.displayName = AlertDialogPrimitive.Content.displayName
+));
+AlertDialogContentBase.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeaderBase = ({
   className,
@@ -58,8 +62,8 @@ const AlertDialogHeaderBase = ({
     )}
     {...props}
   />
-)
-AlertDialogHeaderBase.displayName = "AlertDialogHeaderBase"
+);
+AlertDialogHeaderBase.displayName = "AlertDialogHeaderBase";
 
 const AlertDialogFooterBase = ({
   className,
@@ -67,17 +71,19 @@ const AlertDialogFooterBase = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col-reverse sm:flex-row sm:justify-end",
       className
     )}
     {...props}
   />
-)
-AlertDialogFooterBase.displayName = "AlertDialogFooterBase"
+);
+AlertDialogFooterBase.displayName = "AlertDialogFooterBase";
 
 const AlertDialogTitleBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-title", ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
@@ -85,12 +91,14 @@ const AlertDialogTitleBase = React.forwardRef<
     data-testid={testid}
     {...props}
   />
-))
-AlertDialogTitleBase.displayName = AlertDialogPrimitive.Title.displayName
+));
+AlertDialogTitleBase.displayName = AlertDialogPrimitive.Title.displayName;
 
 const AlertDialogDescriptionBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-description", ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
@@ -98,13 +106,15 @@ const AlertDialogDescriptionBase = React.forwardRef<
     data-testid={testid}
     {...props}
   />
-))
+));
 AlertDialogDescriptionBase.displayName =
-  AlertDialogPrimitive.Description.displayName
+  AlertDialogPrimitive.Description.displayName;
 
 const AlertDialogActionBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-action", ...props }, ref) => (
   <AlertDialogPrimitive.Action
     ref={ref}
@@ -112,25 +122,23 @@ const AlertDialogActionBase = React.forwardRef<
     data-testid={testid}
     {...props}
   />
-))
-AlertDialogActionBase.displayName = AlertDialogPrimitive.Action.displayName
+));
+AlertDialogActionBase.displayName = AlertDialogPrimitive.Action.displayName;
 
 const AlertDialogCancelBase = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel> & { testid?: string }
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel> & {
+    testid?: string;
+  }
 >(({ className, testid = "alertdialog-cancel", ...props }, ref) => (
   <AlertDialogPrimitive.Cancel
     ref={ref}
-    className={cn(
-      buttonVariantsBase({ variant: "outline" }),
-      "mt-2 sm:mt-0",
-      className
-    )}
+    className={cn(buttonVariantsBase({ variant: "outline" }), className)}
     data-testid={testid}
     {...props}
   />
-  ))
-AlertDialogCancelBase.displayName = AlertDialogPrimitive.Cancel.displayName
+));
+AlertDialogCancelBase.displayName = AlertDialogPrimitive.Cancel.displayName;
 
 export {
   AlertDialogBase,
@@ -144,4 +152,4 @@ export {
   AlertDialogDescriptionBase,
   AlertDialogActionBase,
   AlertDialogCancelBase,
-}
+};
