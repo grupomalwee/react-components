@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -13,13 +13,32 @@ import {
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
 
+// Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {
-  name: string;
-  [key: string]: string | number;
+  [key: string]: string | number | boolean | null | undefined;
 }
 
-interface CustomBarChartProps {
-  data?: BarChartData[];
+// Interface para configuração do eixo X - agora mais inteligente
+interface XAxisConfig {
+  dataKey: string; // Campo que será usado como eixo X
+  label?: string; // Label opcional
+  formatter?: (value: string | number) => string; // Formatador opcional
+  autoLabel?: boolean; // Se deve gerar label automaticamente baseado no dataKey
+}
+
+// Interface para mapeamento de dados - mais flexível
+interface DataMapper {
+  [dataKey: string]: {
+    label?: string; // Nome para exibição (se não informado, usa o dataKey formatado)
+    formatter?: (value: string | number) => string | number;
+    color?: string; // Cor específica (se não informada, usa cores automáticas)
+    type?: 'number' | 'string' | 'auto';
+    visible?: boolean; // Se deve ser exibido (padrão: true)
+  };
+}
+
+interface BarChartProps {
+  data: BarChartData[]; // Agora obrigatório - sem fallback confuso
   className?: string;
   height?: number;
   width?: number | string;
@@ -31,14 +50,49 @@ interface CustomBarChartProps {
   title?: string;
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
+  
+  // Configuração do eixo X - pode ser automática
+  xAxis?: XAxisConfig | string; // String = dataKey simples, objeto = configuração completa
+  
+  // Mapeamento de dados - pode ser automático
+  mapper?: DataMapper | string[]; // String[] = campos simples, objeto = configuração completa
+  
+  // Modo automático - detecta tudo automaticamente
+  autoDetect?: boolean; // Se true, ignora xAxis e mapper e detecta automaticamente
 }
 
-// Dados padrão simples - apenas para fallback
-const defaultData: BarChartData[] = [
-  { name: "A", value: 100 },
-  { name: "B", value: 200 },
-  { name: "C", value: 150 },
-];
+// Função para formatar automaticamente nomes de campos
+const formatFieldName = (fieldName: string): string => {
+  return fieldName
+    .replace(/([A-Z])/g, ' $1') // camelCase para espaços
+    .replace(/[_-]/g, ' ') // underscore e hífens para espaços
+    .replace(/\b\w/g, l => l.toUpperCase()) // Primeira letra maiúscula
+    .trim();
+};
+
+// Função para detectar automaticamente o eixo X (primeiro campo string/texto)
+const detectXAxis = (data: BarChartData[]): string => {
+  if (!data || data.length === 0) return 'name';
+  
+  const firstItem = data[0];
+  const stringFields = Object.keys(firstItem).filter(key => 
+    typeof firstItem[key] === 'string' || 
+    (typeof firstItem[key] === 'number' && String(firstItem[key]).length <= 4) // Anos, IDs curtos
+  );
+  
+  return stringFields[0] || Object.keys(firstItem)[0] || 'name';
+};
+
+// Função para detectar automaticamente campos numéricos para as barras
+const detectDataFields = (data: BarChartData[], xAxisKey: string): string[] => {
+  if (!data || data.length === 0) return [];
+  
+  const firstItem = data[0];
+  return Object.keys(firstItem).filter(key => 
+    key !== xAxisKey && 
+    typeof firstItem[key] === 'number'
+  );
+};
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
@@ -82,8 +136,8 @@ const formatCompactNumber = (value: number): string => {
   return value.toString();
 };
 
-const CustomBarChart: React.FC<CustomBarChartProps> = ({
-  data = defaultData,
+const BarChart: React.FC<BarChartProps> = ({
+  data,
   className,
   height = 350,
   width = 900,
@@ -95,7 +149,68 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
   title,
   titlePosition = "left",
   showLabels = false,
+  xAxis,
+  mapper,
+  autoDetect = false,
 }) => {
+  // 🧠 LÓGICA INTELIGENTE: Detectar automaticamente ou usar configurações
+  const smartConfig = useMemo(() => {
+    // Se autoDetect estiver ativo, ignora configurações manuais
+    if (autoDetect || !xAxis || !mapper) {
+      const detectedXAxis = detectXAxis(data);
+      const detectedFields = detectDataFields(data, detectedXAxis);
+      
+      return {
+        xAxisConfig: {
+          dataKey: detectedXAxis,
+          label: formatFieldName(detectedXAxis),
+          autoLabel: true
+        } as XAxisConfig,
+        mapperConfig: detectedFields.reduce((acc, field) => {
+          acc[field] = {
+            label: formatFieldName(field),
+            type: 'number' as const,
+            visible: true
+          };
+          return acc;
+        }, {} as DataMapper)
+      };
+    }
+    
+    // Processar configurações manuais
+    const xAxisConfig: XAxisConfig = typeof xAxis === 'string' 
+      ? { dataKey: xAxis, label: formatFieldName(xAxis), autoLabel: true }
+      : xAxis;
+    
+    let mapperConfig: DataMapper;
+    if (Array.isArray(mapper)) {
+      // Se mapper é array de strings, converter para DataMapper
+      mapperConfig = mapper.reduce((acc, field) => {
+        acc[field] = {
+          label: formatFieldName(field),
+          type: 'auto' as const,
+          visible: true
+        };
+        return acc;
+      }, {} as DataMapper);
+    } else {
+      // Processar DataMapper completo, adicionando labels automáticos se necessário
+      mapperConfig = Object.keys(mapper).reduce((acc, key) => {
+        acc[key] = {
+          label: formatFieldName(key),
+          type: 'auto' as const,
+          visible: true,
+          ...mapper[key], // Sobrescreve com configurações do usuário
+        };
+        return acc;
+      }, {} as DataMapper);
+    }
+    
+    return { xAxisConfig, mapperConfig };
+  }, [data, xAxis, mapper, autoDetect]);
+
+  const { xAxisConfig, mapperConfig } = smartConfig;
+
   const [activeTooltips, setActiveTooltips] = useState<
     Array<{
       id: string;
@@ -130,6 +245,12 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
     }>
   >([]);
 
+  // Processar dados para garantir compatibilidade com Recharts
+  const processedData = data.map((item) => ({
+    ...item,
+    name: String(item[xAxisConfig.dataKey] || 'N/A'), // Garantir propriedade 'name' para tooltip
+  }));
+
   // Função simples para gerar cores dinâmicas
   const generateColors = (dataKeys: string[]): Record<string, string> => {
     const colorMap: Record<string, string> = {};
@@ -142,10 +263,17 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
     return colorMap;
   };
 
-  // Extrair as chaves dos dados para determinar quantas barras temos
-  const dataKeys =
-    data.length > 0 ? Object.keys(data[0]).filter((key) => key !== "name") : [];
+  // Extrair as chaves dos dados baseado no mapperConfig inteligente
+  const dataKeys = Object.keys(mapperConfig);
   const finalColors = generateColors(dataKeys);
+
+  // Função para adaptar dados universais para o tooltip
+  const adaptDataForTooltip = (universalData: BarChartData) => {
+    return {
+      ...universalData,
+      name: String(universalData[xAxisConfig.dataKey] || 'N/A'), // Garantir que tem a propriedade 'name'
+    };
+  };
 
   // Função para lidar com o click na barra
   const handleBarClick = (
@@ -155,7 +283,9 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
   ) => {
     event.stopPropagation(); // Previne que o click propague para o chart
 
-    const tooltipId = `${data.name}`;
+    // Usar o campo dinâmico do xAxisConfig ao invés de "name" fixo
+    const xAxisValue = data[xAxisConfig.dataKey] || 'N/A';
+    const tooltipId = `${xAxisValue}`;
     const rect = (event.target as HTMLElement).getBoundingClientRect();
 
     // Verificar se já existe um tooltip para esta barra
@@ -623,7 +753,7 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
       {title && <h3 className={getTitleClassName(titlePosition)}>{title}</h3>}
 
       <RechartsBarChart
-        data={data}
+        data={processedData}
         width={typeof width === 'number' ? width : 900}
         height={height}
         margin={{
@@ -642,11 +772,12 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
             />
           )}
           <XAxis
-            dataKey="name"
+            dataKey={xAxisConfig.dataKey}
             stroke="hsl(var(--muted-foreground))"
             fontSize={12}
             tickLine={false}
             axisLine={false}
+            tickFormatter={xAxisConfig.formatter}
           />
           <YAxis
             stroke="hsl(var(--muted-foreground))"
@@ -669,16 +800,18 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
               }}
             />
           )}
-          {/* Renderizar barras dinamicamente baseado nos dados */}
-          {dataKeys.map((key) => (
-            <Bar
-              key={key}
-              dataKey={key}
-              name={key.charAt(0).toUpperCase() + key.slice(1)}
-              fill={finalColors[key]}
-              radius={[4, 4, 0, 0]}
-              onClick={handleBarClick}
-              style={{ cursor: "pointer" }}
+          {/* Renderizar barras dinamicamente baseado no mapperConfig */}
+          {dataKeys.map((key) => {
+            const fieldConfig = mapperConfig[key];
+            return (
+              <Bar
+                key={key}
+                dataKey={key}
+                name={fieldConfig?.label || key}
+                fill={fieldConfig?.color || finalColors[key]}
+                radius={[4, 4, 0, 0]}
+                onClick={handleBarClick}
+                style={{ cursor: "pointer" }}
               activeBar={
                 <Rectangle
                   fill={finalColors[key]}
@@ -702,7 +835,8 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
                 />
               )}
             </Bar>
-          ))}
+            );
+          })}
         </RechartsBarChart>
 
       {/* Guias de Alinhamento Visual - Conectam tooltips */}
@@ -800,7 +934,7 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
         <DraggableTooltip
           key={tooltip.id}
           id={tooltip.id}
-          data={tooltip.data}
+          data={adaptDataForTooltip(tooltip.data)}
           position={tooltip.position}
           isDragging={isDragging === tooltip.id}
           title={title}
@@ -812,7 +946,7 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
           }}
           periodLabel="Período Selecionado"
           dataLabel="Dados do Período"
-          showCloseAllButton={index === 0} // Só o primeiro tooltip mostra o botão
+          showCloseAllButton={index === 0} 
           globalTooltipCount={globalTooltipCount}
           onCloseAll={() => {
             window.dispatchEvent(new Event("closeAllTooltips"));
@@ -825,4 +959,4 @@ const CustomBarChart: React.FC<CustomBarChartProps> = ({
   );
 };
 
-export default CustomBarChart;
+export default BarChart;
