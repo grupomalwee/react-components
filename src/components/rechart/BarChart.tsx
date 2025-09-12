@@ -50,12 +50,16 @@ interface BarChartProps {
   title?: string;
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
+  // Mapeamento simples de rótulos exibidos: { fieldKey: 'Rótulo' }
+  labelMap?: Record<string, string>;
   
   // Configuração do eixo X - pode ser automática
   xAxis?: XAxisConfig | string; // String = dataKey simples, objeto = configuração completa
   
   // Mapeamento de dados - pode ser automático
   mapper?: DataMapper | string[]; // String[] = campos simples, objeto = configuração completa
+  // Aceita também prop legacy/Stories: yAxis como alias de mapper
+  yAxis?: DataMapper | string[];
   
   // Modo automático - detecta tudo automaticamente
   autoDetect?: boolean; // Se true, ignora xAxis e mapper e detecta automaticamente
@@ -151,24 +155,29 @@ const BarChart: React.FC<BarChartProps> = ({
   showLabels = false,
   xAxis,
   mapper,
+  yAxis,
+  labelMap,
   autoDetect = false,
 }) => {
   // 🧠 LÓGICA INTELIGENTE: Detectar automaticamente ou usar configurações
   const smartConfig = useMemo(() => {
-    // Se autoDetect estiver ativo, ignora configurações manuais
-    if (autoDetect || !xAxis || !mapper) {
+    // Prefer yAxis (stories) over mapper prop when both exist
+    const providedMapper = (yAxis ?? mapper) as DataMapper | string[] | undefined;
+
+    // Só usar detecção automática quando realmente não houver mapper/xAxis configurados (null/undefined)
+    if (autoDetect === true || xAxis == null || providedMapper == null) {
       const detectedXAxis = detectXAxis(data);
       const detectedFields = detectDataFields(data, detectedXAxis);
       
       return {
         xAxisConfig: {
           dataKey: detectedXAxis,
-          label: formatFieldName(detectedXAxis),
+          label: labelMap?.[detectedXAxis] ?? formatFieldName(detectedXAxis),
           autoLabel: true
         } as XAxisConfig,
         mapperConfig: detectedFields.reduce((acc, field) => {
           acc[field] = {
-            label: formatFieldName(field),
+            label: labelMap?.[field] ?? formatFieldName(field),
             type: 'number' as const,
             visible: true
           };
@@ -176,18 +185,18 @@ const BarChart: React.FC<BarChartProps> = ({
         }, {} as DataMapper)
       };
     }
-    
-    // Processar configurações manuais
+
+    // Processar configurações manuais a partir de providedMapper
     const xAxisConfig: XAxisConfig = typeof xAxis === 'string' 
       ? { dataKey: xAxis, label: formatFieldName(xAxis), autoLabel: true }
-      : xAxis;
+      : (xAxis as XAxisConfig);
     
     let mapperConfig: DataMapper;
-    if (Array.isArray(mapper)) {
+  if (Array.isArray(providedMapper)) {
       // Se mapper é array de strings, converter para DataMapper
-      mapperConfig = mapper.reduce((acc, field) => {
+      mapperConfig = providedMapper.reduce((acc, field) => {
         acc[field] = {
-          label: formatFieldName(field),
+      label: labelMap?.[field] ?? formatFieldName(field),
           type: 'auto' as const,
           visible: true
         };
@@ -195,19 +204,19 @@ const BarChart: React.FC<BarChartProps> = ({
       }, {} as DataMapper);
     } else {
       // Processar DataMapper completo, adicionando labels automáticos se necessário
-      mapperConfig = Object.keys(mapper).reduce((acc, key) => {
+      mapperConfig = Object.keys(providedMapper as DataMapper).reduce((acc, key) => {
         acc[key] = {
-          label: formatFieldName(key),
+      label: (providedMapper as DataMapper)[key]?.label ?? labelMap?.[key] ?? formatFieldName(key),
           type: 'auto' as const,
           visible: true,
-          ...mapper[key], // Sobrescreve com configurações do usuário
+          ...(providedMapper as DataMapper)[key], // Sobrescreve com configurações do usuário
         };
         return acc;
       }, {} as DataMapper);
     }
-    
+
     return { xAxisConfig, mapperConfig };
-  }, [data, xAxis, mapper, autoDetect]);
+  }, [data, xAxis, mapper, yAxis, autoDetect]);
 
   const { xAxisConfig, mapperConfig } = smartConfig;
 

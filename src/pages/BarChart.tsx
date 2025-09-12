@@ -57,9 +57,10 @@ export const BarChartPage = () => {
             title="Análise Financeira Simplificada"
             data={quartData}
             xAxis="trimestre"
-            mapper={["receita", "despesas", "lucro"]}
+            yAxis={["despesas", "lucro"]}
             showLabels={true}
             height={400}
+            labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
           />
         </div>
       </div>
