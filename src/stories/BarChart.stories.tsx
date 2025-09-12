@@ -64,7 +64,7 @@ const meta: Meta<typeof BarChart> = {
     showLegend: true,
     data: sampleQuarterData,
     // padrão editável no painel: array de chaves para yAxis
-    yAxis: undefined,
+    yAxis: ["receita", "despesas", "lucro"],
     labelMap: undefined,
     xAxis: "trimestre",
   },
@@ -105,7 +105,7 @@ export const ManualYAxisObject: Story = {
       xAxis={args.xAxis ?? "name"}
       // permite passar objeto via story args (use painel -> JSON)
       yAxis={
-        (args.yAxis as unknown as Record<string, { label?: string; color?: string }>) ??
+        (args.yAxis as any) ??
         {
           vendas: { label: "Vendas", color: "#ef4444" },
           meta: { label: "Meta", color: "#10b981" },
