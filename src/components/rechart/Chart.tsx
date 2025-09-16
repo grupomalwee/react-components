@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  BarChart as RechartsBarChart,
+  ComposedChart,
   Bar,
+  Line,
+  Area,
   Rectangle,
   XAxis,
   YAxis,
@@ -13,33 +15,42 @@ import {
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
 import renderPillLabel from "./pillLabelRenderer";
+import {
+  formatFieldName,
+  detectDataFields,
+  generateAdditionalColors,
+} from "./helpers";
 
-// Interface universal para aceitar qualquer estrutura de dados JSON
-interface BarChartData {
+interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-// Interface para configuração do eixo X - agora mais inteligente
 interface XAxisConfig {
-  dataKey: string; // Campo que será usado como eixo X
-  label?: string; // Label opcional
-  formatter?: (value: string | number) => string; // Formatador opcional
-  autoLabel?: boolean; // Se deve gerar label automaticamente baseado no dataKey
+  dataKey: string;
+  label?: string;
+  formatter?: (value: string | number) => string;
+  autoLabel?: boolean;
 }
 
-// Interface para mapeamento de dados - mais flexível
 interface DataMapper {
   [dataKey: string]: {
-    label?: string; // Nome para exibição (se não informado, usa o dataKey formatado)
+    label?: string;
     formatter?: (value: string | number) => string | number;
-    color?: string; // Cor específica (se não informada, usa cores automáticas)
+    color?: string;
     type?: "number" | "string" | "auto";
-    visible?: boolean; // Se deve ser exibido (padrão: true)
+    visible?: boolean;
   };
 }
 
-interface BarChartProps {
-  data: BarChartData[]; // Agora obrigatório - sem fallback confuso
+type SeriesProp = {
+  bar?: string[];
+  line?: string[];
+  area?: string[];
+};
+
+interface ChartProps {
+  data: ChartData[];
+  series?: SeriesProp;
   className?: string;
   height?: number;
   width?: number | string;
@@ -51,87 +62,16 @@ interface BarChartProps {
   title?: string;
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
-  // Mapeamento simples de rótulos exibidos: { fieldKey: 'Rótulo' }
   labelMap?: Record<string, string>;
-
-  // Configuração do eixo X - pode ser automática
-  xAxis?: XAxisConfig | string; // String = dataKey simples, objeto = configuração completa
-
-  // Mapeamento de dados - pode ser automático
-  mapper?: DataMapper | string[]; // String[] = campos simples, objeto = configuração completa
-  // Aceita também prop legacy/Stories: yAxis como alias de mapper
-  yAxis?: DataMapper | string[];
-
-  // Modo automático - detecta tudo automaticamente
-  autoDetect?: boolean; // Se true, ignora xAxis e mapper e detecta automaticamente
+  xAxis: XAxisConfig | string;
+  // mapper and autoDetect removed: mapping must be provided via `series` and `labelMap`
 }
-
-// Função para formatar automaticamente nomes de campos
-const formatFieldName = (fieldName: string): string => {
-  return fieldName
-    .replace(/([A-Z])/g, " $1") // camelCase para espaços
-    .replace(/[_-]/g, " ") // underscore e hífens para espaços
-    .replace(/\b\w/g, (l) => l.toUpperCase()) // Primeira letra maiúscula
-    .trim();
-};
-
-// Função para detectar automaticamente o eixo X (primeiro campo string/texto)
-const detectXAxis = (data: BarChartData[]): string => {
-  if (!data || data.length === 0) return "name";
-
-  const firstItem = data[0];
-  const stringFields = Object.keys(firstItem).filter(
-    (key) =>
-      typeof firstItem[key] === "string" ||
-      (typeof firstItem[key] === "number" && String(firstItem[key]).length <= 4) // Anos, IDs curtos
-  );
-
-  return stringFields[0] || Object.keys(firstItem)[0] || "name";
-};
-
-// Função para detectar automaticamente campos numéricos para as barras
-const detectDataFields = (data: BarChartData[], xAxisKey: string): string[] => {
-  if (!data || data.length === 0) return [];
-
-  const firstItem = data[0];
-  return Object.keys(firstItem).filter(
-    (key) => key !== xAxisKey && typeof firstItem[key] === "number"
-  );
-};
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
-// Função simples para gerar cores adicionais
-const generateAdditionalColors = (
-  baseColors: string[],
-  count: number
-): string[] => {
-  const colors = [...baseColors];
-  const variations = [
-    "#ff6b6b",
-    "#4ecdc4",
-    "#45b7d1",
-    "#f9ca24",
-    "#6c5ce7",
-    "#a29bfe",
-    "#fd79a8",
-    "#00b894",
-  ];
-
-  while (colors.length < count) {
-    colors.push(
-      variations[(colors.length - baseColors.length) % variations.length]
-    );
-  }
-
-  return colors;
-};
-
-// Função para formatar números de forma compacta (1K, 1M, etc.)
-// compact number util moved to pillLabelRenderer
-
-const BarChart: React.FC<BarChartProps> = ({
+const Chart: React.FC<ChartProps> = ({
   data,
+  series,
   className,
   height = 350,
   width = 900,
@@ -144,147 +84,96 @@ const BarChart: React.FC<BarChartProps> = ({
   titlePosition = "left",
   showLabels = false,
   xAxis,
-  mapper,
-  yAxis,
   labelMap,
-  autoDetect = false,
 }) => {
-  // 🧠 LÓGICA INTELIGENTE: Detectar automaticamente ou usar configurações
+  type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
-    // Prefer yAxis (stories) over mapper prop when both exist
-    const providedMapper = (yAxis ?? mapper) as
-      | DataMapper
-      | string[]
-      | undefined;
-
-    // Só usar detecção automática quando realmente não houver mapper/xAxis configurados (null/undefined)
-    if (autoDetect === true || xAxis == null || providedMapper == null) {
-      const detectedXAxis = detectXAxis(data);
-      const detectedFields = detectDataFields(data, detectedXAxis);
-
-      return {
-        xAxisConfig: {
-          dataKey: detectedXAxis,
-          label: labelMap?.[detectedXAxis] ?? formatFieldName(detectedXAxis),
-          autoLabel: true,
-        } as XAxisConfig,
-        mapperConfig: detectedFields.reduce((acc, field) => {
-          acc[field] = {
-            label: labelMap?.[field] ?? formatFieldName(field),
-            type: "number" as const,
-            visible: true,
-          };
-          return acc;
-        }, {} as DataMapper),
-      };
-    }
-
-    // Processar configurações manuais a partir de providedMapper
+    // xAxis is now required. Accept either a string dataKey or a full XAxisConfig.
     const xAxisConfig: XAxisConfig =
       typeof xAxis === "string"
         ? { dataKey: xAxis, label: formatFieldName(xAxis), autoLabel: true }
         : (xAxis as XAxisConfig);
 
-    let mapperConfig: DataMapper;
-    if (Array.isArray(providedMapper)) {
-      // Se mapper é array de strings, converter para DataMapper
-      mapperConfig = providedMapper.reduce((acc, field) => {
-        acc[field] = {
-          label: labelMap?.[field] ?? formatFieldName(field),
-          type: "auto" as const,
-          visible: true,
-        };
-        return acc;
-      }, {} as DataMapper);
-    } else {
-      // Processar DataMapper completo, adicionando labels automáticos se necessário
-      mapperConfig = Object.keys(providedMapper as DataMapper).reduce(
-        (acc, key) => {
-          acc[key] = {
-            label:
-              (providedMapper as DataMapper)[key]?.label ??
-              labelMap?.[key] ??
-              formatFieldName(key),
-            type: "auto" as const,
-            visible: true,
-            ...(providedMapper as DataMapper)[key], // Sobrescreve com configurações do usuário
-          };
-          return acc;
-        },
-        {} as DataMapper
-      );
-    }
+    // Derive mapperConfig from data numeric fields and optional labelMap.
+    const detectedFields = detectDataFields(data, xAxisConfig.dataKey);
+    const mapperConfig = detectedFields.reduce((acc, field) => {
+      acc[field] = {
+        label: labelMap?.[field] ?? formatFieldName(field),
+        type: "number" as const,
+        visible: true,
+      };
+      return acc;
+    }, {} as DataMapper);
 
     return { xAxisConfig, mapperConfig };
-  }, [data, xAxis, mapper, yAxis, autoDetect, labelMap]);
+  }, [data, xAxis, labelMap]);
 
   const { xAxisConfig, mapperConfig } = smartConfig;
 
-  const [activeTooltips, setActiveTooltips] = useState<
-    Array<{
-      id: string;
-      data: BarChartData;
-      position: { top: number; left: number };
-    }>
-  >([]);
+  type TooltipItem = {
+    id: string;
+    data: ChartData;
+    position: { top: number; left: number };
+  };
+  type AlignmentGuide = {
+    type: "horizontal" | "vertical";
+    position: number;
+    visible: boolean;
+    sourceTooltip: { top: number; left: number; width: number; height: number };
+    targetTooltip: { top: number; left: number; width: number; height: number };
+  };
 
+  const [activeTooltips, setActiveTooltips] = useState<TooltipItem[]>([]);
   const [isDragging, setIsDragging] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
   const [globalTooltipCount, setGlobalTooltipCount] = useState(0);
-  const [alignmentGuides, setAlignmentGuides] = useState<
-    Array<{
-      type: "horizontal" | "vertical";
-      position: number;
-      visible: boolean;
-      sourceTooltip: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-      };
-      targetTooltip: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-      };
-    }>
-  >([]);
+  const [alignmentGuides, setAlignmentGuides] = useState<AlignmentGuide[]>([]);
 
-  // Processar dados para garantir compatibilidade com Recharts
   const processedData = data.map((item) => ({
     ...item,
-    name: String(item[xAxisConfig.dataKey] || "N/A"), // Garantir propriedade 'name' para tooltip
+    name: String(item[xAxisConfig.dataKey] || "N/A"),
   }));
 
-  // Função simples para gerar cores dinâmicas
+  // Build ordered keys from series if provided, otherwise from mapperConfig
+  const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
+  if (series) {
+    if (series.bar)
+      series.bar.forEach((k) => seriesOrder.push({ type: "bar", key: k }));
+    if (series.line)
+      series.line.forEach((k) => seriesOrder.push({ type: "line", key: k }));
+    if (series.area)
+      series.area.forEach((k) => seriesOrder.push({ type: "area", key: k }));
+  } else {
+    // fallback: treat all mapper keys as bars
+    Object.keys(mapperConfig).forEach((k) =>
+      seriesOrder.push({ type: "bar", key: k })
+    );
+  }
+
+  const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
+
   const generateColors = (dataKeys: string[]): Record<string, string> => {
     const colorMap: Record<string, string> = {};
     const allColors = generateAdditionalColors(colors, dataKeys.length);
-
     dataKeys.forEach((key, index) => {
-      colorMap[key] = allColors[index] || colors[index % colors.length];
+      colorMap[key] =
+        (mapperConfig[key] && mapperConfig[key].color) ||
+        allColors[index] ||
+        colors[index % colors.length];
     });
-
     return colorMap;
   };
 
-  // Extrair as chaves dos dados baseado no mapperConfig inteligente
-  const dataKeys = Object.keys(mapperConfig);
-  const finalColors = generateColors(dataKeys);
+  const finalColors = generateColors(allKeys);
 
-  // Função para adaptar dados universais para o tooltip
-  const adaptDataForTooltip = (universalData: BarChartData) => {
-    return {
-      ...universalData,
-      name: String(universalData[xAxisConfig.dataKey] || "N/A"), // Garantir que tem a propriedade 'name'
-    };
-  };
+  const adaptDataForTooltip = (universalData: ChartData) => ({
+    ...universalData,
+    name: String(universalData[xAxisConfig.dataKey] || "N/A"),
+  });
 
-  // Compute friendly ceiling for axis and sizing
   const niceCeil = (value: number) => {
     if (!isFinite(value) || value <= 0) return 1;
     const pow = Math.pow(10, Math.floor(Math.log10(value)));
@@ -298,102 +187,151 @@ const BarChart: React.FC<BarChartProps> = ({
     return Math.ceil(100 * pow);
   };
 
+  // Find maximum numeric value across the data series to guide axis and sizing
   const maxDataValue = useMemo(() => {
     let max = 0;
-    const keys = Object.keys(mapperConfig);
+    const numericKeys = allKeys;
     for (const row of processedData) {
       const r = row as Record<string, unknown>;
-      for (const key of keys) {
+      for (const key of numericKeys) {
         const v = r[key];
-        if (typeof v === "number" && Number.isFinite(v) && v > max)
-          max = v as number;
+        if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
       }
     }
     return max;
-  }, [processedData, mapperConfig]);
+  }, [processedData, allKeys]);
 
   const niceMax = useMemo(() => {
-    let padding = 0.08;
+    // Add a small percentage padding above the maximum data value so labels
+    // or pill renderings don't get clipped when the largest value is exactly at the top.
+    let padding = 0.08; // default 8%
     if (maxDataValue > 1_000_000) padding = 0.05;
     if (maxDataValue > 10_000_000) padding = 0.03;
-    if (maxDataValue === 0) padding = 0.12;
+    if (maxDataValue === 0) padding = 0.12; // ensure non-zero domain
     const padded = maxDataValue * (1 + padding);
     return niceCeil(padded);
   }, [maxDataValue]);
 
-  // Função para lidar com o click na barra
+  // Compute adaptive width when `width` prop is not a number.
+  const computedWidth = useMemo(() => {
+    if (typeof width === "number") return width;
+    const points = processedData.length || 1;
+    const barCount = series?.bar?.length ?? 0;
+    const lineCount = series?.line?.length ?? 0;
+    const areaCount = series?.area?.length ?? 0;
+
+    // Base per-point width and adjustments for multiple series types
+    const basePerPoint = 84; // comfortable default per category
+    const perBarExtra = Math.max(0, barCount - 1) * 10; // extra for grouped bars
+    const perOtherExtra = (lineCount + areaCount) * 6; // small extra for lines/areas
+
+    // Scale width slightly based on the magnitude of the data (niceMax)
+    let sizeFactor = 1;
+    if (niceMax > 100000) sizeFactor = 1.18;
+    if (niceMax > 1000000) sizeFactor = 1.36;
+    if (niceMax > 10000000) sizeFactor = 1.6;
+
+    const perPoint = Math.round(
+      (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
+    );
+    const marginExtra = 140; // space for axes, paddings and legend
+
+    const raw = Math.round(points * perPoint + marginExtra);
+    const min = 380;
+    const max = 2200;
+    return Math.max(min, Math.min(max, raw));
+  }, [
+    width,
+    processedData.length,
+    series?.bar?.length,
+    series?.line?.length,
+    series?.area?.length,
+    niceMax,
+  ]);
+
+  // Use centralized pill label renderer
+
   const handleBarClick = (
-    data: BarChartData,
+    data: ChartData,
     index: number,
     event: React.MouseEvent
   ) => {
-    event.stopPropagation(); // Previne que o click propague para o chart
-
-    // Usar o campo dinâmico do xAxisConfig ao invés de "name" fixo
+    event.stopPropagation();
     const xAxisValue = data[xAxisConfig.dataKey] || "N/A";
     const tooltipId = `${xAxisValue}`;
     const rect = (event.target as HTMLElement).getBoundingClientRect();
-
-    // Verificar se já existe um tooltip para esta barra
-    const existingIndex = activeTooltips.findIndex(
-      (tooltip) => tooltip.id === tooltipId
-    );
-
+    const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
     if (existingIndex !== -1) {
-      // Se já existe, remover
-      setActiveTooltips((prev) =>
-        prev.filter((tooltip) => tooltip.id !== tooltipId)
-      );
+      setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
     } else {
-      // Se não existe, adicionar - usar coordenadas diretas da viewport
       const newTooltip = {
         id: tooltipId,
         data,
-        position: {
-          top: rect.top - 10, // Posição fixa da viewport
-          left: rect.right + 10, // À direita da barra clicada
-        },
+        position: { top: rect.top - 10, left: rect.right + 10 },
       };
       setActiveTooltips((prev) => [...prev, newTooltip]);
     }
   };
 
-  // Função para limpar todos os tooltips ao clicar no fundo
-  const handleChartClick = () => {
-    // Remove todos os tooltips quando clicado no fundo do chart
+  const handleChartClick = (e?: unknown) => {
+    // If Recharts provides activePayload (click on a line/area point), open tooltip for that point
+    const ev = e as
+      | {
+          activePayload?: Array<{ payload: ChartData }>;
+          chartX?: number;
+          chartY?: number;
+        }
+      | undefined;
+    if (ev && ev.activePayload && ev.activePayload.length > 0) {
+      const clickedData = ev.activePayload[0].payload as ChartData;
+      const xAxisValue =
+        (clickedData as Record<string, unknown>)[xAxisConfig.dataKey] ||
+        clickedData.name ||
+        "N/A";
+      const tooltipId = `${xAxisValue}`;
+      const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
+      if (existingIndex !== -1) {
+        setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
+      } else {
+        const newTooltip = {
+          id: tooltipId,
+          data: clickedData,
+          position: {
+            top: (ev?.chartY || 100) - 10,
+            left: (ev?.chartX || 100) - 100,
+          },
+        };
+        setActiveTooltips((prev) => [...prev, newTooltip]);
+      }
+      return;
+    }
+
+    // Otherwise clear tooltips (click on background)
     setActiveTooltips([]);
   };
 
-  // Funções para detecção de proximidade e alinhamento de tooltips - Sistema Ultra Preciso
-  const ALIGNMENT_THRESHOLD = 25; // Distância em pixels para snap automático (aumentado para maior força)
-  const GUIDE_THRESHOLD = 60; // Distância para mostrar guias (aumentado para detecção mais ampla)
-  const STRONG_SNAP_THRESHOLD = 35; // Snap mais forte em distância maior
-  const PRECISION_SNAP_THRESHOLD = 8; // Snap ultra preciso para alinhamento perfeito
+  // Simplified alignment/drag logic (reused from BarChart but lighter type annotations)
+  const ALIGNMENT_THRESHOLD = 25;
+  const GUIDE_THRESHOLD = 60;
+  const STRONG_SNAP_THRESHOLD = 35;
+  const PRECISION_SNAP_THRESHOLD = 8;
 
-  // Função para detectar e mostrar guias de alinhamento durante o drag
   const updateAlignmentGuides = useCallback(
     (
       draggedTooltipId: string,
       currentPosition: { top: number; left: number }
     ) => {
       if (!isDragging) return;
-
-      // Buscar todos os tooltips globalmente de todos os gráficos
       const getAllTooltips = () => {
         const allTooltips: Array<{
           id: string;
           position: { top: number; left: number };
         }> = [];
-
-        // Adicionar tooltips locais
         allTooltips.push(...activeTooltips);
-
-        // Buscar tooltips de outros gráficos via eventos do window
         const globalEvent = new CustomEvent("requestGlobalTooltips", {
           detail: { requesterId: draggedTooltipId, response: allTooltips },
         });
         window.dispatchEvent(globalEvent);
-
         return allTooltips;
       };
 
@@ -401,29 +339,10 @@ const BarChart: React.FC<BarChartProps> = ({
       const otherTooltips = allTooltips.filter(
         (t) => t.id !== draggedTooltipId
       );
-      const guides: Array<{
-        type: "horizontal" | "vertical";
-        position: number;
-        visible: boolean;
-        sourceTooltip: {
-          top: number;
-          left: number;
-          width: number;
-          height: number;
-        };
-        targetTooltip: {
-          top: number;
-          left: number;
-          width: number;
-          height: number;
-        };
-      }> = [];
-
-      // Dimensões padrão do tooltip (assumindo um tamanho médio)
-      const tooltipDimensions = { width: 224, height: 120 }; // min-w-56 = 224px
+      const guides: AlignmentGuide[] = [];
+      const tooltipDimensions = { width: 224, height: 120 };
 
       otherTooltips.forEach((tooltip) => {
-        // Guia horizontal (alinhamento top)
         const topDiff = Math.abs(currentPosition.top - tooltip.position.top);
         if (topDiff <= GUIDE_THRESHOLD) {
           guides.push({
@@ -444,8 +363,6 @@ const BarChart: React.FC<BarChartProps> = ({
             },
           });
         }
-
-        // Guia vertical (alinhamento left)
         const leftDiff = Math.abs(currentPosition.left - tooltip.position.left);
         if (leftDiff <= GUIDE_THRESHOLD) {
           guides.push({
@@ -473,21 +390,18 @@ const BarChart: React.FC<BarChartProps> = ({
     [isDragging, activeTooltips]
   );
 
-  // Função para snap automático quando próximo das guias
   const snapToGuides = useCallback(
     (position: { top: number; left: number }) => {
       const snappedPosition = { ...position };
       let hasSnapped = false;
-
-      // Primeiro: Snap ultra preciso (prioridade máxima)
-      alignmentGuides.forEach((guide) => {
+      alignmentGuides.forEach((guide: AlignmentGuide) => {
         if (guide.type === "horizontal") {
           const diff = Math.abs(position.top - guide.position);
           if (diff <= PRECISION_SNAP_THRESHOLD) {
             snappedPosition.top = guide.position;
             hasSnapped = true;
           }
-        } else if (guide.type === "vertical") {
+        } else {
           const diff = Math.abs(position.left - guide.position);
           if (diff <= PRECISION_SNAP_THRESHOLD) {
             snappedPosition.left = guide.position;
@@ -495,120 +409,85 @@ const BarChart: React.FC<BarChartProps> = ({
           }
         }
       });
-
-      // Segundo: Snap forte (se não houve snap preciso)
       if (!hasSnapped) {
-        alignmentGuides.forEach((guide) => {
+        alignmentGuides.forEach((guide: AlignmentGuide) => {
           if (guide.type === "horizontal") {
             const diff = Math.abs(position.top - guide.position);
-            if (diff <= STRONG_SNAP_THRESHOLD) {
+            if (diff <= STRONG_SNAP_THRESHOLD)
               snappedPosition.top = guide.position;
-            }
-          } else if (guide.type === "vertical") {
+          } else {
             const diff = Math.abs(position.left - guide.position);
-            if (diff <= STRONG_SNAP_THRESHOLD) {
+            if (diff <= STRONG_SNAP_THRESHOLD)
               snappedPosition.left = guide.position;
-            }
           }
         });
       }
-
-      // Terceiro: Snap normal (área mais ampla)
-      alignmentGuides.forEach((guide) => {
+      alignmentGuides.forEach((guide: AlignmentGuide) => {
         if (guide.type === "horizontal") {
           const diff = Math.abs(position.top - guide.position);
           if (
             diff <= ALIGNMENT_THRESHOLD &&
             snappedPosition.top === position.top
-          ) {
+          )
             snappedPosition.top = guide.position;
-          }
-        } else if (guide.type === "vertical") {
+        } else {
           const diff = Math.abs(position.left - guide.position);
           if (
             diff <= ALIGNMENT_THRESHOLD &&
             snappedPosition.left === position.left
-          ) {
+          )
             snappedPosition.left = guide.position;
-          }
         }
       });
-
       return snappedPosition;
     },
     [alignmentGuides]
   );
 
-  // Funções para drag dos tooltips - versão que acompanha perfeitamente o mouse
   const handleMouseDown = (e: React.MouseEvent, tooltipId: string) => {
     e.preventDefault();
     e.stopPropagation();
-
     const tooltip = activeTooltips.find((t) => t.id === tooltipId);
     if (!tooltip) return;
-
-    // Calcular o offset do mouse em relação ao tooltip
     const rect = e.currentTarget.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
-
     setIsDragging(tooltipId);
     setDragOffset({ x: offsetX, y: offsetY });
   };
 
-  // Usar eventos globais para permitir drag fora do container - versão com guias de alinhamento
   useEffect(() => {
     let rafId: number;
     let lastMousePosition = { x: 0, y: 0 };
-
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
-
-      // Armazena a posição do mouse
       lastMousePosition = { x: e.clientX, y: e.clientY };
-
-      // Cancela frame anterior se existir
       if (rafId) cancelAnimationFrame(rafId);
-
-      // Usa requestAnimationFrame para suavizar o movimento
       rafId = requestAnimationFrame(() => {
-        // Posição do mouse menos o offset = posição do tooltip
         const newLeft = lastMousePosition.x - dragOffset.x;
         const newTop = lastMousePosition.y - dragOffset.y;
-
         const rawPosition = {
           top: Math.max(0, Math.min(newTop, window.innerHeight - 200)),
           left: Math.max(0, Math.min(newLeft, window.innerWidth - 250)),
         };
-
-        // Atualizar guias de alinhamento
-        updateAlignmentGuides(isDragging, rawPosition);
-
-        // Aplicar snap automático
+        updateAlignmentGuides(isDragging as string, rawPosition);
         const snappedPosition = snapToGuides(rawPosition);
-
         setActiveTooltips((prev) =>
-          prev.map((tooltip) => {
-            if (tooltip.id === isDragging) {
-              return {
-                ...tooltip,
-                position: snappedPosition,
-              };
-            }
-            return tooltip;
-          })
+          prev.map((tooltip) =>
+            tooltip.id === isDragging
+              ? { ...tooltip, position: snappedPosition }
+              : tooltip
+          )
         );
       });
     };
-
     const handleGlobalMouseUp = () => {
       if (isDragging) {
         setIsDragging(null);
-        setAlignmentGuides([]); // Limpar guias quando parar de arrastar
+        setAlignmentGuides([]);
         if (rafId) cancelAnimationFrame(rafId);
       }
     };
-
     if (isDragging) {
       document.addEventListener("mousemove", handleGlobalMouseMove, {
         passive: true,
@@ -617,7 +496,6 @@ const BarChart: React.FC<BarChartProps> = ({
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
     }
-
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       document.removeEventListener("mousemove", handleGlobalMouseMove);
@@ -633,24 +511,17 @@ const BarChart: React.FC<BarChartProps> = ({
     snapToGuides,
   ]);
 
-  // Listener para evento global de fechar todos os tooltips
   useEffect(() => {
     const handleCloseAllTooltips = () => {
       setActiveTooltips([]);
-      // Resetar contagem global imediatamente
       setGlobalTooltipCount(0);
     };
-
     window.addEventListener("closeAllTooltips", handleCloseAllTooltips);
-
-    return () => {
+    return () =>
       window.removeEventListener("closeAllTooltips", handleCloseAllTooltips);
-    };
   }, []);
 
-  // Sistema global de contagem de tooltips (versão ultra otimizada)
   useEffect(() => {
-    // Responde com a contagem local quando solicitado (função mais leve)
     const handleTooltipCountRequest = () => {
       window.dispatchEvent(
         new CustomEvent("tooltipCountResponse", {
@@ -658,19 +529,18 @@ const BarChart: React.FC<BarChartProps> = ({
         })
       );
     };
-
-    // Responde com todos os tooltips locais para alinhamento global
-    const handleGlobalTooltipsRequest = (event: CustomEvent) => {
-      const { detail } = event;
+    const handleGlobalTooltipsRequest = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        requesterId: string;
+        response: Array<{
+          id: string;
+          position: { top: number; left: number };
+        }>;
+      }>;
+      const detail = customEvent.detail;
       if (detail && detail.response && detail.requesterId) {
-        // Adicionar nossos tooltips locais à lista global
         activeTooltips.forEach((tooltip) => {
-          if (
-            !detail.response.find(
-              (t: { id: string; position: { top: number; left: number } }) =>
-                t.id === tooltip.id
-            )
-          ) {
+          if (!detail.response.find((t) => t.id === tooltip.id)) {
             detail.response.push({
               id: tooltip.id,
               position: tooltip.position,
@@ -679,14 +549,11 @@ const BarChart: React.FC<BarChartProps> = ({
         });
       }
     };
-
-    // Registra listeners
     window.addEventListener("requestTooltipCount", handleTooltipCountRequest);
     window.addEventListener(
       "requestGlobalTooltips",
       handleGlobalTooltipsRequest as EventListener
     );
-
     return () => {
       window.removeEventListener(
         "requestTooltipCount",
@@ -699,75 +566,58 @@ const BarChart: React.FC<BarChartProps> = ({
     };
   }, [activeTooltips]);
 
-  // Atualiza contagem global de forma otimizada
   useEffect(() => {
     if (isDragging) return;
-
     let totalCount = 0;
-
     const handleCountResponse = (event: Event) => {
       const customEvent = event as CustomEvent;
       totalCount += customEvent.detail.count;
     };
-
-    // Atualização mais direta e rápida
     window.addEventListener("tooltipCountResponse", handleCountResponse);
     window.dispatchEvent(new CustomEvent("requestTooltipCount"));
-
     const timeoutId = setTimeout(() => {
       window.removeEventListener("tooltipCountResponse", handleCountResponse);
       setGlobalTooltipCount(totalCount);
     }, 5);
-
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("tooltipCountResponse", handleCountResponse);
     };
   }, [activeTooltips.length, isDragging]);
 
-  // Componente personalizado para o tooltip de hover
+  type TooltipPayloadItem = {
+    dataKey: string;
+    value: number;
+    name: string;
+    color?: string;
+  };
   const CustomTooltip = ({
     active,
     payload,
     label,
   }: {
     active?: boolean;
-    payload?: Array<{
-      dataKey: string;
-      value: number;
-      name: string;
-      color: string;
-    }>;
+    payload?: TooltipPayloadItem[];
     label?: string;
   }) => {
-    // Mostrar apenas o tooltip de hover (não os fixos)
     if (!active || !payload) return null;
-
     return (
       <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
         <p className="font-medium text-foreground mb-2">{label}</p>
-        {payload.map(
-          (
-            entry: {
-              dataKey: string;
-              value: number;
-              name: string;
-              color: string;
-            },
-            index: number
-          ) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div
-                className="w-3 h-3 rounded-sm"
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-muted-foreground">{entry.name}:</span>
-              <span className="text-foreground font-medium">
-                {entry.value?.toLocaleString("pt-BR")}
-              </span>
-            </div>
-          )
-        )}
+        {payload.map((entry, index: number) => (
+          <div key={index} className="flex items-center gap-2 text-sm">
+            <div
+              className="w-3 h-3 rounded-sm"
+              style={{
+                backgroundColor: finalColors[entry.dataKey] || entry.color,
+              }}
+            />
+            <span className="text-muted-foreground">{entry.name}:</span>
+            <span className="text-foreground font-medium">
+              {entry.value?.toLocaleString("pt-BR")}
+            </span>
+          </div>
+        ))}
         <p className="text-xs text-muted-foreground mt-1">
           Clique para fixar este tooltip
         </p>
@@ -775,7 +625,6 @@ const BarChart: React.FC<BarChartProps> = ({
     );
   };
 
-  // Função para obter a classe CSS do título baseada na posição
   const getTitleClassName = (position: "left" | "center" | "right") => {
     const baseClasses = "text-xl font-semibold text-foreground mb-3";
     switch (position) {
@@ -792,15 +641,18 @@ const BarChart: React.FC<BarChartProps> = ({
     <div
       className={cn("rounded-lg bg-card p-4 relative", className)}
       style={{
-        width: typeof width === "number" ? `${width + 32}px` : "fit-content",
+        width:
+          typeof width === "number"
+            ? `${width + 32}px`
+            : `${computedWidth + 32}px`,
         maxWidth: "100%",
       }}
     >
       {title && <h3 className={getTitleClassName(titlePosition)}>{title}</h3>}
 
-      <RechartsBarChart
+      <ComposedChart
         data={processedData}
-        width={typeof width === "number" ? width : 900}
+        width={typeof width === "number" ? width : computedWidth}
         height={height}
         margin={{ top: showLabels ? 48 : 20, right: 30, left: 20, bottom: 5 }}
         onClick={handleChartClick}
@@ -825,7 +677,7 @@ const BarChart: React.FC<BarChartProps> = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => value.toLocaleString("pt-BR")}
+          tickFormatter={(value) => Number(value).toLocaleString("pt-BR")}
           domain={[0, niceMax]}
           tickCount={6}
         />
@@ -837,56 +689,103 @@ const BarChart: React.FC<BarChartProps> = ({
         )}
         {showLegend && (
           <Legend
-            wrapperStyle={{
-              color: "hsl(var(--foreground))",
-              fontSize: "14px",
-            }}
+            wrapperStyle={{ color: "hsl(var(--foreground))", fontSize: "14px" }}
           />
         )}
-        {/* Renderizar barras dinamicamente baseado no mapperConfig */}
-        {dataKeys.map((key) => {
-          const fieldConfig = mapperConfig[key];
-          return (
-            <Bar
-              key={key}
-              dataKey={key}
-              name={fieldConfig?.label || key}
-              fill={fieldConfig?.color || finalColors[key]}
-              radius={[4, 4, 0, 0]}
-              onClick={handleBarClick}
-              style={{ cursor: "pointer" }}
-              activeBar={
-                <Rectangle
-                  fill={finalColors[key]}
-                  stroke={finalColors[key]}
-                  strokeWidth={2}
-                  opacity={0.8}
-                />
-              }
-            >
-              {showLabels && (
-                <LabelList
-                  dataKey={key}
-                  position="top"
-                  content={
-                    renderPillLabel(
-                      finalColors[key] || "#000",
-                      "filled"
-                    ) as unknown as (props: unknown) => React.ReactNode
-                  }
-                />
-              )}
-            </Bar>
-          );
-        })}
-      </RechartsBarChart>
 
-      {/* Guias de Alinhamento Visual - Conectam tooltips */}
-      {alignmentGuides.map((guide, index) => {
+        {seriesOrder.map((s) => {
+          const key = s.key;
+          const label =
+            mapperConfig[key]?.label ?? labelMap?.[key] ?? formatFieldName(key);
+          const color = finalColors[key];
+          if (s.type === "bar") {
+            return (
+              <Bar
+                key={`bar-${key}`}
+                dataKey={key}
+                name={label}
+                fill={color}
+                radius={[4, 4, 0, 0]}
+                onClick={handleBarClick}
+                style={{ cursor: "pointer" }}
+                activeBar={
+                  <Rectangle
+                    fill={color}
+                    stroke={color}
+                    strokeWidth={2}
+                    opacity={0.8}
+                  />
+                }
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={key}
+                    position="top"
+                    content={
+                      renderPillLabel(color, "filled") as LabelListContent
+                    }
+                    offset={8}
+                  />
+                )}
+              </Bar>
+            );
+          }
+          if (s.type === "line") {
+            return (
+              <Line
+                key={`line-${key}`}
+                dataKey={key}
+                name={label}
+                stroke={color}
+                strokeWidth={2}
+                dot={{ r: 3 }}
+                activeDot={{ r: 6 }}
+                onClick={handleChartClick}
+                style={{ cursor: "pointer", pointerEvents: "all" }}
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={key}
+                    position="top"
+                    content={
+                      renderPillLabel(color, "filled") as LabelListContent
+                    }
+                    offset={14}
+                  />
+                )}
+              </Line>
+            );
+          }
+          if (s.type === "area") {
+            return (
+              <Area
+                key={`area-${key}`}
+                dataKey={key}
+                name={label}
+                stroke={color}
+                fill={color}
+                fillOpacity={0.15}
+                onClick={handleChartClick}
+                style={{ cursor: "pointer", pointerEvents: "all" }}
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={key}
+                    position="top"
+                    content={renderPillLabel(color, "soft") as LabelListContent}
+                    offset={12}
+                  />
+                )}
+              </Area>
+            );
+          }
+          return null;
+        })}
+      </ComposedChart>
+
+      {alignmentGuides.map((guide, index: number) => {
         const isHorizontal = guide.type === "horizontal";
         const color = isHorizontal ? "#3b82f6" : "#ef4444";
-
-        // Calcular posições para conectar os tooltips
         const startX = isHorizontal
           ? Math.min(
               guide.sourceTooltip.left + guide.sourceTooltip.width / 2,
@@ -901,7 +800,6 @@ const BarChart: React.FC<BarChartProps> = ({
             )
           : guide.targetTooltip.left +
             (isHorizontal ? 0 : guide.targetTooltip.width / 2);
-
         const startY = isHorizontal
           ? guide.sourceTooltip.top +
             (isHorizontal ? guide.sourceTooltip.height / 2 : 0)
@@ -919,7 +817,6 @@ const BarChart: React.FC<BarChartProps> = ({
 
         return (
           <div key={index}>
-            {/* Linha principal conectando os tooltips */}
             <div
               className="fixed pointer-events-none z-30"
               style={{
@@ -936,8 +833,6 @@ const BarChart: React.FC<BarChartProps> = ({
                 transform: "translateZ(0)",
               }}
             />
-
-            {/* Marcadores nos tooltips */}
             <div
               className="fixed pointer-events-none z-31"
               style={{
@@ -980,19 +875,17 @@ const BarChart: React.FC<BarChartProps> = ({
           position={tooltip.position}
           isDragging={isDragging === tooltip.id}
           title={title}
-          dataKeys={dataKeys}
+          dataKeys={allKeys}
           finalColors={finalColors}
           onMouseDown={(id, e) => handleMouseDown(e, id)}
-          onClose={(id) => {
-            setActiveTooltips((prev) => prev.filter((t) => t.id !== id));
-          }}
+          onClose={(id) =>
+            setActiveTooltips((prev) => prev.filter((t) => t.id !== id))
+          }
           periodLabel="Período Selecionado"
           dataLabel="Dados do Período"
           showCloseAllButton={index === 0}
           globalTooltipCount={globalTooltipCount}
-          onCloseAll={() => {
-            window.dispatchEvent(new Event("closeAllTooltips"));
-          }}
+          onCloseAll={() => window.dispatchEvent(new Event("closeAllTooltips"))}
           closeAllButtonPosition="top-center"
           closeAllButtonVariant="floating"
         />
@@ -1001,4 +894,4 @@ const BarChart: React.FC<BarChartProps> = ({
   );
 };
 
-export default BarChart;
+export default Chart;

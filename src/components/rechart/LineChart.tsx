@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
+import renderPillLabel from "./pillLabelRenderer";
 
 interface LineChartData {
   name: string;
@@ -69,18 +70,14 @@ const generateAdditionalColors = (
   return colors;
 };
 
-// Função para formatar números de forma compacta (1K, 1M, etc.)
-const formatCompactNumber = (value: number): string => {
-  if (value >= 1000000000) {
+// compact tick formatter usado pelo eixo
+const compactTick = (value: number) => {
+  if (value >= 1000000000)
     return (value / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
-  }
-  if (value >= 1000000) {
+  if (value >= 1000000)
     return (value / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
-  }
-  if (value >= 1000) {
-    return (value / 1000).toFixed(1).replace(/\.0$/, "") + "K";
-  }
-  return value.toString();
+  if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  return String(value);
 };
 
 const CustomLineChart: React.FC<CustomLineChartProps> = ({
@@ -146,12 +143,53 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
   };
 
   // Extrair as chaves dos dados para determinar quantas linhas temos
-  const dataKeys =
-    data.length > 0 ? Object.keys(data[0]).filter((key) => key !== "name") : [];
+  const dataKeys = useMemo(
+    () =>
+      data.length > 0
+        ? Object.keys(data[0]).filter((key) => key !== "name")
+        : [],
+    [data]
+  );
   const finalColors = generateColors(dataKeys);
 
+  // Compute a friendly ceiling for axis based on data magnitude
+  const niceCeil = (value: number) => {
+    if (!isFinite(value) || value <= 0) return 1;
+    const pow = Math.pow(10, Math.floor(Math.log10(value)));
+    const normalized = value / pow;
+    const multipliers = [
+      1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 25, 50, 100,
+    ];
+    for (const m of multipliers) {
+      if (m >= normalized) return Math.ceil(m * pow);
+    }
+    return Math.ceil(100 * pow);
+  };
+
+  const maxDataValue = useMemo(() => {
+    let max = 0;
+    for (const row of data) {
+      const r = row as Record<string, unknown>;
+      for (const key of dataKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v > max)
+          max = v as number;
+      }
+    }
+    return max;
+  }, [data, dataKeys]);
+
+  const niceMax = useMemo(() => {
+    let padding = 0.08;
+    if (maxDataValue > 1_000_000) padding = 0.05;
+    if (maxDataValue > 10_000_000) padding = 0.03;
+    if (maxDataValue === 0) padding = 0.12;
+    const padded = maxDataValue * (1 + padding);
+    return niceCeil(padded);
+  }, [maxDataValue]);
+
   // Componente personalizado para dots clicáveis
-    // Componente para pontos clicáveis
+  // Componente para pontos clicáveis
   const ClickableDot = (props: {
     cx?: number;
     cy?: number;
@@ -159,14 +197,14 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
     dataKey?: string;
   }) => {
     const { cx, cy, payload, dataKey } = props;
-    
+
     const handleDotClick = (e: React.MouseEvent) => {
-      e.stopPropagation();// Debug
-      
+      e.stopPropagation(); // Debug
+
       if (!payload || !cx || !cy) return;
-      
+
       const tooltipId = `${payload.name}`;
-      
+
       // Verificar se já existe um tooltip para este ponto
       const existingIndex = activeTooltips.findIndex(
         (tooltip) => tooltip.id === tooltipId
@@ -191,7 +229,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
         setActiveTooltips((prev) => [...prev, newTooltip]);
       }
     };
-    
+
     return (
       <circle
         cx={cx}
@@ -212,7 +250,6 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
     chartX?: number;
     chartY?: number;
   }) => {
-    
     if (e && e.activePayload && e.activePayload.length > 0) {
       const clickedData = e.activePayload[0].payload;
 
@@ -242,7 +279,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
         setActiveTooltips((prev) => [...prev, newTooltip]);
       }
     } else {
-       // Debug
+      // Debug
     }
   };
 
@@ -583,9 +620,9 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
       {/* Container do gráfico */}
       <div
         className="rounded-lg bg-card p-4 relative border border-border"
-        style={{ 
-          width: typeof width === 'number' ? `${width + 32}px` : 'fit-content',
-          maxWidth: '100%'
+        style={{
+          width: typeof width === "number" ? `${width + 32}px` : "fit-content",
+          maxWidth: "100%",
         }}
         onClick={handleChartBackgroundClick}
       >
@@ -598,79 +635,80 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
 
         <RechartsLineChart
           data={data}
-          width={typeof width === 'number' ? width : 900}
+          width={typeof width === "number" ? width : 900}
           height={height}
           margin={{
-            top: 20,
+            top: showLabels ? 48 : 20,
             right: 30,
             left: 20,
             bottom: 5,
           }}
           onClick={handleChartClick}
         >
-            {showGrid && (
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={gridColor || "hsl(var(--muted-foreground))"}
-                opacity={0.3}
-              />
-            )}
-
-            <XAxis
-              dataKey="name"
-              className="fill-muted-foreground text-xs"
-              fontSize={12}
+          {showGrid && (
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke={gridColor || "hsl(var(--muted-foreground))"}
+              opacity={0.3}
             />
+          )}
 
-            <YAxis
-              className="fill-muted-foreground text-xs"
-              fontSize={12}
-              tickFormatter={formatCompactNumber}
+          <XAxis
+            dataKey="name"
+            className="fill-muted-foreground text-xs"
+            fontSize={12}
+          />
+
+          <YAxis
+            className="fill-muted-foreground text-xs"
+            fontSize={12}
+            tickFormatter={(value) => compactTick(Number(value))}
+            domain={[0, niceMax]}
+            tickCount={6}
+          />
+
+          {showTooltip && <Tooltip content={() => null} />}
+
+          {showLegend && (
+            <Legend
+              wrapperStyle={{
+                fontSize: "12px",
+                color: "hsl(var(--muted-foreground))",
+              }}
             />
+          )}
 
-            {showTooltip && <Tooltip content={() => null} />}
-
-            {showLegend && (
-              <Legend
-                wrapperStyle={{
-                  fontSize: "12px",
-                  color: "hsl(var(--muted-foreground))",
-                }}
-              />
-            )}
-
-            {/* Renderizar linhas dinamicamente */}
-            {dataKeys.map((key) => (
-              <Line
-                key={key}
-                type="monotone"
-                dataKey={key}
-                stroke={finalColors[key]}
-                strokeWidth={strokeWidth}
-                dot={showDots ? { r: 4, cursor: "pointer" } : false}
-                activeDot={(props: {
-                  cx?: number;
-                  cy?: number;
-                  payload?: LineChartData;
-                }) => <ClickableDot {...props} dataKey={key} />}
-              >
-                {showLabels && (
-                  <LabelList
-                    dataKey={key}
-                    position="top"
-                    style={{
-                      textAnchor: "middle",
-                      fontSize: "10px",
-                      fontWeight: "600",
-                      fill: "hsl(var(--foreground))",
-                    }}
-                    formatter={(value: number) => formatCompactNumber(value)}
-                    offset={10}
-                  />
-                )}
-              </Line>
-            ))}
-          </RechartsLineChart>
+          {/* Renderizar linhas dinamicamente */}
+          {dataKeys.map((key) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={finalColors[key]}
+              strokeWidth={strokeWidth}
+              dot={showDots ? { r: 4, cursor: "pointer" } : false}
+              activeDot={(props: {
+                cx?: number;
+                cy?: number;
+                payload?: LineChartData;
+              }) => <ClickableDot {...props} dataKey={key} />}
+            >
+              {showLabels && (
+                <LabelList
+                  dataKey={key}
+                  position="top"
+                  content={
+                    renderPillLabel(
+                      finalColors[key] || "#000",
+                      "filled"
+                    ) as unknown as (props: unknown) => React.ReactNode
+                  }
+                  offset={14}
+                />
+              )}
+            </Line>
+          ))}
+        </RechartsLineChart>
 
         {/* Guias de Alinhamento Visual - Conectam tooltips */}
         {alignmentGuides.map((guide, index) => {
@@ -733,9 +771,13 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
                 className="fixed pointer-events-none z-31"
                 style={{
                   left:
-                    guide.sourceTooltip.left + guide.sourceTooltip.width / 2 - 4,
+                    guide.sourceTooltip.left +
+                    guide.sourceTooltip.width / 2 -
+                    4,
                   top:
-                    guide.sourceTooltip.top + guide.sourceTooltip.height / 2 - 4,
+                    guide.sourceTooltip.top +
+                    guide.sourceTooltip.height / 2 -
+                    4,
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
@@ -748,9 +790,13 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
                 className="fixed pointer-events-none z-31"
                 style={{
                   left:
-                    guide.targetTooltip.left + guide.targetTooltip.width / 2 - 4,
+                    guide.targetTooltip.left +
+                    guide.targetTooltip.width / 2 -
+                    4,
                   top:
-                    guide.targetTooltip.top + guide.targetTooltip.height / 2 - 4,
+                    guide.targetTooltip.top +
+                    guide.targetTooltip.height / 2 -
+                    4,
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
@@ -787,7 +833,6 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
             closeAllButtonVariant="floating"
           />
         ))}
-
       </div>
     </div>
   );
