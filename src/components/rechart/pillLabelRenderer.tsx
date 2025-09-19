@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 
 type Variant = "filled" | "outline" | "soft";
 
@@ -110,7 +109,7 @@ export const renderPillLabel = (color: string, variant: Variant) => {
       variant === "filled"
         ? color
         : variant === "soft"
-        ? `${color}33`
+        ? `${color}`
         : "#ffffff";
     const rectStroke = variant === "outline" ? `${color}CC` : undefined;
     const textColor =
@@ -120,53 +119,17 @@ export const renderPillLabel = (color: string, variant: Variant) => {
         ? color
         : "#111827";
 
-    const gradientId = `pill-gradient-${color.replace(/[^a-zA-Z0-9]/g, "")}`;
-    const delay =
-      typeof props.index === "number" ? Math.min(0.12, props.index * 0.03) : 0;
-    const content = (
-      <motion.g
-        initial={{ opacity: 0, scale: 0.94, translateY: -4 }}
-        animate={{ opacity: 1, scale: 1, translateY: 0 }}
-        transition={{ type: "spring", stiffness: 220, damping: 18, delay }}
-        style={{ transformOrigin: `${centerX}px ${rectY + pillHeight / 2}px` }}
-      >
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="0%"
-              stopColor={color}
-              stopOpacity={variant === "filled" ? 0.95 : 0.6}
-            />
-            <stop
-              offset="100%"
-              stopColor={color}
-              stopOpacity={variant === "filled" ? 0.82 : 0.3}
-            />
-          </linearGradient>
-          <filter id="pill-shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow
-              dx="0"
-              dy="2"
-              stdDeviation="3"
-              floodColor="#000"
-              floodOpacity="0.10"
-            />
-          </filter>
-        </defs>
+    return (
+      <g>
         <rect
           x={rectX}
           y={rectY}
           rx={pillHeight / 2}
           width={pillWidth}
           height={pillHeight}
-          fill={
-            variant === "filled" || variant === "soft"
-              ? `url(#${gradientId})`
-              : rectFill
-          }
+          fill={rectFill}
           stroke={rectStroke}
           strokeWidth={rectStroke ? 1 : 0}
-          filter="url(#pill-shadow)"
         />
         <text
           x={textX}
@@ -180,10 +143,8 @@ export const renderPillLabel = (color: string, variant: Variant) => {
         >
           {text}
         </text>
-      </motion.g>
+      </g>
     );
-
-    return content;
   };
 };
 

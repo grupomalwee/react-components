@@ -91,13 +91,7 @@ export const BarsAndLine: Story = {
       {...args}
       data={args.data ?? sampleQuarterData}
       xAxis={args.xAxis ?? "trimestre"}
-      series={{ bar: ["receita", "vendas"], line: ["positivacao"] }}
-      labelMap={{
-        receita: "Receita",
-        vendas: "Vendas",
-        positivacao: "Positivação (%)",
-      }}
-      height={420}
+      series={{ bar: ["despesas"], area: ["lucro", "positivacao"], line: ["vendas"] }}
     />
   ),
 };

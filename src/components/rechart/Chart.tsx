@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   ComposedChart,
   Bar,
@@ -11,15 +18,21 @@ import {
   Tooltip,
   Legend,
   LabelList,
+  ResponsiveContainer,
 } from "recharts";
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
+import CloseAllButton from "./CloseAllButton";
 import renderPillLabel from "./pillLabelRenderer";
 import {
   formatFieldName,
   detectDataFields,
   generateAdditionalColors,
 } from "./helpers";
+
+import ChartPeriodsDropdown from "./PeriodsDropdown";
+import ShowOnly from "./ShowOnly";
+import Highlights from "./Highlights";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -64,7 +77,25 @@ interface ChartProps {
   showLabels?: boolean;
   labelMap?: Record<string, string>;
   xAxis: XAxisConfig | string;
-  // mapper and autoDetect removed: mapping must be provided via `series` and `labelMap`
+  highlights?:
+    | React.ComponentType<
+        React.ComponentProps<typeof import("./Highlights").default>
+      >
+    | boolean;
+  showOnly?:
+    | React.ComponentType<
+        React.ComponentProps<typeof import("./ShowOnly").default>
+      >
+    | boolean;
+  periodsDropdown?:
+    | React.ComponentType<
+        React.ComponentProps<typeof import("./PeriodsDropdown").default>
+      >
+    | boolean;
+  enableHighlights?: boolean;
+  enableShowOnly?: boolean;
+  enablePeriodsDropdown?: boolean;
+  enableDraggableTooltips?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -85,16 +116,21 @@ const Chart: React.FC<ChartProps> = ({
   showLabels = false,
   xAxis,
   labelMap,
+  highlights: HighlightsProp,
+  showOnly: ShowOnlyProp,
+  periodsDropdown: PeriodsDropdownProp,
+  enableHighlights = false,
+  enableShowOnly = false,
+  enablePeriodsDropdown = false,
+  enableDraggableTooltips = false,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
-    // xAxis is now required. Accept either a string dataKey or a full XAxisConfig.
     const xAxisConfig: XAxisConfig =
       typeof xAxis === "string"
         ? { dataKey: xAxis, label: formatFieldName(xAxis), autoLabel: true }
         : (xAxis as XAxisConfig);
 
-    // Derive mapperConfig from data numeric fields and optional labelMap.
     const detectedFields = detectDataFields(data, xAxisConfig.dataKey);
     const mapperConfig = detectedFields.reduce((acc, field) => {
       acc[field] = {
@@ -115,29 +151,42 @@ const Chart: React.FC<ChartProps> = ({
     data: ChartData;
     position: { top: number; left: number };
   };
-  type AlignmentGuide = {
-    type: "horizontal" | "vertical";
-    position: number;
-    visible: boolean;
-    sourceTooltip: { top: number; left: number; width: number; height: number };
-    targetTooltip: { top: number; left: number; width: number; height: number };
-  };
 
   const [activeTooltips, setActiveTooltips] = useState<TooltipItem[]>([]);
-  const [isDragging, setIsDragging] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-  const [globalTooltipCount, setGlobalTooltipCount] = useState(0);
-  const [alignmentGuides, setAlignmentGuides] = useState<AlignmentGuide[]>([]);
+
+  const [highlightedSeries, setHighlightedSeries] = useState<Set<string>>(
+    new Set()
+  );
+  const [showOnlyHighlighted, setShowOnlyHighlighted] = useState(false);
+
+  useEffect(() => {
+    if (highlightedSeries.size === 0 && showOnlyHighlighted) {
+      setShowOnlyHighlighted(false);
+    }
+  }, [highlightedSeries, showOnlyHighlighted]);
 
   const processedData = data.map((item) => ({
     ...item,
     name: String(item[xAxisConfig.dataKey] || "N/A"),
   }));
 
-  // Build ordered keys from series if provided, otherwise from mapperConfig
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0];
+      if (r && typeof r.contentRect.width === "number") {
+        setMeasuredWidth(Math.round(r.contentRect.width));
+      }
+    });
+    ro.observe(el);
+
+    setMeasuredWidth(Math.round(el.getBoundingClientRect().width));
+    return () => ro.disconnect();
+  }, []);
+
   const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
   if (series) {
     if (series.bar)
@@ -147,7 +196,6 @@ const Chart: React.FC<ChartProps> = ({
     if (series.area)
       series.area.forEach((k) => seriesOrder.push({ type: "area", key: k }));
   } else {
-    // fallback: treat all mapper keys as bars
     Object.keys(mapperConfig).forEach((k) =>
       seriesOrder.push({ type: "bar", key: k })
     );
@@ -169,10 +217,59 @@ const Chart: React.FC<ChartProps> = ({
 
   const finalColors = generateColors(allKeys);
 
-  const adaptDataForTooltip = (universalData: ChartData) => ({
-    ...universalData,
-    name: String(universalData[xAxisConfig.dataKey] || "N/A"),
-  });
+  const adaptDataForTooltip = useCallback(
+    (universalData: ChartData) => ({
+      ...universalData,
+      name: String(universalData[xAxisConfig.dataKey] || "N/A"),
+    }),
+    [xAxisConfig.dataKey]
+  );
+
+  const activePeriods = useMemo(
+    () => activeTooltips.map((t) => adaptDataForTooltip(t.data).name),
+    [activeTooltips, adaptDataForTooltip]
+  );
+
+  const openTooltipForPeriod = (periodName: string) => {
+    if (!enableDraggableTooltips) return;
+    const row = processedData.find((r) => String(r.name) === periodName);
+    if (!row) return;
+    const tooltipId = `${periodName}`;
+    const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
+    if (existingIndex !== -1) {
+      setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
+      return;
+    }
+    const offsetIndex = activeTooltips.length;
+    const availableWidth =
+      typeof width === "number"
+        ? width
+        : measuredWidth
+        ? Math.max(0, measuredWidth - 32)
+        : computedWidth;
+    const newTooltip = {
+      id: tooltipId,
+      data: row,
+      position: {
+        top: 48 + offsetIndex * 28,
+        left: Math.max(120, availableWidth - 260 - offsetIndex * 28),
+      },
+    };
+    setActiveTooltips((prev) => [...prev, newTooltip]);
+  };
+
+  useEffect(() => {
+    window.dispatchEvent(new Event("recountTooltips"));
+  }, [activeTooltips.length]);
+
+  const toggleHighlight = useCallback((key: string) => {
+    setHighlightedSeries((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
 
   const niceCeil = (value: number) => {
     if (!isFinite(value) || value <= 0) return 1;
@@ -187,7 +284,6 @@ const Chart: React.FC<ChartProps> = ({
     return Math.ceil(100 * pow);
   };
 
-  // Find maximum numeric value across the data series to guide axis and sizing
   const maxDataValue = useMemo(() => {
     let max = 0;
     const numericKeys = allKeys;
@@ -202,30 +298,24 @@ const Chart: React.FC<ChartProps> = ({
   }, [processedData, allKeys]);
 
   const niceMax = useMemo(() => {
-    // Add a small percentage padding above the maximum data value so labels
-    // or pill renderings don't get clipped when the largest value is exactly at the top.
-    let padding = 0.08; // default 8%
+    let padding = 0.08;
     if (maxDataValue > 1_000_000) padding = 0.05;
     if (maxDataValue > 10_000_000) padding = 0.03;
-    if (maxDataValue === 0) padding = 0.12; // ensure non-zero domain
+    if (maxDataValue === 0) padding = 0.12;
     const padded = maxDataValue * (1 + padding);
     return niceCeil(padded);
   }, [maxDataValue]);
 
-  // Compute adaptive width when `width` prop is not a number.
   const computedWidth = useMemo(() => {
     if (typeof width === "number") return width;
     const points = processedData.length || 1;
     const barCount = series?.bar?.length ?? 0;
     const lineCount = series?.line?.length ?? 0;
     const areaCount = series?.area?.length ?? 0;
+    const basePerPoint = 84;
+    const perBarExtra = Math.max(0, barCount - 1) * 10;
+    const perOtherExtra = (lineCount + areaCount) * 6;
 
-    // Base per-point width and adjustments for multiple series types
-    const basePerPoint = 84; // comfortable default per category
-    const perBarExtra = Math.max(0, barCount - 1) * 10; // extra for grouped bars
-    const perOtherExtra = (lineCount + areaCount) * 6; // small extra for lines/areas
-
-    // Scale width slightly based on the magnitude of the data (niceMax)
     let sizeFactor = 1;
     if (niceMax > 100000) sizeFactor = 1.18;
     if (niceMax > 1000000) sizeFactor = 1.36;
@@ -234,7 +324,7 @@ const Chart: React.FC<ChartProps> = ({
     const perPoint = Math.round(
       (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
     );
-    const marginExtra = 140; // space for axes, paddings and legend
+    const marginExtra = 140;
 
     const raw = Math.round(points * perPoint + marginExtra);
     const min = 380;
@@ -249,13 +339,12 @@ const Chart: React.FC<ChartProps> = ({
     niceMax,
   ]);
 
-  // Use centralized pill label renderer
-
   const handleBarClick = (
     data: ChartData,
     index: number,
     event: React.MouseEvent
   ) => {
+    if (!enableDraggableTooltips) return;
     event.stopPropagation();
     const xAxisValue = data[xAxisConfig.dataKey] || "N/A";
     const tooltipId = `${xAxisValue}`;
@@ -274,7 +363,7 @@ const Chart: React.FC<ChartProps> = ({
   };
 
   const handleChartClick = (e?: unknown) => {
-    // If Recharts provides activePayload (click on a line/area point), open tooltip for that point
+    if (!enableDraggableTooltips) return;
     const ev = e as
       | {
           activePayload?: Array<{ payload: ChartData }>;
@@ -306,284 +395,27 @@ const Chart: React.FC<ChartProps> = ({
       return;
     }
 
-    // Otherwise clear tooltips (click on background)
     setActiveTooltips([]);
   };
 
-  // Simplified alignment/drag logic (reused from BarChart but lighter type annotations)
-  const ALIGNMENT_THRESHOLD = 25;
-  const GUIDE_THRESHOLD = 60;
-  const STRONG_SNAP_THRESHOLD = 35;
-  const PRECISION_SNAP_THRESHOLD = 8;
+  const handleSeriesClick = (...args: unknown[]) => {
+    if (args.length >= 3) {
+      const [data, index, event] = args as [unknown, number, unknown];
+      handleBarClick(data as ChartData, index, event as React.MouseEvent);
+      return;
+    }
 
-  const updateAlignmentGuides = useCallback(
-    (
-      draggedTooltipId: string,
-      currentPosition: { top: number; left: number }
-    ) => {
-      if (!isDragging) return;
-      const getAllTooltips = () => {
-        const allTooltips: Array<{
-          id: string;
-          position: { top: number; left: number };
-        }> = [];
-        allTooltips.push(...activeTooltips);
-        const globalEvent = new CustomEvent("requestGlobalTooltips", {
-          detail: { requesterId: draggedTooltipId, response: allTooltips },
-        });
-        window.dispatchEvent(globalEvent);
-        return allTooltips;
-      };
-
-      const allTooltips = getAllTooltips();
-      const otherTooltips = allTooltips.filter(
-        (t) => t.id !== draggedTooltipId
-      );
-      const guides: AlignmentGuide[] = [];
-      const tooltipDimensions = { width: 224, height: 120 };
-
-      otherTooltips.forEach((tooltip) => {
-        const topDiff = Math.abs(currentPosition.top - tooltip.position.top);
-        if (topDiff <= GUIDE_THRESHOLD) {
-          guides.push({
-            type: "horizontal",
-            position: tooltip.position.top,
-            visible: true,
-            sourceTooltip: {
-              top: currentPosition.top,
-              left: currentPosition.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
-            },
-            targetTooltip: {
-              top: tooltip.position.top,
-              left: tooltip.position.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
-            },
-          });
-        }
-        const leftDiff = Math.abs(currentPosition.left - tooltip.position.left);
-        if (leftDiff <= GUIDE_THRESHOLD) {
-          guides.push({
-            type: "vertical",
-            position: tooltip.position.left,
-            visible: true,
-            sourceTooltip: {
-              top: currentPosition.top,
-              left: currentPosition.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
-            },
-            targetTooltip: {
-              top: tooltip.position.top,
-              left: tooltip.position.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
-            },
-          });
-        }
-      });
-
-      setAlignmentGuides(guides);
-    },
-    [isDragging, activeTooltips]
-  );
-
-  const snapToGuides = useCallback(
-    (position: { top: number; left: number }) => {
-      const snappedPosition = { ...position };
-      let hasSnapped = false;
-      alignmentGuides.forEach((guide: AlignmentGuide) => {
-        if (guide.type === "horizontal") {
-          const diff = Math.abs(position.top - guide.position);
-          if (diff <= PRECISION_SNAP_THRESHOLD) {
-            snappedPosition.top = guide.position;
-            hasSnapped = true;
-          }
-        } else {
-          const diff = Math.abs(position.left - guide.position);
-          if (diff <= PRECISION_SNAP_THRESHOLD) {
-            snappedPosition.left = guide.position;
-            hasSnapped = true;
-          }
-        }
-      });
-      if (!hasSnapped) {
-        alignmentGuides.forEach((guide: AlignmentGuide) => {
-          if (guide.type === "horizontal") {
-            const diff = Math.abs(position.top - guide.position);
-            if (diff <= STRONG_SNAP_THRESHOLD)
-              snappedPosition.top = guide.position;
-          } else {
-            const diff = Math.abs(position.left - guide.position);
-            if (diff <= STRONG_SNAP_THRESHOLD)
-              snappedPosition.left = guide.position;
-          }
-        });
-      }
-      alignmentGuides.forEach((guide: AlignmentGuide) => {
-        if (guide.type === "horizontal") {
-          const diff = Math.abs(position.top - guide.position);
-          if (
-            diff <= ALIGNMENT_THRESHOLD &&
-            snappedPosition.top === position.top
-          )
-            snappedPosition.top = guide.position;
-        } else {
-          const diff = Math.abs(position.left - guide.position);
-          if (
-            diff <= ALIGNMENT_THRESHOLD &&
-            snappedPosition.left === position.left
-          )
-            snappedPosition.left = guide.position;
-        }
-      });
-      return snappedPosition;
-    },
-    [alignmentGuides]
-  );
-
-  const handleMouseDown = (e: React.MouseEvent, tooltipId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const tooltip = activeTooltips.find((t) => t.id === tooltipId);
-    if (!tooltip) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    setIsDragging(tooltipId);
-    setDragOffset({ x: offsetX, y: offsetY });
+    handleChartClick(args[0]);
   };
 
-  useEffect(() => {
-    let rafId: number;
-    let lastMousePosition = { x: 0, y: 0 };
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      lastMousePosition = { x: e.clientX, y: e.clientY };
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const newLeft = lastMousePosition.x - dragOffset.x;
-        const newTop = lastMousePosition.y - dragOffset.y;
-        const rawPosition = {
-          top: Math.max(0, Math.min(newTop, window.innerHeight - 200)),
-          left: Math.max(0, Math.min(newLeft, window.innerWidth - 250)),
-        };
-        updateAlignmentGuides(isDragging as string, rawPosition);
-        const snappedPosition = snapToGuides(rawPosition);
-        setActiveTooltips((prev) =>
-          prev.map((tooltip) =>
-            tooltip.id === isDragging
-              ? { ...tooltip, position: snappedPosition }
-              : tooltip
-          )
-        );
-      });
-    };
-    const handleGlobalMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(null);
-        setAlignmentGuides([]);
-        if (rafId) cancelAnimationFrame(rafId);
-      }
-    };
-    if (isDragging) {
-      document.addEventListener("mousemove", handleGlobalMouseMove, {
-        passive: true,
-      });
-      document.addEventListener("mouseup", handleGlobalMouseUp);
-      document.body.style.cursor = "grabbing";
-      document.body.style.userSelect = "none";
-    }
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      document.removeEventListener("mousemove", handleGlobalMouseMove);
-      document.removeEventListener("mouseup", handleGlobalMouseUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-  }, [
-    isDragging,
-    dragOffset,
-    alignmentGuides,
-    updateAlignmentGuides,
-    snapToGuides,
-  ]);
-
-  useEffect(() => {
-    const handleCloseAllTooltips = () => {
-      setActiveTooltips([]);
-      setGlobalTooltipCount(0);
-    };
-    window.addEventListener("closeAllTooltips", handleCloseAllTooltips);
-    return () =>
-      window.removeEventListener("closeAllTooltips", handleCloseAllTooltips);
-  }, []);
-
-  useEffect(() => {
-    const handleTooltipCountRequest = () => {
-      window.dispatchEvent(
-        new CustomEvent("tooltipCountResponse", {
-          detail: { count: activeTooltips.length },
-        })
-      );
-    };
-    const handleGlobalTooltipsRequest = (event: Event) => {
-      const customEvent = event as CustomEvent<{
-        requesterId: string;
-        response: Array<{
-          id: string;
-          position: { top: number; left: number };
-        }>;
-      }>;
-      const detail = customEvent.detail;
-      if (detail && detail.response && detail.requesterId) {
-        activeTooltips.forEach((tooltip) => {
-          if (!detail.response.find((t) => t.id === tooltip.id)) {
-            detail.response.push({
-              id: tooltip.id,
-              position: tooltip.position,
-            });
-          }
-        });
-      }
-    };
-    window.addEventListener("requestTooltipCount", handleTooltipCountRequest);
-    window.addEventListener(
-      "requestGlobalTooltips",
-      handleGlobalTooltipsRequest as EventListener
+  const onTooltipPositionChange = (
+    id: string,
+    position: { top: number; left: number }
+  ) => {
+    setActiveTooltips((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, position } : t))
     );
-    return () => {
-      window.removeEventListener(
-        "requestTooltipCount",
-        handleTooltipCountRequest
-      );
-      window.removeEventListener(
-        "requestGlobalTooltips",
-        handleGlobalTooltipsRequest as EventListener
-      );
-    };
-  }, [activeTooltips]);
-
-  useEffect(() => {
-    if (isDragging) return;
-    let totalCount = 0;
-    const handleCountResponse = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      totalCount += customEvent.detail.count;
-    };
-    window.addEventListener("tooltipCountResponse", handleCountResponse);
-    window.dispatchEvent(new CustomEvent("requestTooltipCount"));
-    const timeoutId = setTimeout(() => {
-      window.removeEventListener("tooltipCountResponse", handleCountResponse);
-      setGlobalTooltipCount(totalCount);
-    }, 5);
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("tooltipCountResponse", handleCountResponse);
-    };
-  }, [activeTooltips.length, isDragging]);
+  };
 
   type TooltipPayloadItem = {
     dataKey: string;
@@ -625,271 +457,396 @@ const Chart: React.FC<ChartProps> = ({
     );
   };
 
-  const getTitleClassName = (position: "left" | "center" | "right") => {
-    const baseClasses = "text-xl font-semibold text-foreground mb-3";
-    switch (position) {
-      case "center":
-        return `${baseClasses} text-center`;
-      case "right":
-        return `${baseClasses} text-right`;
-      default:
-        return `${baseClasses} text-left`;
-    }
+  const getTitleClassName = () => {
+    return "text-xl font-semibold text-foreground mb-3";
   };
+  const isHighlightsComponentProvided = typeof HighlightsProp === "function";
+  const isShowOnlyComponentProvided = typeof ShowOnlyProp === "function";
+  const isPeriodsDropdownComponentProvided =
+    typeof PeriodsDropdownProp === "function";
+
+  const finalEnableHighlights =
+    enableHighlights ||
+    isHighlightsComponentProvided ||
+    HighlightsProp === true;
+  const finalEnableShowOnly =
+    enableShowOnly || isShowOnlyComponentProvided || ShowOnlyProp === true;
+  const finalEnablePeriodsDropdown =
+    (enablePeriodsDropdown ||
+      isPeriodsDropdownComponentProvided ||
+      PeriodsDropdownProp === true) &&
+    enableDraggableTooltips;
+
+  const chartRightMargin = 30;
+  const containerPaddingLeft = 16;
+  const chartLeftMargin = 20;
+  const measuredInner = measuredWidth
+    ? Math.max(0, measuredWidth - 32)
+    : undefined;
+  const effectiveChartWidth =
+    typeof width === "number" ? width : measuredInner ?? computedWidth;
+  const chartInnerWidth =
+    effectiveChartWidth - chartLeftMargin - chartRightMargin;
 
   return (
     <div
-      className={cn("rounded-lg bg-card p-4 relative", className)}
+      ref={wrapperRef}
       style={{
-        width:
-          typeof width === "number"
-            ? `${width + 32}px`
-            : `${computedWidth + 32}px`,
-        maxWidth: "100%",
+        width: "100%",
+        overflowX: typeof width === "number" ? "auto" : "visible",
+        overflowY: "hidden",
       }}
     >
-      {title && <h3 className={getTitleClassName(titlePosition)}>{title}</h3>}
-
-      <ComposedChart
-        data={processedData}
-        width={typeof width === "number" ? width : computedWidth}
-        height={height}
-        margin={{ top: showLabels ? 48 : 20, right: 30, left: 20, bottom: 5 }}
-        onClick={handleChartClick}
+      <div
+        className={cn("rounded-lg bg-card p-4 relative", className)}
+        style={
+          typeof width === "number"
+            ? { width: `${width + 32}px` }
+            : { width: "100%", maxWidth: "100%" }
+        }
       >
-        {showGrid && (
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={gridColor || "hsl(var(--muted-foreground))"}
-            opacity={0.5}
-          />
-        )}
-        <XAxis
-          dataKey={xAxisConfig.dataKey}
-          stroke="hsl(var(--muted-foreground))"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={xAxisConfig.formatter}
-        />
-        <YAxis
-          stroke="hsl(var(--muted-foreground))"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => Number(value).toLocaleString("pt-BR")}
-          domain={[0, niceMax]}
-          tickCount={6}
-        />
-        {showTooltip && (
-          <Tooltip
-            content={<CustomTooltip />}
-            cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
-          />
-        )}
-        {showLegend && (
-          <Legend
-            wrapperStyle={{ color: "hsl(var(--foreground))", fontSize: "14px" }}
-          />
+        {title && (
+          <div
+            style={{
+              paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
+              width: "100%",
+              maxWidth: `${chartInnerWidth}px`,
+              display: "flex",
+              justifyContent:
+                titlePosition === "center"
+                  ? "center"
+                  : titlePosition === "right"
+                  ? "flex-end"
+                  : "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <h3 className={getTitleClassName()}>{title}</h3>
+          </div>
         )}
 
-        {seriesOrder.map((s) => {
-          const key = s.key;
-          const label =
-            mapperConfig[key]?.label ?? labelMap?.[key] ?? formatFieldName(key);
-          const color = finalColors[key];
-          if (s.type === "bar") {
-            return (
-              <Bar
-                key={`bar-${key}`}
-                dataKey={key}
-                name={label}
-                fill={color}
-                radius={[4, 4, 0, 0]}
-                onClick={handleBarClick}
-                style={{ cursor: "pointer" }}
-                activeBar={
-                  <Rectangle
+        {allKeys.length > 0 &&
+          (finalEnableHighlights || finalEnableShowOnly) && (
+            <div
+              className="flex items-center w-full"
+              style={{
+                paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
+                width: "98%",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              {finalEnableHighlights &&
+                (isHighlightsComponentProvided ? (
+                  <HighlightsProp
+                    allKeys={allKeys}
+                    mapperConfig={mapperConfig}
+                    finalColors={finalColors}
+                    highlightedSeries={highlightedSeries}
+                    toggleHighlight={toggleHighlight}
+                    containerWidth={chartInnerWidth}
+                  />
+                ) : (
+                  <Highlights
+                    allKeys={allKeys}
+                    mapperConfig={mapperConfig}
+                    finalColors={finalColors}
+                    highlightedSeries={highlightedSeries}
+                    toggleHighlight={toggleHighlight}
+                    containerWidth={chartInnerWidth}
+                  />
+                ))}
+
+              {finalEnableShowOnly &&
+                (isShowOnlyComponentProvided ? (
+                  <ShowOnlyProp
+                    showOnlyHighlighted={showOnlyHighlighted}
+                    setShowOnlyHighlighted={setShowOnlyHighlighted}
+                    highlightedSeriesSize={highlightedSeries.size}
+                    clearHighlights={() => setHighlightedSeries(new Set())}
+                  />
+                ) : (
+                  <ShowOnly
+                    showOnlyHighlighted={showOnlyHighlighted}
+                    setShowOnlyHighlighted={setShowOnlyHighlighted}
+                    highlightedSeriesSize={highlightedSeries.size}
+                    clearHighlights={() => setHighlightedSeries(new Set())}
+                  />
+                ))}
+
+              {finalEnablePeriodsDropdown && (
+                <div
+                  style={{
+                    marginLeft: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {isPeriodsDropdownComponentProvided ? (
+                    <PeriodsDropdownProp
+                      processedData={processedData}
+                      onOpenPeriod={openTooltipForPeriod}
+                      rightOffset={chartRightMargin}
+                      activePeriods={activePeriods}
+                    />
+                  ) : (
+                    <ChartPeriodsDropdown
+                      processedData={processedData}
+                      onOpenPeriod={openTooltipForPeriod}
+                      rightOffset={chartRightMargin}
+                      activePeriods={activePeriods}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+        {!(
+          allKeys.length > 0 &&
+          (finalEnableHighlights || finalEnableShowOnly)
+        ) &&
+          finalEnablePeriodsDropdown && (
+            <div
+              style={{
+                paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
+                paddingRight: `${chartRightMargin}px`,
+                width: "100%",
+                maxWidth: `${chartInnerWidth}px`,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              {isPeriodsDropdownComponentProvided ? (
+                <PeriodsDropdownProp
+                  processedData={processedData}
+                  onOpenPeriod={openTooltipForPeriod}
+                  rightOffset={chartRightMargin}
+                />
+              ) : (
+                <ChartPeriodsDropdown
+                  processedData={processedData}
+                  onOpenPeriod={openTooltipForPeriod}
+                  rightOffset={chartRightMargin}
+                />
+              )}
+            </div>
+          )}
+
+        <ResponsiveContainer width="100%" height={height}>
+          <ComposedChart
+            data={processedData}
+            height={height}
+            margin={{
+              top: showLabels ? 48 : 20,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+            onClick={handleChartClick}
+          >
+            {showGrid && (
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={gridColor || "hsl(var(--muted-foreground))"}
+                opacity={0.5}
+              />
+            )}
+            <XAxis
+              dataKey={xAxisConfig.dataKey}
+              stroke="hsl(var(--muted-foreground))"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={xAxisConfig.formatter}
+            />
+            <YAxis
+              stroke="hsl(var(--muted-foreground))"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => Number(value).toLocaleString("pt-BR")}
+              domain={[0, niceMax]}
+              tickCount={6}
+            />
+            {showTooltip && (
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
+              />
+            )}
+            {showLegend && (
+              <Legend
+                wrapperStyle={{
+                  color: "hsl(var(--foreground))",
+                  fontSize: "14px",
+                }}
+              />
+            )}
+
+            {seriesOrder.map((s) => {
+              const key = s.key;
+              if (showOnlyHighlighted && !highlightedSeries.has(key))
+                return null;
+              const label =
+                mapperConfig[key]?.label ??
+                labelMap?.[key] ??
+                formatFieldName(key);
+              const color = finalColors[key];
+              if (s.type === "bar") {
+                return (
+                  <Bar
+                    key={`bar-${key}`}
+                    dataKey={key}
+                    name={label}
                     fill={color}
+                    radius={[4, 4, 0, 0]}
+                    onClick={handleBarClick}
+                    style={{
+                      cursor: "pointer",
+                      opacity:
+                        highlightedSeries.size > 0
+                          ? highlightedSeries.has(key)
+                            ? 1
+                            : 0.25
+                          : 1,
+                    }}
+                    activeBar={
+                      <Rectangle
+                        fill={color}
+                        stroke={color}
+                        strokeWidth={2}
+                        opacity={0.8}
+                      />
+                    }
+                  >
+                    {(showLabels && highlightedSeries.size === 0) ||
+                    highlightedSeries.has(key) ? (
+                      <LabelList
+                        dataKey={key}
+                        position="top"
+                        content={
+                          renderPillLabel(color, "filled") as LabelListContent
+                        }
+                        offset={8}
+                      />
+                    ) : null}
+                  </Bar>
+                );
+              }
+              if (s.type === "line") {
+                return (
+                  <Line
+                    key={`line-${key}`}
+                    dataKey={key}
+                    name={label}
                     stroke={color}
                     strokeWidth={2}
-                    opacity={0.8}
-                  />
-                }
-              >
-                {showLabels && (
-                  <LabelList
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 6 }}
+                    onClick={handleSeriesClick}
+                    style={{
+                      cursor: "pointer",
+                      pointerEvents: "all",
+                      opacity:
+                        highlightedSeries.size > 0
+                          ? highlightedSeries.has(key)
+                            ? 1
+                            : 0.25
+                          : 1,
+                    }}
+                  >
+                    {(showLabels && highlightedSeries.size === 0) ||
+                    highlightedSeries.has(key) ? (
+                      <LabelList
+                        dataKey={key}
+                        position="top"
+                        content={
+                          renderPillLabel(color, "filled") as LabelListContent
+                        }
+                        offset={14}
+                      />
+                    ) : null}
+                  </Line>
+                );
+              }
+              if (s.type === "area") {
+                return (
+                  <Area
+                    key={`area-${key}`}
                     dataKey={key}
-                    position="top"
-                    content={
-                      renderPillLabel(color, "filled") as LabelListContent
-                    }
-                    offset={8}
-                  />
-                )}
-              </Bar>
-            );
-          }
-          if (s.type === "line") {
-            return (
-              <Line
-                key={`line-${key}`}
-                dataKey={key}
-                name={label}
-                stroke={color}
-                strokeWidth={2}
-                dot={{ r: 3 }}
-                activeDot={{ r: 6 }}
-                onClick={handleChartClick}
-                style={{ cursor: "pointer", pointerEvents: "all" }}
-              >
-                {showLabels && (
-                  <LabelList
-                    dataKey={key}
-                    position="top"
-                    content={
-                      renderPillLabel(color, "filled") as LabelListContent
-                    }
-                    offset={14}
-                  />
-                )}
-              </Line>
-            );
-          }
-          if (s.type === "area") {
-            return (
-              <Area
-                key={`area-${key}`}
-                dataKey={key}
-                name={label}
-                stroke={color}
-                fill={color}
-                fillOpacity={0.15}
-                onClick={handleChartClick}
-                style={{ cursor: "pointer", pointerEvents: "all" }}
-              >
-                {showLabels && (
-                  <LabelList
-                    dataKey={key}
-                    position="top"
-                    content={renderPillLabel(color, "soft") as LabelListContent}
-                    offset={12}
-                  />
-                )}
-              </Area>
-            );
-          }
-          return null;
-        })}
-      </ComposedChart>
+                    name={label}
+                    stroke={color}
+                    fill={color}
+                    fillOpacity={0.15}
+                    onClick={handleSeriesClick}
+                    style={{
+                      cursor: "pointer",
+                      pointerEvents: "all",
+                      opacity:
+                        highlightedSeries.size > 0
+                          ? highlightedSeries.has(key)
+                            ? 1
+                            : 0.25
+                          : 1,
+                    }}
+                  >
+                    {(showLabels && highlightedSeries.size === 0) ||
+                    highlightedSeries.has(key) ? (
+                      <LabelList
+                        dataKey={key}
+                        position="top"
+                        content={
+                          renderPillLabel(color, "soft") as LabelListContent
+                        }
+                        offset={12}
+                      />
+                    ) : null}
+                  </Area>
+                );
+              }
+              return null;
+            })}
+          </ComposedChart>
+        </ResponsiveContainer>
 
-      {alignmentGuides.map((guide, index: number) => {
-        const isHorizontal = guide.type === "horizontal";
-        const color = isHorizontal ? "#3b82f6" : "#ef4444";
-        const startX = isHorizontal
-          ? Math.min(
-              guide.sourceTooltip.left + guide.sourceTooltip.width / 2,
-              guide.targetTooltip.left + guide.targetTooltip.width / 2
-            )
-          : guide.sourceTooltip.left +
-            (isHorizontal ? 0 : guide.sourceTooltip.width / 2);
-        const endX = isHorizontal
-          ? Math.max(
-              guide.sourceTooltip.left + guide.sourceTooltip.width / 2,
-              guide.targetTooltip.left + guide.targetTooltip.width / 2
-            )
-          : guide.targetTooltip.left +
-            (isHorizontal ? 0 : guide.targetTooltip.width / 2);
-        const startY = isHorizontal
-          ? guide.sourceTooltip.top +
-            (isHorizontal ? guide.sourceTooltip.height / 2 : 0)
-          : Math.min(
-              guide.sourceTooltip.top + guide.sourceTooltip.height / 2,
-              guide.targetTooltip.top + guide.targetTooltip.height / 2
-            );
-        const endY = isHorizontal
-          ? guide.targetTooltip.top +
-            (isHorizontal ? guide.targetTooltip.height / 2 : 0)
-          : Math.max(
-              guide.sourceTooltip.top + guide.sourceTooltip.height / 2,
-              guide.targetTooltip.top + guide.targetTooltip.height / 2
-            );
+        {enableDraggableTooltips &&
+          activeTooltips.map((tooltip) => (
+            <DraggableTooltip
+              key={tooltip.id}
+              id={tooltip.id}
+              data={adaptDataForTooltip(tooltip.data)}
+              position={tooltip.position}
+              title={title}
+              dataKeys={allKeys}
+              finalColors={finalColors}
+              onClose={(id) =>
+                setActiveTooltips((prev) => prev.filter((t) => t.id !== id))
+              }
+              onPositionChange={onTooltipPositionChange}
+              periodLabel="Período Selecionado"
+              dataLabel="Dados do Período"
+              globalTooltipCount={activeTooltips.length}
+              onCloseAll={() =>
+                window.dispatchEvent(new Event("closeAllTooltips"))
+              }
+              closeAllButtonPosition="top-center"
+              closeAllButtonVariant="floating"
+            />
+          ))}
 
-        return (
-          <div key={index}>
-            <div
-              className="fixed pointer-events-none z-30"
-              style={{
-                left: startX,
-                top: startY,
-                width: isHorizontal ? endX - startX : "2px",
-                height: isHorizontal ? "2px" : endY - startY,
-                backgroundColor: color,
-                boxShadow: `0 0 8px ${color}60`,
-                opacity: 0.9,
-                borderStyle: "dashed",
-                borderWidth: "1px",
-                borderColor: color,
-                transform: "translateZ(0)",
-              }}
-            />
-            <div
-              className="fixed pointer-events-none z-31"
-              style={{
-                left:
-                  guide.sourceTooltip.left + guide.sourceTooltip.width / 2 - 4,
-                top:
-                  guide.sourceTooltip.top + guide.sourceTooltip.height / 2 - 4,
-                width: "8px",
-                height: "8px",
-                backgroundColor: color,
-                borderRadius: "50%",
-                boxShadow: `0 0 4px ${color}80`,
-                opacity: 0.8,
-              }}
-            />
-            <div
-              className="fixed pointer-events-none z-31"
-              style={{
-                left:
-                  guide.targetTooltip.left + guide.targetTooltip.width / 2 - 4,
-                top:
-                  guide.targetTooltip.top + guide.targetTooltip.height / 2 - 4,
-                width: "8px",
-                height: "8px",
-                backgroundColor: color,
-                borderRadius: "50%",
-                boxShadow: `0 0 4px ${color}80`,
-                opacity: 0.8,
-              }}
-            />
-          </div>
-        );
-      })}
-
-      {activeTooltips.map((tooltip, index) => (
-        <DraggableTooltip
-          key={tooltip.id}
-          id={tooltip.id}
-          data={adaptDataForTooltip(tooltip.data)}
-          position={tooltip.position}
-          isDragging={isDragging === tooltip.id}
-          title={title}
-          dataKeys={allKeys}
-          finalColors={finalColors}
-          onMouseDown={(id, e) => handleMouseDown(e, id)}
-          onClose={(id) =>
-            setActiveTooltips((prev) => prev.filter((t) => t.id !== id))
-          }
-          periodLabel="Período Selecionado"
-          dataLabel="Dados do Período"
-          showCloseAllButton={index === 0}
-          globalTooltipCount={globalTooltipCount}
-          onCloseAll={() => window.dispatchEvent(new Event("closeAllTooltips"))}
-          closeAllButtonPosition="top-center"
-          closeAllButtonVariant="floating"
-        />
-      ))}
+        {enableDraggableTooltips && activeTooltips.length > 1 && (
+          <CloseAllButton
+            count={activeTooltips.length}
+            onCloseAll={() =>
+              window.dispatchEvent(new Event("closeAllTooltips"))
+            }
+            position="top-center"
+            variant="floating"
+          />
+        )}
+      </div>
     </div>
   );
 };
