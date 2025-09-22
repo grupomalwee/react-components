@@ -89,13 +89,21 @@ import { ContextMenuPage } from "@/pages/ContextMenu";
 import { HoverCardPage } from "@/pages/HoverCard";
 import { NavigationMenuPage } from "@/pages/NavigationMenu";
 import DocsTests from "@/pages/Docs-tests";
+import { BarChartPage } from "@/pages/BarChart";
+import { LineChartPage } from "@/pages/LineChart";
+import DraggableTooltipPage from "@/pages/DraggableTooltip";
+import ChartPage from "@/pages/Chart";
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },
+  { title: "Chart", url: "/chart", icon: HouseIcon },
   { title: "Alert Dialog", url: "/alert-dialog", icon: WarningCircleIcon },
   { title: "Destructive Dialog", url: "/destructive-dialog", icon: WarningCircleIcon },
   { title: "Avatar", url: "/avatar", icon: UserCircleIcon },
   { title: "Bagde", url: "/badge", icon: MedalIcon },
+  { title: "Bar Chart", url: "/bar-chart", icon: SpinnerGapIcon },
+  { title: "Line Chart", url: "/line-chart", icon: ImageIcon },
+  { title: "Draggable Tooltip", url: "/draggable-tooltip", icon: ImageIcon },
   { title: "Breadcrumb", url: "/breadcrumb", icon: TreeStructureIcon },
   { title: "Button", url: "/button", icon: CursorIcon },
   { title: "Calendar", url: "/calender", icon: CalendarBlankIcon },
@@ -163,10 +171,14 @@ export function AppSidebar() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/chart" element={<ChartPage />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
           <Route path="/destructive-dialog" element={<DestructiveDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/badge" element={<BadgePage />} />
+          <Route path="/bar-chart" element={<BarChartPage />} />
+          <Route path="/line-chart" element={<LineChartPage />} />
+          <Route path="/draggable-tooltip" element={<DraggableTooltipPage />} />
           <Route path="/button" element={<ButtonPage />} />
           <Route path="/breadcrumb" element={<BreadcrumbPage />} />
           <Route path="/calender" element={<CalendarPage />} />
