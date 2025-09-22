@@ -208,6 +208,8 @@ export const ChartPage = () => {
               enableShowOnly
               enableDraggableTooltips
               titlePosition="center"
+              width={600}
+              height={300}
             />
           </div>
 

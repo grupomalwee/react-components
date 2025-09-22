@@ -77,21 +77,6 @@ interface ChartProps {
   showLabels?: boolean;
   labelMap?: Record<string, string>;
   xAxis: XAxisConfig | string;
-  highlights?:
-    | React.ComponentType<
-        React.ComponentProps<typeof import("./Highlights").default>
-      >
-    | boolean;
-  showOnly?:
-    | React.ComponentType<
-        React.ComponentProps<typeof import("./ShowOnly").default>
-      >
-    | boolean;
-  periodsDropdown?:
-    | React.ComponentType<
-        React.ComponentProps<typeof import("./PeriodsDropdown").default>
-      >
-    | boolean;
   enableHighlights?: boolean;
   enableShowOnly?: boolean;
   enablePeriodsDropdown?: boolean;
@@ -116,9 +101,7 @@ const Chart: React.FC<ChartProps> = ({
   showLabels = false,
   xAxis,
   labelMap,
-  highlights: HighlightsProp,
-  showOnly: ShowOnlyProp,
-  periodsDropdown: PeriodsDropdownProp,
+
   enableHighlights = false,
   enableShowOnly = false,
   enablePeriodsDropdown = false,
@@ -460,22 +443,10 @@ const Chart: React.FC<ChartProps> = ({
   const getTitleClassName = () => {
     return "text-xl font-semibold text-foreground mb-3";
   };
-  const isHighlightsComponentProvided = typeof HighlightsProp === "function";
-  const isShowOnlyComponentProvided = typeof ShowOnlyProp === "function";
-  const isPeriodsDropdownComponentProvided =
-    typeof PeriodsDropdownProp === "function";
-
-  const finalEnableHighlights =
-    enableHighlights ||
-    isHighlightsComponentProvided ||
-    HighlightsProp === true;
-  const finalEnableShowOnly =
-    enableShowOnly || isShowOnlyComponentProvided || ShowOnlyProp === true;
+  const finalEnableHighlights = enableHighlights;
+  const finalEnableShowOnly = enableShowOnly;
   const finalEnablePeriodsDropdown =
-    (enablePeriodsDropdown ||
-      isPeriodsDropdownComponentProvided ||
-      PeriodsDropdownProp === true) &&
-    enableDraggableTooltips;
+    enablePeriodsDropdown && enableDraggableTooltips;
 
   const chartRightMargin = 30;
   const containerPaddingLeft = 16;
@@ -537,43 +508,25 @@ const Chart: React.FC<ChartProps> = ({
                 gap: "0.5rem",
               }}
             >
-              {finalEnableHighlights &&
-                (isHighlightsComponentProvided ? (
-                  <HighlightsProp
-                    allKeys={allKeys}
-                    mapperConfig={mapperConfig}
-                    finalColors={finalColors}
-                    highlightedSeries={highlightedSeries}
-                    toggleHighlight={toggleHighlight}
-                    containerWidth={chartInnerWidth}
-                  />
-                ) : (
-                  <Highlights
-                    allKeys={allKeys}
-                    mapperConfig={mapperConfig}
-                    finalColors={finalColors}
-                    highlightedSeries={highlightedSeries}
-                    toggleHighlight={toggleHighlight}
-                    containerWidth={chartInnerWidth}
-                  />
-                ))}
+              {finalEnableHighlights && (
+                <Highlights
+                  allKeys={allKeys}
+                  mapperConfig={mapperConfig}
+                  finalColors={finalColors}
+                  highlightedSeries={highlightedSeries}
+                  toggleHighlight={toggleHighlight}
+                  containerWidth={chartInnerWidth}
+                />
+              )}
 
-              {finalEnableShowOnly &&
-                (isShowOnlyComponentProvided ? (
-                  <ShowOnlyProp
-                    showOnlyHighlighted={showOnlyHighlighted}
-                    setShowOnlyHighlighted={setShowOnlyHighlighted}
-                    highlightedSeriesSize={highlightedSeries.size}
-                    clearHighlights={() => setHighlightedSeries(new Set())}
-                  />
-                ) : (
-                  <ShowOnly
-                    showOnlyHighlighted={showOnlyHighlighted}
-                    setShowOnlyHighlighted={setShowOnlyHighlighted}
-                    highlightedSeriesSize={highlightedSeries.size}
-                    clearHighlights={() => setHighlightedSeries(new Set())}
-                  />
-                ))}
+              {finalEnableShowOnly && (
+                <ShowOnly
+                  showOnlyHighlighted={showOnlyHighlighted}
+                  setShowOnlyHighlighted={setShowOnlyHighlighted}
+                  highlightedSeriesSize={highlightedSeries.size}
+                  clearHighlights={() => setHighlightedSeries(new Set())}
+                />
+              )}
 
               {finalEnablePeriodsDropdown && (
                 <div
@@ -583,21 +536,12 @@ const Chart: React.FC<ChartProps> = ({
                     alignItems: "center",
                   }}
                 >
-                  {isPeriodsDropdownComponentProvided ? (
-                    <PeriodsDropdownProp
-                      processedData={processedData}
-                      onOpenPeriod={openTooltipForPeriod}
-                      rightOffset={chartRightMargin}
-                      activePeriods={activePeriods}
-                    />
-                  ) : (
-                    <ChartPeriodsDropdown
-                      processedData={processedData}
-                      onOpenPeriod={openTooltipForPeriod}
-                      rightOffset={chartRightMargin}
-                      activePeriods={activePeriods}
-                    />
-                  )}
+                  <ChartPeriodsDropdown
+                    processedData={processedData}
+                    onOpenPeriod={openTooltipForPeriod}
+                    rightOffset={chartRightMargin}
+                    activePeriods={activePeriods}
+                  />
                 </div>
               )}
             </div>
@@ -618,19 +562,11 @@ const Chart: React.FC<ChartProps> = ({
                 justifyContent: "flex-end",
               }}
             >
-              {isPeriodsDropdownComponentProvided ? (
-                <PeriodsDropdownProp
-                  processedData={processedData}
-                  onOpenPeriod={openTooltipForPeriod}
-                  rightOffset={chartRightMargin}
-                />
-              ) : (
-                <ChartPeriodsDropdown
-                  processedData={processedData}
-                  onOpenPeriod={openTooltipForPeriod}
-                  rightOffset={chartRightMargin}
-                />
-              )}
+              <ChartPeriodsDropdown
+                processedData={processedData}
+                onOpenPeriod={openTooltipForPeriod}
+                rightOffset={chartRightMargin}
+              />
             </div>
           )}
 
