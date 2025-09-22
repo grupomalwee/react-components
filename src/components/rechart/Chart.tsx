@@ -90,7 +90,7 @@ const Chart: React.FC<ChartProps> = ({
   series,
   className,
   height = 350,
-  width = 900,
+  width = "100%",
   colors = DEFAULT_COLORS,
   gridColor,
   showGrid = true,
@@ -225,11 +225,7 @@ const Chart: React.FC<ChartProps> = ({
     }
     const offsetIndex = activeTooltips.length;
     const availableWidth =
-      typeof width === "number"
-        ? width
-        : measuredWidth
-        ? Math.max(0, measuredWidth - 32)
-        : computedWidth;
+      typeof width === "number" ? width : measuredInner ?? computedWidth;
     const newTooltip = {
       id: tooltipId,
       data: row,
@@ -310,7 +306,7 @@ const Chart: React.FC<ChartProps> = ({
     const marginExtra = 140;
 
     const raw = Math.round(points * perPoint + marginExtra);
-    const min = 380;
+    const min = 200;
     const max = 2200;
     return Math.max(min, Math.min(max, raw));
   }, [
@@ -464,17 +460,14 @@ const Chart: React.FC<ChartProps> = ({
       ref={wrapperRef}
       style={{
         width: "100%",
-        overflowX: typeof width === "number" ? "auto" : "visible",
+        overflowX: "hidden",
         overflowY: "hidden",
+        minWidth: 0,
       }}
     >
       <div
         className={cn("rounded-lg bg-card p-4 relative", className)}
-        style={
-          typeof width === "number"
-            ? { width: `${width + 32}px` }
-            : { width: "100%", maxWidth: "100%" }
-        }
+        style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}
       >
         {title && (
           <div
