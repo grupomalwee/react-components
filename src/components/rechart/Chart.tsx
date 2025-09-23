@@ -28,6 +28,7 @@ import {
   formatFieldName,
   detectDataFields,
   generateAdditionalColors,
+  niceCeil,
 } from "./helpers";
 
 import ChartPeriodsDropdown from "./PeriodsDropdown";
@@ -65,6 +66,26 @@ interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
   className?: string;
+  /** Padding shorthand: number -> left padding in px, or object with sides. Default left = 16 */
+  padding?:
+    | number
+    | Partial<{ left: number; right: number; top: number; bottom: number }>;
+  /** Simplified margins prop for the underlying Recharts ComposedChart. Use instead of deprecated `chartMargins`. */
+  margins?: Partial<{
+    top: number;
+    right: number;
+    left: number;
+    bottom: number;
+  }>;
+  /** Backwards-compat: previous single-value padding left (deprecated). */
+  containerPaddingLeft?: number;
+  /** Backwards-compat: previous chartMargins (deprecated). */
+  chartMargins?: Partial<{
+    top: number;
+    right: number;
+    left: number;
+    bottom: number;
+  }>;
   height?: number;
   width?: number | string;
   colors?: string[];
@@ -106,6 +127,10 @@ const Chart: React.FC<ChartProps> = ({
   enableShowOnly = false,
   enablePeriodsDropdown = false,
   enableDraggableTooltips = false,
+  padding,
+  margins,
+  containerPaddingLeft,
+  chartMargins,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -249,19 +274,6 @@ const Chart: React.FC<ChartProps> = ({
       return next;
     });
   }, []);
-
-  const niceCeil = (value: number) => {
-    if (!isFinite(value) || value <= 0) return 1;
-    const pow = Math.pow(10, Math.floor(Math.log10(value)));
-    const normalized = value / pow;
-    const multipliers = [
-      1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 25, 50, 100,
-    ];
-    for (const m of multipliers) {
-      if (m >= normalized) return Math.ceil(m * pow);
-    }
-    return Math.ceil(100 * pow);
-  };
 
   const maxDataValue = useMemo(() => {
     let max = 0;
@@ -444,16 +456,31 @@ const Chart: React.FC<ChartProps> = ({
   const finalEnablePeriodsDropdown =
     enablePeriodsDropdown && enableDraggableTooltips;
 
-  const chartRightMargin = 30;
-  const containerPaddingLeft = 16;
-  const chartLeftMargin = 20;
+  const defaultChartRightMargin = 30;
+  const defaultChartLeftMargin = 0;
+
+  const resolvedContainerPaddingLeft = ((): number => {
+    if (typeof padding === "number") return padding;
+    if (padding && typeof padding === "object" && padding.left != null)
+      return padding.left as number;
+    if (typeof containerPaddingLeft === "number") return containerPaddingLeft;
+    return 16;
+  })();
+
+  const finalChartRightMargin =
+    margins?.right ?? chartMargins?.right ?? defaultChartRightMargin;
+  const finalChartLeftMargin =
+    margins?.left ?? chartMargins?.left ?? defaultChartLeftMargin;
+  const finalChartTopMargin =
+    margins?.top ?? chartMargins?.top ?? (showLabels ? 48 : 20);
+  const finalChartBottomMargin = margins?.bottom ?? chartMargins?.bottom ?? 5;
   const measuredInner = measuredWidth
     ? Math.max(0, measuredWidth - 32)
     : undefined;
   const effectiveChartWidth =
     typeof width === "number" ? width : measuredInner ?? computedWidth;
   const chartInnerWidth =
-    effectiveChartWidth - chartLeftMargin - chartRightMargin;
+    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
 
   return (
     <div
@@ -466,13 +493,15 @@ const Chart: React.FC<ChartProps> = ({
       }}
     >
       <div
-        className={cn("rounded-lg bg-card p-4 relative", className)}
+        className={cn("rounded-lg bg-card p-2 relative", className)}
         style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}
       >
         {title && (
           <div
             style={{
-              paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
+              paddingLeft: `${
+                resolvedContainerPaddingLeft + finalChartLeftMargin
+              }px`,
               width: "100%",
               maxWidth: `${chartInnerWidth}px`,
               display: "flex",
@@ -483,6 +512,7 @@ const Chart: React.FC<ChartProps> = ({
                   ? "flex-end"
                   : "flex-start",
               alignItems: "center",
+              marginTop: 4,
             }}
           >
             <h3 className={getTitleClassName()}>{title}</h3>
@@ -494,7 +524,9 @@ const Chart: React.FC<ChartProps> = ({
             <div
               className="flex items-center w-full"
               style={{
-                paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
+                paddingLeft: `${
+                  resolvedContainerPaddingLeft + finalChartLeftMargin
+                }px`,
                 width: "98%",
                 display: "flex",
                 alignItems: "center",
@@ -532,7 +564,7 @@ const Chart: React.FC<ChartProps> = ({
                   <ChartPeriodsDropdown
                     processedData={processedData}
                     onOpenPeriod={openTooltipForPeriod}
-                    rightOffset={chartRightMargin}
+                    rightOffset={finalChartRightMargin}
                     activePeriods={activePeriods}
                   />
                 </div>
@@ -547,8 +579,10 @@ const Chart: React.FC<ChartProps> = ({
           finalEnablePeriodsDropdown && (
             <div
               style={{
-                paddingLeft: `${containerPaddingLeft + chartLeftMargin}px`,
-                paddingRight: `${chartRightMargin}px`,
+                paddingLeft: `${
+                  resolvedContainerPaddingLeft + finalChartLeftMargin
+                }px`,
+                paddingRight: `${finalChartRightMargin}px`,
                 width: "100%",
                 maxWidth: `${chartInnerWidth}px`,
                 display: "flex",
@@ -558,7 +592,7 @@ const Chart: React.FC<ChartProps> = ({
               <ChartPeriodsDropdown
                 processedData={processedData}
                 onOpenPeriod={openTooltipForPeriod}
-                rightOffset={chartRightMargin}
+                rightOffset={finalChartRightMargin}
               />
             </div>
           )}
@@ -568,10 +602,10 @@ const Chart: React.FC<ChartProps> = ({
             data={processedData}
             height={height}
             margin={{
-              top: showLabels ? 48 : 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              top: finalChartTopMargin,
+              right: finalChartRightMargin,
+              left: finalChartLeftMargin,
+              bottom: finalChartBottomMargin,
             }}
             onClick={handleChartClick}
           >

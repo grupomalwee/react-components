@@ -12,6 +12,15 @@ import {
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
 import renderPillLabel from "./pillLabelRenderer";
+import {
+  generateAdditionalColors,
+  niceCeil,
+  compactTick,
+  Padding,
+  Margins,
+  resolveContainerPaddingLeft,
+  resolveChartMargins,
+} from "./helpers";
 
 interface LineChartData {
   name: string;
@@ -21,6 +30,10 @@ interface LineChartData {
 interface CustomLineChartProps {
   data?: LineChartData[];
   className?: string;
+  padding?: Padding;
+  margins?: Margins;
+  containerPaddingLeft?: number;
+  chartMargins?: Margins;
   height?: number;
   width?: number | string;
   colors?: string[];
@@ -44,42 +57,6 @@ const defaultData: LineChartData[] = [
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
-// Função simples para gerar cores adicionais
-const generateAdditionalColors = (
-  baseColors: string[],
-  count: number
-): string[] => {
-  const colors = [...baseColors];
-  const variations = [
-    "#ff6b6b",
-    "#4ecdc4",
-    "#45b7d1",
-    "#f9ca24",
-    "#6c5ce7",
-    "#a29bfe",
-    "#fd79a8",
-    "#00b894",
-  ];
-
-  while (colors.length < count) {
-    colors.push(
-      variations[(colors.length - baseColors.length) % variations.length]
-    );
-  }
-
-  return colors;
-};
-
-// compact tick formatter usado pelo eixo
-const compactTick = (value: number) => {
-  if (value >= 1000000000)
-    return (value / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
-  if (value >= 1000000)
-    return (value / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
-  if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, "") + "K";
-  return String(value);
-};
-
 const CustomLineChart: React.FC<CustomLineChartProps> = ({
   data = defaultData,
   className,
@@ -95,7 +72,16 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
   strokeWidth = 2,
   showDots = true,
   showLabels = false,
+  padding,
+  margins,
+  containerPaddingLeft,
+  chartMargins,
 }) => {
+  const resolvedContainerPaddingLeft = resolveContainerPaddingLeft(
+    padding,
+    containerPaddingLeft,
+    16
+  );
   const [activeTooltips, setActiveTooltips] = useState<
     Array<{
       id: string;
@@ -152,19 +138,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
   );
   const finalColors = generateColors(dataKeys);
 
-  // Compute a friendly ceiling for axis based on data magnitude
-  const niceCeil = (value: number) => {
-    if (!isFinite(value) || value <= 0) return 1;
-    const pow = Math.pow(10, Math.floor(Math.log10(value)));
-    const normalized = value / pow;
-    const multipliers = [
-      1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 25, 50, 100,
-    ];
-    for (const m of multipliers) {
-      if (m >= normalized) return Math.ceil(m * pow);
-    }
-    return Math.ceil(100 * pow);
-  };
+  // use niceCeil from helpers
 
   const maxDataValue = useMemo(() => {
     let max = 0;
@@ -628,8 +602,10 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
       >
         {/* Título do gráfico */}
         {title && (
-          <div className={cn("mb-4", getTitleClass())}>
-            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          <div style={{ paddingLeft: `${resolvedContainerPaddingLeft}px` }}>
+            <div className={cn("mb-4", getTitleClass())}>
+              <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+            </div>
           </div>
         )}
 
@@ -637,12 +613,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
           data={data}
           width={typeof width === "number" ? width : 900}
           height={height}
-          margin={{
-            top: showLabels ? 48 : 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
+          margin={resolveChartMargins(margins, chartMargins, showLabels)}
           onClick={handleChartClick}
         >
           {showGrid && (

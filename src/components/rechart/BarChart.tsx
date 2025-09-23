@@ -13,6 +13,17 @@ import {
 import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
 import renderPillLabel from "./pillLabelRenderer";
+import {
+  formatFieldName,
+  detectXAxis,
+  detectDataFields,
+  generateAdditionalColors,
+  niceCeil,
+  Padding,
+  Margins,
+  resolveContainerPaddingLeft,
+  resolveChartMargins,
+} from "./helpers";
 
 // Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {
@@ -41,6 +52,10 @@ interface DataMapper {
 interface BarChartProps {
   data: BarChartData[]; // Agora obrigatório - sem fallback confuso
   className?: string;
+  padding?: Padding;
+  margins?: Margins;
+  containerPaddingLeft?: number;
+  chartMargins?: Margins;
   height?: number;
   width?: number | string;
   colors?: string[];
@@ -66,66 +81,9 @@ interface BarChartProps {
   autoDetect?: boolean; // Se true, ignora xAxis e mapper e detecta automaticamente
 }
 
-// Função para formatar automaticamente nomes de campos
-const formatFieldName = (fieldName: string): string => {
-  return fieldName
-    .replace(/([A-Z])/g, " $1") // camelCase para espaços
-    .replace(/[_-]/g, " ") // underscore e hífens para espaços
-    .replace(/\b\w/g, (l) => l.toUpperCase()) // Primeira letra maiúscula
-    .trim();
-};
-
-// Função para detectar automaticamente o eixo X (primeiro campo string/texto)
-const detectXAxis = (data: BarChartData[]): string => {
-  if (!data || data.length === 0) return "name";
-
-  const firstItem = data[0];
-  const stringFields = Object.keys(firstItem).filter(
-    (key) =>
-      typeof firstItem[key] === "string" ||
-      (typeof firstItem[key] === "number" && String(firstItem[key]).length <= 4) // Anos, IDs curtos
-  );
-
-  return stringFields[0] || Object.keys(firstItem)[0] || "name";
-};
-
-// Função para detectar automaticamente campos numéricos para as barras
-const detectDataFields = (data: BarChartData[], xAxisKey: string): string[] => {
-  if (!data || data.length === 0) return [];
-
-  const firstItem = data[0];
-  return Object.keys(firstItem).filter(
-    (key) => key !== xAxisKey && typeof firstItem[key] === "number"
-  );
-};
-
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
-// Função simples para gerar cores adicionais
-const generateAdditionalColors = (
-  baseColors: string[],
-  count: number
-): string[] => {
-  const colors = [...baseColors];
-  const variations = [
-    "#ff6b6b",
-    "#4ecdc4",
-    "#45b7d1",
-    "#f9ca24",
-    "#6c5ce7",
-    "#a29bfe",
-    "#fd79a8",
-    "#00b894",
-  ];
-
-  while (colors.length < count) {
-    colors.push(
-      variations[(colors.length - baseColors.length) % variations.length]
-    );
-  }
-
-  return colors;
-};
+// ...using shared helpers from ./helpers.ts
 
 // Função para formatar números de forma compacta (1K, 1M, etc.)
 // compact number util moved to pillLabelRenderer
@@ -148,7 +106,16 @@ const BarChart: React.FC<BarChartProps> = ({
   yAxis,
   labelMap,
   autoDetect = false,
+  padding,
+  margins,
+  containerPaddingLeft,
+  chartMargins,
 }) => {
+  const resolvedContainerPaddingLeft = resolveContainerPaddingLeft(
+    padding,
+    containerPaddingLeft,
+    16
+  );
   // 🧠 LÓGICA INTELIGENTE: Detectar automaticamente ou usar configurações
   const smartConfig = useMemo(() => {
     // Prefer yAxis (stories) over mapper prop when both exist
@@ -284,19 +251,7 @@ const BarChart: React.FC<BarChartProps> = ({
     };
   };
 
-  // Compute friendly ceiling for axis and sizing
-  const niceCeil = (value: number) => {
-    if (!isFinite(value) || value <= 0) return 1;
-    const pow = Math.pow(10, Math.floor(Math.log10(value)));
-    const normalized = value / pow;
-    const multipliers = [
-      1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 25, 50, 100,
-    ];
-    for (const m of multipliers) {
-      if (m >= normalized) return Math.ceil(m * pow);
-    }
-    return Math.ceil(100 * pow);
-  };
+  // using niceCeil from helpers
 
   const maxDataValue = useMemo(() => {
     let max = 0;
@@ -796,13 +751,17 @@ const BarChart: React.FC<BarChartProps> = ({
         maxWidth: "100%",
       }}
     >
-      {title && <h3 className={getTitleClassName(titlePosition)}>{title}</h3>}
+      {title && (
+        <div style={{ paddingLeft: `${resolvedContainerPaddingLeft}px` }}>
+          <h3 className={getTitleClassName(titlePosition)}>{title}</h3>
+        </div>
+      )}
 
       <RechartsBarChart
         data={processedData}
         width={typeof width === "number" ? width : 900}
         height={height}
-        margin={{ top: showLabels ? 48 : 20, right: 30, left: 20, bottom: 5 }}
+        margin={resolveChartMargins(margins, chartMargins, showLabels)}
         onClick={handleChartClick}
       >
         {showGrid && (
