@@ -240,181 +240,30 @@ export const ChartPage = () => {
         <InteractiveGrid />
       </section>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Chart
-            data={userData}
-            xAxis="trimestre"
-            labelMap={{
-              usuariosAtivos: "Usuários Ativos",
-              novosCadastros: "Novos Cadastros",
-              churn: "Churn",
-              engajamento: "Engajamento (%)",
-              visitas: "Visitas",
-              extra: "Extra",
-            }}
-            series={{
-              bar: ["usuariosAtivos", "novosCadastros", "churn", "extra"],
-              line: ["engajamento", "visitas"],
-            }}
-            showLegend={false}
-            title="Usuários - Barra + Linha"
-            titlePosition="center"
-            enableHighlights
-            enablePeriodsDropdown
-            enableShowOnly
-            enableDraggableTooltips
-            showLabels={true}
-          />
-        </div>
-
-        <div>
-          <Chart
-            title="Many Series Example"
-            data={manySeriesData}
-            xAxis="trimestre"
-            series={{
-              bar: ["s1", "s2", "s3", "s4"],
-              line: ["s5", "s6"],
-            }}
-            labelMap={{
-              s1: "Série 1",
-              s2: "Série 2",
-              s3: "Série 3",
-              s4: "Série 4",
-              s5: "Série 5",
-              s6: "Série 6",
-            }}
-            showLegend
-            titlePosition="center"
-          />
-        </div>
-
-        <div>
-          <Chart
-            title="Large Dataset (50 points)"
-            data={largeData}
-            xAxis="label"
-            series={{
-              line: ["metricA"],
-              area: ["metricB"],
-            }}
-            labelMap={{
-              metricA: "Métrica A",
-              metricB: "Métrica B",
-            }}
-            showLabels={false}
-            showLegend
-            titlePosition="center"
-          />
-        </div>
-
-        <div>
-          <Chart
-            title="Engajamento & Cadastros"
-            data={userData}
-            xAxis="trimestre"
-            series={{
-              line: ["engajamento"],
-              area: ["novosCadastros"],
-            }}
-            labelMap={{
-              engajamento: "Engajamento (%)",
-              novosCadastros: "Novos Cadastros",
-            }}
-            showLabels={true}
-            titlePosition="center"
-          />
-        </div>
-
-        <div>
-          <Chart
-            title="Churn vs Cadastros"
-            data={userData}
-            xAxis="trimestre"
-            series={{
-              bar: ["churn"],
-              area: ["novosCadastros"],
-              line: ["visitas"],
-            }}
-            labelMap={{
-              churn: "Churn",
-              novosCadastros: "Novos Cadastros",
-              visitas: "Visitas",
-            }}
-            showLabels={true}
-            titlePosition="center"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Chart
-              title="Controls ON"
-              data={userData}
-              xAxis="trimestre"
-              series={{ bar: ["usuariosAtivos"], line: ["visitas"] }}
-              labelMap={{
-                usuariosAtivos: "Usuários Ativos",
-                visitas: "Visitas",
-              }}
-              enableHighlights
-              enablePeriodsDropdown
-              enableShowOnly
-              enableDraggableTooltips
-              titlePosition="center"
-            />
-          </div>
-
-          <div>
-            <Chart
-              title="Controls OFF"
-              data={userData}
-              xAxis="trimestre"
-              series={{ bar: ["usuariosAtivos"], line: ["visitas"] }}
-              labelMap={{
-                usuariosAtivos: "Usuários Ativos",
-                visitas: "Visitas",
-              }}
-              showLegend
-              titlePosition="center"
-            />
-          </div>
-        </div>
-
-        <div>
-          <Chart
-            title="Time Series (ISO Dates)"
-            data={[
-              { date: "2025-01-01", value: 120 },
-              { date: "2025-01-08", value: 150 },
-              { date: "2025-01-15", value: 180 },
-              { date: "2025-01-22", value: 160 },
-              { date: "2025-01-29", value: 200 },
-            ]}
-            xAxis="date"
-            series={{ line: ["value"] }}
-            labelMap={{ value: "Valor" }}
-            showLabels={false}
-            showLegend
-            titlePosition="center"
-          />
-        </div>
-
-        <div>
-          <Chart
-            title="Minimal — Controls Disabled"
-            data={userData}
-            xAxis="trimestre"
-            series={{ bar: ["novosCadastros"] }}
-            labelMap={{ novosCadastros: "Novos Cadastros" }}
-            showLegend={false}
-            enableHighlights={false}
-            enablePeriodsDropdown={false}
-            enableShowOnly={false}
-            enableDraggableTooltips={false}
-            titlePosition="center"
-          />
-        </div>
+        <Chart
+          data={userData}
+          xAxis="trimestre"
+          labelMap={{
+            usuariosAtivos: "Usuários Ativos",
+            novosCadastros: "Novos Cadastros",
+            churn: "Churn",
+            engajamento: "Engajamento (%)",
+            visitas: "Visitas",
+            extra: "Extra",
+          }}
+          series={{
+            bar: ["usuariosAtivos", "novosCadastros"],
+            line: ["engajamento", "visitas"],
+          }}
+          showLegend={false}
+          title="Usuários - Barra + Linha"
+          titlePosition="center"
+          enableHighlights
+          enablePeriodsDropdown
+          enableShowOnly
+          enableDraggableTooltips
+          showLabels={true}
+        />
       </div>
     </div>
   );
