@@ -6,13 +6,19 @@ metadata:
 spec:
   gatewayClassName: gke-l7-regional-external-managed
   listeners:
-  - name: https
-    protocol: HTTPS
-    port: 443
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - name: malwee-dev
+    - name: https
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              shared-gateway-access: "true"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: malwee-dev
   addresses:
-  - type: NamedAddress
-    value: react-components-storybook
+    - type: NamedAddress
+      value: react-components-storybook
