@@ -89,7 +89,7 @@ const Highlights: React.FC<Props> = ({
                       backgroundColor: color,
                       borderColor: isHighlighted ? color : "transparent",
                       boxShadow: isHighlighted
-                        ? `0 6px 20px ${color}33` // subtle colored glow
+                        ? `0 6px 20px ${color}33`
                         : undefined,
                     }}
                     layout
@@ -111,35 +111,37 @@ const Highlights: React.FC<Props> = ({
                     </motion.span>
                   ) : null}
 
-                  {isHighlighted ? (
-                    <motion.span
-                      initial={{ opacity: 0, scale: 0.6 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 450,
-                        damping: 28,
-                      }}
-                      className="ml-1 text-xs text-foreground"
+                  <motion.span
+                    aria-hidden
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    animate={
+                      isHighlighted
+                        ? { opacity: 1, scale: 1 }
+                        : { opacity: 0, scale: 0.6 }
+                    }
+                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
+                    className={cn(
+                      "pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs text-foreground",
+                      isHighlighted ? "" : ""
+                    )}
+                    style={{ width: 18, height: 18 }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden
-                      >
-                        <path
-                          d="M20 6L9 17l-5-5"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </motion.span>
-                  ) : null}
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </motion.span>
                 </motion.button>
               </ButtonBase>
             </motion.div>

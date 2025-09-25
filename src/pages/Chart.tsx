@@ -240,30 +240,33 @@ export const ChartPage = () => {
         <InteractiveGrid />
       </section>
       <div className="grid grid-cols-2 gap-4">
-        <Chart
-          data={userData}
-          xAxis="trimestre"
-          labelMap={{
-            usuariosAtivos: "Usuários Ativos",
-            novosCadastros: "Novos Cadastros",
-            churn: "Churn",
-            engajamento: "Engajamento (%)",
-            visitas: "Visitas",
-            extra: "Extra",
-          }}
-          series={{
-            bar: ["usuariosAtivos", "novosCadastros"],
-            line: ["engajamento", "visitas"],
-          }}
-          showLegend={false}
-          title="Usuários - Barra + Linha"
-          titlePosition="center"
-          enableHighlights
-          enablePeriodsDropdown
-          enableShowOnly
-          enableDraggableTooltips
-          showLabels={true}
-        />
+      
+          <Chart
+            data={userData}
+            xAxis="trimestre"
+            labelMap={{
+              usuariosAtivos: "Usuários Ativos",
+              novosCadastros: "Novos Cadastros",
+              churn: "Churn",
+              engajamento: "Engajamento (%)",
+              visitas: "Visitas",
+              extra: "Extra",
+            }}
+            series={{
+              bar: ["usuariosAtivos", "novosCadastros", "churn", "extra"],
+              line: ["engajamento", "visitas"],
+            }}
+            showLegend={false}
+            title="Usuários - Barra + Linha"
+            titlePosition="center"
+            enableHighlights
+            enablePeriodsDropdown
+            enableShowOnly
+            enableDraggableTooltips
+            showLabels={true}
+          />
+       
+
       </div>
     </div>
   );
