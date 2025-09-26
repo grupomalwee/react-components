@@ -87,6 +87,44 @@ export const ChartPage = () => {
     metricB: Math.round(200 + Math.cos(idx / 5) * 30 + idx * 3),
   }));
 
+  // --- Variantes de dados para demonstração (paralelo às stories) ---
+  const zeroValuesData = manySeriesData.map((row, idx) => {
+    const r = row as unknown as Record<string, number>;
+    return {
+      ...row,
+      usuariosAtivos: idx % 2 === 0 ? 0 : r.usuariosAtivos || 0,
+      novosCadastros: idx % 3 === 0 ? 0 : r.novosCadastros || 0,
+    };
+  });
+
+  const negativeValuesData = manySeriesData.map((row, idx) => {
+    const r = row as unknown as Record<string, number>;
+    return {
+      ...row,
+      usuariosAtivos: idx === 2 ? -1200 : r.usuariosAtivos || 0,
+      novosCadastros: idx === 5 ? -800 : r.novosCadastros || 0,
+    };
+  });
+
+  const manyPointsData = Array.from({ length: 36 }).map((_, i) => ({
+    periodo: `M${i + 1}`,
+    receita: Math.round(3000 + Math.sin(i / 3) * 1200 + i * 15),
+    despesas: Math.round(1800 + Math.cos(i / 4) * 900 + i * 8),
+    churn: Math.round(100 - ((i * 0.5) % 80)),
+  }));
+
+  const singlePointData = [
+    { trimestre: "Q1/2026", receita: 5000, despesas: 2000, churn: 120 },
+  ];
+
+  const mixedTypesData = [
+    { label: "A", value: 1200 },
+    { label: "B", value: 0 },
+    { label: "C", value: -300 },
+    { label: "D", value: 800 },
+    { label: "E", value: 2400 },
+  ];
+
   function InteractiveGrid() {
     const [mode, setMode] = useState<"auto" | "fixed">("auto");
     const [cols, setCols] = useState<number>(3);
@@ -233,41 +271,171 @@ export const ChartPage = () => {
     );
   }
 
+  function QuickControls() {
+    const [dataset, setDataset] = useState<"user" | "many" | "large">("user");
+    const [showLegend, setShowLegend] = useState<boolean>(false);
+    const [draggable, setDraggable] = useState<boolean>(true);
+
+    const current =
+      dataset === "many"
+        ? manySeriesData
+        : dataset === "large"
+        ? largeData
+        : userData;
+
+    // helper: create an alphabetical labelMap from the first row of data
+    const buildLabelMap = (row: Record<string, unknown> | undefined) => {
+      if (!row) return {};
+      const keys = Object.keys(row)
+        .filter((k) => k !== "trimestre" && k !== "label")
+        .sort((a, b) => a.localeCompare(b));
+      const map: Record<string, string> = {};
+      keys.forEach(
+        (k) =>
+          (map[k] = k
+            .replace(/([A-Z])/g, " $1")
+            .replace(/^./, (s) => s.toUpperCase()))
+      );
+      return map;
+    };
+
+    const labelMap = buildLabelMap(current[0]);
+
+    return (
+      <div className="p-4 bg-card rounded-md">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <LabelBase className="select-none">Dataset</LabelBase>
+            <div className="w-44">
+              <Select
+                placeholder="Dataset"
+                items={[
+                  { label: "Usuários (exemplo)", value: "user" },
+                  { label: "Many Series", value: "many" },
+                  { label: "Large (50 pontos)", value: "large" },
+                ]}
+                onChange={(v: string) =>
+                  setDataset(v as "user" | "many" | "large")
+                }
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <CheckboxBase
+                id="qc-legend"
+                checked={showLegend}
+                onCheckedChange={(v) => setShowLegend(Boolean(v))}
+              />
+              <LabelBase htmlFor="qc-legend">Mostrar legenda</LabelBase>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckboxBase
+                id="qc-draggable"
+                checked={draggable}
+                onCheckedChange={(v) => setDraggable(Boolean(v))}
+              />
+              <LabelBase htmlFor="qc-draggable">Tooltips fixáveis</LabelBase>
+            </div>
+          </div>
+
+          <div>
+            <Chart
+              data={current}
+              xAxis={dataset === "large" ? "label" : "trimestre"}
+              series={
+                dataset === "many"
+                  ? { bar: ["s1", "s2", "s3"], line: ["s4"] }
+                  : dataset === "large"
+                  ? { line: ["metricA"], area: ["metricB"] }
+                  : { bar: ["usuariosAtivos"], line: ["visitas"] }
+              }
+              labelMap={labelMap}
+              showLegend={showLegend}
+              enableDraggableTooltips={draggable}
+              title="Quick Controls"
+              titlePosition="left"
+              height={260}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 space-y-8">
-      {/* Exemplo único: interativo e responsivo */}
       <section className="space-y-6">
         <InteractiveGrid />
+        <QuickControls />
       </section>
-      <div className="grid grid-cols-2 gap-4">
-      
-          <Chart
-            data={userData}
-            xAxis="trimestre"
-            labelMap={{
-              usuariosAtivos: "Usuários Ativos",
-              novosCadastros: "Novos Cadastros",
-              churn: "Churn",
-              engajamento: "Engajamento (%)",
-              visitas: "Visitas",
-              extra: "Extra",
-            }}
-            series={{
-              bar: ["usuariosAtivos", "novosCadastros", "churn", "extra"],
-              line: ["engajamento", "visitas"],
-            }}
-            showLegend={false}
-            title="Usuários - Barra + Linha"
-            titlePosition="center"
-            enableHighlights
-            enablePeriodsDropdown
-            enableShowOnly
-            enableDraggableTooltips
-            showLabels={true}
-          />
-       
-
-      </div>
+      <section className="space-y-6">
+        <Chart
+          data={userData}
+          xAxis="trimestre"
+          series={{ bar: ["usuariosAtivos"], line: ["visitas"] }}
+          labelMap={{ usuariosAtivos: "Usuários Ativos", visitas: "Visitas" }}
+          title="Default"
+          height={280}
+        />
+      </section>
+      <section className="space-y-6">
+        <Chart
+          data={zeroValuesData}
+          xAxis="trimestre"
+          series={{ bar: ["usuariosAtivos"], line: ["novosCadastros"] }}
+          labelMap={{
+            usuariosAtivos: "Usuários Ativos",
+            novosCadastros: "Novos Cadastros",
+          }}
+          height={260}
+          title="With Zero Values"
+        />
+      </section>
+      <section className="space-y-6">
+        <Chart
+          data={negativeValuesData}
+          xAxis="trimestre"
+          series={{ bar: ["usuariosAtivos"], line: ["novosCadastros"] }}
+          labelMap={{
+            usuariosAtivos: "Usuários Ativos",
+            novosCadastros: "Novos Cadastros",
+          }}
+          height={260}
+          title="With Negative Values"
+        />
+      </section>
+      <section className="space-y-6">
+        <Chart
+          data={manyPointsData}
+          xAxis="periodo"
+          series={{ line: ["receita"], area: ["despesas"] }}
+          labelMap={{ receita: "Receita", despesas: "Despesas" }}
+          height={320}
+          title="With Many Points"
+        />
+      </section>
+      <section className="space-y-6">
+        <Chart
+          data={singlePointData}
+          xAxis="trimestre"
+          series={{ bar: ["despesas"], line: ["receita"] }}
+          labelMap={{ receita: "Receita", despesas: "Despesas" }}
+          height={220}
+          title="With Single Point"
+        />
+      </section>
+      <section className="space-y-6">
+        <Chart
+          data={mixedTypesData}
+          xAxis="label"
+          series={{ bar: ["value"] }}
+          labelMap={{ value: "Valor" }}
+          height={260}
+          title="With Mixed Types"
+        />
+      </section>
     </div>
   );
 };

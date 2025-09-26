@@ -19,7 +19,7 @@ const CloseAllButton: React.FC<CloseAllButtonProps> = ({
 
   const getPositionClasses = () => {
     if (variant === "inline") return "";
-    
+
     switch (position) {
       case "top-left":
         return "fixed top-6 left-6 z-50";
@@ -36,9 +36,9 @@ const CloseAllButton: React.FC<CloseAllButtonProps> = ({
     if (variant === "inline") {
       return "text-xs px-2 py-1 h-auto bg-card border border-border shadow-sm hover:bg-accent";
     }
-    
+
     return `
-      rounded-full px-4 py-2.5 bg-transparent hover:bg-white/15 active:bg-white/20
+      rounded-full px-4 py-2.5
       text-white font-semibold text-sm
       transition-all duration-200 ease-in-out
       hover:scale-105 active:scale-95 hover:shadow-2xl
@@ -65,13 +65,14 @@ const CloseAllButton: React.FC<CloseAllButtonProps> = ({
   }
 
   return (
-    <div className={`${getPositionClasses()} animate-in fade-in slide-in-from-top-2 duration-300`}>
-      <div className="bg-red-500 rounded-full shadow-xl border border-white/20 backdrop-blur-sm">
+    <div
+      className={`${getPositionClasses()} animate-in fade-in slide-in-from-top-2 duration-300`}
+    >
+      <div>
         <ButtonBase
           onClick={onCloseAll}
-          variant="destructive"
           size="sm"
-          className={getVariantClasses()}
+          className={`bg-red-600 hover:bg-red-700${getVariantClasses()}`}
         >
           <XIcon
             size={18}
@@ -81,16 +82,7 @@ const CloseAllButton: React.FC<CloseAllButtonProps> = ({
             "
           />
           <span className="min-w-0 tracking-wide">Fechar Todos</span>
-          <div
-            className="
-            bg-white/20 text-white text-xs font-bold
-            rounded-full w-6 h-6 
-            flex items-center justify-center
-            transition-colors duration-200
-          "
-          >
-            {count}
-          </div>
+          <div className="mb-1 mx-2">{count}</div>
         </ButtonBase>
       </div>
     </div>

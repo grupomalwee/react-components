@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 const sampleQuarterData = [
   {
     trimestre: "Q1/2024",
-    receita: 4000,
+    receita: -4000,
     despesas: 2400,
 
     churn: 180,
@@ -115,7 +115,7 @@ const Template = (args: React.ComponentProps<typeof Chart>) => (
 );
 
 export const Default: Story = {
-  name: "Default (with controls)",
+  name: "Default ( controls)",
   render: Template,
   parameters: {
     docs: {
@@ -136,8 +136,8 @@ export const BarsAndLine: Story = {
         height={350}
         series={{
           bar: ["despesas"],
-          area: ["lucro", "positivacao"],
-          line: ["vendas"],
+          area: ["receita"],
+          line: ["churn"],
         }}
         labelMap={{
           despesas: "Despesas",
@@ -166,7 +166,7 @@ export const BarAndArea: Story = {
       <Chart
         {...args}
         height={350}
-        series={{ bar: ["despesas"], area: ["lucro"] }}
+        series={{ bar: ["despesas"], area: ["receita"] }}
         labelMap={{ despesas: "Despesas", lucro: "Lucro" }}
         colors={["#f97316", "#10b981"]}
       />
@@ -189,7 +189,7 @@ export const BarLineArea: Story = {
       <Chart
         {...args}
         height={350}
-        series={{ bar: ["despesas"], area: ["lucro"], line: ["vendas"] }}
+        series={{ bar: ["despesas"], area: ["receita"], line: ["churn"] }}
         labelMap={{ despesas: "Despesas", lucro: "Lucro", vendas: "Vendas" }}
         colors={["#f43f5e", "#3b82f6", "#22c55e"]}
       />
@@ -241,6 +241,155 @@ export const MixedMultipleSeries: Story = {
       description: {
         story:
           "Exemplo com múltiplas séries (várias barras e linhas) para demonstrar mapeamento de cores e legenda automática.",
+      },
+    },
+  },
+};
+
+// --- Novas variants de dados para demonstração ---
+
+const zeroValuesData = sampleQuarterData.map((row, idx) => ({
+  ...row,
+  receita: idx % 2 === 0 ? 0 : row.receita,
+  despesas: idx % 3 === 0 ? 0 : row.despesas,
+}));
+
+const negativeValuesData = sampleQuarterData.map((row, idx) => ({
+  ...row,
+  receita: idx === 2 ? -1200 : row.receita,
+  despesas: idx === 5 ? -800 : row.despesas,
+}));
+
+// Many points: gera dados mensais ao invés de trimestrais
+const manyPointsData = Array.from({ length: 36 }).map((_, i) => ({
+  periodo: `M${i + 1}`,
+  receita: Math.round(3000 + Math.sin(i / 3) * 1200 + i * 15),
+  despesas: Math.round(1800 + Math.cos(i / 4) * 900 + i * 8),
+  churn: Math.round(100 - ((i * 0.5) % 80)),
+}));
+
+const singlePointData = [
+  { trimestre: "Q1/2026", receita: 5000, despesas: 2000, churn: 120 },
+];
+
+const mixedTypesData = [
+  { label: "A", value: 1200 },
+  { label: "B", value: 0 },
+  { label: "C", value: -300 },
+  { label: "D", value: 800 },
+  { label: "E", value: 2400 },
+];
+
+export const ZeroValues: Story = {
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        data={zeroValuesData}
+        height={360}
+        series={{ bar: ["despesas"], line: ["receita"], area: ["churn"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
+        colors={["#3b82f6", "#f97316", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Dados com zeros esparsos para testar escalas e eixos.",
+      },
+    },
+  },
+};
+
+export const NegativeValues: Story = {
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        data={negativeValuesData}
+        height={360}
+        series={{ bar: ["despesas"], line: ["receita"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        colors={["#06b6d4", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Dados contendo valores negativos — útil para perdas e ajustes.",
+      },
+    },
+  },
+};
+
+export const ManyPoints: Story = {
+  render: (args) => (
+    <div style={{ width: "1200px", height: "480px" }}>
+      <Chart
+        {...args}
+        data={manyPointsData}
+        height={420}
+        xAxis="periodo"
+        series={{ line: ["receita"], area: ["despesas"], bar: ["churn"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
+        colors={["#6366f1", "#10b981", "#f59e0b"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Grande série de pontos (36) para testar desempenho e renderização de muitos ticks no eixo X.",
+      },
+    },
+  },
+};
+
+export const SinglePoint: Story = {
+  render: (args) => (
+    <div style={{ width: "600px", height: "360px" }}>
+      <Chart
+        {...args}
+        data={singlePointData}
+        height={300}
+        series={{ bar: ["despesas"], line: ["receita"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        colors={["#06b6d4", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Apenas um ponto — verifica se o componente lida com datasets minimalistas.",
+      },
+    },
+  },
+};
+
+export const MixedTypes: Story = {
+  render: (args) => (
+    <div style={{ width: "700px", height: "380px" }}>
+      <Chart
+        {...args}
+        data={mixedTypesData}
+        height={340}
+        xAxis="label"
+        series={{ bar: ["value"] }}
+        labelMap={{ value: "Valor" }}
+        colors={["#8b5cf6"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Dados mistos com zeros e negativos para testar tooltips e formatação.",
       },
     },
   },

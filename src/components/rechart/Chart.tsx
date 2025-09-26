@@ -12,6 +12,7 @@ import {
   Line,
   Area,
   Rectangle,
+  ReferenceLine,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -24,6 +25,8 @@ import { cn } from "../../lib/utils";
 import DraggableTooltip from "./DraggableTooltip";
 import CloseAllButton from "./CloseAllButton";
 import renderPillLabel from "./pillLabelRenderer";
+import RechartTooltipWithTotal from "./TooltipWithTotal";
+import TooltipSimple from "./TooltipSimple";
 import {
   formatFieldName,
   detectDataFields,
@@ -66,20 +69,15 @@ interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
   className?: string;
-  /** Padding shorthand: number -> left padding in px, or object with sides. Default left = 16 */
   padding?:
     | number
     | Partial<{ left: number; right: number; top: number; bottom: number }>;
-  /** Simplified margins prop for the underlying Recharts ComposedChart. Use instead of deprecated `chartMargins`. */
   margins?: Partial<{
     top: number;
     right: number;
     left: number;
     bottom: number;
   }>;
-  /** Backwards-compat: previous single-value padding left (deprecated). */
-  containerPaddingLeft?: number;
-  /** Backwards-compat: previous chartMargins (deprecated). */
   chartMargins?: Partial<{
     top: number;
     right: number;
@@ -102,6 +100,10 @@ interface ChartProps {
   enableShowOnly?: boolean;
   enablePeriodsDropdown?: boolean;
   enableDraggableTooltips?: boolean;
+  showTooltipTotal?: boolean;
+  isLoading?: boolean;
+  maxTooltips?: number;
+  compactTooltips?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -122,14 +124,16 @@ const Chart: React.FC<ChartProps> = ({
   showLabels = false,
   xAxis,
   labelMap,
-
   enableHighlights = false,
   enableShowOnly = false,
   enablePeriodsDropdown = false,
   enableDraggableTooltips = false,
+  showTooltipTotal = false,
+  isLoading = false,
+  maxTooltips = 5,
+  compactTooltips = true,
   padding,
   margins,
-  containerPaddingLeft,
   chartMargins,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
@@ -251,15 +255,25 @@ const Chart: React.FC<ChartProps> = ({
     const offsetIndex = activeTooltips.length;
     const availableWidth =
       typeof width === "number" ? width : measuredInner ?? computedWidth;
+    const gap = compactTooltips ? 22 : 28;
+    const leftGap = compactTooltips ? 18 : 28;
     const newTooltip = {
       id: tooltipId,
       data: row,
       position: {
-        top: 48 + offsetIndex * 28,
-        left: Math.max(120, availableWidth - 260 - offsetIndex * 28),
+        top: 48 + offsetIndex * gap,
+        left: Math.max(120, availableWidth - 260 - offsetIndex * leftGap),
       },
     };
-    setActiveTooltips((prev) => [...prev, newTooltip]);
+    setActiveTooltips((prev) => {
+      // já existe verificação acima; aqui aplicamos limite de maxTooltips
+      const next = [...prev, newTooltip];
+      if (next.length > maxTooltips) {
+        // remover o mais antigo
+        next.shift();
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -286,6 +300,20 @@ const Chart: React.FC<ChartProps> = ({
       }
     }
     return max;
+  }, [processedData, allKeys]);
+
+  const minDataValue = useMemo(() => {
+    let min = 0;
+    const numericKeys = allKeys;
+    for (const row of processedData) {
+      const r = row as Record<string, unknown>;
+      for (const key of numericKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v < min)
+          min = v as number;
+      }
+    }
+    return min;
   }, [processedData, allKeys]);
 
   const niceMax = useMemo(() => {
@@ -344,12 +372,24 @@ const Chart: React.FC<ChartProps> = ({
     if (existingIndex !== -1) {
       setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
     } else {
+      // construir posição com compact option e respeitar maxTooltips
+      const offsetIndex = activeTooltips.length;
+      const gap = compactTooltips ? 18 : 28;
+      const baseTop = Math.max(8, rect.top - 10);
+      const baseLeft = rect.right + 10;
       const newTooltip = {
         id: tooltipId,
         data,
-        position: { top: rect.top - 10, left: rect.right + 10 },
+        position: {
+          top: baseTop + offsetIndex * gap,
+          left: baseLeft + offsetIndex * gap,
+        },
       };
-      setActiveTooltips((prev) => [...prev, newTooltip]);
+      setActiveTooltips((prev) => {
+        const next = [...prev, newTooltip];
+        if (next.length > maxTooltips) next.shift();
+        return next;
+      });
     }
   };
 
@@ -373,15 +413,21 @@ const Chart: React.FC<ChartProps> = ({
       if (existingIndex !== -1) {
         setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
       } else {
+        const offsetIndex = activeTooltips.length;
+        const gap = compactTooltips ? 18 : 28;
         const newTooltip = {
           id: tooltipId,
           data: clickedData,
           position: {
-            top: (ev?.chartY || 100) - 10,
-            left: (ev?.chartX || 100) - 100,
+            top: (ev?.chartY || 100) - 10 + offsetIndex * gap,
+            left: (ev?.chartX || 100) - 100 + offsetIndex * gap,
           },
         };
-        setActiveTooltips((prev) => [...prev, newTooltip]);
+        setActiveTooltips((prev) => {
+          const next = [...prev, newTooltip];
+          if (next.length > maxTooltips) next.shift();
+          return next;
+        });
       }
       return;
     }
@@ -408,46 +454,6 @@ const Chart: React.FC<ChartProps> = ({
     );
   };
 
-  type TooltipPayloadItem = {
-    dataKey: string;
-    value: number;
-    name: string;
-    color?: string;
-  };
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: {
-    active?: boolean;
-    payload?: TooltipPayloadItem[];
-    label?: string;
-  }) => {
-    if (!active || !payload) return null;
-    return (
-      <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
-        <p className="font-medium text-foreground mb-2">{label}</p>
-        {payload.map((entry, index: number) => (
-          <div key={index} className="flex items-center gap-2 text-sm">
-            <div
-              className="w-3 h-3 rounded-sm"
-              style={{
-                backgroundColor: finalColors[entry.dataKey] || entry.color,
-              }}
-            />
-            <span className="text-muted-foreground">{entry.name}:</span>
-            <span className="text-foreground font-medium">
-              {entry.value?.toLocaleString("pt-BR")}
-            </span>
-          </div>
-        ))}
-        <p className="text-xs text-muted-foreground mt-1">
-          Clique para fixar este tooltip
-        </p>
-      </div>
-    );
-  };
-
   const getTitleClassName = () => {
     return "text-xl font-semibold text-foreground mb-3";
   };
@@ -463,7 +469,6 @@ const Chart: React.FC<ChartProps> = ({
     if (typeof padding === "number") return padding;
     if (padding && typeof padding === "object" && padding.left != null)
       return padding.left as number;
-    if (typeof containerPaddingLeft === "number") return containerPaddingLeft;
     return 16;
   })();
 
@@ -481,6 +486,44 @@ const Chart: React.FC<ChartProps> = ({
     typeof width === "number" ? width : measuredInner ?? computedWidth;
   const chartInnerWidth =
     effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
+
+  // skeleton / placeholder quando carrega ou dados indefinidos
+  if (isLoading || !data) {
+    return (
+      <div className={cn("rounded-lg bg-card p-4 relative w-full")}>
+        {/* skeleton simples */}
+        <div className="animate-pulse">
+          <div className="h-4 bg-muted rounded w-1/3 mb-3" />
+          <div className="h-56 bg-muted rounded mb-2" />
+          <div className="flex gap-2 mt-2">
+            <div className="h-8 bg-muted rounded w-24" />
+            <div className="h-8 bg-muted rounded w-24" />
+            <div className="h-8 bg-muted rounded w-24" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (Array.isArray(data) && data.length === 0) {
+    return (
+      <div
+        className={cn(
+          "rounded-lg bg-card p-4 relative w-full text-muted-foreground"
+        )}
+      >
+        <div
+          style={{
+            paddingLeft: `${
+              resolvedContainerPaddingLeft + finalChartLeftMargin
+            }px`,
+          }}
+        >
+          Sem dados para exibir
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -630,16 +673,31 @@ const Chart: React.FC<ChartProps> = ({
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => Number(value).toLocaleString("pt-BR")}
-              domain={[0, niceMax]}
+              domain={[Math.min(minDataValue, 0), niceMax]}
               tickCount={6}
             />
+            {minDataValue < 0 && (
+              <ReferenceLine
+                y={0}
+                stroke="hsl(var(--muted-foreground))"
+                strokeWidth={1}
+                strokeDasharray="4 4"
+              />
+            )}
             {showTooltip && (
               <Tooltip
-                content={<CustomTooltip />}
+                content={
+                  showTooltipTotal ? (
+                    <RechartTooltipWithTotal finalColors={finalColors} />
+                  ) : (
+                    <TooltipSimple finalColors={finalColors} />
+                  )
+                }
                 cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
               />
             )}
             {showLegend && (
+            
               <Legend
                 wrapperStyle={{
                   color: "hsl(var(--foreground))",
@@ -742,7 +800,8 @@ const Chart: React.FC<ChartProps> = ({
                     name={label}
                     stroke={color}
                     fill={color}
-                    fillOpacity={0.15}
+                    fillOpacity={0.35}
+                    strokeWidth={2}
                     onClick={handleSeriesClick}
                     style={{
                       cursor: "pointer",
@@ -784,6 +843,9 @@ const Chart: React.FC<ChartProps> = ({
               title={title}
               dataKeys={allKeys}
               finalColors={finalColors}
+              highlightedSeries={highlightedSeries}
+              toggleHighlight={toggleHighlight}
+              showOnlyHighlighted={showOnlyHighlighted}
               onClose={(id) =>
                 setActiveTooltips((prev) => prev.filter((t) => t.id !== id))
               }

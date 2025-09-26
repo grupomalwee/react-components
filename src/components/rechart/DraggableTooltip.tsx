@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { MouseIcon } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import CloseAllButton from "./CloseAllButton";
@@ -30,6 +31,9 @@ interface DraggableTooltipProps {
     id: string,
     position: { top: number; left: number }
   ) => void;
+  highlightedSeries?: Set<string>;
+  toggleHighlight?: (key: string) => void;
+  showOnlyHighlighted?: boolean;
 }
 
 const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
@@ -40,6 +44,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
   dataKeys,
   finalColors,
 
+  onMouseDown,
   onClose,
   periodLabel = "Período Selecionado",
   dataLabel = "Dados do Período",
@@ -49,7 +54,32 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
   closeAllButtonPosition = "top-center",
   closeAllButtonVariant = "floating",
   onPositionChange,
+  highlightedSeries,
+  toggleHighlight,
+  showOnlyHighlighted,
 }) => {
+  // keys currently visible inside the tooltip (respecting showOnlyHighlighted)
+  const visibleKeys =
+    showOnlyHighlighted && highlightedSeries && highlightedSeries.size > 0
+      ? dataKeys.filter((k) => highlightedSeries.has(k))
+      : dataKeys;
+  // Componente interno para exibir total
+  const TotalDisplay: React.FC<{ data: TooltipData }> = ({ data }) => {
+    const numeric = visibleKeys
+      .map((k) => data[k])
+      .filter((v) => typeof v === "number") as number[];
+    // total real (pode ser negativo)
+    const total = numeric.reduce((s, v) => s + (v || 0), 0);
+    return (
+      <div className="text-sm">
+        <div className="text-sm text-muted-foreground">Total</div>
+        <div className="text-base font-semibold text-foreground">
+          {total.toLocaleString("pt-BR")}
+        </div>
+      </div>
+    );
+  };
+
   // internal position state so tooltip can move locally and notify parent
   const [localPos, setLocalPos] = useState<{ top: number; left: number }>(
     position
@@ -97,7 +127,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     window.dispatchEvent(ev);
     return response;
   }, [id]);
-
   const updateAlignmentGuides = useCallback(
     (currentPosition: { top: number; left: number }) => {
       const allTooltips = getAllTooltips();
@@ -297,7 +326,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     };
   }, [id, localPos, onClose]);
 
-  // Maintain local global tooltip count (used for CloseAllButton)
   useEffect(() => {
     if (dragging) return;
     let total = 0;
@@ -317,7 +345,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     };
   }, [localPos, dragging]);
 
-  // Allow external forces (e.g. Chart) to request a recount
   useEffect(() => {
     const recount = () => {
       if (dragging) return;
@@ -344,6 +371,21 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     offsetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     setDragging(true);
+    if (typeof onMouseDown === "function") onMouseDown(id, e);
+  };
+
+  const handleTouchStartLocal = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    if (!touch) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    offsetRef.current = {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    };
+    setDragging(true);
+    if (typeof onMouseDown === "function")
+      onMouseDown(id, e as unknown as React.MouseEvent);
   };
 
   return (
@@ -379,25 +421,33 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
 
           return (
             <div key={index}>
-              <div
+              <motion.div
                 className="fixed pointer-events-none z-30"
-                style={{
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 0.95,
                   left: startX,
                   top: startY,
-                  width: isHorizontal ? endX - startX : "2px",
-                  height: isHorizontal ? "2px" : endY - startY,
+                  width: isHorizontal ? endX - startX : 2,
+                  height: isHorizontal ? 2 : endY - startY,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ type: "spring", stiffness: 220, damping: 24 }}
+                style={{
                   backgroundColor: color,
                   boxShadow: `0 0 8px ${color}60`,
-                  opacity: 0.9,
                   borderStyle: "dashed",
                   borderWidth: "1px",
                   borderColor: color,
                   transform: "translateZ(0)",
                 }}
               />
-              <div
+              <motion.div
                 className="fixed pointer-events-none z-31"
-                style={{
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{
+                  scale: 1,
+                  opacity: 0.9,
                   left:
                     guide.sourceTooltip.left +
                     guide.sourceTooltip.width / 2 -
@@ -406,17 +456,23 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                     guide.sourceTooltip.top +
                     guide.sourceTooltip.height / 2 -
                     4,
+                }}
+                exit={{ opacity: 0, scale: 0.6 }}
+                transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                style={{
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
                   borderRadius: "50%",
                   boxShadow: `0 0 4px ${color}80`,
-                  opacity: 0.8,
                 }}
               />
-              <div
+              <motion.div
                 className="fixed pointer-events-none z-31"
-                style={{
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{
+                  scale: 1,
+                  opacity: 0.9,
                   left:
                     guide.targetTooltip.left +
                     guide.targetTooltip.width / 2 -
@@ -425,100 +481,186 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                     guide.targetTooltip.top +
                     guide.targetTooltip.height / 2 -
                     4,
+                }}
+                exit={{ opacity: 0, scale: 0.6 }}
+                transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                style={{
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
                   borderRadius: "50%",
                   boxShadow: `0 0 4px ${color}80`,
-                  opacity: 0.8,
                 }}
               />
             </div>
           );
         })}
 
-      <div
-        className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-56 select-none"
-        style={{
-          top: localPos.top,
-          left: localPos.left,
-          cursor: dragging ? "grabbing" : "grab",
-        }}
-        onMouseDown={handleMouseDownLocal}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-2 p-3 pb-2 border-b bg-muted/20 rounded-t-lg">
-          <div className="flex flex-col gap-1">
-            {title && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                <p className="font-bold text-foreground text-base">{title}</p>
-              </div>
-            )}
-          </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose(id);
-            }}
-            className="text-muted-foreground hover:text-destructive ml-2 text-sm hover:bg-destructive/10 rounded p-1"
-            title="Fechar este tooltip"
+      <AnimatePresence>
+        <motion.div
+          key={id}
+          className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-56 select-none"
+          initial={{ opacity: 0, scale: 0.96 }}
+          // animate only visual properties (opacity/scale). position updated instantly via style below
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          style={{
+            top: localPos.top,
+            left: localPos.left,
+            cursor: dragging ? "grabbing" : "grab",
+            transform: "translateZ(0)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-label={title ? `Tooltip ${title}` : `Tooltip ${data.name}`}
+        >
+          <div
+            className="flex items-center justify-between mb-2 p-3 pb-2 border-b bg-muted/20 rounded-t-lg"
+            onMouseDown={handleMouseDownLocal}
+            onTouchStart={handleTouchStartLocal}
+            // make header the only drag handle
+            style={{ touchAction: "none" }}
           >
-            <XIcon size={14} />
-          </button>
-        </div>
-
-        {/* Informação do item selecionado */}
-        <div className="px-3 py-2 bg-accent/30 border-l-4 border-primary">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              {periodLabel}
-            </span>
-          </div>
-          <p className="font-bold text-lg text-foreground mt-1">{data.name}</p>
-        </div>
-
-        <div className="p-3 pt-2 space-y-2">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-            {dataLabel}
-          </p>
-          {dataKeys.map((key) => {
-            const value = data[key];
-            if (value === undefined) return null;
-
-            return (
-              <div
-                key={key}
-                className="flex items-center justify-between gap-3 text-sm mb-2 p-2 rounded bg-muted/20 hover:bg-muted/40 transition-colors"
-              >
+            <div className="flex flex-col gap-1">
+              {title && (
                 <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-sm shadow-sm"
-                    style={{ backgroundColor: finalColors[key] || "#666" }}
-                  />
-                  <span className="font-medium text-foreground">
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </span>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                  <p className="font-bold text-foreground text-base">{title}</p>
                 </div>
-                <span className="font-semibold text-foreground bg-background px-2 py-1 rounded text-xs">
-                  {(value as number).toLocaleString("pt-BR")}
-                </span>
-              </div>
-            );
-          })}
-
-          <div className="mt-3 pt-2 border-t">
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
-              <span>
-                <MouseIcon />
-              </span>
-              Arraste para mover • Clique no <XIcon size={12} /> para remover
-            </p>
+              )}
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose(id);
+              }}
+              className="text-muted-foreground hover:text-destructive ml-2 text-sm hover:bg-destructive/10 rounded p-1"
+              title="Fechar este tooltip"
+            >
+              <XIcon size={14} />
+            </button>
           </div>
-        </div>
-      </div>
 
-      {/* CloseAllButton - renderizado apenas se solicitado */}
+          {/* Informação do item selecionado com total */}
+          <div className="px-3 py-2 bg-accent/30 border-l-4 border-primary">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  {periodLabel}
+                </span>
+                <p className="font-bold text-lg text-foreground mt-1 truncate">
+                  {data.name}
+                </p>
+              </div>
+              <div className="text-right">
+                <TotalDisplay data={data} />
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 pt-2 space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+              {dataLabel}
+            </p>
+            {/* Lista animada de itens */}
+            {(showOnlyHighlighted &&
+            highlightedSeries &&
+            highlightedSeries.size > 0
+              ? dataKeys.filter((k) => highlightedSeries.has(k))
+              : dataKeys
+            ).map((key) => {
+              const value = data[key];
+              if (value === undefined) return null;
+              const numericKeys = dataKeys.filter(
+                (k) => typeof data[k] === "number"
+              );
+              const absDenominator = numericKeys.reduce(
+                (s, k) => s + Math.abs(Number(data[k]) || 0),
+                0
+              );
+              const val =
+                typeof value === "number"
+                  ? value
+                  : Number(value as unknown) || 0;
+              // porcentagem baseada em valores absolutos para lidar com negativos
+              const pct =
+                absDenominator > 0 ? (Math.abs(val) / absDenominator) * 100 : 0;
+              const isDimmed =
+                highlightedSeries &&
+                highlightedSeries.size > 0 &&
+                !highlightedSeries.has(key);
+              const isHighlighted =
+                highlightedSeries && highlightedSeries.has(key);
+
+              return (
+                <div
+                  key={key}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleHighlight?.(key);
+                    }
+                  }}
+                  onClick={() => toggleHighlight?.(key)}
+                  className={`flex flex-col gap-1 text-sm mb-1 p-2 rounded transition-colors cursor-pointer bg-muted/20`}
+                  style={{
+                    boxShadow: isHighlighted
+                      ? `0 6px 18px ${finalColors[key] || "#666"}33`
+                      : undefined,
+                    border: isHighlighted
+                      ? `1px solid ${finalColors[key] || "#666"}22`
+                      : undefined,
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-sm shadow-sm"
+                        style={{ backgroundColor: finalColors[key] || "#666" }}
+                      />
+                      <span className={`font-medium text-foreground truncate`}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-semibold text-foreground tabular-nums">
+                        {val.toLocaleString("pt-BR")}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+                    <div
+                      className="h-1 rounded-full"
+                      style={{
+                        width: `${Math.max(0, Math.min(100, pct))}%`,
+                        opacity: isDimmed ? 0.35 : 1,
+                        background: finalColors[key] || "#666",
+                        transition: "none",
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="mt-3 pt-2 border-t">
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <span>
+                  <MouseIcon />
+                </span>
+                Arraste para mover • Clique no <XIcon size={12} /> para remover
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
       {showCloseAllButton && onCloseAll && (
         <CloseAllButton
           count={
