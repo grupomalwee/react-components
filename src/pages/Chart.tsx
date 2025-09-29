@@ -261,7 +261,6 @@ export const ChartPage = () => {
                 enableDraggableTooltips={draggable}
                 title={mode === "auto" ? `Auto ${i + 1}` : `Fixo ${i + 1}`}
                 titlePosition="center"
-                height={220}
               />
             </div>
           ))}
@@ -271,18 +270,16 @@ export const ChartPage = () => {
   }
 
   return (
-    <div className="space-y-8 p-8 w-screen">
+    <div className="space-y-4 p-8 w-screen">
       <InteractiveGrid />
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-2 gap-4">
         <section className="space-y-6">
           <Chart
             data={userData}
             xAxis="trimestre"
             series={{ bar: ["usuariosAtivos"], line: ["visitas"] }}
             labelMap={{ usuariosAtivos: "Usuários Ativos", visitas: "Visitas" }}
-            title="Default"
-            height={280}
-            width={900}
+            title="Default"            
           />
         </section>
         <section className="space-y-6">
@@ -294,7 +291,6 @@ export const ChartPage = () => {
               usuariosAtivos: "Usuários Ativos",
               novosCadastros: "Novos Cadastros",
             }}
-            height={260}
             title="With Zero Values"
           />
         </section>
@@ -307,7 +303,6 @@ export const ChartPage = () => {
               usuariosAtivos: "Usuários Ativos",
               novosCadastros: "Novos Cadastros",
             }}
-            height={260}
             title="With Negative Values"
           />
         </section>
@@ -317,7 +312,6 @@ export const ChartPage = () => {
             xAxis="periodo"
             series={{ line: ["receita"], area: ["despesas"] }}
             labelMap={{ receita: "Receita", despesas: "Despesas" }}
-            height={320}
             title="With Many Points"
           />
         </section>
@@ -327,7 +321,6 @@ export const ChartPage = () => {
             xAxis="trimestre"
             series={{ bar: ["despesas"], line: ["receita"] }}
             labelMap={{ receita: "Receita", despesas: "Despesas" }}
-            height={220}
             title="With Single Point"
           />
         </section>
@@ -337,7 +330,6 @@ export const ChartPage = () => {
             xAxis="label"
             series={{ bar: ["value"] }}
             labelMap={{ value: "Valor" }}
-            height={260}
             title="With Mixed Types"
           />
         </section>

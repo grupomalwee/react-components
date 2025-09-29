@@ -41,14 +41,12 @@ import Highlights from "./Highlights";
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
 }
-
 interface XAxisConfig {
   dataKey: string;
   label?: string;
   formatter?: (value: string | number) => string;
   autoLabel?: boolean;
 }
-
 interface DataMapper {
   [dataKey: string]: {
     label?: string;
@@ -58,27 +56,17 @@ interface DataMapper {
     visible?: boolean;
   };
 }
-
 type SeriesProp = {
   bar?: string[];
   line?: string[];
   area?: string[];
 };
-
 interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
   className?: string;
-  padding?:
-    | number
-    | Partial<{ left: number; right: number; top: number; bottom: number }>;
-  margins?: Partial<{
-    top: number;
-    right: number;
-    left: number;
-    bottom: number;
-  }>;
-  chartMargins?: Partial<{
+  // padding removed
+  chartMargin?: Partial<{
     top: number;
     right: number;
     left: number;
@@ -101,9 +89,7 @@ interface ChartProps {
   enablePeriodsDropdown?: boolean;
   enableDraggableTooltips?: boolean;
   showTooltipTotal?: boolean;
-  isLoading?: boolean;
   maxTooltips?: number;
-  compactTooltips?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -129,12 +115,9 @@ const Chart: React.FC<ChartProps> = ({
   enablePeriodsDropdown = false,
   enableDraggableTooltips = false,
   showTooltipTotal = false,
-  isLoading = false,
   maxTooltips = 5,
-  compactTooltips = true,
-  padding,
-  margins,
-  chartMargins,
+  // padding removed
+  chartMargin,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -255,8 +238,8 @@ const Chart: React.FC<ChartProps> = ({
     const offsetIndex = activeTooltips.length;
     const availableWidth =
       typeof width === "number" ? width : measuredInner ?? computedWidth;
-    const gap = compactTooltips ? 22 : 28;
-    const leftGap = compactTooltips ? 18 : 28;
+    const gap = 28;
+    const leftGap = 28;
     const newTooltip = {
       id: tooltipId,
       data: row,
@@ -266,10 +249,8 @@ const Chart: React.FC<ChartProps> = ({
       },
     };
     setActiveTooltips((prev) => {
-      // já existe verificação acima; aqui aplicamos limite de maxTooltips
       const next = [...prev, newTooltip];
       if (next.length > maxTooltips) {
-        // remover o mais antigo
         next.shift();
       }
       return next;
@@ -374,7 +355,7 @@ const Chart: React.FC<ChartProps> = ({
     } else {
       // construir posição com compact option e respeitar maxTooltips
       const offsetIndex = activeTooltips.length;
-      const gap = compactTooltips ? 18 : 28;
+      const gap = 28;
       const baseTop = Math.max(8, rect.top - 10);
       const baseLeft = rect.right + 10;
       const newTooltip = {
@@ -414,7 +395,7 @@ const Chart: React.FC<ChartProps> = ({
         setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
       } else {
         const offsetIndex = activeTooltips.length;
-        const gap = compactTooltips ? 18 : 28;
+        const gap = 28;
         const newTooltip = {
           id: tooltipId,
           data: clickedData,
@@ -465,20 +446,13 @@ const Chart: React.FC<ChartProps> = ({
   const defaultChartRightMargin = 30;
   const defaultChartLeftMargin = 0;
 
-  const resolvedContainerPaddingLeft = ((): number => {
-    if (typeof padding === "number") return padding;
-    if (padding && typeof padding === "object" && padding.left != null)
-      return padding.left as number;
-    return 16;
-  })();
+  // Container padding left fixo: simplifica comportamento e evita duplicação
+  const containerPaddingLeft = 16;
 
-  const finalChartRightMargin =
-    margins?.right ?? chartMargins?.right ?? defaultChartRightMargin;
-  const finalChartLeftMargin =
-    margins?.left ?? chartMargins?.left ?? defaultChartLeftMargin;
-  const finalChartTopMargin =
-    margins?.top ?? chartMargins?.top ?? (showLabels ? 48 : 20);
-  const finalChartBottomMargin = margins?.bottom ?? chartMargins?.bottom ?? 5;
+  const finalChartRightMargin = chartMargin?.right ?? defaultChartRightMargin;
+  const finalChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
+  const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
+  const finalChartBottomMargin = chartMargin?.bottom ?? 5;
   const measuredInner = measuredWidth
     ? Math.max(0, measuredWidth - 32)
     : undefined;
@@ -487,23 +461,7 @@ const Chart: React.FC<ChartProps> = ({
   const chartInnerWidth =
     effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
 
-  // skeleton / placeholder quando carrega ou dados indefinidos
-  if (isLoading || !data) {
-    return (
-      <div className={cn("rounded-lg bg-card p-4 relative w-full")}>
-        {/* skeleton simples */}
-        <div className="animate-pulse">
-          <div className="h-4 bg-muted rounded w-1/3 mb-3" />
-          <div className="h-56 bg-muted rounded mb-2" />
-          <div className="flex gap-2 mt-2">
-            <div className="h-8 bg-muted rounded w-24" />
-            <div className="h-8 bg-muted rounded w-24" />
-            <div className="h-8 bg-muted rounded w-24" />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!data) return null;
 
   if (Array.isArray(data) && data.length === 0) {
     return (
@@ -514,9 +472,7 @@ const Chart: React.FC<ChartProps> = ({
       >
         <div
           style={{
-            paddingLeft: `${
-              resolvedContainerPaddingLeft + finalChartLeftMargin
-            }px`,
+            paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
           }}
         >
           Sem dados para exibir
@@ -542,9 +498,7 @@ const Chart: React.FC<ChartProps> = ({
         {title && (
           <div
             style={{
-              paddingLeft: `${
-                resolvedContainerPaddingLeft + finalChartLeftMargin
-              }px`,
+              paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
               width: "100%",
               maxWidth: `${chartInnerWidth}px`,
               display: "flex",
@@ -567,9 +521,7 @@ const Chart: React.FC<ChartProps> = ({
             <div
               className="flex items-center w-full"
               style={{
-                paddingLeft: `${
-                  resolvedContainerPaddingLeft + finalChartLeftMargin
-                }px`,
+                paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
                 width: "98%",
                 display: "flex",
                 alignItems: "center",
@@ -622,9 +574,7 @@ const Chart: React.FC<ChartProps> = ({
           finalEnablePeriodsDropdown && (
             <div
               style={{
-                paddingLeft: `${
-                  resolvedContainerPaddingLeft + finalChartLeftMargin
-                }px`,
+                paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
                 paddingRight: `${finalChartRightMargin}px`,
                 width: "100%",
                 maxWidth: `${chartInnerWidth}px`,
@@ -697,7 +647,6 @@ const Chart: React.FC<ChartProps> = ({
               />
             )}
             {showLegend && (
-            
               <Legend
                 wrapperStyle={{
                   color: "hsl(var(--foreground))",
