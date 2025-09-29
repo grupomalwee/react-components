@@ -1,6 +1,19 @@
+import React from "react";
 import Chart from "@/components/rechart/Chart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ButtonBase } from "@/components/ui/ButtonBase";
+import { CheckboxBase } from "@/components/ui/CheckBoxBase";
+import { SlideBase } from "@/components/ui/SliderBase";
+import {
+  SelectBase,
+  SelectTriggerBase,
+  SelectContentBase,
+  SelectItemBase,
+  SelectValueBase,
+  SelectGroupBase,
+  SelectLabelBase,
+} from "@/components/ui/SelectBase";
 
 const sampleQuarterData = [
   {
@@ -205,59 +218,16 @@ export const BarLineArea: Story = {
   },
 };
 
-export const MixedMultipleSeries: Story = {
-  name: "Mixed: multiple bars + lines",
-  render: (args) => (
-    <div style={{ width: "1100px", height: "480px" }}>
-      <Chart
-        {...args}
-        height={380}
-        series={{
-          bar: ["receita", "vendas"],
-          line: ["positivacao", "lucro", "roi"],
-          area: ["churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          vendas: "Vendas",
-          positivacao: "% Posit",
-          lucro: "Lucro",
-          roi: "ROI (%)",
-          churn: "Churn",
-        }}
-        colors={[
-          "#6366f1",
-          "#06b6d4",
-          "#f97316",
-          "#22c55e",
-          "#eab308",
-          "#ef4444",
-        ]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo com múltiplas séries (várias barras e linhas) para demonstrar mapeamento de cores e legenda automática.",
-      },
-    },
-  },
-};
-
-// --- Novas variants de dados para demonstração ---
+const negativeValuesData = sampleQuarterData.map((row, idx) => ({
+  ...row,
+  receita: idx === 2 ? -1200 : row.receita,
+  despesas: idx === 5 ? -800 : row.despesas,
+}));
 
 const zeroValuesData = sampleQuarterData.map((row, idx) => ({
   ...row,
   receita: idx % 2 === 0 ? 0 : row.receita,
   despesas: idx % 3 === 0 ? 0 : row.despesas,
-}));
-
-const negativeValuesData = sampleQuarterData.map((row, idx) => ({
-  ...row,
-  receita: idx === 2 ? -1200 : row.receita,
-  despesas: idx === 5 ? -800 : row.despesas,
 }));
 
 // Many points: gera dados mensais ao invés de trimestrais
@@ -272,6 +242,7 @@ const singlePointData = [
   { trimestre: "Q1/2026", receita: 5000, despesas: 2000, churn: 120 },
 ];
 
+
 const mixedTypesData = [
   { label: "A", value: 1200 },
   { label: "B", value: 0 },
@@ -280,27 +251,6 @@ const mixedTypesData = [
   { label: "E", value: 2400 },
 ];
 
-export const ZeroValues: Story = {
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        data={zeroValuesData}
-        height={360}
-        series={{ bar: ["despesas"], line: ["receita"], area: ["churn"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
-        colors={["#3b82f6", "#f97316", "#ef4444"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Dados com zeros esparsos para testar escalas e eixos.",
-      },
-    },
-  },
-};
 
 export const NegativeValues: Story = {
   render: (args) => (
@@ -393,4 +343,287 @@ export const MixedTypes: Story = {
       },
     },
   },
+};
+
+export const Playground: Story = {
+  name: "Playground (interactive)",
+  render: (args) => {
+  type Row = { trimestre?: string; periodo?: string; receita?: number; despesas?: number; churn?: number };
+  const [data, setData] = React.useState<Row[]>(sampleQuarterData.slice(0, 4));
+    const [showGrid, setShowGrid] = React.useState(true);
+    const [showLegend, setShowLegend] = React.useState(true);
+    const [height, setHeight] = React.useState(360);
+    const [series, setSeries] = React.useState<{
+      bar?: string[];
+      line?: string[];
+      area?: string[];
+    }>({ bar: ["despesas"], line: ["receita"] });
+
+    // extra header controls
+    const [datasetPreset, setDatasetPreset] = React.useState<'quarter'|'many'|'single'|'zeros'>('quarter');
+    const [seriesPreset, setSeriesPreset] = React.useState<'default'|'bars'|'line'|'area'>('default');
+    const [showTooltipLocal, ] = React.useState(true);
+    const [showLabelsLocal, ] = React.useState(false);
+    const [xAxisField, setXAxisField] = React.useState<string>('trimestre');
+    const [colorPreset, setColorPreset] = React.useState<'default'|'warm'|'cool'>('default');
+    const [colorsState, setColorsState] = React.useState<string[]>(["#6366f1", "#10b981", "#f59e0b"]);
+
+    // apply dataset presets
+    React.useEffect(() => {
+      switch (datasetPreset) {
+        case 'quarter':
+          setData(sampleQuarterData.slice(0, 4));
+          setXAxisField('trimestre');
+          break;
+        case 'many':
+          // convert periodo -> trimestre for a consistent key used in chart by default
+          setData(manyPointsData.map((r) => ({ ...r, trimestre: r.periodo })));
+          setXAxisField('periodo');
+          break;
+        case 'single':
+          setData(singlePointData);
+          setXAxisField('trimestre');
+          break;
+        case 'zeros':
+          setData(zeroValuesData);
+          setXAxisField('trimestre');
+          break;
+      }
+    }, [datasetPreset]);
+
+    // apply series presets
+    React.useEffect(() => {
+      switch (seriesPreset) {
+        case 'default':
+          setSeries({ bar: ['despesas'], line: ['receita'] });
+          break;
+        case 'bars':
+          setSeries({ bar: ['despesas', 'receita'] });
+          break;
+        case 'line':
+          setSeries({ line: ['receita', 'churn'] });
+          break;
+        case 'area':
+          setSeries({ area: ['receita'] });
+          break;
+      }
+    }, [seriesPreset]);
+
+    // color presets
+    React.useEffect(() => {
+      if (colorPreset === 'default') setColorsState(['#6366f1', '#10b981', '#f59e0b']);
+      if (colorPreset === 'warm') setColorsState(['#f97316', '#ef4444', '#f43f5e']);
+      if (colorPreset === 'cool') setColorsState(['#06b6d4', '#6366f1', '#8e68ff']);
+    }, [colorPreset]);
+
+    const addPoint = () => {
+      const nextIndex = data.length + 1;
+      const newPoint = {
+        trimestre: `Q${nextIndex}/2026`,
+        receita: Math.round(2000 + Math.random() * 8000),
+        despesas: Math.round(1000 + Math.random() * 6000),
+        churn: Math.round(50 + Math.random() * 150),
+      };
+      setData((d) => [...d, newPoint]);
+    };
+
+    const removeLast = () => setData((d) => d.slice(0, -1));
+
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            padding: 16,
+            display: "flex",
+            gap: 12,
+            alignItems: "center",
+            borderBottom: "1px solid rgba(0,0,0,0.06)",
+          }}
+        >
+          <div style={{ display: "flex", gap: 8, alignItems: 'center' }}>
+            <ButtonBase variant="default" onClick={addPoint}>Adicionar ponto</ButtonBase>
+            <ButtonBase variant="outline" onClick={removeLast}>Remover último</ButtonBase>
+
+            <SelectBase value={datasetPreset} onValueChange={(v) => setDatasetPreset(v as 'quarter'|'many'|'single'|'zeros')}>
+              <SelectTriggerBase className="w-[160px]">
+                <SelectValueBase />
+              </SelectTriggerBase>
+              <SelectContentBase>
+                <SelectGroupBase>
+                  <SelectLabelBase>Dataset</SelectLabelBase>
+                  <SelectItemBase value="quarter">Quarter (4)</SelectItemBase>
+                  <SelectItemBase value="many">Many (36)</SelectItemBase>
+                  <SelectItemBase value="single">Single</SelectItemBase>
+                  <SelectItemBase value="zeros">Zeros</SelectItemBase>
+                </SelectGroupBase>
+              </SelectContentBase>
+            </SelectBase>
+
+            <SelectBase value={seriesPreset} onValueChange={(v) => setSeriesPreset(v as 'default'|'bars'|'line'|'area')}>
+              <SelectTriggerBase className="w-[140px]">
+                <SelectValueBase />
+              </SelectTriggerBase>
+              <SelectContentBase>
+                <SelectGroupBase>
+                  <SelectLabelBase>Series</SelectLabelBase>
+                  <SelectItemBase value="default">Default</SelectItemBase>
+                  <SelectItemBase value="bars">Bars</SelectItemBase>
+                  <SelectItemBase value="line">Line</SelectItemBase>
+                  <SelectItemBase value="area">Area</SelectItemBase>
+                </SelectGroupBase>
+              </SelectContentBase>
+            </SelectBase>
+
+            <SelectBase value={xAxisField} onValueChange={(v) => setXAxisField(v)}>
+              <SelectTriggerBase className="w-[160px]">
+                <SelectValueBase />
+              </SelectTriggerBase>
+              <SelectContentBase>
+                <SelectGroupBase>
+                  <SelectLabelBase>X Axis</SelectLabelBase>
+                  {/* derive options from first row keys */}
+                  {Object.keys(data[0] || {}).map((k) => (
+                    <SelectItemBase key={k} value={k}>{k}</SelectItemBase>
+                  ))}
+                </SelectGroupBase>
+              </SelectContentBase>
+            </SelectBase>
+
+            <SelectBase value={colorPreset} onValueChange={(v) => setColorPreset(v as 'default'|'warm'|'cool')}>
+              <SelectTriggerBase className="w-[120px]">
+                <SelectValueBase />
+              </SelectTriggerBase>
+              <SelectContentBase>
+                <SelectGroupBase>
+                  <SelectLabelBase>Colors</SelectLabelBase>
+                  <SelectItemBase value="default">Default</SelectItemBase>
+                  <SelectItemBase value="warm">Warm</SelectItemBase>
+                  <SelectItemBase value="cool">Cool</SelectItemBase>
+                </SelectGroupBase>
+              </SelectContentBase>
+            </SelectBase>
+          </div>
+          <div
+            style={{
+              marginLeft: 12,
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label style={{ fontSize: 12, color: "var(--muted, #6b7280)" }}>
+                Height: {height}px
+              </label>
+              <div style={{ width: 260 }}>
+                <SlideBase
+                  value={[height]}
+                  onValueChange={(v) => setHeight(Number(v[0]))}
+                  min={240}
+                  max={720}
+                />
+              </div>
+            </div>
+            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <CheckboxBase
+                checked={showGrid}
+                onCheckedChange={(v) => setShowGrid(Boolean(v))}
+              />
+              <span>Mostrar Grid</span>
+            </label>
+            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <CheckboxBase
+                checked={showLegend}
+                onCheckedChange={(v) => setShowLegend(Boolean(v))}
+              />
+              <span>Mostrar Legenda</span>
+            </label>
+            <h1 style={{ marginTop: 0 }}> | Séries</h1>
+            <div style={{ display: "flex", flexDirection: "row", gap: 8, alignContent: "center" }}>
+              {["receita", "despesas", "churn"].map((k) => (
+                <label
+                  key={k}
+                  style={{ display: "flex", gap: 8, alignItems: "center" }}
+                >
+                  <CheckboxBase
+                    checked={
+                      (series.bar || []).includes(k) ||
+                      (series.line || []).includes(k) ||
+                      (series.area || []).includes(k)
+                    }
+                    onCheckedChange={() => {
+                      if ((series.bar || []).includes(k)) {
+                        setSeries((s) => ({
+                          ...s,
+                          bar: (s.bar || []).filter((x) => x !== k),
+                          line: [...(s.line || []), k],
+                        }));
+                      } else if ((series.line || []).includes(k)) {
+                        setSeries((s) => ({
+                          ...s,
+                          line: (s.line || []).filter((x) => x !== k),
+                          area: [...(s.area || []), k],
+                        }));
+                      } else if ((series.area || []).includes(k)) {
+                        setSeries((s) => ({
+                          ...s,
+                          area: (s.area || []).filter((x) => x !== k),
+                        }));
+                      } else {
+                        setSeries((s) => ({
+                          ...s,
+                          bar: [...(s.bar || []), k],
+                        }));
+                      }
+                    }}
+                  />
+                  <span style={{ textTransform: "capitalize" }}>{k}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div>
+
+          <main style={{ flex: 1 }}>
+            <div style={{ width: "100%", height }}>
+              <Chart
+                {...args}
+                data={data}
+                height={height}
+                showGrid={showGrid}
+                showLegend={showLegend}
+                series={series}
+                xAxis={xAxisField || args.xAxis || "trimestre"}
+                showTooltip={showTooltipLocal}
+                showLabels={showLabelsLocal}
+                colors={colorsState}
+              />
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Playground interativo para experimentar dados e séries em tempo real.",
+      },
+    },
+  },
+};
+
+// Ajuste de layout: usar fullscreen para evitar centralização global do story
+Playground.parameters = {
+  layout: "fullscreen",
 };
