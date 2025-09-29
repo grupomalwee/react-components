@@ -73,7 +73,11 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     return (
       <div className="text-sm">
         <div className="text-sm text-muted-foreground">Total</div>
-        <div className="text-base font-semibold text-foreground">
+        <div
+          className={`text-base font-semibold ${
+            total < 0 ? "text-destructive" : "text-foreground"
+          }`}
+        >
           {total.toLocaleString("pt-BR")}
         </div>
       </div>
@@ -626,7 +630,11 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                       </span>
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-semibold text-foreground tabular-nums">
+                      <span
+                        className={`font-semibold tabular-nums ${
+                          val < 0 ? "text-destructive" : "text-foreground"
+                        }`}
+                      >
                         {val.toLocaleString("pt-BR")}
                       </span>
                       <span className="text-xs text-muted-foreground">

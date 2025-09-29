@@ -61,7 +61,11 @@ const TooltipSimple: React.FC<Props> = ({
               </div>
 
               <div className="ml-3">
-                <span className="text-foreground font-medium tabular-nums">
+                <span
+                  className={`font-medium tabular-nums ${
+                    value < 0 ? "text-destructive" : "text-foreground"
+                  }`}
+                >
                   {value.toLocaleString("pt-BR")}
                 </span>
               </div>

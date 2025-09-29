@@ -1,5 +1,6 @@
 import React from "react";
 
+
 type TooltipPayloadItem = {
   dataKey: string;
   value: number;
@@ -29,9 +30,10 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
   const numeric = payload.filter(
     (p) => typeof p.value === "number" && Number.isFinite(p.value)
   ) as TooltipPayloadItem[];
-  // total real (pode ser negativo)
+
   const total = numeric.reduce((sum, p) => sum + (p.value || 0), 0);
-  // denominador absoluto para calcular porcentagens de forma consistente
+  const isTotalNegative = total < 0;
+
   const absDenominator = numeric.reduce(
     (sum, p) => sum + Math.abs(typeof p.value === "number" ? p.value : 0),
     0
@@ -49,8 +51,9 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
           <p className="font-medium text-foreground truncate">{label}</p>
           <p className="text-xs text-muted-foreground">{periodLabel}</p>
         </div>
+
         <div className="text-right ml-3">
-          <p className="text-sm font-semibold text-foreground">
+          <p className={`text-sm font-semibold ${isTotalNegative ? "text-rose-500" : "text-foreground"}`}>
             {total.toLocaleString("pt-BR")}
           </p>
           <p className="text-xs text-muted-foreground">{totalLabel}</p>
@@ -60,31 +63,27 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
       <div className="flex flex-col gap-2">
         {payload.map((entry, index: number) => {
           const value = typeof entry.value === "number" ? entry.value : 0;
-          // porcentagem baseada em valores absolutos (para lidar com negativos)
-          const pct =
-            absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
-          const color = finalColors[entry.dataKey] || entry.color || "#999";
+          const pct = absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
+          const baseColor = finalColors[entry.dataKey] || entry.color || "#999";
+          const isNeg = value < 0;
+
           return (
             <div key={index} className="flex flex-col gap-1">
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2 truncate">
                   <span
-                    className="w-3 h-3 rounded-sm flex-shrink-0 transition-transform duration-200"
-                    style={{ backgroundColor: color }}
+                    className="w-3 h-3 rounded-sm flex-shrink-0"
+                    style={{ backgroundColor: baseColor }}
                     aria-hidden
                   />
-                  <span className="text-muted-foreground truncate">
-                    {entry.name}
-                  </span>
+                  <span className="text-muted-foreground truncate">{entry.name}</span>
                 </div>
 
                 <div className="flex items-baseline gap-3 ml-3">
-                  <span className="text-foreground font-medium">
+                  <span className={`${isNeg ? "text-rose-500" : "text-foreground"} font-medium`}>
                     {value.toLocaleString("pt-BR")}
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
-                  </span>
+                  <span className="text-xs text-muted-foreground">{absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}</span>
                 </div>
               </div>
 
@@ -93,7 +92,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                   className="h-1 rounded-full transition-all duration-300"
                   style={{
                     width: `${Math.max(0, Math.min(100, pct))}%`,
-                    background: color,
+                    background: baseColor,
                   }}
                 />
               </div>
@@ -104,5 +103,6 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     </div>
   );
 };
+
 
 export default RechartTooltipWithTotal;
