@@ -99,7 +99,7 @@ Explore exemplos completos e documentação técnica na pasta `src/pages` dentro
 
 - Uso avançado de componentes.
 - Configurações de tema e responsividade.
-- Exemplos de integração com testes e acessibilidade.
+- Exemplos de integração com testes e acessibilidade..
 
 ---
 
