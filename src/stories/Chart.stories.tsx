@@ -14,6 +14,7 @@ import {
   SelectGroupBase,
   SelectLabelBase,
 } from "@/components/ui/SelectBase";
+import { ArrowClockwiseIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
 
 const sampleQuarterData = [
   {
@@ -109,18 +110,14 @@ const meta: Meta<typeof Chart> = {
     showGrid: { control: "boolean" },
   },
   args: {
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
+    // Use apenas os dados por padrão — as demais opções deverão seguir os defaults do componente Chart
     data: sampleQuarterData,
-    xAxis: "trimestre",
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Chart>;
 
-// Helper template to ensure ResponsiveContainer has explicit space in Storybook
 const Template = (args: React.ComponentProps<typeof Chart>) => (
   <div style={{ width: "900px", height: "420px" }}>
     <Chart {...args} />
@@ -242,7 +239,6 @@ const singlePointData = [
   { trimestre: "Q1/2026", receita: 5000, despesas: 2000, churn: 120 },
 ];
 
-
 const mixedTypesData = [
   { label: "A", value: 1200 },
   { label: "B", value: 0 },
@@ -250,7 +246,6 @@ const mixedTypesData = [
   { label: "D", value: 800 },
   { label: "E", value: 2400 },
 ];
-
 
 export const NegativeValues: Story = {
   render: (args) => (
@@ -348,8 +343,16 @@ export const MixedTypes: Story = {
 export const Playground: Story = {
   name: "Playground (interactive)",
   render: (args) => {
-  type Row = { trimestre?: string; periodo?: string; receita?: number; despesas?: number; churn?: number };
-  const [data, setData] = React.useState<Row[]>(sampleQuarterData.slice(0, 4));
+    type Row = {
+      trimestre?: string;
+      periodo?: string;
+      receita?: number;
+      despesas?: number;
+      churn?: number;
+    };
+    const [data, setData] = React.useState<Row[]>(
+      sampleQuarterData.slice(0, 4)
+    );
     const [showGrid, setShowGrid] = React.useState(true);
     const [showLegend, setShowLegend] = React.useState(true);
     const [height, setHeight] = React.useState(360);
@@ -360,33 +363,46 @@ export const Playground: Story = {
     }>({ bar: ["despesas"], line: ["receita"] });
 
     // extra header controls
-    const [datasetPreset, setDatasetPreset] = React.useState<'quarter'|'many'|'single'|'zeros'>('quarter');
-    const [seriesPreset, setSeriesPreset] = React.useState<'default'|'bars'|'line'|'area'>('default');
-    const [showTooltipLocal, ] = React.useState(true);
-    const [showLabelsLocal, ] = React.useState(false);
-    const [xAxisField, setXAxisField] = React.useState<string>('trimestre');
-    const [colorPreset, setColorPreset] = React.useState<'default'|'warm'|'cool'>('default');
-    const [colorsState, setColorsState] = React.useState<string[]>(["#6366f1", "#10b981", "#f59e0b"]);
+    const [datasetPreset, setDatasetPreset] = React.useState<
+      "quarter" | "many" | "single" | "zeros"
+    >("quarter");
+    const [seriesPreset, setSeriesPreset] = React.useState<
+      "default" | "bars" | "line" | "area"
+    >("default");
+    const [showTooltipLocal] = React.useState(true);
+    const [showLabelsLocal] = React.useState(false);
+    const [xAxisField, setXAxisField] = React.useState<string>("trimestre");
+    const [colorPreset, setColorPreset] = React.useState<
+      "default" | "warm" | "cool" | "custom"
+    >("default");
+    const [colorsState, setColorsState] = React.useState<string[]>([
+      "#6366f1",
+      "#10b981",
+      "#f59e0b",
+    ]);
+    const [enableDraggableTooltips, setEnableDraggableTooltips] =
+      React.useState(false);
+    const [maxTooltips, setMaxTooltips] = React.useState(5);
 
     // apply dataset presets
     React.useEffect(() => {
       switch (datasetPreset) {
-        case 'quarter':
+        case "quarter":
           setData(sampleQuarterData.slice(0, 4));
-          setXAxisField('trimestre');
+          setXAxisField("trimestre");
           break;
-        case 'many':
+        case "many":
           // convert periodo -> trimestre for a consistent key used in chart by default
           setData(manyPointsData.map((r) => ({ ...r, trimestre: r.periodo })));
-          setXAxisField('periodo');
+          setXAxisField("periodo");
           break;
-        case 'single':
+        case "single":
           setData(singlePointData);
-          setXAxisField('trimestre');
+          setXAxisField("trimestre");
           break;
-        case 'zeros':
+        case "zeros":
           setData(zeroValuesData);
-          setXAxisField('trimestre');
+          setXAxisField("trimestre");
           break;
       }
     }, [datasetPreset]);
@@ -394,26 +410,29 @@ export const Playground: Story = {
     // apply series presets
     React.useEffect(() => {
       switch (seriesPreset) {
-        case 'default':
-          setSeries({ bar: ['despesas'], line: ['receita'] });
+        case "default":
+          setSeries({ bar: ["despesas"], line: ["receita"] });
           break;
-        case 'bars':
-          setSeries({ bar: ['despesas', 'receita'] });
+        case "bars":
+          setSeries({ bar: ["despesas", "receita"] });
           break;
-        case 'line':
-          setSeries({ line: ['receita', 'churn'] });
+        case "line":
+          setSeries({ line: ["receita", "churn"] });
           break;
-        case 'area':
-          setSeries({ area: ['receita'] });
+        case "area":
+          setSeries({ area: ["receita"] });
           break;
       }
     }, [seriesPreset]);
 
     // color presets
     React.useEffect(() => {
-      if (colorPreset === 'default') setColorsState(['#6366f1', '#10b981', '#f59e0b']);
-      if (colorPreset === 'warm') setColorsState(['#f97316', '#ef4444', '#f43f5e']);
-      if (colorPreset === 'cool') setColorsState(['#06b6d4', '#6366f1', '#8e68ff']);
+      if (colorPreset === "default")
+        setColorsState(["#6366f1", "#10b981", "#f59e0b"]);
+      if (colorPreset === "warm")
+        setColorsState(["#f97316", "#ef4444", "#f43f5e"]);
+      if (colorPreset === "cool")
+        setColorsState(["#06b6d4", "#6366f1", "#8e68ff"]);
     }, [colorPreset]);
 
     const addPoint = () => {
@@ -440,82 +459,214 @@ export const Playground: Story = {
       >
         <div
           style={{
-            padding: 16,
+            padding: 12,
             display: "flex",
-            gap: 12,
-            alignItems: "center",
+            gap: 8,
+            flexDirection: "column",
             borderBottom: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <div style={{ display: "flex", gap: 8, alignItems: 'center' }}>
-            <ButtonBase variant="default" onClick={addPoint}>Adicionar ponto</ButtonBase>
-            <ButtonBase variant="outline" onClick={removeLast}>Remover último</ButtonBase>
-
-            <SelectBase value={datasetPreset} onValueChange={(v) => setDatasetPreset(v as 'quarter'|'many'|'single'|'zeros')}>
-              <SelectTriggerBase className="w-[160px]">
-                <SelectValueBase />
-              </SelectTriggerBase>
-              <SelectContentBase>
-                <SelectGroupBase>
-                  <SelectLabelBase>Dataset</SelectLabelBase>
-                  <SelectItemBase value="quarter">Quarter (4)</SelectItemBase>
-                  <SelectItemBase value="many">Many (36)</SelectItemBase>
-                  <SelectItemBase value="single">Single</SelectItemBase>
-                  <SelectItemBase value="zeros">Zeros</SelectItemBase>
-                </SelectGroupBase>
-              </SelectContentBase>
-            </SelectBase>
-
-            <SelectBase value={seriesPreset} onValueChange={(v) => setSeriesPreset(v as 'default'|'bars'|'line'|'area')}>
-              <SelectTriggerBase className="w-[140px]">
-                <SelectValueBase />
-              </SelectTriggerBase>
-              <SelectContentBase>
-                <SelectGroupBase>
-                  <SelectLabelBase>Series</SelectLabelBase>
-                  <SelectItemBase value="default">Default</SelectItemBase>
-                  <SelectItemBase value="bars">Bars</SelectItemBase>
-                  <SelectItemBase value="line">Line</SelectItemBase>
-                  <SelectItemBase value="area">Area</SelectItemBase>
-                </SelectGroupBase>
-              </SelectContentBase>
-            </SelectBase>
-
-            <SelectBase value={xAxisField} onValueChange={(v) => setXAxisField(v)}>
-              <SelectTriggerBase className="w-[160px]">
-                <SelectValueBase />
-              </SelectTriggerBase>
-              <SelectContentBase>
-                <SelectGroupBase>
-                  <SelectLabelBase>X Axis</SelectLabelBase>
-                  {/* derive options from first row keys */}
-                  {Object.keys(data[0] || {}).map((k) => (
-                    <SelectItemBase key={k} value={k}>{k}</SelectItemBase>
-                  ))}
-                </SelectGroupBase>
-              </SelectContentBase>
-            </SelectBase>
-
-            <SelectBase value={colorPreset} onValueChange={(v) => setColorPreset(v as 'default'|'warm'|'cool')}>
-              <SelectTriggerBase className="w-[120px]">
-                <SelectValueBase />
-              </SelectTriggerBase>
-              <SelectContentBase>
-                <SelectGroupBase>
-                  <SelectLabelBase>Colors</SelectLabelBase>
-                  <SelectItemBase value="default">Default</SelectItemBase>
-                  <SelectItemBase value="warm">Warm</SelectItemBase>
-                  <SelectItemBase value="cool">Cool</SelectItemBase>
-                </SelectGroupBase>
-              </SelectContentBase>
-            </SelectBase>
-          </div>
           <div
             style={{
-              marginLeft: 12,
               display: "flex",
+              gap: 8,
               alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                flex: "1 1 auto",
+              }}
+            >
+              <ButtonBase variant="default" onClick={addPoint}>
+                <PlusIcon />
+              </ButtonBase>
+              <ButtonBase variant="outline" onClick={removeLast}>
+                <MinusIcon />
+              </ButtonBase>
+
+              <SelectBase
+                value={datasetPreset}
+                onValueChange={(v) =>
+                  setDatasetPreset(v as "quarter" | "many" | "single" | "zeros")
+                }
+              >
+                <SelectTriggerBase className="w-[160px]">
+                  <SelectValueBase />
+                </SelectTriggerBase>
+                <SelectContentBase>
+                  <SelectGroupBase>
+                    <SelectLabelBase>Dataset</SelectLabelBase>
+                    <SelectItemBase value="quarter">Quarter (4)</SelectItemBase>
+                    <SelectItemBase value="many">Many (36)</SelectItemBase>
+                    <SelectItemBase value="single">Single</SelectItemBase>
+                    <SelectItemBase value="zeros">Zeros</SelectItemBase>
+                  </SelectGroupBase>
+                </SelectContentBase>
+              </SelectBase>
+
+              <SelectBase
+                value={seriesPreset}
+                onValueChange={(v) =>
+                  setSeriesPreset(v as "default" | "bars" | "line" | "area")
+                }
+              >
+                <SelectTriggerBase className="w-[140px]">
+                  <SelectValueBase />
+                </SelectTriggerBase>
+                <SelectContentBase>
+                  <SelectGroupBase>
+                    <SelectLabelBase>Series</SelectLabelBase>
+                    <SelectItemBase value="default">Default</SelectItemBase>
+                    <SelectItemBase value="bars">Bars</SelectItemBase>
+                    <SelectItemBase value="line">Line</SelectItemBase>
+                    <SelectItemBase value="area">Area</SelectItemBase>
+                  </SelectGroupBase>
+                </SelectContentBase>
+              </SelectBase>
+
+              <SelectBase
+                value={xAxisField}
+                onValueChange={(v) => setXAxisField(v)}
+              >
+                <SelectTriggerBase className="w-[160px]">
+                  <SelectValueBase />
+                </SelectTriggerBase>
+                <SelectContentBase>
+                  <SelectGroupBase>
+                    <SelectLabelBase>X Axis</SelectLabelBase>
+                    {/* derive options from first row keys */}
+                    {Object.keys(data[0] || {}).map((k) => (
+                      <SelectItemBase key={k} value={k}>
+                        {k}
+                      </SelectItemBase>
+                    ))}
+                  </SelectGroupBase>
+                </SelectContentBase>
+              </SelectBase>
+
+              <SelectBase
+                value={colorPreset}
+                onValueChange={(v) =>
+                  setColorPreset(v as "default" | "warm" | "cool" | "custom")
+                }
+              >
+                <SelectTriggerBase className="w-[120px]">
+                  <SelectValueBase />
+                </SelectTriggerBase>
+                <SelectContentBase>
+                  <SelectGroupBase>
+                    <SelectLabelBase>Colors</SelectLabelBase>
+                    <SelectItemBase value="default">Default</SelectItemBase>
+                    <SelectItemBase value="warm">Warm</SelectItemBase>
+                    <SelectItemBase value="cool">Cool</SelectItemBase>
+                    <SelectItemBase value="custom">Custom</SelectItemBase>
+                  </SelectGroupBase>
+                </SelectContentBase>
+              </SelectBase>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <CheckboxBase
+                  checked={enableDraggableTooltips}
+                  onCheckedChange={(v) =>
+                    setEnableDraggableTooltips(Boolean(v))
+                  }
+                />
+                <span>Draggable</span>
+              </label>
+              <div style={{ width: 160 }}>
+                <label
+                  style={{
+                    fontSize: 12,
+                    color: "var(--muted, #6b7280)",
+                    display: "block",
+                  }}
+                >
+                  Max tips: {maxTooltips}
+                </label>
+                <SlideBase
+                  value={[maxTooltips]}
+                  onValueChange={(v) => setMaxTooltips(Number(v[0]))}
+                  min={1}
+                  max={12}
+                />
+              </div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {/* simplified palette editor: only editable colors + add button */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 6,
+                    alignItems: "center",
+                    marginLeft: 6,
+                  }}
+                >
+                  {colorsState.map((c, i) => (
+                    <label
+                      key={i}
+                      title={c}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <input
+                        aria-label={`Color ${i + 1}`}
+                        type="color"
+                        value={c}
+                        onChange={(e) => {
+                          const next = [...colorsState];
+                          next[i] = e.target.value;
+                          setColorsState(next);
+                          setColorPreset("custom");
+                        }}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          border: "none",
+                          padding: 0,
+                          background: "transparent",
+                        }}
+                      />
+                    </label>
+                  ))}
+
+                  <ButtonBase
+                    variant="outline"
+                    onClick={() => {
+                      setColorsState((s) => [...s, "#cccccc"]);
+                      setColorPreset("custom");
+                    }}
+                  >
+                    <PlusIcon />
+                  </ButtonBase>
+                </div>
+              </div>
+              <ButtonBase
+                variant="ghost"
+                onClick={() => {
+                  setDatasetPreset("quarter");
+                  setSeriesPreset("default");
+                  setColorPreset("default");
+                  setColorsState(["#6366f1", "#10b981", "#f59e0b"]);
+                  setEnableDraggableTooltips(false);
+                  setMaxTooltips(5);
+                }}
+              >
+                <ArrowClockwiseIcon />
+              </ButtonBase>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
               gap: 12,
+              alignItems: "center",
+              marginTop: 8,
             }}
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -531,6 +682,7 @@ export const Playground: Story = {
                 />
               </div>
             </div>
+
             <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <CheckboxBase
                 checked={showGrid}
@@ -546,7 +698,14 @@ export const Playground: Story = {
               <span>Mostrar Legenda</span>
             </label>
             <h1 style={{ marginTop: 0 }}> | Séries</h1>
-            <div style={{ display: "flex", flexDirection: "row", gap: 8, alignContent: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 8,
+                alignContent: "center",
+              }}
+            >
               {["receita", "despesas", "churn"].map((k) => (
                 <label
                   key={k}
@@ -592,7 +751,6 @@ export const Playground: Story = {
         </div>
 
         <div>
-
           <main style={{ flex: 1 }}>
             <div style={{ width: "100%", height }}>
               <Chart
@@ -606,6 +764,8 @@ export const Playground: Story = {
                 showTooltip={showTooltipLocal}
                 showLabels={showLabelsLocal}
                 colors={colorsState}
+                enableDraggableTooltips={enableDraggableTooltips}
+                maxTooltips={maxTooltips}
               />
             </div>
           </main>

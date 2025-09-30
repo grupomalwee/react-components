@@ -30,6 +30,7 @@ import TooltipSimple from "./TooltipSimple";
 import {
   formatFieldName,
   detectDataFields,
+  detectXAxis,
   generateAdditionalColors,
   niceCeil,
 } from "./helpers";
@@ -83,7 +84,7 @@ interface ChartProps {
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
   labelMap?: Record<string, string>;
-  xAxis: XAxisConfig | string;
+  xAxis?: XAxisConfig | string;
   enableHighlights?: boolean;
   enableShowOnly?: boolean;
   enablePeriodsDropdown?: boolean;
@@ -121,10 +122,27 @@ const Chart: React.FC<ChartProps> = ({
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
+    // resolve x axis key: prefer provided string, then provided config, otherwise auto-detect
+    const resolvedXAxisKey =
+      typeof xAxis === "string"
+        ? xAxis
+        : (xAxis && (xAxis as XAxisConfig).dataKey) || detectXAxis(data);
+
     const xAxisConfig: XAxisConfig =
       typeof xAxis === "string"
-        ? { dataKey: xAxis, label: formatFieldName(xAxis), autoLabel: true }
-        : (xAxis as XAxisConfig);
+        ? {
+            dataKey: resolvedXAxisKey,
+            label: formatFieldName(resolvedXAxisKey),
+            autoLabel: true,
+          }
+        : {
+            dataKey: resolvedXAxisKey,
+            label:
+              (xAxis as XAxisConfig)?.label ??
+              formatFieldName(resolvedXAxisKey),
+            formatter: (xAxis as XAxisConfig)?.formatter,
+            autoLabel: (xAxis as XAxisConfig)?.autoLabel ?? true,
+          };
 
     const detectedFields = detectDataFields(data, xAxisConfig.dataKey);
     const mapperConfig = detectedFields.reduce((acc, field) => {
