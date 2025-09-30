@@ -1,4 +1,4 @@
-import LineChart from "@/components/rechart/LineChart";
+import LineChart from "@/components/rechart/charts/LineChart";
 
 export const LineChartPage = () => {
   return (
@@ -49,7 +49,6 @@ export const LineChartPage = () => {
           />
           <LineChart
             title="Receita, Despesas e Lucro Anual"
-
             width={900}
             height={150}
             data={[

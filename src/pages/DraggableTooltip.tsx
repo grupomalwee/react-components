@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DraggableTooltip from "@/components/rechart/DraggableTooltip";
+import DraggableTooltip from "@/components/rechart/tooltips/DraggableTooltip";
 import { useDrag } from "@/hooks/use-drag";
 
 const sampleData = {
@@ -13,13 +13,13 @@ const sampleData = {
 
 const sampleColors = {
   receita: "#55af7d",
-  despesas: "#8e68ff", 
+  despesas: "#8e68ff",
   lucro: "#2273e1",
   vendas: "#ff6b6b",
   marketing: "#4ecdc4",
 };
 
-const dataKeys = Object.keys(sampleData).filter(key => key !== 'name');
+const dataKeys = Object.keys(sampleData).filter((key) => key !== "name");
 
 export const DraggableTooltipPage = () => {
   const [tooltips, setTooltips] = useState([
@@ -28,24 +28,20 @@ export const DraggableTooltipPage = () => {
       data: sampleData,
     },
     {
-      id: "tooltip-2", 
+      id: "tooltip-2",
       data: { ...sampleData, name: "Q2 2024", receita: 5200, despesas: 3100 },
     },
     {
       id: "tooltip-3",
       data: { ...sampleData, name: "Q3 2024", receita: 6800, despesas: 3800 },
-    }
+    },
   ]);
 
-  const {
-    handleMouseDown,
-    getPosition,
-    setPosition,
-    isElementDragging,
-  } = useDrag({
-    onDragStart: (id) => console.log(`Iniciando drag do ${id}`),
-    onDragEnd: (id) => console.log(`Finalizando drag do ${id}`),
-  });
+  const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+    useDrag({
+      onDragStart: (id) => console.log(`Iniciando drag do ${id}`),
+      onDragEnd: (id) => console.log(`Finalizando drag do ${id}`),
+    });
 
   // Definir posições iniciais
   React.useEffect(() => {
@@ -55,7 +51,7 @@ export const DraggableTooltipPage = () => {
   }, [setPosition]);
 
   const handleClose = (id: string) => {
-    setTooltips(prev => prev.filter(tooltip => tooltip.id !== id));
+    setTooltips((prev) => prev.filter((tooltip) => tooltip.id !== id));
   };
 
   const handleCloseAll = () => {
@@ -69,15 +65,15 @@ export const DraggableTooltipPage = () => {
         data: sampleData,
       },
       {
-        id: "tooltip-2", 
+        id: "tooltip-2",
         data: { ...sampleData, name: "Q2 2024", receita: 5200, despesas: 3100 },
       },
       {
         id: "tooltip-3",
         data: { ...sampleData, name: "Q3 2024", receita: 6800, despesas: 3800 },
-      }
+      },
     ]);
-    
+
     // Resetar posições
     setTimeout(() => {
       setPosition("tooltip-1", { top: 100, left: 100 });
@@ -94,17 +90,18 @@ export const DraggableTooltipPage = () => {
             DraggableTooltip Demo
           </h1>
           <p className="text-muted-foreground mb-4">
-            Demonstração do componente DraggableTooltip com tooltips arrastáveis e botão "Fechar Todos".
+            Demonstração do componente DraggableTooltip com tooltips arrastáveis
+            e botão "Fechar Todos".
           </p>
-          
+
           <div className="flex gap-4 mb-6">
-            <button 
+            <button
               onClick={resetTooltips}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
             >
               Reset Tooltips
             </button>
-            <button 
+            <button
               onClick={handleCloseAll}
               className="px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90"
             >
@@ -146,7 +143,9 @@ export const DraggableTooltipPage = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-muted-foreground">
                 <p className="text-lg mb-2">Nenhum tooltip ativo</p>
-                <p className="text-sm">Clique em "Reset Tooltips" para criar novos tooltips</p>
+                <p className="text-sm">
+                  Clique em "Reset Tooltips" para criar novos tooltips
+                </p>
               </div>
             </div>
           )}
@@ -159,8 +158,12 @@ export const DraggableTooltipPage = () => {
             <ul className="list-disc list-inside text-muted-foreground space-y-1">
               <li>Tooltips arrastáveis com posicionamento fixo</li>
               <li>Botão individual de fechar em cada tooltip</li>
-              <li>Botão "Fechar Todos" flutuante quando há múltiplos tooltips</li>
-              <li>Labels customizáveis (Período/Ponto, Dados do Período/Ponto)</li>
+              <li>
+                Botão "Fechar Todos" flutuante quando há múltiplos tooltips
+              </li>
+              <li>
+                Labels customizáveis (Período/Ponto, Dados do Período/Ponto)
+              </li>
               <li>Cores personalizadas para cada série de dados</li>
               <li>Suporte a diferentes variantes do botão "Fechar Todos"</li>
             </ul>
@@ -170,10 +173,15 @@ export const DraggableTooltipPage = () => {
             <h2 className="text-xl font-semibold mb-3">Props Principais</h2>
             <div className="bg-muted/50 p-4 rounded-lg">
               <code className="text-sm">
-                <div>periodLabel: "Período Selecionado" | "Ponto Selecionado"</div>
+                <div>
+                  periodLabel: "Período Selecionado" | "Ponto Selecionado"
+                </div>
                 <div>dataLabel: "Dados do Período" | "Dados do Ponto"</div>
                 <div>showCloseAllButton: boolean</div>
-                <div>closeAllButtonPosition: "top-left" | "top-right" | "top-center"</div>
+                <div>
+                  closeAllButtonPosition: "top-left" | "top-right" |
+                  "top-center"
+                </div>
                 <div>closeAllButtonVariant: "floating" | "inline"</div>
               </code>
             </div>

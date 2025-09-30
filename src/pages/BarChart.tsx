@@ -1,4 +1,4 @@
-import BarChart from "@/components/rechart/BarChart";
+import BarChart from "@/components/rechart/charts/BarChart";
 
 export const BarChartPage = () => {
   const quartData = [
@@ -60,7 +60,11 @@ export const BarChartPage = () => {
             yAxis={["despesas", "lucro"]}
             showLabels={true}
             height={400}
-            labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
+            labelMap={{
+              receita: "Receita",
+              despesas: "Despesas",
+              lucro: "Lucro",
+            }}
           />
         </div>
       </div>

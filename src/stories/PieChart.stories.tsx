@@ -1,41 +1,42 @@
-import PieChart from "@/components/rechart/PieChart";
+import PieChart from "@/components/rechart/charts/PieChart";
 import "../style/global.css";
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof PieChart> = {
-  title: 'charts/PieChart',
+  title: "charts/PieChart",
   component: PieChart,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'Gráfico de pizza responsivo usando Recharts. Props simplificadas para definir cores em hex, hsl, rgb, etc.'
-      }
+        component:
+          "Gráfico de pizza responsivo usando Recharts. Props simplificadas para definir cores em hex, hsl, rgb, etc.",
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
   argTypes: {
     height: {
-      control: { type: 'number', min: 200, max: 600, step: 50 },
+      control: { type: "number", min: 200, max: 600, step: 50 },
     },
-    colors: { control: 'object' },
-    showTooltip: { control: 'boolean' },
-    showLegend: { control: 'boolean' },
-    showLabels: { control: 'boolean' },
+    colors: { control: "object" },
+    showTooltip: { control: "boolean" },
+    showLegend: { control: "boolean" },
+    showLabels: { control: "boolean" },
     innerRadius: {
-      control: { type: 'number', min: 0, max: 100, step: 10 },
+      control: { type: "number", min: 0, max: 100, step: 10 },
     },
     outerRadius: {
-      control: { type: 'number', min: 50, max: 150, step: 10 },
+      control: { type: "number", min: 50, max: 150, step: 10 },
     },
-    className: { control: 'text' },
+    className: { control: "text" },
   },
   args: {
     height: 400,
@@ -52,7 +53,7 @@ type Story = StoryObj<typeof PieChart>;
 
 export const Default: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
+    <div style={{ width: "600px", height: "500px" }}>
       <PieChart {...args} />
     </div>
   ),
@@ -60,10 +61,10 @@ export const Default: Story = {
 
 export const CustomHexColors: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
-        colors={['#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4']}
+        colors={["#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4"]}
       />
     </div>
   ),
@@ -71,15 +72,15 @@ export const CustomHexColors: Story = {
 
 export const CustomHslColors: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         colors={[
-          'hsl(258, 88%, 66%)',
-          'hsl(188, 94%, 43%)',
-          'hsl(84, 81%, 44%)',
-          'hsl(12, 76%, 61%)',
-          'hsl(280, 100%, 70%)'
+          "hsl(258, 88%, 66%)",
+          "hsl(188, 94%, 43%)",
+          "hsl(84, 81%, 44%)",
+          "hsl(12, 76%, 61%)",
+          "hsl(280, 100%, 70%)",
         ]}
       />
     </div>
@@ -88,15 +89,15 @@ export const CustomHslColors: Story = {
 
 export const CustomData: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         data={[
-          { name: 'Desktop', value: 45 },
-          { name: 'Mobile', value: 35 },
-          { name: 'Tablet', value: 20 },
+          { name: "Desktop", value: 45 },
+          { name: "Mobile", value: 35 },
+          { name: "Tablet", value: 20 },
         ]}
-        colors={['#3b82f6', '#ef4444', '#10b981']}
+        colors={["#3b82f6", "#ef4444", "#10b981"]}
       />
     </div>
   ),
@@ -104,12 +105,12 @@ export const CustomData: Story = {
 
 export const DonutChart: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         innerRadius={60}
         outerRadius={120}
-        colors={['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b']}
+        colors={["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f0932b"]}
       />
     </div>
   ),
@@ -117,17 +118,17 @@ export const DonutChart: Story = {
 
 export const MarketShare: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         data={[
-          { name: 'Chrome', value: 65 },
-          { name: 'Safari', value: 18 },
-          { name: 'Edge', value: 8 },
-          { name: 'Firefox', value: 6 },
-          { name: 'Outros', value: 3 },
+          { name: "Chrome", value: 65 },
+          { name: "Safari", value: 18 },
+          { name: "Edge", value: 8 },
+          { name: "Firefox", value: 6 },
+          { name: "Outros", value: 3 },
         ]}
-        colors={['#4285f4', '#34c759', '#0078d4', '#ff9500', '#8e8e93']}
+        colors={["#4285f4", "#34c759", "#0078d4", "#ff9500", "#8e8e93"]}
         innerRadius={40}
         outerRadius={100}
       />
@@ -137,11 +138,11 @@ export const MarketShare: Story = {
 
 export const WithoutLabels: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         showLabels={false}
-        colors={['#f97316', '#059669', '#7c3aed', '#dc2626', '#0891b2']}
+        colors={["#f97316", "#059669", "#7c3aed", "#dc2626", "#0891b2"]}
       />
     </div>
   ),
@@ -149,11 +150,11 @@ export const WithoutLabels: Story = {
 
 export const WithoutLegend: Story = {
   render: (args) => (
-    <div style={{ width: '600px', height: '500px' }}>
-      <PieChart 
+    <div style={{ width: "600px", height: "500px" }}>
+      <PieChart
         {...args}
         showLegend={false}
-        colors={['#ec4899', '#14b8a6', '#f59e0b', '#8b5cf6', '#06b6d4']}
+        colors={["#ec4899", "#14b8a6", "#f59e0b", "#8b5cf6", "#06b6d4"]}
       />
     </div>
   ),
@@ -161,13 +162,13 @@ export const WithoutLegend: Story = {
 
 export const Compact: Story = {
   render: (args) => (
-    <div style={{ width: '400px', height: '350px' }}>
-      <PieChart 
+    <div style={{ width: "400px", height: "350px" }}>
+      <PieChart
         {...args}
         height={300}
         outerRadius={80}
         showLegend={false}
-        colors={['#55af7d', '#8e68ff', '#2273e1', '#f59e0b', '#ef4444']}
+        colors={["#55af7d", "#8e68ff", "#2273e1", "#f59e0b", "#ef4444"]}
       />
     </div>
   ),

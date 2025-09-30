@@ -1,5 +1,5 @@
-import React from "react";  
-import BarChart from "@/components/rechart/BarChart";
+import React from "react";
+import BarChart from "@/components/rechart/charts/BarChart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -42,7 +42,8 @@ const meta: Meta<typeof BarChart> = {
     height: { control: { type: "number", min: 200, max: 800, step: 50 } },
     colors: {
       control: "object",
-      description: "Array de cores para as barras [primary, secondary, tertiary]",
+      description:
+        "Array de cores para as barras [primary, secondary, tertiary]",
     },
     gridColor: { control: "color" },
     showGrid: { control: "boolean" },
@@ -51,9 +52,13 @@ const meta: Meta<typeof BarChart> = {
     // controle ajustado para object (aceita array ou objeto via painel JSON)
     yAxis: {
       control: { type: "object" },
-      description: "Defina séries: array ['a','b'] ou objeto { key: {label, color, visible} } (cole JSON no painel)",
+      description:
+        "Defina séries: array ['a','b'] ou objeto { key: {label, color, visible} } (cole JSON no painel)",
     },
-    labelMap: { control: "object", description: "Mapeamento de rótulos exibidos { key: 'Rótulo' }" },
+    labelMap: {
+      control: "object",
+      description: "Mapeamento de rótulos exibidos { key: 'Rótulo' }",
+    },
     xAxis: { control: "text", description: "Chave do eixo X (string)" },
     data: { control: "object" },
   },
@@ -86,7 +91,13 @@ export const ManualYAxisArray: Story = {
       data={args.data ?? sampleQuarterData}
       xAxis={args.xAxis ?? "trimestre"}
       yAxis={args.yAxis as string[]}
-      labelMap={args.labelMap ?? { receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
+      labelMap={
+        args.labelMap ?? {
+          receita: "Receita",
+          despesas: "Despesas",
+          lucro: "Lucro",
+        }
+      }
       height={420}
     />
   ),
@@ -105,8 +116,10 @@ export const ManualYAxisObject: Story = {
       xAxis={args.xAxis ?? "name"}
       // permite passar objeto via story args (use painel -> JSON)
       yAxis={
-        (args.yAxis as unknown as Record<string, { label?: string; color?: string }>) ??
-        {
+        (args.yAxis as unknown as Record<
+          string,
+          { label?: string; color?: string }
+        >) ?? {
           vendas: { label: "Vendas", color: "#ef4444" },
           meta: { label: "Meta", color: "#10b981" },
           crescimento: { label: "Crescimento", color: "#f59e0b" },
@@ -128,7 +141,9 @@ export const WithLabelMap: Story = {
       data={args.data ?? sampleQuarterData}
       xAxis={args.xAxis ?? "trimestre"}
       yAxis={(args.yAxis as string[]) ?? ["vendas", "lucro"]}
-      labelMap={args.labelMap ?? { vendas: "Vendas Totais", lucro: "Lucro Líquido" }}
+      labelMap={
+        args.labelMap ?? { vendas: "Vendas Totais", lucro: "Lucro Líquido" }
+      }
       colors={["#6366f1", "#06b6d4"]}
       height={380}
     />

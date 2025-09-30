@@ -21,23 +21,23 @@ import {
   LabelList,
   ResponsiveContainer,
 } from "recharts";
-import { cn } from "../../lib/utils";
-import DraggableTooltip from "./DraggableTooltip";
-import CloseAllButton from "./CloseAllButton";
-import renderPillLabel from "./pillLabelRenderer";
-import RechartTooltipWithTotal from "./TooltipWithTotal";
-import TooltipSimple from "./TooltipSimple";
+import { cn } from "../../../lib/utils";
+import DraggableTooltip from "../tooltips/DraggableTooltip";
+import renderPillLabel from "../utils/pillLabelRenderer";
+import RechartTooltipWithTotal from "../tooltips/TooltipWithTotal";
+import TooltipSimple from "../tooltips/TooltipSimple";
 import {
   formatFieldName,
   detectDataFields,
   detectXAxis,
   generateAdditionalColors,
   niceCeil,
-} from "./helpers";
+} from "../utils/helpers";
 
-import ChartPeriodsDropdown from "./PeriodsDropdown";
-import ShowOnly from "./ShowOnly";
-import Highlights from "./Highlights";
+import ChartPeriodsDropdown from "../controls/PeriodsDropdown";
+import ShowOnly from "../controls/ShowOnly";
+import Highlights from "../controls/Highlights";
+import CloseAllButton from "../controls/CloseAllButton";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -117,12 +117,10 @@ const Chart: React.FC<ChartProps> = ({
   enableDraggableTooltips = false,
   showTooltipTotal = false,
   maxTooltips = 5,
-  // padding removed
   chartMargin,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
-    // resolve x axis key: prefer provided string, then provided config, otherwise auto-detect
     const resolvedXAxisKey =
       typeof xAxis === "string"
         ? xAxis
@@ -464,7 +462,6 @@ const Chart: React.FC<ChartProps> = ({
   const defaultChartRightMargin = 30;
   const defaultChartLeftMargin = 0;
 
-  // Container padding left fixo: simplifica comportamento e evita duplicação
   const containerPaddingLeft = 16;
 
   const finalChartRightMargin = chartMargin?.right ?? defaultChartRightMargin;

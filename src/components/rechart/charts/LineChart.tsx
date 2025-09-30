@@ -9,9 +9,9 @@ import {
   Legend,
   LabelList,
 } from "recharts";
-import { cn } from "../../lib/utils";
-import DraggableTooltip from "./DraggableTooltip";
-import renderPillLabel from "./pillLabelRenderer";
+import { cn } from "../../../lib/utils";
+import DraggableTooltip from "../tooltips/DraggableTooltip";
+import renderPillLabel from "../utils/pillLabelRenderer";
 import {
   generateAdditionalColors,
   niceCeil,
@@ -20,7 +20,7 @@ import {
   Margins,
   resolveContainerPaddingLeft,
   resolveChartMargins,
-} from "./helpers";
+} from "../utils/helpers";
 
 interface LineChartData {
   name: string;

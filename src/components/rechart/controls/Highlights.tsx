@@ -1,6 +1,6 @@
 import React from "react";
-import { ButtonBase } from "../ui/ButtonBase";
-import { cn } from "../../lib/utils";
+import { ButtonBase } from "../../ui/ButtonBase";
+import { cn } from "../../../lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 
@@ -18,7 +18,7 @@ interface Props {
   finalColors: Record<string, string>;
   highlightedSeries: Set<string>;
   toggleHighlight: (key: string) => void;
-  containerWidth?: number; 
+  containerWidth?: number;
 }
 
 const Highlights: React.FC<Props> = ({

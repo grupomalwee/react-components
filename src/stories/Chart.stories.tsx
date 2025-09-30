@@ -1,5 +1,5 @@
 import React from "react";
-import Chart from "@/components/rechart/Chart";
+import Chart from "@/components/rechart/charts/Chart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ButtonBase } from "@/components/ui/ButtonBase";

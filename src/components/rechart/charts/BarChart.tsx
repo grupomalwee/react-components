@@ -10,9 +10,9 @@ import {
   Legend,
   LabelList,
 } from "recharts";
-import { cn } from "../../lib/utils";
-import DraggableTooltip from "./DraggableTooltip";
-import renderPillLabel from "./pillLabelRenderer";
+import { cn } from "../../../lib/utils";
+import DraggableTooltip from "../tooltips/DraggableTooltip";
+import renderPillLabel from "../utils/pillLabelRenderer";
 import {
   formatFieldName,
   detectXAxis,
@@ -23,7 +23,7 @@ import {
   Margins,
   resolveContainerPaddingLeft,
   resolveChartMargins,
-} from "./helpers";
+} from "../utils/helpers";
 
 // Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {

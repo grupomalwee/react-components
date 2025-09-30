@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Chart from "@/components/rechart/Chart";
+import Chart from "@/components/rechart/charts/Chart";
 import { CheckboxBase } from "@/components/ui/CheckBoxBase";
 import LabelBase from "@/components/ui/LabelBase";
 import { Select } from "@/components/selects/Select";
@@ -279,7 +279,7 @@ export const ChartPage = () => {
             xAxis="trimestre"
             series={{ bar: ["usuariosAtivos"], line: ["visitas"] }}
             labelMap={{ usuariosAtivos: "Usuários Ativos", visitas: "Visitas" }}
-            title="Default"            
+            title="Default"
           />
         </section>
         <section className="space-y-6">

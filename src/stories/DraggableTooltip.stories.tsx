@@ -1,4 +1,4 @@
-import DraggableTooltip from "@/components/rechart/DraggableTooltip";
+import DraggableTooltip from "@/components/rechart/tooltips/DraggableTooltip";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useEffect } from "react";
@@ -46,7 +46,7 @@ const meta: Meta<typeof DraggableTooltip> = {
       control: "select",
       options: ["floating", "inline"],
       description: "Variante do botão 'Fechar Todos'",
-    }
+    },
   },
   args: {
     periodLabel: "Período Selecionado",
@@ -422,7 +422,6 @@ export const AnchorCenterDemo: Story = {
       </div>
     );
   },
- 
 };
 
 // Story: Interactive Playground — criar/remover tooltips e alternar anchor
@@ -431,7 +430,7 @@ export const Playground: Story = {
     const [tooltips, setTooltips] = useState<
       Array<{ id: string; top: number; left: number }>
     >([]);
-   
+
     const { handleMouseDown, getPosition, setPosition, isElementDragging } =
       useDrag();
 
@@ -467,7 +466,6 @@ export const Playground: Story = {
           >
             Remover Todos
           </button>
-         
         </div>
 
         {tooltips.map((t, i) => (

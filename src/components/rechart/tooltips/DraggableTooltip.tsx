@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MouseIcon } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
-import CloseAllButton from "./CloseAllButton";
+import CloseAllButton from "../controls/CloseAllButton";
 
 interface TooltipData {
   name: string;
@@ -19,9 +19,8 @@ interface DraggableTooltipProps {
   finalColors: Record<string, string>;
   onMouseDown?: (id: string, e: React.MouseEvent) => void;
   onClose: (id: string) => void;
-  periodLabel?: string; // "Período Selecionado" ou "Ponto Selecionado"
-  dataLabel?: string; // "Dados do Período" ou "Dados do Ponto"
-  // Props para o CloseAllButton
+  periodLabel?: string; 
+  dataLabel?: string; 
   showCloseAllButton?: boolean;
   globalTooltipCount?: number;
   onCloseAll?: () => void;
