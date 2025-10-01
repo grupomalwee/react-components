@@ -1,6 +1,5 @@
 import React from "react";
 
-
 type TooltipPayloadItem = {
   dataKey: string;
   value: number;
@@ -48,22 +47,27 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     >
       <div className="flex items-start justify-between mb-2">
         <div className="pr-2">
-          <p className="font-medium text-foreground truncate">{label}</p>
           <p className="text-xs text-muted-foreground">{periodLabel}</p>
+          <p className="font-medium text-foreground truncate">{label}</p>
         </div>
 
         <div className="text-right ml-3">
-          <p className={`text-sm font-semibold ${isTotalNegative ? "text-rose-500" : "text-foreground"}`}>
+          <p className="text-xs text-muted-foreground">{totalLabel}</p>
+          <p
+            className={`text-sm font-semibold ${
+              isTotalNegative ? "text-rose-500" : "text-foreground"
+            }`}
+          >
             {total.toLocaleString("pt-BR")}
           </p>
-          <p className="text-xs text-muted-foreground">{totalLabel}</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
         {payload.map((entry, index: number) => {
           const value = typeof entry.value === "number" ? entry.value : 0;
-          const pct = absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
+          const pct =
+            absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
           const baseColor = finalColors[entry.dataKey] || entry.color || "#999";
           const isNeg = value < 0;
 
@@ -76,14 +80,22 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                     style={{ backgroundColor: baseColor }}
                     aria-hidden
                   />
-                  <span className="text-muted-foreground truncate">{entry.name}</span>
+                  <span className="text-muted-foreground truncate">
+                    {entry.name}
+                  </span>
                 </div>
 
                 <div className="flex items-baseline gap-3 ml-3">
-                  <span className={`${isNeg ? "text-rose-500" : "text-foreground"} font-medium`}>
+                  <span
+                    className={`${
+                      isNeg ? "text-rose-500" : "text-foreground"
+                    } font-medium`}
+                  >
                     {value.toLocaleString("pt-BR")}
                   </span>
-                  <span className="text-xs text-muted-foreground">{absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
+                  </span>
                 </div>
               </div>
 
@@ -103,6 +115,5 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     </div>
   );
 };
-
 
 export default RechartTooltipWithTotal;

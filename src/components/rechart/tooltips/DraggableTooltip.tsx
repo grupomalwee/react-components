@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MouseIcon } from "@phosphor-icons/react";
+import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import CloseAllButton from "../controls/CloseAllButton";
 
@@ -19,8 +19,8 @@ interface DraggableTooltipProps {
   finalColors: Record<string, string>;
   onMouseDown?: (id: string, e: React.MouseEvent) => void;
   onClose: (id: string) => void;
-  periodLabel?: string; 
-  dataLabel?: string; 
+  periodLabel?: string;
+  dataLabel?: string;
   showCloseAllButton?: boolean;
   globalTooltipCount?: number;
   onCloseAll?: () => void;
@@ -502,9 +502,8 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
       <AnimatePresence>
         <motion.div
           key={id}
-          className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-56 select-none"
+          className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-80 select-none"
           initial={{ opacity: 0, scale: 0.96 }}
-          // animate only visual properties (opacity/scale). position updated instantly via style below
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ type: "spring", stiffness: 300, damping: 28 }}
@@ -519,16 +518,17 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
           aria-label={title ? `Tooltip ${title}` : `Tooltip ${data.name}`}
         >
           <div
-            className="flex items-center justify-between mb-2 p-3 pb-2 border-b bg-muted/20 rounded-t-lg"
+            className="flex items-center justify-between p-3 pb-2 border-b bg-muted/20 rounded-t-lg"
             onMouseDown={handleMouseDownLocal}
             onTouchStart={handleTouchStartLocal}
-            // make header the only drag handle
             style={{ touchAction: "none" }}
           >
+            
+            <DotsSixVerticalIcon size={16}/>
             <div className="flex flex-col gap-1">
               {title && (
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                <div className="flex items-center gap-2 pb-0.5">
+                  {/* <div className="w-2 h-2 bg-blue-500 rounded-full" /> */}
                   <p className="font-bold text-foreground text-base">{title}</p>
                 </div>
               )}
@@ -545,8 +545,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             </button>
           </div>
 
-          {/* Informação do item selecionado com total */}
-          <div className="px-3 py-2 bg-accent/30 border-l-4 border-primary">
+          <div className="px-3 py-2 bg-accent/5 border-l-4 border-primary">
             <div className="flex items-center justify-between gap-2">
               <div>
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -566,7 +565,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
               {dataLabel}
             </p>
-            {/* Lista animada de itens */}
             {(showOnlyHighlighted &&
             highlightedSeries &&
             highlightedSeries.size > 0
@@ -586,7 +584,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                 typeof value === "number"
                   ? value
                   : Number(value as unknown) || 0;
-              // porcentagem baseada em valores absolutos para lidar com negativos
               const pct =
                 absDenominator > 0 ? (Math.abs(val) / absDenominator) * 100 : 0;
               const isDimmed =
@@ -659,10 +656,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
 
             <div className="mt-3 pt-2 border-t">
               <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <span>
-                  <MouseIcon />
-                </span>
-                Arraste para mover • Clique no <XIcon size={12} /> para remover
+                Clique no <XIcon size={12} /> para remover
               </p>
             </div>
           </div>
