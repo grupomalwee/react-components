@@ -1,4 +1,4 @@
-import DraggableTooltip from "@/components/rechart/tooltips/DraggableTooltip";
+import DraggableTooltip from "@/components/charts/components/tooltips/DraggableTooltip";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useEffect } from "react";

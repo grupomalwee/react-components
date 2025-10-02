@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import Chart from "@/components/rechart/charts/Chart";
+import Chart from "@/components/charts/Chart";
+import { Select } from "@/components/selects/Select";
 import { CheckboxBase } from "@/components/ui/CheckBoxBase";
 import LabelBase from "@/components/ui/LabelBase";
-import { Select } from "@/components/selects/Select";
+import { useState } from "react";
 
 export const ChartPage = () => {
   const userData = [

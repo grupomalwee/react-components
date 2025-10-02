@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DraggableTooltip from "@/components/rechart/tooltips/DraggableTooltip";
+import DraggableTooltip from "@/components/charts/components/tooltips/DraggableTooltip";
 import { useDrag } from "@/hooks/use-drag";
 
 const sampleData = {

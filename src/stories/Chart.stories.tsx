@@ -1,5 +1,5 @@
 import React from "react";
-import Chart from "@/components/rechart/charts/Chart";
+import Chart from "@/components/charts/Chart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ButtonBase } from "@/components/ui/ButtonBase";
@@ -11,69 +11,23 @@ import {
   SelectContentBase,
   SelectItemBase,
   SelectValueBase,
-  SelectGroupBase,
-  SelectLabelBase,
 } from "@/components/ui/SelectBase";
 import { ArrowClockwiseIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
 
-const sampleQuarterData = [
-  {
-    trimestre: "Q1/2024",
-    receita: -4000,
-    despesas: 2400,
+const sampleData = [
+  { periodo: "Q1/24", receita: 4000, despesas: 2400, churn: 180 },
+  { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
+  { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
+  { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },
+  { periodo: "Q1/25", receita: 8200, despesas: 4600, churn: 95 },
+  { periodo: "Q2/25", receita: 9100, despesas: 5000, churn: 90 },
+];
 
-    churn: 180,
-  },
-  {
-    trimestre: "Q2/2024",
-    receita: 5200,
-    despesas: 3100,
-
-    churn: 150,
-  },
-  {
-    trimestre: "Q3/2024",
-    receita: 6800,
-    despesas: 3800,
-
-    churn: 120,
-  },
-  {
-    trimestre: "Q4/2024",
-    receita: 7500,
-    despesas: 4200,
-
-    churn: 100,
-  },
-
-  {
-    trimestre: "Q1/2025",
-    receita: 8200,
-    despesas: 4600,
-
-    churn: 95,
-  },
-  {
-    trimestre: "Q2/2025",
-    receita: 9100,
-    despesas: 5000,
-
-    churn: 90,
-  },
-  {
-    trimestre: "Q3/2025",
-    receita: 10000,
-    despesas: 5600,
-
-    churn: 80,
-  },
-  {
-    trimestre: "Q4/2025",
-    receita: 11200,
-    despesas: 6000,
-
-    churn: 75,
-  },
+const negativeData = [
+  { periodo: "Q1/24", receita: -2000, despesas: 1800, churn: 200 },
+  { periodo: "Q2/24", receita: 3000, despesas: -800, churn: 180 },
+  { periodo: "Q3/24", receita: 5500, despesas: 3200, churn: 150 },
+  { periodo: "Q4/24", receita: 6800, despesas: 4100, churn: 120 },
 ];
 
 const meta: Meta<typeof Chart> = {
@@ -84,7 +38,7 @@ const meta: Meta<typeof Chart> = {
     docs: {
       description: {
         component:
-          "Composed chart que aceita a prop `series` para combinar `bar`, `line` e `area` em um único gráfico. Agora com mais métricas e datasets multi-ano para análises mais ricas.",
+          "Chart combinado que aceita barras, linhas e áreas em um único gráfico.",
       },
     },
     backgrounds: {
@@ -97,11 +51,8 @@ const meta: Meta<typeof Chart> = {
     layout: "centered",
   },
   argTypes: {
-    height: { control: { type: "number", min: 200, max: 800, step: 50 } },
-    series: {
-      control: "object",
-      description: "Defina séries: { bar: [...], line: [...], area: [...] }",
-    },
+    height: { control: { type: "number", min: 200, max: 600, step: 50 } },
+    series: { control: "object" },
     labelMap: { control: "object" },
     xAxis: { control: "text" },
     data: { control: "object" },
@@ -110,8 +61,7 @@ const meta: Meta<typeof Chart> = {
     showGrid: { control: "boolean" },
   },
   args: {
-    // Use apenas os dados por padrão — as demais opções deverão seguir os defaults do componente Chart
-    data: sampleQuarterData,
+    data: sampleData,
   },
 };
 
@@ -125,20 +75,20 @@ const Template = (args: React.ComponentProps<typeof Chart>) => (
 );
 
 export const Default: Story = {
-  name: "Default ( controls)",
+  name: "Padrão",
   render: Template,
   parameters: {
     docs: {
       description: {
         story:
-          "Exemplo padrão com dados trimestrais. Use os controles (painel `Controls`) para modificar `series`, `colors`, `height`, `showGrid` e outras props em tempo real.",
+          "Exemplo básico com dados trimestrais. Use os controles para modificar as propriedades.",
       },
     },
   },
 };
 
-export const BarsAndLine: Story = {
-  name: "Bars + Line",
+export const Combined: Story = {
+  name: "Combinado",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -151,108 +101,29 @@ export const BarsAndLine: Story = {
         }}
         labelMap={{
           despesas: "Despesas",
-          lucro: "Lucro",
-          positivacao: "Positivação",
-          vendas: "Vendas",
+          receita: "Receita",
+          churn: "Churn",
         }}
-        colors={["#ef4444", "#22c55e", "#6366f1", "#06b6d4"]}
+        colors={["#ef4444", "#22c55e", "#6366f1"]}
       />
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story:
-          "Combina barras para `despesas`, áreas para `lucro` e `positivacao` e uma linha para `vendas`.",
+        story: "Combina barras, áreas e linhas em um único gráfico.",
       },
     },
   },
 };
-
-export const BarAndArea: Story = {
-  name: "Bar + Area",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{ bar: ["despesas"], area: ["receita"] }}
-        labelMap={{ despesas: "Despesas", lucro: "Lucro" }}
-        colors={["#f97316", "#10b981"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo simples com barras e área — útil para comparações entre categorias e tendência acumulada.",
-      },
-    },
-  },
-};
-
-export const BarLineArea: Story = {
-  name: "Bar + Line + Area",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{ bar: ["despesas"], area: ["receita"], line: ["churn"] }}
-        labelMap={{ despesas: "Despesas", lucro: "Lucro", vendas: "Vendas" }}
-        colors={["#f43f5e", "#3b82f6", "#22c55e"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Combinação típica: barras para volume, linha para indicador e área para métrica adicional.",
-      },
-    },
-  },
-};
-
-const negativeValuesData = sampleQuarterData.map((row, idx) => ({
-  ...row,
-  receita: idx === 2 ? -1200 : row.receita,
-  despesas: idx === 5 ? -800 : row.despesas,
-}));
-
-const zeroValuesData = sampleQuarterData.map((row, idx) => ({
-  ...row,
-  receita: idx % 2 === 0 ? 0 : row.receita,
-  despesas: idx % 3 === 0 ? 0 : row.despesas,
-}));
-
-// Many points: gera dados mensais ao invés de trimestrais
-const manyPointsData = Array.from({ length: 36 }).map((_, i) => ({
-  periodo: `M${i + 1}`,
-  receita: Math.round(3000 + Math.sin(i / 3) * 1200 + i * 15),
-  despesas: Math.round(1800 + Math.cos(i / 4) * 900 + i * 8),
-  churn: Math.round(100 - ((i * 0.5) % 80)),
-}));
-
-const singlePointData = [
-  { trimestre: "Q1/2026", receita: 5000, despesas: 2000, churn: 120 },
-];
-
-const mixedTypesData = [
-  { label: "A", value: 1200 },
-  { label: "B", value: 0 },
-  { label: "C", value: -300 },
-  { label: "D", value: 800 },
-  { label: "E", value: 2400 },
-];
 
 export const NegativeValues: Story = {
+  name: "Valores Negativos",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
         {...args}
-        data={negativeValuesData}
+        data={negativeData}
         height={360}
         series={{ bar: ["despesas"], line: ["receita"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas" }}
@@ -263,190 +134,101 @@ export const NegativeValues: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Dados contendo valores negativos — útil para perdas e ajustes.",
-      },
-    },
-  },
-};
-
-export const ManyPoints: Story = {
-  render: (args) => (
-    <div style={{ width: "1200px", height: "480px" }}>
-      <Chart
-        {...args}
-        data={manyPointsData}
-        height={420}
-        xAxis="periodo"
-        series={{ line: ["receita"], area: ["despesas"], bar: ["churn"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
-        colors={["#6366f1", "#10b981", "#f59e0b"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Grande série de pontos (36) para testar desempenho e renderização de muitos ticks no eixo X.",
-      },
-    },
-  },
-};
-
-export const SinglePoint: Story = {
-  render: (args) => (
-    <div style={{ width: "600px", height: "360px" }}>
-      <Chart
-        {...args}
-        data={singlePointData}
-        height={300}
-        series={{ bar: ["despesas"], line: ["receita"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas" }}
-        colors={["#06b6d4", "#ef4444"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Apenas um ponto — verifica se o componente lida com datasets minimalistas.",
-      },
-    },
-  },
-};
-
-export const MixedTypes: Story = {
-  render: (args) => (
-    <div style={{ width: "700px", height: "380px" }}>
-      <Chart
-        {...args}
-        data={mixedTypesData}
-        height={340}
-        xAxis="label"
-        series={{ bar: ["value"] }}
-        labelMap={{ value: "Valor" }}
-        colors={["#8b5cf6"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Dados mistos com zeros e negativos para testar tooltips e formatação.",
+        story: "Exemplo com valores negativos para mostrar perdas e ajustes.",
       },
     },
   },
 };
 
 export const Playground: Story = {
-  name: "Playground (interactive)",
-  render: (args) => {
-    type Row = {
-      trimestre?: string;
-      periodo?: string;
-      receita?: number;
-      despesas?: number;
-      churn?: number;
-    };
-    const [data, setData] = React.useState<Row[]>(
-      sampleQuarterData.slice(0, 4)
-    );
+  render: () => {
+    const [data, setData] = React.useState(sampleData);
+    const [height, setHeight] = React.useState(360);
     const [showGrid, setShowGrid] = React.useState(true);
     const [showLegend, setShowLegend] = React.useState(true);
-    const [height, setHeight] = React.useState(360);
     const [series, setSeries] = React.useState<{
       bar?: string[];
       line?: string[];
       area?: string[];
-    }>({ bar: ["despesas"], line: ["receita"] });
-
-    // extra header controls
-    const [datasetPreset, setDatasetPreset] = React.useState<
-      "quarter" | "many" | "single" | "zeros"
-    >("quarter");
-    const [seriesPreset, setSeriesPreset] = React.useState<
-      "default" | "bars" | "line" | "area"
-    >("default");
-    const [showTooltipLocal] = React.useState(true);
-    const [showLabelsLocal] = React.useState(false);
-    const [xAxisField, setXAxisField] = React.useState<string>("trimestre");
-    const [colorPreset, setColorPreset] = React.useState<
-      "default" | "warm" | "cool" | "custom"
-    >("default");
-    const [colorsState, setColorsState] = React.useState<string[]>([
+    }>({
+      bar: ["despesas"],
+      line: ["receita"],
+    });
+    const [colors, setColors] = React.useState([
       "#6366f1",
       "#10b981",
       "#f59e0b",
     ]);
-    const [enableDraggableTooltips, setEnableDraggableTooltips] =
-      React.useState(false);
-    const [maxTooltips, setMaxTooltips] = React.useState(5);
-
-    // apply dataset presets
-    React.useEffect(() => {
-      switch (datasetPreset) {
-        case "quarter":
-          setData(sampleQuarterData.slice(0, 4));
-          setXAxisField("trimestre");
-          break;
-        case "many":
-          // convert periodo -> trimestre for a consistent key used in chart by default
-          setData(manyPointsData.map((r) => ({ ...r, trimestre: r.periodo })));
-          setXAxisField("periodo");
-          break;
-        case "single":
-          setData(singlePointData);
-          setXAxisField("trimestre");
-          break;
-        case "zeros":
-          setData(zeroValuesData);
-          setXAxisField("trimestre");
-          break;
-      }
-    }, [datasetPreset]);
-
-    // apply series presets
-    React.useEffect(() => {
-      switch (seriesPreset) {
-        case "default":
-          setSeries({ bar: ["despesas"], line: ["receita"] });
-          break;
-        case "bars":
-          setSeries({ bar: ["despesas", "receita"] });
-          break;
-        case "line":
-          setSeries({ line: ["receita", "churn"] });
-          break;
-        case "area":
-          setSeries({ area: ["receita"] });
-          break;
-      }
-    }, [seriesPreset]);
-
-    // color presets
-    React.useEffect(() => {
-      if (colorPreset === "default")
-        setColorsState(["#6366f1", "#10b981", "#f59e0b"]);
-      if (colorPreset === "warm")
-        setColorsState(["#f97316", "#ef4444", "#f43f5e"]);
-      if (colorPreset === "cool")
-        setColorsState(["#06b6d4", "#6366f1", "#8e68ff"]);
-    }, [colorPreset]);
 
     const addPoint = () => {
-      const nextIndex = data.length + 1;
+      const lastPeriod = data[data.length - 1]?.periodo || "Q1/25";
+      const nextPeriod = `Q${(parseInt(lastPeriod.charAt(1)) % 4) + 1}/${
+        parseInt(lastPeriod.slice(3)) + (lastPeriod.charAt(1) === "4" ? 1 : 0)
+      }`;
+
       const newPoint = {
-        trimestre: `Q${nextIndex}/2026`,
-        receita: Math.round(2000 + Math.random() * 8000),
-        despesas: Math.round(1000 + Math.random() * 6000),
-        churn: Math.round(50 + Math.random() * 150),
+        periodo: nextPeriod,
+        receita: Math.round(3000 + Math.random() * 6000),
+        despesas: Math.round(2000 + Math.random() * 4000),
+        churn: Math.round(80 + Math.random() * 120),
       };
-      setData((d) => [...d, newPoint]);
+      setData((prev) => [...prev, newPoint]);
     };
 
-    const removeLast = () => setData((d) => d.slice(0, -1));
+    const removePoint = () => {
+      setData((prev) => prev.slice(0, -1));
+    };
+
+    const resetData = () => {
+      setData(sampleData);
+      setHeight(360);
+      setShowGrid(true);
+      setShowLegend(true);
+      setSeries({ bar: ["despesas"], line: ["receita"] });
+      setColors(["#6366f1", "#10b981", "#f59e0b"]);
+    };
+
+    const switchToNegative = () => {
+      setData(negativeData);
+    };
+
+    const toggleSeriesType = (field: string, type: "bar" | "line" | "area") => {
+      setSeries((prev) => {
+        const newSeries: {
+          bar?: string[];
+          line?: string[];
+          area?: string[];
+        } = { ...prev };
+
+        // Remove field from all types
+        Object.keys(newSeries).forEach((key) => {
+          const seriesKey = key as keyof typeof newSeries;
+          newSeries[seriesKey] =
+            newSeries[seriesKey]?.filter((f) => f !== field) || [];
+        });
+
+        // Add to selected type
+        if (!newSeries[type]) newSeries[type] = [];
+        newSeries[type] = [...(newSeries[type] || []), field];
+
+        // Clean empty arrays
+        Object.keys(newSeries).forEach((key) => {
+          const seriesKey = key as keyof typeof newSeries;
+          if (newSeries[seriesKey]?.length === 0) {
+            delete newSeries[seriesKey];
+          }
+        });
+
+        return newSeries;
+      });
+    };
+
+    const getSeriesType = (field: string): "bar" | "line" | "area" | "none" => {
+      if (series.bar?.includes(field)) return "bar";
+      if (series.line?.includes(field)) return "line";
+      if (series.area?.includes(field)) return "area";
+      return "none";
+    };
 
     return (
       <div
@@ -457,333 +239,198 @@ export const Playground: Story = {
           flexDirection: "column",
         }}
       >
+        {/* Controls */}
         <div
           style={{
-            padding: 12,
+            padding: 16,
+            borderBottom: "1px solid #e5e7eb",
             display: "flex",
-            gap: 8,
             flexDirection: "column",
-            borderBottom: "1px solid rgba(0,0,0,0.06)",
+            gap: 16,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                alignItems: "center",
-                flex: "1 1 auto",
-              }}
-            >
-              <ButtonBase variant="default" onClick={addPoint}>
-                <PlusIcon />
-              </ButtonBase>
-              <ButtonBase variant="outline" onClick={removeLast}>
-                <MinusIcon />
-              </ButtonBase>
-
-              <SelectBase
-                value={datasetPreset}
-                onValueChange={(v) =>
-                  setDatasetPreset(v as "quarter" | "many" | "single" | "zeros")
-                }
-              >
-                <SelectTriggerBase className="w-[160px]">
-                  <SelectValueBase />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase>
-                    <SelectLabelBase>Dataset</SelectLabelBase>
-                    <SelectItemBase value="quarter">Quarter (4)</SelectItemBase>
-                    <SelectItemBase value="many">Many (36)</SelectItemBase>
-                    <SelectItemBase value="single">Single</SelectItemBase>
-                    <SelectItemBase value="zeros">Zeros</SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-
-              <SelectBase
-                value={seriesPreset}
-                onValueChange={(v) =>
-                  setSeriesPreset(v as "default" | "bars" | "line" | "area")
-                }
-              >
-                <SelectTriggerBase className="w-[140px]">
-                  <SelectValueBase />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase>
-                    <SelectLabelBase>Series</SelectLabelBase>
-                    <SelectItemBase value="default">Default</SelectItemBase>
-                    <SelectItemBase value="bars">Bars</SelectItemBase>
-                    <SelectItemBase value="line">Line</SelectItemBase>
-                    <SelectItemBase value="area">Area</SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-
-              <SelectBase
-                value={xAxisField}
-                onValueChange={(v) => setXAxisField(v)}
-              >
-                <SelectTriggerBase className="w-[160px]">
-                  <SelectValueBase />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase>
-                    <SelectLabelBase>X Axis</SelectLabelBase>
-                    {/* derive options from first row keys */}
-                    {Object.keys(data[0] || {}).map((k) => (
-                      <SelectItemBase key={k} value={k}>
-                        {k}
-                      </SelectItemBase>
-                    ))}
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-
-              <SelectBase
-                value={colorPreset}
-                onValueChange={(v) =>
-                  setColorPreset(v as "default" | "warm" | "cool" | "custom")
-                }
-              >
-                <SelectTriggerBase className="w-[120px]">
-                  <SelectValueBase />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase>
-                    <SelectLabelBase>Colors</SelectLabelBase>
-                    <SelectItemBase value="default">Default</SelectItemBase>
-                    <SelectItemBase value="warm">Warm</SelectItemBase>
-                    <SelectItemBase value="cool">Cool</SelectItemBase>
-                    <SelectItemBase value="custom">Custom</SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-            </div>
-
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <CheckboxBase
-                  checked={enableDraggableTooltips}
-                  onCheckedChange={(v) =>
-                    setEnableDraggableTooltips(Boolean(v))
-                  }
-                />
-                <span>Draggable</span>
-              </label>
-              <div style={{ width: 160 }}>
-                <label
-                  style={{
-                    fontSize: 12,
-                    color: "var(--muted, #6b7280)",
-                    display: "block",
-                  }}
-                >
-                  Max tips: {maxTooltips}
-                </label>
-                <SlideBase
-                  value={[maxTooltips]}
-                  onValueChange={(v) => setMaxTooltips(Number(v[0]))}
-                  min={1}
-                  max={12}
-                />
-              </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                {/* simplified palette editor: only editable colors + add button */}
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 6,
-                    alignItems: "center",
-                    marginLeft: 6,
-                  }}
-                >
-                  {colorsState.map((c, i) => (
-                    <label
-                      key={i}
-                      title={c}
-                      style={{ display: "flex", alignItems: "center", gap: 6 }}
-                    >
-                      <input
-                        aria-label={`Color ${i + 1}`}
-                        type="color"
-                        value={c}
-                        onChange={(e) => {
-                          const next = [...colorsState];
-                          next[i] = e.target.value;
-                          setColorsState(next);
-                          setColorPreset("custom");
-                        }}
-                        style={{
-                          width: 28,
-                          height: 28,
-                          border: "none",
-                          padding: 0,
-                          background: "transparent",
-                        }}
-                      />
-                    </label>
-                  ))}
-
-                  <ButtonBase
-                    variant="outline"
-                    onClick={() => {
-                      setColorsState((s) => [...s, "#cccccc"]);
-                      setColorPreset("custom");
-                    }}
-                  >
-                    <PlusIcon />
-                  </ButtonBase>
-                </div>
-              </div>
-              <ButtonBase
-                variant="ghost"
-                onClick={() => {
-                  setDatasetPreset("quarter");
-                  setSeriesPreset("default");
-                  setColorPreset("default");
-                  setColorsState(["#6366f1", "#10b981", "#f59e0b"]);
-                  setEnableDraggableTooltips(false);
-                  setMaxTooltips(5);
-                }}
-              >
-                <ArrowClockwiseIcon />
-              </ButtonBase>
-            </div>
-          </div>
-
+          {/* Top row - Data controls */}
           <div
             style={{
               display: "flex",
               gap: 12,
               alignItems: "center",
-              marginTop: 8,
+              flexWrap: "wrap",
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <label style={{ fontSize: 12, color: "var(--muted, #6b7280)" }}>
-                Height: {height}px
-              </label>
-              <div style={{ width: 260 }}>
-                <SlideBase
-                  value={[height]}
-                  onValueChange={(v) => setHeight(Number(v[0]))}
-                  min={240}
-                  max={720}
-                />
-              </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <ButtonBase onClick={addPoint} variant="default">
+                <PlusIcon size={16} />
+                Adicionar
+              </ButtonBase>
+              <ButtonBase onClick={removePoint} variant="outline">
+                <MinusIcon size={16} />
+                Remover
+              </ButtonBase>
             </div>
 
-            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <CheckboxBase
-                checked={showGrid}
-                onCheckedChange={(v) => setShowGrid(Boolean(v))}
-              />
-              <span>Mostrar Grid</span>
-            </label>
-            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <CheckboxBase
-                checked={showLegend}
-                onCheckedChange={(v) => setShowLegend(Boolean(v))}
-              />
-              <span>Mostrar Legenda</span>
-            </label>
-            <h1 style={{ marginTop: 0 }}> | Séries</h1>
+            <ButtonBase onClick={switchToNegative} variant="outline">
+              Dados Negativos
+            </ButtonBase>
+
+            <ButtonBase onClick={resetData} variant="ghost">
+              <ArrowClockwiseIcon size={16} />
+              Reset
+            </ButtonBase>
+
+            <div style={{ marginLeft: "auto", fontSize: 14, color: "#6b7280" }}>
+              {data.length} pontos
+            </div>
+          </div>
+
+          {/* Second row - Display controls */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
             <div
               style={{
                 display: "flex",
-                flexDirection: "row",
-                gap: 8,
-                alignContent: "center",
+                flexDirection: "column",
+                minWidth: 200,
               }}
             >
-              {["receita", "despesas", "churn"].map((k) => (
+              <label
+                style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}
+              >
+                Altura: {height}px
+              </label>
+              <SlideBase
+                value={[height]}
+                onValueChange={(v) => setHeight(v[0])}
+                min={200}
+                max={600}
+              />
+            </div>
+
+            <label style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              <CheckboxBase
+                checked={showGrid}
+                onCheckedChange={(checked) => setShowGrid(Boolean(checked))}
+              />
+              Grid
+            </label>
+
+            <label style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              <CheckboxBase
+                checked={showLegend}
+                onCheckedChange={(checked) => setShowLegend(Boolean(checked))}
+              />
+              Legenda
+            </label>
+          </div>
+
+          {/* Third row - Series controls */}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {["receita", "despesas", "churn"].map((field) => (
+              <div
+                key={field}
+                style={{ display: "flex", flexDirection: "column", gap: 4 }}
+              >
                 <label
-                  key={k}
-                  style={{ display: "flex", gap: 8, alignItems: "center" }}
+                  style={{
+                    fontSize: 12,
+                    color: "#6b7280",
+                    textTransform: "capitalize",
+                  }}
                 >
-                  <CheckboxBase
-                    checked={
-                      (series.bar || []).includes(k) ||
-                      (series.line || []).includes(k) ||
-                      (series.area || []).includes(k)
-                    }
-                    onCheckedChange={() => {
-                      if ((series.bar || []).includes(k)) {
-                        setSeries((s) => ({
-                          ...s,
-                          bar: (s.bar || []).filter((x) => x !== k),
-                          line: [...(s.line || []), k],
-                        }));
-                      } else if ((series.line || []).includes(k)) {
-                        setSeries((s) => ({
-                          ...s,
-                          line: (s.line || []).filter((x) => x !== k),
-                          area: [...(s.area || []), k],
-                        }));
-                      } else if ((series.area || []).includes(k)) {
-                        setSeries((s) => ({
-                          ...s,
-                          area: (s.area || []).filter((x) => x !== k),
-                        }));
-                      } else {
-                        setSeries((s) => ({
-                          ...s,
-                          bar: [...(s.bar || []), k],
-                        }));
-                      }
-                    }}
-                  />
-                  <span style={{ textTransform: "capitalize" }}>{k}</span>
+                  {field}
                 </label>
+                <SelectBase
+                  value={getSeriesType(field)}
+                  onValueChange={(value) => {
+                    if (value !== "none") {
+                      toggleSeriesType(field, value as "bar" | "line" | "area");
+                    }
+                  }}
+                >
+                  <SelectTriggerBase className="w-[100px]">
+                    <SelectValueBase />
+                  </SelectTriggerBase>
+                  <SelectContentBase>
+                    <SelectItemBase value="none">Nenhum</SelectItemBase>
+                    <SelectItemBase value="bar">Barra</SelectItemBase>
+                    <SelectItemBase value="line">Linha</SelectItemBase>
+                    <SelectItemBase value="area">Área</SelectItemBase>
+                  </SelectContentBase>
+                </SelectBase>
+              </div>
+            ))}
+
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                marginLeft: 16,
+              }}
+            >
+              {colors.map((color, i) => (
+                <input
+                  key={i}
+                  type="color"
+                  value={color}
+                  onChange={(e) => {
+                    const newColors = [...colors];
+                    newColors[i] = e.target.value;
+                    setColors(newColors);
+                  }}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    border: "2px solid #e5e7eb",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                  }}
+                />
               ))}
             </div>
           </div>
         </div>
 
-        <div>
-          <main style={{ flex: 1 }}>
-            <div style={{ width: "100%", height }}>
-              <Chart
-                {...args}
-                data={data}
-                height={height}
-                showGrid={showGrid}
-                showLegend={showLegend}
-                series={series}
-                xAxis={xAxisField || args.xAxis || "trimestre"}
-                showTooltip={showTooltipLocal}
-                showLabels={showLabelsLocal}
-                colors={colorsState}
-                enableDraggableTooltips={enableDraggableTooltips}
-                maxTooltips={maxTooltips}
-              />
-            </div>
-          </main>
+        {/* Chart */}
+        <div style={{ flex: 1, padding: 16 }}>
+          <Chart
+            data={data}
+            height={height}
+            showGrid={showGrid}
+            showLegend={showLegend}
+            series={series}
+            xAxis="periodo"
+            colors={colors}
+            labelMap={{
+              receita: "Receita",
+              despesas: "Despesas",
+              churn: "Churn",
+            }}
+          />
         </div>
       </div>
     );
   },
   parameters: {
+    layout: "fullscreen",
     docs: {
       description: {
         story:
-          "Playground interativo para experimentar dados e séries em tempo real.",
+          "Playground interativo para experimentar com dados e configurações do chart.",
       },
     },
   },
-};
-
-// Ajuste de layout: usar fullscreen para evitar centralização global do story
-Playground.parameters = {
-  layout: "fullscreen",
 };

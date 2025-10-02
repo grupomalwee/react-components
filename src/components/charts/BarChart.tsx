@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   BarChart as RechartsBarChart,
@@ -10,20 +11,8 @@ import {
   Legend,
   LabelList,
 } from "recharts";
-import { cn } from "../../../lib/utils";
-import DraggableTooltip from "../tooltips/DraggableTooltip";
-import renderPillLabel from "../utils/pillLabelRenderer";
-import {
-  formatFieldName,
-  detectXAxis,
-  detectDataFields,
-  generateAdditionalColors,
-  niceCeil,
-  Padding,
-  Margins,
-  resolveContainerPaddingLeft,
-  resolveChartMargins,
-} from "../utils/helpers";
+import { DraggableTooltip } from "./components";
+import { Padding, Margins, resolveContainerPaddingLeft, detectXAxis, detectDataFields, formatFieldName, generateAdditionalColors, niceCeil, resolveChartMargins, renderPillLabel } from "./utils";
 
 // Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {

@@ -1,4 +1,4 @@
-import CustomLineChart from "@/components/rechart/charts/LineChart";
+import CustomLineChart from "@/components/charts/LineChart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 import {
   PieChart as RechartsPieChart,
@@ -7,7 +8,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { cn } from "../../../lib/utils";
 
 interface PieChartData {
   name: string;

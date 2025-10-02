@@ -8,6 +8,7 @@ import { ModeToggleBase } from "./components/mode-toggle";
 
 import { SidebarProviderBase } from "@/components/ui/SidebarBase";
 import { AppSidebar } from "@/components/Sidebar/AppSidebar";
+import { Toaster } from "@/components/ui/SonnerBase";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           </div>
         </div>
       </ThemeProviderBase>
+      <Toaster />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ButtonBase } from "../../ui/ButtonBase";
-import { cn } from "../../../lib/utils";
+
 import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
+import { ButtonBase } from "@/components/ui/ButtonBase";
 
 interface Props {
   showOnlyHighlighted: boolean;

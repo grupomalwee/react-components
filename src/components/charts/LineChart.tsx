@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   LineChart as RechartsLineChart,
@@ -9,18 +10,9 @@ import {
   Legend,
   LabelList,
 } from "recharts";
-import { cn } from "../../../lib/utils";
-import DraggableTooltip from "../tooltips/DraggableTooltip";
-import renderPillLabel from "../utils/pillLabelRenderer";
-import {
-  generateAdditionalColors,
-  niceCeil,
-  compactTick,
-  Padding,
-  Margins,
-  resolveContainerPaddingLeft,
-  resolveChartMargins,
-} from "../utils/helpers";
+import { DraggableTooltip } from "./components";
+import { Padding, Margins, resolveContainerPaddingLeft, generateAdditionalColors, niceCeil, resolveChartMargins, compactTick, renderPillLabel } from "./utils";
+
 
 interface LineChartData {
   name: string;

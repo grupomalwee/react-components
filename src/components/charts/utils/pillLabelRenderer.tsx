@@ -19,12 +19,21 @@ type LabelRendererProps = {
 };
 
 const formatCompactNumber = (value: number): string => {
-  if (value >= 1000000000)
-    return (value / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
-  if (value >= 1000000)
-    return (value / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
-  if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, "") + "K";
-  return value.toString();
+  const isNegative = value < 0;
+  const absValue = Math.abs(value);
+
+  let formatted: string;
+  if (absValue >= 1000000000) {
+    formatted = (absValue / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
+  } else if (absValue >= 1000000) {
+    formatted = (absValue / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (absValue >= 1000) {
+    formatted = (absValue / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  } else {
+    formatted = absValue.toString();
+  }
+
+  return isNegative ? `-${formatted}` : formatted;
 };
 
 const parseNumber = (v: number | string | undefined) => {
@@ -109,15 +118,27 @@ export const renderPillLabel = (color: string, variant: Variant) => {
       variant === "filled"
         ? color
         : variant === "soft"
-        ? `${color}`
+        ? `${color}20`
         : "#ffffff";
+
     const rectStroke = variant === "outline" ? `${color}CC` : undefined;
-    const textColor =
-      variant === "filled"
-        ? "#ffffff"
-        : variant === "outline"
-        ? color
-        : "#111827";
+
+    // Melhorar a lógica de cores para valores negativos
+    const numValue = parseNumber(value);
+    const isNegative = typeof numValue === "number" && numValue < 0;
+
+    let textColor: string;
+    if (isNegative) {
+      // Valores negativos sempre vermelhos, independente da variante
+      textColor = "#dc2626";
+    } else {
+      // Valores positivos seguem a lógica da variante
+      if (variant === "filled") {
+        textColor = "#ffffff";
+      } else {
+        textColor = "#374151";
+      }
+    }
 
     return (
       <g>

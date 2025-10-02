@@ -1,4 +1,4 @@
-import LineChart from "@/components/rechart/charts/LineChart";
+import LineChart from "@/components/charts/LineChart";
 
 export const LineChartPage = () => {
   return (

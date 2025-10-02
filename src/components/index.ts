@@ -43,5 +43,4 @@ export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
 export * from "./ui/DestructiveDialog";
-export * from "./rechart";
-
+export * from "./charts";

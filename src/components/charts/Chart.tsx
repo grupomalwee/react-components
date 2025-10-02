@@ -21,23 +21,26 @@ import {
   LabelList,
   ResponsiveContainer,
 } from "recharts";
-import { cn } from "../../../lib/utils";
-import DraggableTooltip from "../tooltips/DraggableTooltip";
-import renderPillLabel from "../utils/pillLabelRenderer";
-import RechartTooltipWithTotal from "../tooltips/TooltipWithTotal";
-import TooltipSimple from "../tooltips/TooltipSimple";
+
 import {
   formatFieldName,
   detectDataFields,
   detectXAxis,
   generateAdditionalColors,
   niceCeil,
-} from "../utils/helpers";
-
-import ChartPeriodsDropdown from "../controls/PeriodsDropdown";
-import ShowOnly from "../controls/ShowOnly";
-import Highlights from "../controls/Highlights";
-import CloseAllButton from "../controls/CloseAllButton";
+} from "./utils/helpers";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import {
+  Highlights,
+  ShowOnly,
+  TooltipSimple,
+  DraggableTooltip,
+  CloseAllButton,
+  PeriodsDropdown,
+} from "./components";
+import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
+import { renderPillLabel } from "./utils";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -66,7 +69,6 @@ interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
   className?: string;
-  // padding removed
   chartMargin?: Partial<{
     top: number;
     right: number;
@@ -214,19 +216,27 @@ const Chart: React.FC<ChartProps> = ({
 
   const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
 
-  const generateColors = (dataKeys: string[]): Record<string, string> => {
-    const colorMap: Record<string, string> = {};
-    const allColors = generateAdditionalColors(colors, dataKeys.length);
-    dataKeys.forEach((key, index) => {
-      colorMap[key] =
-        (mapperConfig[key] && mapperConfig[key].color) ||
-        allColors[index] ||
-        colors[index % colors.length];
-    });
-    return colorMap;
-  };
+  const generateColors = useCallback(
+    (dataKeys: string[]): Record<string, string> => {
+      const colorMap: Record<string, string> = {};
+      const allColors = generateAdditionalColors(colors, dataKeys.length);
 
-  const finalColors = generateColors(allKeys);
+      dataKeys.forEach((key, index) => {
+        colorMap[key] =
+          mapperConfig[key]?.color ||
+          allColors[index] ||
+          colors[index % colors.length];
+      });
+
+      return colorMap;
+    },
+    [colors, mapperConfig]
+  );
+
+  const finalColors = useMemo(
+    () => generateColors(allKeys),
+    [generateColors, allKeys]
+  );
 
   const adaptDataForTooltip = useCallback(
     (universalData: ChartData) => ({
@@ -240,38 +250,6 @@ const Chart: React.FC<ChartProps> = ({
     () => activeTooltips.map((t) => adaptDataForTooltip(t.data).name),
     [activeTooltips, adaptDataForTooltip]
   );
-
-  const openTooltipForPeriod = (periodName: string) => {
-    if (!enableDraggableTooltips) return;
-    const row = processedData.find((r) => String(r.name) === periodName);
-    if (!row) return;
-    const tooltipId = `${periodName}`;
-    const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
-    if (existingIndex !== -1) {
-      setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
-      return;
-    }
-    const offsetIndex = activeTooltips.length;
-    const availableWidth =
-      typeof width === "number" ? width : measuredInner ?? computedWidth;
-    const gap = 28;
-    const leftGap = 28;
-    const newTooltip = {
-      id: tooltipId,
-      data: row,
-      position: {
-        top: 48 + offsetIndex * gap,
-        left: Math.max(120, availableWidth - 260 - offsetIndex * leftGap),
-      },
-    };
-    setActiveTooltips((prev) => {
-      const next = [...prev, newTooltip];
-      if (next.length > maxTooltips) {
-        next.shift();
-      }
-      return next;
-    });
-  };
 
   useEffect(() => {
     window.dispatchEvent(new Event("recountTooltips"));
@@ -324,28 +302,36 @@ const Chart: React.FC<ChartProps> = ({
 
   const computedWidth = useMemo(() => {
     if (typeof width === "number") return width;
-    const points = processedData.length || 1;
+
+    const points = Math.max(1, processedData.length);
     const barCount = series?.bar?.length ?? 0;
     const lineCount = series?.line?.length ?? 0;
     const areaCount = series?.area?.length ?? 0;
-    const basePerPoint = 84;
-    const perBarExtra = Math.max(0, barCount - 1) * 10;
-    const perOtherExtra = (lineCount + areaCount) * 6;
 
+    // Base width calculation with better scaling
+    const basePerPoint = 60;
+    const perBarExtra = barCount > 0 ? Math.max(0, barCount - 1) * 8 : 0;
+    const perOtherExtra = (lineCount + areaCount) * 4;
+
+    // Size factor based on data magnitude
     let sizeFactor = 1;
-    if (niceMax > 100000) sizeFactor = 1.18;
-    if (niceMax > 1000000) sizeFactor = 1.36;
-    if (niceMax > 10000000) sizeFactor = 1.6;
+    if (niceMax > 100_000) sizeFactor = 1.1;
+    if (niceMax > 1_000_000) sizeFactor = 1.2;
+    if (niceMax > 10_000_000) sizeFactor = 1.3;
 
     const perPoint = Math.round(
       (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
     );
-    const marginExtra = 140;
 
-    const raw = Math.round(points * perPoint + marginExtra);
-    const min = 200;
-    const max = 2200;
-    return Math.max(min, Math.min(max, raw));
+    // More conservative margins
+    const marginExtra = 120;
+    const calculated = points * perPoint + marginExtra;
+
+    // Improved bounds
+    const minWidth = 300;
+    const maxWidth = 1800;
+
+    return Math.max(minWidth, Math.min(maxWidth, calculated));
   }, [
     width,
     processedData.length,
@@ -355,105 +341,115 @@ const Chart: React.FC<ChartProps> = ({
     niceMax,
   ]);
 
-  const handleBarClick = (
-    data: ChartData,
-    index: number,
-    event: React.MouseEvent
-  ) => {
-    if (!enableDraggableTooltips) return;
-    event.stopPropagation();
-    const xAxisValue = data[xAxisConfig.dataKey] || "N/A";
-    const tooltipId = `${xAxisValue}`;
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
-    if (existingIndex !== -1) {
-      setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
-    } else {
-      // construir posição com compact option e respeitar maxTooltips
-      const offsetIndex = activeTooltips.length;
-      const gap = 28;
-      const baseTop = Math.max(8, rect.top - 10);
-      const baseLeft = rect.right + 10;
-      const newTooltip = {
-        id: tooltipId,
-        data,
-        position: {
-          top: baseTop + offsetIndex * gap,
-          left: baseLeft + offsetIndex * gap,
-        },
-      };
-      setActiveTooltips((prev) => {
-        const next = [...prev, newTooltip];
-        if (next.length > maxTooltips) next.shift();
-        return next;
-      });
-    }
-  };
-
-  const handleChartClick = (e?: unknown) => {
-    if (!enableDraggableTooltips) return;
-    const ev = e as
-      | {
-          activePayload?: Array<{ payload: ChartData }>;
-          chartX?: number;
-          chartY?: number;
-        }
-      | undefined;
-    if (ev && ev.activePayload && ev.activePayload.length > 0) {
-      const clickedData = ev.activePayload[0].payload as ChartData;
-      const xAxisValue =
-        (clickedData as Record<string, unknown>)[xAxisConfig.dataKey] ||
-        clickedData.name ||
-        "N/A";
-      const tooltipId = `${xAxisValue}`;
+  const toggleTooltip = useCallback(
+    (
+      tooltipId: string,
+      data: ChartData,
+      basePosition: { top: number; left: number }
+    ) => {
       const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
+
       if (existingIndex !== -1) {
         setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
       } else {
+        if (activeTooltips.length >= maxTooltips) {
+          toast.warning(
+            `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`
+          );
+        }
+
         const offsetIndex = activeTooltips.length;
         const gap = 28;
+
         const newTooltip = {
           id: tooltipId,
-          data: clickedData,
+          data,
           position: {
-            top: (ev?.chartY || 100) - 10 + offsetIndex * gap,
-            left: (ev?.chartX || 100) - 100 + offsetIndex * gap,
+            top: basePosition.top + offsetIndex * gap,
+            left: basePosition.left + offsetIndex * gap,
           },
         };
+
         setActiveTooltips((prev) => {
           const next = [...prev, newTooltip];
-          if (next.length > maxTooltips) next.shift();
-          return next;
+          return next.length > maxTooltips ? next.slice(1) : next;
         });
       }
-      return;
-    }
+    },
+    [activeTooltips, maxTooltips]
+  );
 
-    setActiveTooltips([]);
-  };
+  const handleChartClick = useCallback(
+    (e?: unknown) => {
+      if (!enableDraggableTooltips) return;
 
-  const handleSeriesClick = (...args: unknown[]) => {
-    if (args.length >= 3) {
-      const [data, index, event] = args as [unknown, number, unknown];
-      handleBarClick(data as ChartData, index, event as React.MouseEvent);
-      return;
-    }
+      const ev = e as
+        | {
+            activePayload?: Array<{ payload: ChartData }>;
+            chartX?: number;
+            chartY?: number;
+          }
+        | undefined;
 
-    handleChartClick(args[0]);
-  };
+      if (ev?.activePayload?.length) {
+        const clickedData = ev.activePayload[0].payload;
+        const xAxisValue =
+          clickedData[xAxisConfig.dataKey] || clickedData.name || "N/A";
+        const tooltipId = String(xAxisValue);
 
-  const onTooltipPositionChange = (
-    id: string,
-    position: { top: number; left: number }
-  ) => {
-    setActiveTooltips((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, position } : t))
-    );
-  };
+        toggleTooltip(tooltipId, clickedData, {
+          top: (ev.chartY || 100) - 10,
+          left: (ev.chartX || 100) - 100,
+        });
+      } else {
+        setActiveTooltips([]);
+      }
+    },
+    [enableDraggableTooltips, xAxisConfig.dataKey, toggleTooltip]
+  );
 
-  const getTitleClassName = () => {
-    return "text-xl font-semibold text-foreground mb-3";
-  };
+  const handleBarClick = useCallback(
+    (data: ChartData, index: number, event: React.MouseEvent) => {
+      if (!enableDraggableTooltips) return;
+
+      event.stopPropagation();
+      const xAxisValue = data[xAxisConfig.dataKey] || "N/A";
+      const tooltipId = String(xAxisValue);
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+
+      toggleTooltip(tooltipId, data, {
+        top: Math.max(8, rect.top - 10),
+        left: rect.right + 10,
+      });
+    },
+    [enableDraggableTooltips, xAxisConfig.dataKey, toggleTooltip]
+  );
+
+  const handleSeriesClick = useCallback(
+    (...args: unknown[]) => {
+      if (args.length >= 3) {
+        const [data, index, event] = args as [unknown, number, unknown];
+        handleBarClick(data as ChartData, index, event as React.MouseEvent);
+        return;
+      }
+      handleChartClick(args[0]);
+    },
+    [handleBarClick, handleChartClick]
+  );
+
+  const onTooltipPositionChange = useCallback(
+    (id: string, position: { top: number; left: number }) => {
+      setActiveTooltips((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, position } : t))
+      );
+    },
+    []
+  );
+
+  const titleClassName = useMemo(
+    () => "text-xl font-semibold text-foreground mb-3",
+    []
+  );
   const finalEnableHighlights = enableHighlights;
   const finalEnableShowOnly = enableShowOnly;
   const finalEnablePeriodsDropdown =
@@ -475,6 +471,58 @@ const Chart: React.FC<ChartProps> = ({
     typeof width === "number" ? width : measuredInner ?? computedWidth;
   const chartInnerWidth =
     effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
+
+  const openTooltipForPeriod = useCallback(
+    (periodName: string) => {
+      if (!enableDraggableTooltips) return;
+
+      const row = processedData.find((r) => String(r.name) === periodName);
+      if (!row) return;
+
+      const tooltipId = String(periodName);
+      const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
+
+      if (existingIndex !== -1) {
+        setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
+        return;
+      }
+
+      if (activeTooltips.length >= maxTooltips) {
+        toast.warning(
+          `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`
+        );
+      }
+
+      const offsetIndex = activeTooltips.length;
+      const availableWidth =
+        typeof width === "number" ? width : measuredInner ?? computedWidth;
+      const gap = 28;
+      const leftGap = 28;
+
+      const newTooltip = {
+        id: tooltipId,
+        data: row,
+        position: {
+          top: 48 + offsetIndex * gap,
+          left: Math.max(120, availableWidth - 280 - offsetIndex * leftGap),
+        },
+      };
+
+      setActiveTooltips((prev) => {
+        const next = [...prev, newTooltip];
+        return next.length > maxTooltips ? next.slice(1) : next;
+      });
+    },
+    [
+      enableDraggableTooltips,
+      processedData,
+      activeTooltips,
+      width,
+      measuredInner,
+      computedWidth,
+      maxTooltips,
+    ]
+  );
 
   if (!data) return null;
 
@@ -527,7 +575,7 @@ const Chart: React.FC<ChartProps> = ({
               marginTop: 4,
             }}
           >
-            <h3 className={getTitleClassName()}>{title}</h3>
+            <h3 className={titleClassName}>{title}</h3>
           </div>
         )}
 
@@ -571,7 +619,7 @@ const Chart: React.FC<ChartProps> = ({
                     alignItems: "center",
                   }}
                 >
-                  <ChartPeriodsDropdown
+                  <PeriodsDropdown
                     processedData={processedData}
                     onOpenPeriod={openTooltipForPeriod}
                     rightOffset={finalChartRightMargin}
@@ -597,7 +645,7 @@ const Chart: React.FC<ChartProps> = ({
                 justifyContent: "flex-end",
               }}
             >
-              <ChartPeriodsDropdown
+              <PeriodsDropdown
                 processedData={processedData}
                 onOpenPeriod={openTooltipForPeriod}
                 rightOffset={finalChartRightMargin}

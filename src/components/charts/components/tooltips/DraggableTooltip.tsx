@@ -1,18 +1,110 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import CloseAllButton from "../controls/CloseAllButton";
+
+// Constantes para alinhamento
+const ALIGNMENT_THRESHOLD = 25;
+const GUIDE_THRESHOLD = 60;
+const STRONG_SNAP_THRESHOLD = 35;
+const PRECISION_SNAP_THRESHOLD = 8;
+const TOOLTIP_DIMENSIONS = { width: 224, height: 120 };
+
+// Variantes de animação otimizadas para performance
+const tooltipVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.96,
+    transition: { type: "spring" as const, stiffness: 400, damping: 28 },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring" as const, stiffness: 300, damping: 28 },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.96,
+    transition: { type: "spring" as const, stiffness: 400, damping: 28 },
+  },
+};
+
+const guideVariants = {
+  hidden: {
+    opacity: 0,
+    transition: { type: "spring" as const, stiffness: 220, damping: 24 },
+  },
+  visible: {
+    opacity: 0.95,
+    transition: { type: "spring" as const, stiffness: 220, damping: 24 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { type: "spring" as const, stiffness: 220, damping: 24 },
+  },
+};
+
+const guideDotVariants = {
+  hidden: {
+    scale: 0.6,
+    opacity: 0,
+    transition: { type: "spring" as const, stiffness: 400, damping: 24 },
+  },
+  visible: {
+    scale: 1,
+    opacity: 0.9,
+    transition: { type: "spring" as const, stiffness: 400, damping: 24 },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.6,
+    transition: { type: "spring" as const, stiffness: 400, damping: 24 },
+  },
+};
 
 interface TooltipData {
   name: string;
   [key: string]: string | number;
 }
 
+interface Position {
+  top: number;
+  left: number;
+}
+
+interface TooltipInfo {
+  id: string;
+  position: Position;
+}
+
+interface AlignmentGuide {
+  type: "horizontal" | "vertical";
+  position: number;
+  sourceTooltip: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  };
+  targetTooltip: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  };
+}
+
 interface DraggableTooltipProps {
   id: string;
   data: TooltipData;
-  position: { top: number; left: number };
+  position: Position;
   isDragging?: boolean;
   title?: string;
   dataKeys: string[];
@@ -26,23 +118,19 @@ interface DraggableTooltipProps {
   onCloseAll?: () => void;
   closeAllButtonPosition?: "top-left" | "top-right" | "top-center";
   closeAllButtonVariant?: "floating" | "inline";
-  onPositionChange?: (
-    id: string,
-    position: { top: number; left: number }
-  ) => void;
+  onPositionChange?: (id: string, position: Position) => void;
   highlightedSeries?: Set<string>;
   toggleHighlight?: (key: string) => void;
   showOnlyHighlighted?: boolean;
 }
 
-const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
+const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
   id,
   data,
   position,
   title,
   dataKeys,
   finalColors,
-
   onMouseDown,
   onClose,
   periodLabel = "Período Selecionado",
@@ -58,84 +146,65 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
   showOnlyHighlighted,
 }) => {
   // keys currently visible inside the tooltip (respecting showOnlyHighlighted)
-  const visibleKeys =
-    showOnlyHighlighted && highlightedSeries && highlightedSeries.size > 0
-      ? dataKeys.filter((k) => highlightedSeries.has(k))
-      : dataKeys;
-  // Componente interno para exibir total
-  const TotalDisplay: React.FC<{ data: TooltipData }> = ({ data }) => {
-    const numeric = visibleKeys
-      .map((k) => data[k])
-      .filter((v) => typeof v === "number") as number[];
-    // total real (pode ser negativo)
-    const total = numeric.reduce((s, v) => s + (v || 0), 0);
-    return (
-      <div className="text-sm">
-        <div className="text-sm text-muted-foreground">Total</div>
-        <div
-          className={`text-base font-semibold ${
-            total < 0 ? "text-destructive" : "text-foreground"
-          }`}
-        >
-          {total.toLocaleString("pt-BR")}
+  const visibleKeys = useMemo(
+    () =>
+      showOnlyHighlighted && highlightedSeries && highlightedSeries.size > 0
+        ? dataKeys.filter((k) => highlightedSeries.has(k))
+        : dataKeys,
+    [showOnlyHighlighted, highlightedSeries, dataKeys]
+  );
+
+  // Componente interno para exibir total - memorizado para evitar re-renders
+  const TotalDisplay = React.memo<{ data: TooltipData; visibleKeys: string[] }>(
+    ({ data, visibleKeys }) => {
+      const total = useMemo(() => {
+        const numeric = visibleKeys
+          .map((k) => data[k])
+          .filter((v) => typeof v === "number") as number[];
+        return numeric.reduce((s, v) => s + (v || 0), 0);
+      }, [data, visibleKeys]);
+
+      return (
+        <div className="text-sm">
+          <div className="text-sm text-muted-foreground">Total</div>
+          <div
+            className={`text-base font-semibold ${
+              total < 0 ? "text-destructive" : "text-foreground"
+            }`}
+          >
+            {total.toLocaleString("pt-BR")}
+          </div>
         </div>
-      </div>
-    );
-  };
+      );
+    }
+  );
 
   // internal position state so tooltip can move locally and notify parent
-  const [localPos, setLocalPos] = useState<{ top: number; left: number }>(
-    position
-  );
+  const [localPos, setLocalPos] = useState<Position>(position);
   const [dragging, setDragging] = useState(false);
   const offsetRef = useRef({ x: 0, y: 0 });
-
   const lastMouse = useRef({ x: 0, y: 0 });
-  const [alignmentGuides, setAlignmentGuides] = useState<
-    Array<{
-      type: "horizontal" | "vertical";
-      position: number;
-      sourceTooltip: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-      };
-      targetTooltip: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-      };
-    }>
-  >([]);
+  const [alignmentGuides, setAlignmentGuides] = useState<AlignmentGuide[]>([]);
   const [globalTooltipCountLocal, setGlobalTooltipCountLocal] = useState(0);
 
   // Keep localPos in sync with incoming prop when parent updates
   useEffect(() => setLocalPos(position), [position]);
 
-  const ALIGNMENT_THRESHOLD = 25;
-  const GUIDE_THRESHOLD = 60;
-  const STRONG_SNAP_THRESHOLD = 35;
-  const PRECISION_SNAP_THRESHOLD = 8;
-
-  const getAllTooltips = useCallback(() => {
-    const response: Array<{
-      id: string;
-      position: { top: number; left: number };
-    }> = [];
+  // Otimizado com useCallback para evitar re-renders desnecessários
+  const getAllTooltips = useCallback((): TooltipInfo[] => {
+    const response: TooltipInfo[] = [];
     const ev = new CustomEvent("requestGlobalTooltips", {
       detail: { requesterId: id, response },
     });
     window.dispatchEvent(ev);
     return response;
   }, [id]);
+
   const updateAlignmentGuides = useCallback(
-    (currentPosition: { top: number; left: number }) => {
+    (currentPosition: Position) => {
       const allTooltips = getAllTooltips();
       const otherTooltips = allTooltips.filter((t) => t.id !== id);
-      const guides: typeof alignmentGuides = [];
-      const tooltipDimensions = { width: 224, height: 120 };
+      const guides: AlignmentGuide[] = [];
 
       otherTooltips.forEach((tooltip) => {
         const topDiff = Math.abs(currentPosition.top - tooltip.position.top);
@@ -146,17 +215,18 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             sourceTooltip: {
               top: currentPosition.top,
               left: currentPosition.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
+              width: TOOLTIP_DIMENSIONS.width,
+              height: TOOLTIP_DIMENSIONS.height,
             },
             targetTooltip: {
               top: tooltip.position.top,
               left: tooltip.position.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
+              width: TOOLTIP_DIMENSIONS.width,
+              height: TOOLTIP_DIMENSIONS.height,
             },
           });
         }
+
         const leftDiff = Math.abs(currentPosition.left - tooltip.position.left);
         if (leftDiff <= GUIDE_THRESHOLD) {
           guides.push({
@@ -165,14 +235,14 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             sourceTooltip: {
               top: currentPosition.top,
               left: currentPosition.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
+              width: TOOLTIP_DIMENSIONS.width,
+              height: TOOLTIP_DIMENSIONS.height,
             },
             targetTooltip: {
               top: tooltip.position.top,
               left: tooltip.position.left,
-              width: tooltipDimensions.width,
-              height: tooltipDimensions.height,
+              width: TOOLTIP_DIMENSIONS.width,
+              height: TOOLTIP_DIMENSIONS.height,
             },
           });
         }
@@ -184,9 +254,11 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
   );
 
   const snapToGuides = useCallback(
-    (position: { top: number; left: number }) => {
+    (position: Position): Position => {
       const snappedPosition = { ...position };
       let hasSnapped = false;
+
+      // Primeiro tenta snap de precisão
       alignmentGuides.forEach((guide) => {
         if (guide.type === "horizontal") {
           const diff = Math.abs(position.top - guide.position);
@@ -202,6 +274,8 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
           }
         }
       });
+
+      // Se não houve snap de precisão, tenta snap forte
       if (!hasSnapped) {
         alignmentGuides.forEach((guide) => {
           if (guide.type === "horizontal") {
@@ -215,6 +289,8 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
           }
         });
       }
+
+      // Por último, tenta snap de alinhamento
       alignmentGuides.forEach((guide) => {
         if (guide.type === "horizontal") {
           const diff = Math.abs(position.top - guide.position);
@@ -232,6 +308,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             snappedPosition.left = guide.position;
         }
       });
+
       return snappedPosition;
     },
     [alignmentGuides]
@@ -283,113 +360,135 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     };
   }, [dragging, snapToGuides, updateAlignmentGuides, id, onPositionChange]);
 
-  // Respond to global events and participate in tooltip counting
+  // Respond to global events and participate in tooltip counting - Otimizado
   useEffect(() => {
-    const handleCloseAll = () => {
-      onClose(id);
-    };
+    const handleCloseAll = () => onClose(id);
+
     const handleRequestTooltipCount = () => {
       window.dispatchEvent(
         new CustomEvent("tooltipCountResponse", { detail: { count: 1 } })
       );
     };
+
     const handleRequestGlobalTooltips = (event: Event) => {
       const customEvent = event as CustomEvent<{
         requesterId: string;
-        response: Array<{
-          id: string;
-          position: { top: number; left: number };
-        }>;
+        response: TooltipInfo[];
       }>;
       const detail = customEvent.detail;
-      if (detail && detail.response && detail.requesterId) {
-        // append this tooltip if not already present
-        if (!detail.response.find((t) => t.id === id)) {
-          detail.response.push({ id, position: localPos });
-        }
+      if (detail?.response && detail.requesterId && detail.requesterId !== id) {
+        detail.response.push({ id, position: localPos });
       }
     };
 
-    window.addEventListener("closeAllTooltips", handleCloseAll);
-    window.addEventListener("requestTooltipCount", handleRequestTooltipCount);
-    window.addEventListener(
-      "requestGlobalTooltips",
-      handleRequestGlobalTooltips as EventListener
-    );
+    const events = [
+      { name: "closeAllTooltips", handler: handleCloseAll },
+      { name: "requestTooltipCount", handler: handleRequestTooltipCount },
+      {
+        name: "requestGlobalTooltips",
+        handler: handleRequestGlobalTooltips as EventListener,
+      },
+    ];
+
+    // Adiciona todos os listeners
+    events.forEach(({ name, handler }) => {
+      window.addEventListener(name, handler);
+    });
+
+    // Cleanup function para remover todos os listeners
     return () => {
-      window.removeEventListener("closeAllTooltips", handleCloseAll);
-      window.removeEventListener(
-        "requestTooltipCount",
-        handleRequestTooltipCount
-      );
-      window.removeEventListener(
-        "requestGlobalTooltips",
-        handleRequestGlobalTooltips as EventListener
-      );
+      events.forEach(({ name, handler }) => {
+        window.removeEventListener(name, handler);
+      });
     };
   }, [id, localPos, onClose]);
 
+  // Sistema de contagem otimizado
   useEffect(() => {
     if (dragging) return;
+
     let total = 0;
-    const handleCountResponse = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      total += customEvent.detail.count || 0;
-    };
-    window.addEventListener("tooltipCountResponse", handleCountResponse);
-    window.dispatchEvent(new CustomEvent("requestTooltipCount"));
     const timeoutId = setTimeout(() => {
-      window.removeEventListener("tooltipCountResponse", handleCountResponse);
-      setGlobalTooltipCountLocal(total);
-    }, 50);
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("tooltipCountResponse", handleCountResponse);
-    };
+      const handleCountResponse = (event: Event) => {
+        const customEvent = event as CustomEvent;
+        total += customEvent.detail.count || 0;
+      };
+
+      window.addEventListener("tooltipCountResponse", handleCountResponse);
+      window.dispatchEvent(new CustomEvent("requestTooltipCount"));
+
+      const cleanupTimeout = setTimeout(() => {
+        window.removeEventListener("tooltipCountResponse", handleCountResponse);
+        setGlobalTooltipCountLocal(total);
+      }, 50);
+
+      return () => clearTimeout(cleanupTimeout);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [localPos, dragging]);
 
+  // Recontagem otimizada
   useEffect(() => {
     const recount = () => {
       if (dragging) return;
+
       let total = 0;
       const handleCountResponse = (event: Event) => {
         const customEvent = event as CustomEvent;
         total += customEvent.detail.count || 0;
       };
+
       window.addEventListener("tooltipCountResponse", handleCountResponse);
       window.dispatchEvent(new CustomEvent("requestTooltipCount"));
+
       setTimeout(() => {
         window.removeEventListener("tooltipCountResponse", handleCountResponse);
         setGlobalTooltipCountLocal(total);
       }, 50);
     };
+
     window.addEventListener("recountTooltips", recount as EventListener);
     return () =>
       window.removeEventListener("recountTooltips", recount as EventListener);
   }, [dragging]);
 
-  const handleMouseDownLocal = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    offsetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    setDragging(true);
-    if (typeof onMouseDown === "function") onMouseDown(id, e);
-  };
+  // Handlers otimizados com useCallback
+  const handleMouseDownLocal = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      offsetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      setDragging(true);
+      onMouseDown?.(id, e);
+    },
+    [id, onMouseDown]
+  );
 
-  const handleTouchStartLocal = (e: React.TouchEvent) => {
-    e.stopPropagation();
-    const touch = e.touches[0];
-    if (!touch) return;
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    offsetRef.current = {
-      x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top,
-    };
-    setDragging(true);
-    if (typeof onMouseDown === "function")
-      onMouseDown(id, e as unknown as React.MouseEvent);
-  };
+  const handleTouchStartLocal = useCallback(
+    (e: React.TouchEvent) => {
+      e.stopPropagation();
+      const touch = e.touches[0];
+      if (!touch) return;
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      offsetRef.current = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+      };
+      setDragging(true);
+      onMouseDown?.(id, e as unknown as React.MouseEvent);
+    },
+    [id, onMouseDown]
+  );
+
+  const handleCloseClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onClose(id);
+    },
+    [id, onClose]
+  );
 
   return (
     <>
@@ -426,17 +525,15 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             <div key={index}>
               <motion.div
                 className="fixed pointer-events-none z-30"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 0.95,
+                variants={guideVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
                   left: startX,
                   top: startY,
                   width: isHorizontal ? endX - startX : 2,
                   height: isHorizontal ? 2 : endY - startY,
-                }}
-                exit={{ opacity: 0 }}
-                transition={{ type: "spring", stiffness: 220, damping: 24 }}
-                style={{
                   backgroundColor: color,
                   boxShadow: `0 0 8px ${color}60`,
                   borderStyle: "dashed",
@@ -447,10 +544,11 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
               />
               <motion.div
                 className="fixed pointer-events-none z-31"
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{
-                  scale: 1,
-                  opacity: 0.9,
+                variants={guideDotVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
                   left:
                     guide.sourceTooltip.left +
                     guide.sourceTooltip.width / 2 -
@@ -459,10 +557,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                     guide.sourceTooltip.top +
                     guide.sourceTooltip.height / 2 -
                     4,
-                }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                style={{
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
@@ -472,10 +566,11 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
               />
               <motion.div
                 className="fixed pointer-events-none z-31"
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{
-                  scale: 1,
-                  opacity: 0.9,
+                variants={guideDotVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{
                   left:
                     guide.targetTooltip.left +
                     guide.targetTooltip.width / 2 -
@@ -484,10 +579,6 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                     guide.targetTooltip.top +
                     guide.targetTooltip.height / 2 -
                     4,
-                }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                style={{
                   width: "8px",
                   height: "8px",
                   backgroundColor: color,
@@ -503,10 +594,10 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
         <motion.div
           key={id}
           className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-80 select-none"
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          variants={tooltipVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={{
             top: localPos.top,
             left: localPos.left,
@@ -523,8 +614,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             onTouchStart={handleTouchStartLocal}
             style={{ touchAction: "none" }}
           >
-            
-            <DotsSixVerticalIcon size={16}/>
+            <DotsSixVerticalIcon size={16} />
             <div className="flex flex-col gap-1">
               {title && (
                 <div className="flex items-center gap-2 pb-0.5">
@@ -534,10 +624,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
               )}
             </div>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose(id);
-              }}
+              onClick={handleCloseClick}
               className="text-muted-foreground hover:text-destructive ml-2 text-sm hover:bg-destructive/10 rounded p-1"
               title="Fechar este tooltip"
             >
@@ -556,7 +643,7 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
                 </p>
               </div>
               <div className="text-right">
-                <TotalDisplay data={data} />
+                <TotalDisplay data={data} visibleKeys={visibleKeys} />
               </div>
             </div>
           </div>
@@ -565,94 +652,108 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
               {dataLabel}
             </p>
-            {(showOnlyHighlighted &&
-            highlightedSeries &&
-            highlightedSeries.size > 0
-              ? dataKeys.filter((k) => highlightedSeries.has(k))
-              : dataKeys
-            ).map((key) => {
-              const value = data[key];
-              if (value === undefined) return null;
-              const numericKeys = dataKeys.filter(
-                (k) => typeof data[k] === "number"
-              );
-              const absDenominator = numericKeys.reduce(
-                (s, k) => s + Math.abs(Number(data[k]) || 0),
-                0
-              );
-              const val =
-                typeof value === "number"
-                  ? value
-                  : Number(value as unknown) || 0;
-              const pct =
-                absDenominator > 0 ? (Math.abs(val) / absDenominator) * 100 : 0;
-              const isDimmed =
-                highlightedSeries &&
-                highlightedSeries.size > 0 &&
-                !highlightedSeries.has(key);
-              const isHighlighted =
-                highlightedSeries && highlightedSeries.has(key);
+            {/* Dados renderizados com memoização para performance */}
+            {useMemo(
+              () =>
+                visibleKeys.map((key) => {
+                  const value = data[key];
+                  if (value === undefined) return null;
 
-              return (
-                <div
-                  key={key}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleHighlight?.(key);
-                    }
-                  }}
-                  onClick={() => toggleHighlight?.(key)}
-                  className={`flex flex-col gap-1 text-sm mb-1 p-2 rounded transition-colors cursor-pointer bg-muted/20`}
-                  style={{
-                    boxShadow: isHighlighted
-                      ? `0 6px 18px ${finalColors[key] || "#666"}33`
-                      : undefined,
-                    border: isHighlighted
-                      ? `1px solid ${finalColors[key] || "#666"}22`
-                      : undefined,
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-sm shadow-sm"
-                        style={{ backgroundColor: finalColors[key] || "#666" }}
-                      />
-                      <span className={`font-medium text-foreground truncate`}>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </span>
-                    </div>
-                    <div className="flex items-baseline gap-2">
-                      <span
-                        className={`font-semibold tabular-nums ${
-                          val < 0 ? "text-destructive" : "text-foreground"
-                        }`}
-                      >
-                        {val.toLocaleString("pt-BR")}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
-                      </span>
-                    </div>
-                  </div>
+                  const numericKeys = dataKeys.filter(
+                    (k) => typeof data[k] === "number"
+                  );
+                  const absDenominator = numericKeys.reduce(
+                    (s, k) => s + Math.abs(Number(data[k]) || 0),
+                    0
+                  );
+                  const val =
+                    typeof value === "number"
+                      ? value
+                      : Number(value as unknown) || 0;
+                  const pct =
+                    absDenominator > 0
+                      ? (Math.abs(val) / absDenominator) * 100
+                      : 0;
+                  const isDimmed =
+                    highlightedSeries &&
+                    highlightedSeries.size > 0 &&
+                    !highlightedSeries.has(key);
+                  const isHighlighted =
+                    highlightedSeries && highlightedSeries.has(key);
 
-                  <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+                  return (
                     <div
-                      className="h-1 rounded-full"
-                      style={{
-                        width: `${Math.max(0, Math.min(100, pct))}%`,
-                        opacity: isDimmed ? 0.35 : 1,
-                        background: finalColors[key] || "#666",
-                        transition: "none",
+                      key={key}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          toggleHighlight?.(key);
+                        }
                       }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                      onClick={() => toggleHighlight?.(key)}
+                      className={`flex flex-col gap-1 text-sm mb-1 p-2 rounded transition-colors cursor-pointer bg-muted/20`}
+                      style={{
+                        boxShadow: isHighlighted
+                          ? `0 6px 18px ${finalColors[key] || "#666"}33`
+                          : undefined,
+                        border: isHighlighted
+                          ? `1px solid ${finalColors[key] || "#666"}22`
+                          : undefined,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-3 h-3 rounded-sm shadow-sm"
+                            style={{
+                              backgroundColor: finalColors[key] || "#666",
+                            }}
+                          />
+                          <span
+                            className={`font-medium text-foreground truncate`}
+                          >
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </span>
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span
+                            className={`font-semibold tabular-nums ${
+                              val < 0 ? "text-destructive" : "text-foreground"
+                            }`}
+                          >
+                            {val.toLocaleString("pt-BR")}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+                        <div
+                          className="h-1 rounded-full"
+                          style={{
+                            width: `${Math.max(0, Math.min(100, pct))}%`,
+                            opacity: isDimmed ? 0.35 : 1,
+                            background: finalColors[key] || "#666",
+                            transition: "none",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                }),
+              [
+                visibleKeys,
+                data,
+                dataKeys,
+                highlightedSeries,
+                toggleHighlight,
+                finalColors,
+              ]
+            )}
 
             <div className="mt-3 pt-2 border-t">
               <p className="text-xs text-muted-foreground flex items-center gap-1">
@@ -677,5 +778,9 @@ const DraggableTooltip: React.FC<DraggableTooltipProps> = ({
     </>
   );
 };
+
+const DraggableTooltip = React.memo(DraggableTooltipComponent);
+
+DraggableTooltip.displayName = "DraggableTooltip";
 
 export default DraggableTooltip;
