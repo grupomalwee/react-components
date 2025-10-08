@@ -44,6 +44,7 @@ function ComparisonRowGrid({
         onChange={(e) => setInputValue(e.target.value)}
       />
       <ButtonBase>Comparar</ButtonBase>
+      
     </section>
   );
 }
@@ -80,6 +81,11 @@ function ComparisonRowFlex({
         onChange={(e) => setInputValue(e.target.value)}
       />
       <ButtonBase>Comparar</ButtonBase>
+      <ButtonBase variant="outline">Comparar</ButtonBase>
+      <ButtonBase variant="ghost">Comparar</ButtonBase>
+      <ButtonBase variant="destructive">Comparar</ButtonBase>
+      <ButtonBase variant="link">Comparar</ButtonBase>
+      <ButtonBase variant="secondary">Comparar</ButtonBase>
     </section>
   );
 }
