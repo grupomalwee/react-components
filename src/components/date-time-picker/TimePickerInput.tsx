@@ -1,4 +1,4 @@
-import { InputBase } from "@/components/ui/InputBase";
+import { CaretUpIcon, CaretDownIcon } from "@phosphor-icons/react";
 
 import { cn } from "../..//lib/utils";
 import React from "react";
@@ -10,14 +10,22 @@ import {
   setDateByType,
 } from "./time-picker-utils";
 
+
 export interface TimePickerInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   picker: TimePickerType;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   period?: Period;
   onRightFocus?: () => void;
   onLeftFocus?: () => void;
+  showArrows?: boolean;
+  label?: string;
+  error?: boolean;
+  inputSize?: "sm" | "md" | "lg";
+  enableButton?: boolean;
+  buttonText?: string;
+  buttonIcon?: React.ReactNode;
 }
 
 const TimePickerInput = React.forwardRef<
@@ -39,12 +47,15 @@ const TimePickerInput = React.forwardRef<
       period,
       onLeftFocus,
       onRightFocus,
+      showArrows = true,
+      label,
       ...props
     },
     ref
   ) => {
     const [flag, setFlag] = React.useState<boolean>(false);
     const [prevIntKey, setPrevIntKey] = React.useState<string>("0");
+    const [isFocused, setIsFocused] = React.useState<boolean>(false);
 
     /**
      * allow the user to enter the second digit within 2 seconds
@@ -77,6 +88,14 @@ const TimePickerInput = React.forwardRef<
       return !flag ? "0" + key : calculatedValue.slice(1, 2) + key;
     };
 
+    const handleArrowClick = (direction: "up" | "down") => {
+      const step = direction === "up" ? 1 : -1;
+      const newValue = getArrowByType(calculatedValue, step, picker);
+      if (flag) setFlag(false);
+      const tempDate = new Date(date);
+      setDate(setDateByType(tempDate, newValue, picker, period));
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Tab") return;
       e.preventDefault();
@@ -100,28 +119,132 @@ const TimePickerInput = React.forwardRef<
       }
     };
 
+    const getPickerLabel = () => {
+      if (label) return label;
+      switch (picker) {
+        case "hours":
+        case "12hours":
+          return "Horas";
+        case "minutes":
+          return "Minutos";
+        case "seconds":
+          return "Segundos";
+        default:
+          return "";
+      }
+    };
+
+    const getAriaLabel = () => {
+      const baseLabel = getPickerLabel();
+      return `${baseLabel}, valor atual: ${calculatedValue}.`;
+    };
     return (
-      <InputBase
-        ref={ref}
-        id={id || picker}
-        name={name || picker}
-        className={cn(
-          "focus:bg-accent focus:text-accent-foreground w-[48px] text-center font-mono text-base tabular-nums caret-transparent [&::-webkit-inner-spin-button]:appearance-none",
-          className
+      <div className="relative group flex flex-col items-center">
+        {getPickerLabel() && (
+          <label
+            htmlFor={id || picker}
+            className="text-xs sm:text-sm font-medium text-muted-foreground mb-1 sm:mb-2 select-none"
+          >
+            {getPickerLabel()}
+          </label>
         )}
-        value={value || calculatedValue}
-        onChange={(e) => {
-          e.preventDefault();
-          onChange?.(e);
-        }}
-        type={type}
-        inputMode="decimal"
-        onKeyDown={(e) => {
-          onKeyDown?.(e);
-          handleKeyDown(e);
-        }}
-        {...props}
-      />
+
+        <div
+          className={cn(
+            "relative flex flex-col items-center",
+            "transition-all duration-200"
+          )}
+        >
+          {showArrows && (
+            <button
+              type="button"
+              onClick={() => handleArrowClick("up")}
+              className={cn(
+                "flex items-center justify-center w-10 sm:w-12 h-5 sm:h-6 mb-1",
+                "rounded-t",
+                "bg-background hover:bg-accent active:bg-accent/80 transition-colors",
+                "text-muted-foreground hover:text-foreground",
+                "focus:outline-none focus:ring-1 focus:ring-ring",
+                "touch-manipulation",
+                isFocused && "border-ring"
+              )}
+              tabIndex={-1}
+              aria-label={`Incrementar ${getPickerLabel().toLowerCase()}`}
+            >
+              <CaretUpIcon size={14} className="sm:w-4 sm:h-4" />
+            </button>
+          )}
+
+          <div className="relative">
+            <input
+              ref={ref}
+              id={id || picker}
+              name={name || picker}
+              className={cn(
+                "w-16 sm:w-20 h-10 sm:h-12 text-center font-mono text-lg sm:text-xl font-semibold",
+                "border-2 rounded-lg",
+                "bg-background text-foreground",
+                "transition-all duration-200",
+                "focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring",
+                "selection:bg-primary selection:text-primary-foreground",
+                "touch-manipulation",
+                showArrows && "rounded-lg",
+                isFocused && "ring-2 ring-ring border-ring shadow-md",
+                className
+              )}
+              value={value || calculatedValue}
+              onChange={(e) => {
+                e.preventDefault();
+                onChange?.(e);
+              }}
+              onFocus={(e) => {
+                setIsFocused(true);
+                props.onFocus?.(e);
+                e.target.select();
+              }}
+              onBlur={(e) => {
+                setIsFocused(false);
+                props.onBlur?.(e);
+              }}
+              type={type}
+              inputMode="decimal"
+              onKeyDown={(e) => {
+                onKeyDown?.(e);
+                handleKeyDown(e);
+              }}
+              aria-label={getAriaLabel()}
+              aria-describedby={`${id || picker}-help`}
+              autoComplete="off"
+              spellCheck={false}
+              {...props}
+            />
+
+            {isFocused && (
+              <div className="absolute inset-0 rounded-lg ring-2 ring-primary/20 pointer-events-none animate-pulse" />
+            )}
+          </div>
+
+          {showArrows && (
+            <button
+              type="button"
+              onClick={() => handleArrowClick("down")}
+              className={cn(
+                "flex items-center justify-center w-10 sm:w-12 h-5 sm:h-6 mt-1",
+                "rounded-b",
+                "bg-background hover:bg-accent active:bg-accent/80 transition-colors",
+                "text-muted-foreground hover:text-foreground",
+                "focus:outline-none focus:ring-1 focus:ring-ring",
+                "touch-manipulation",
+                isFocused && "border-ring"
+              )}
+              tabIndex={-1}
+              aria-label={`Decrementar ${getPickerLabel().toLowerCase()}`}
+            >
+              <CaretDownIcon size={14} className="sm:w-4 sm:h-4" />
+            </button>
+          )}
+        </div>
+      </div>
     );
   }
 );

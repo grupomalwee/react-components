@@ -93,6 +93,7 @@ import { BarChartPage } from "@/pages/BarChart";
 import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
 import ChartPage from "@/pages/Chart";
+import DatePickerPage from "@/pages/DatePicker";
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },
@@ -117,6 +118,7 @@ const items = [
   { title: "Dialog", url: "/dialog", icon: ChatCenteredIcon },
   { title: "Drawer", url: "/drawer", icon: SidebarIcon },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: DotsNineIcon },
+  { title: "Date Picker", url: "/date-picker", icon: DotsNineIcon },
   { title: "Filter", url: "/filter", icon: FunnelSimpleIcon },
   { title: "HoverCard", url: "/hovercard", icon: TagChevronIcon },
   { title: "Input", url: "/input", icon: NotePencilIcon },
@@ -192,6 +194,7 @@ export function AppSidebar() {
           <Route path="/dialog" element={<DialogPage />} />
           <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
+          <Route path="/date-picker" element={<DatePickerPage />} />
           <Route path="/filter" element={<Filter />} />
           {/* <Route path="/form" element={<ProfileForm />} /> */}
           <Route path="/hovercard" element={<HoverCardPage />} />
