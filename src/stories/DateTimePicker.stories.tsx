@@ -30,8 +30,6 @@ const meta: Meta<typeof DateTimePicker> = {
     hideHour: { control: "boolean" },
     hideMinute: { control: "boolean" },
     disabled: { control: "boolean" },
-    dialogTitle: { control: "text" },
-    enableTimePickerButton: { control: "boolean" },
     className: { control: "text" },
     fromDate: { control: "date" },
     toDate: { control: "date" },
@@ -42,8 +40,6 @@ const meta: Meta<typeof DateTimePicker> = {
     hideHour: false,
     hideMinute: false,
     disabled: false,
-    dialogTitle: "Selecione a data",
-    enableTimePickerButton: false,
     className: "",
   },
 };
@@ -67,8 +63,6 @@ export const WithTimePickerButton: Story = {
   render: Template,
   args: {
     label: "Data com Time Picker Button",
-    enableTimePickerButton: true,
-    dialogTitle: "Selecione data e hora",
   },
 };
 
@@ -77,7 +71,6 @@ export const HideSeconds: Story = {
   args: {
     label: "Sem segundos",
     hideSeconds: true,
-    dialogTitle: "Data sem segundos",
   },
 };
 
@@ -87,7 +80,6 @@ export const DateOnly: Story = {
     label: "Apenas data",
     hideHour: true,
     hideMinute: true,
-    dialogTitle: "Selecionar apenas data",
   },
 };
 
@@ -96,7 +88,6 @@ export const HideMinutes: Story = {
   args: {
     label: "Sem minutos",
     hideMinute: true,
-    dialogTitle: "Data e hora sem minutos",
   },
 };
 
@@ -105,7 +96,6 @@ export const HideHour: Story = {
   args: {
     label: "Apenas minutos",
     hideHour: true,
-    dialogTitle: "Data com apenas minutos",
   },
 };
 
@@ -114,7 +104,6 @@ export const Disabled: Story = {
   args: {
     label: "Campo desabilitado",
     disabled: true,
-    dialogTitle: "Campo desabilitado",
   },
 };
 
@@ -124,111 +113,11 @@ export const WithDateLimits: Story = {
     label: "Próximos 30 dias",
     fromDate: new Date(),
     toDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    dialogTitle: "Próximos 30 dias apenas",
   },
 };
 
-export const CustomStyle: Story = {
-  render: Template,
-  args: {
-    label: "Estilo personalizado",
-    className: "border-2 border-blue-500 rounded-lg p-2",
-    dialogTitle: "Com estilo personalizado",
-  },
-};
 
 export const NoLabel: Story = {
   render: Template,
-  args: {
-    dialogTitle: "Sem label",
-  },
-};
-
-export const AllVariations: Story = {
-  render: () => (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "24px",
-        padding: "32px",
-        maxWidth: "1200px",
-      }}
-    >
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Básico
-        </h3>
-        <Template label="Data e hora" dialogTitle="Selecione data e hora" />
-      </div>
-
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Com Time Picker Button
-        </h3>
-        <Template
-          label="Com popover"
-          enableTimePickerButton={true}
-          dialogTitle="Com time picker em popover"
-        />
-      </div>
-
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Apenas Data
-        </h3>
-        <Template
-          label="Apenas data"
-          hideHour={true}
-          hideMinute={true}
-          dialogTitle="Selecionar apenas data"
-        />
-      </div>
-
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Sem Segundos
-        </h3>
-        <Template
-          label="Sem segundos"
-          hideSeconds={true}
-          dialogTitle="Data sem segundos"
-        />
-      </div>
-
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Sem Minutos
-        </h3>
-        <Template
-          label="Sem minutos"
-          hideMinute={true}
-          dialogTitle="Sem minutos"
-        />
-      </div>
-
-      <div>
-        <h3
-          style={{ marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}
-        >
-          Desabilitado
-        </h3>
-        <Template
-          label="Desabilitado"
-          disabled={true}
-          dialogTitle="Campo desabilitado"
-        />
-      </div>
-    </div>
-  ),
+  args: {},
 };
