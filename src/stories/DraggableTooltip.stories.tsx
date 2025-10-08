@@ -1,25 +1,26 @@
-import DraggableTooltip from "@/components/rechart/DraggableTooltip";
+import DraggableTooltip from "@/components/charts/components/tooltips/DraggableTooltip";
 import "../style/global.css";
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useEffect } from "react";
 import { useDrag } from "@/hooks/use-drag";
 
 const meta: Meta<typeof DraggableTooltip> = {
   title: "charts/DraggableTooltip",
   component: DraggableTooltip,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: "Componente de tooltip arrastável para gráficos com funcionalidades avançadas como botão 'Fechar Todos' e labels customizáveis.",
+        component:
+          "Componente de tooltip arrastável para gráficos com funcionalidades avançadas como botão 'Fechar Todos' e labels customizáveis.",
       },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
     layout: "fullscreen",
   },
@@ -29,7 +30,7 @@ const meta: Meta<typeof DraggableTooltip> = {
       description: "Label para o período/ponto selecionado",
     },
     dataLabel: {
-      control: "text", 
+      control: "text",
       description: "Label para a seção de dados",
     },
     showCloseAllButton: {
@@ -42,7 +43,7 @@ const meta: Meta<typeof DraggableTooltip> = {
       description: "Posição do botão 'Fechar Todos'",
     },
     closeAllButtonVariant: {
-      control: "select", 
+      control: "select",
       options: ["floating", "inline"],
       description: "Variante do botão 'Fechar Todos'",
     },
@@ -71,30 +72,28 @@ const sampleData = {
 const sampleColors = {
   receita: "#55af7d",
   despesas: "#8e68ff",
-  lucro: "#2273e1", 
+  lucro: "#2273e1",
   vendas: "#ff6b6b",
   marketing: "#4ecdc4",
 };
 
-const dataKeys = Object.keys(sampleData).filter(key => key !== 'name');
+const dataKeys = Object.keys(sampleData).filter((key) => key !== "name");
 
 // Story básica
 export const Default: Story = {
   render: (args) => {
-    const {
-      handleMouseDown,
-      getPosition,
-      setPosition,
-      isElementDragging,
-    } = useDrag();
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
 
     // Definir posição inicial
     useEffect(() => {
       setPosition("tooltip-1", { top: 100, left: 100 });
     }, [setPosition]);
-    
+
     return (
-      <div style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}>
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
         <DraggableTooltip
           {...args}
           id="tooltip-1"
@@ -120,20 +119,18 @@ export const Default: Story = {
 // Story para BarChart
 export const BarChartStyle: Story = {
   render: (args) => {
-    const {
-      handleMouseDown,
-      getPosition,
-      setPosition,
-      isElementDragging,
-    } = useDrag();
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
 
     // Definir posição inicial
     useEffect(() => {
       setPosition("tooltip-bar", { top: 120, left: 150 });
     }, [setPosition]);
-    
+
     return (
-      <div style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}>
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
         <DraggableTooltip
           {...args}
           id="tooltip-bar"
@@ -159,20 +156,18 @@ export const BarChartStyle: Story = {
 // Story para LineChart
 export const LineChartStyle: Story = {
   render: (args) => {
-    const {
-      handleMouseDown,
-      getPosition,
-      setPosition,
-      isElementDragging,
-    } = useDrag();
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
 
     // Definir posição inicial
     useEffect(() => {
       setPosition("tooltip-line", { top: 80, left: 200 });
     }, [setPosition]);
-    
+
     return (
-      <div style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}>
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
         <DraggableTooltip
           {...args}
           id="tooltip-line"
@@ -204,12 +199,8 @@ export const WithCloseAllButton: Story = {
       { id: "tooltip-3" },
     ]);
 
-    const {
-      handleMouseDown,
-      getPosition,
-      setPosition,
-      isElementDragging,
-    } = useDrag();
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
 
     // Definir posições iniciais
     useEffect(() => {
@@ -217,17 +208,19 @@ export const WithCloseAllButton: Story = {
       setPosition("tooltip-2", { top: 250, left: 300 });
       setPosition("tooltip-3", { top: 150, left: 500 });
     }, [setPosition]);
-    
+
     const handleClose = (id: string) => {
-      setTooltips(prev => prev.filter(tooltip => tooltip.id !== id));
+      setTooltips((prev) => prev.filter((tooltip) => tooltip.id !== id));
     };
-    
+
     const handleCloseAll = () => {
       setTooltips([]);
     };
-    
+
     return (
-      <div style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}>
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
         {tooltips.map((tooltip, index) => (
           <DraggableTooltip
             key={tooltip.id}
@@ -245,18 +238,20 @@ export const WithCloseAllButton: Story = {
             onCloseAll={handleCloseAll}
           />
         ))}
-        
+
         {tooltips.length === 0 && (
-          <div style={{ 
-            position: "absolute", 
-            top: "50%", 
-            left: "50%", 
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            color: "#666"
-          }}>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              color: "#666",
+            }}
+          >
             <p>Todos os tooltips foram fechados!</p>
-            <button 
+            <button
               onClick={() => {
                 setTooltips([
                   { id: "tooltip-1" },
@@ -277,7 +272,7 @@ export const WithCloseAllButton: Story = {
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Recriar Tooltips
@@ -289,7 +284,7 @@ export const WithCloseAllButton: Story = {
   },
   args: {
     title: "Multi Tooltips Demo",
-    periodLabel: "Período Selecionado", 
+    periodLabel: "Período Selecionado",
     dataLabel: "Dados do Período",
     closeAllButtonPosition: "top-center",
     closeAllButtonVariant: "floating",
@@ -304,29 +299,27 @@ export const WithInlineCloseButton: Story = {
       { id: "tooltip-2" },
     ]);
 
-    const {
-      handleMouseDown,
-      getPosition,
-      setPosition,
-      isElementDragging,
-    } = useDrag();
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
 
     // Definir posições iniciais
     useEffect(() => {
       setPosition("tooltip-1", { top: 100, left: 100 });
       setPosition("tooltip-2", { top: 250, left: 300 });
     }, [setPosition]);
-    
+
     const handleClose = (id: string) => {
-      setTooltips(prev => prev.filter(tooltip => tooltip.id !== id));
+      setTooltips((prev) => prev.filter((tooltip) => tooltip.id !== id));
     };
-    
+
     const handleCloseAll = () => {
       setTooltips([]);
     };
-    
+
     return (
-      <div style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}>
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
         {tooltips.map((tooltip, index) => (
           <DraggableTooltip
             key={tooltip.id}
@@ -350,8 +343,151 @@ export const WithInlineCloseButton: Story = {
   args: {
     title: "Inline Button Demo",
     periodLabel: "Item Selecionado",
-    dataLabel: "Dados do Item", 
+    dataLabel: "Dados do Item",
     closeAllButtonPosition: "top-right",
     closeAllButtonVariant: "inline",
+  },
+};
+
+// Story: Single tooltip explicit (should not show guides)
+export const SingleTooltipNoGuides: Story = {
+  render: (args) => {
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
+
+    useEffect(() => {
+      setPosition("single-tooltip", { top: 180, left: 240 });
+    }, [setPosition]);
+
+    return (
+      <div
+        style={{ height: "100vh", position: "relative", background: "#f5f5f5" }}
+      >
+        <DraggableTooltip
+          {...args}
+          id="single-tooltip"
+          data={{ ...sampleData, name: "Single" }}
+          position={getPosition("single-tooltip")}
+          isDragging={isElementDragging("single-tooltip")}
+          dataKeys={dataKeys}
+          finalColors={sampleColors}
+          onMouseDown={handleMouseDown}
+          onClose={() => console.log("Single tooltip closed")}
+        />
+      </div>
+    );
+  },
+  args: {
+    title: "Single Tooltip (no guides)",
+  },
+};
+
+// Story: Anchor center demo (posiciona o tooltip centralizado no ponto)
+export const AnchorCenterDemo: Story = {
+  render: (args) => {
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
+
+    useEffect(() => {
+      // posição representa o ponto central
+      setPosition("center-tooltip", { top: 260, left: 420 });
+    }, [setPosition]);
+
+    return (
+      <div
+        style={{ height: "100vh", position: "relative", background: "#fff8e8" }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            left: 420 - 4,
+            top: 260 - 4,
+            width: 8,
+            height: 8,
+            background: "#222",
+            borderRadius: 4,
+          }}
+        />
+        <DraggableTooltip
+          {...args}
+          id="center-tooltip"
+          data={{ ...sampleData, name: "Ponto Central" }}
+          position={getPosition("center-tooltip")}
+          isDragging={isElementDragging("center-tooltip")}
+          dataKeys={dataKeys}
+          finalColors={sampleColors}
+          onMouseDown={handleMouseDown}
+          onClose={() => console.log("Center tooltip closed")}
+        />
+      </div>
+    );
+  },
+};
+
+// Story: Interactive Playground — criar/remover tooltips e alternar anchor
+export const Playground: Story = {
+  render: (args) => {
+    const [tooltips, setTooltips] = useState<
+      Array<{ id: string; top: number; left: number }>
+    >([]);
+
+    const { handleMouseDown, getPosition, setPosition, isElementDragging } =
+      useDrag();
+
+    useEffect(() => {
+      // criar 2 tooltips iniciais
+      setTooltips([
+        { id: "play-1", top: 120, left: 140 },
+        { id: "play-2", top: 240, left: 380 },
+      ]);
+      setTimeout(() => {
+        setPosition("play-1", { top: 120, left: 140 });
+        setPosition("play-2", { top: 240, left: 380 });
+      }, 0);
+    }, [setPosition]);
+
+    const addTooltip = () => {
+      const id = `play-${Date.now()}`;
+      const top = 80 + Math.floor(Math.random() * 300);
+      const left = 80 + Math.floor(Math.random() * 600);
+      setTooltips((p) => [...p, { id, top, left }]);
+      setTimeout(() => setPosition(id, { top, left }), 0);
+    };
+
+    return (
+      <div style={{ height: "100vh", position: "relative", padding: 16 }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+          <button onClick={addTooltip} style={{ padding: "8px 12px" }}>
+            Adicionar Tooltip
+          </button>
+          <button
+            onClick={() => setTooltips([])}
+            style={{ padding: "8px 12px" }}
+          >
+            Remover Todos
+          </button>
+        </div>
+
+        {tooltips.map((t, i) => (
+          <DraggableTooltip
+            key={t.id}
+            {...args}
+            id={t.id}
+            data={{ ...sampleData, name: `Play ${i + 1}` }}
+            position={getPosition(t.id)}
+            isDragging={isElementDragging(t.id)}
+            dataKeys={dataKeys}
+            finalColors={sampleColors}
+            onMouseDown={handleMouseDown}
+            onClose={(id) => setTooltips((p) => p.filter((x) => x.id !== id))}
+            showCloseAllButton={false}
+            globalTooltipCount={tooltips.length}
+          />
+        ))}
+      </div>
+    );
+  },
+  args: {
+    title: "Playground",
   },
 };

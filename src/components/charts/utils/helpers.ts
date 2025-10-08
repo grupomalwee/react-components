@@ -137,3 +137,44 @@ export const compactTick = (value: number) => {
   if (value >= 1000) return (value / 1000).toFixed(1).replace(/\.0$/, "") + "K";
   return String(value);
 };
+
+export type Padding =
+  | number
+  | Partial<{ left: number; right: number; top: number; bottom: number }>;
+
+export type Margins = Partial<{
+  top: number;
+  right: number;
+  left: number;
+  bottom: number;
+}>;
+
+export const resolveContainerPaddingLeft = (
+  padding?: Padding,
+  containerPaddingLeft?: number,
+  defaultLeft = 16
+): number => {
+  if (typeof padding === "number") return padding;
+  if (padding && typeof padding === "object" && padding.left != null)
+    return padding.left as number;
+  if (typeof containerPaddingLeft === "number") return containerPaddingLeft;
+  return defaultLeft;
+};
+
+export const resolveChartMargins = (
+  margins?: Margins,
+  chartMargins?: Margins,
+  showLabels?: boolean
+): { top: number; right: number; left: number; bottom: number } => {
+  const defaultRight = 30;
+  const defaultLeft = 20;
+  const topDefault = showLabels ? 48 : 20;
+  const bottomDefault = 5;
+
+  return {
+    top: margins?.top ?? chartMargins?.top ?? topDefault,
+    right: margins?.right ?? chartMargins?.right ?? defaultRight,
+    left: margins?.left ?? chartMargins?.left ?? defaultLeft,
+    bottom: margins?.bottom ?? chartMargins?.bottom ?? bottomDefault,
+  };
+};

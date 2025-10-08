@@ -24,14 +24,14 @@ const itemVariants = {
   visible: { opacity: 1, x: 0 },
 };
 
-const PeriodsDropdown: React.FC<Props> = ({
+function PeriodsDropdown({
   processedData,
   onOpenPeriod,
   rightOffset,
   topOffset,
   activePeriod,
   activePeriods,
-}) => {
+}: Props) {
   const periods = processedData.map((d) => String(d.name));
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -60,30 +60,39 @@ const PeriodsDropdown: React.FC<Props> = ({
     }
   }, [open]);
 
-  const handleSelect = (p: string) => {
+  function handleSelect(p: string) {
     onOpenPeriod(p);
     setOpen(false);
-  };
+  }
 
   const containerStyle: React.CSSProperties =
     typeof rightOffset === "number"
-      ? { position: "relative", zIndex: 60 }
-      : { position: "relative", zIndex: 60 };
+      ? { position: "relative", zIndex: 30 }
+      : { position: "relative", zIndex: 30 };
 
   return (
     <div ref={wrapperRef} style={containerStyle} className="mr-4">
       <button
-        className="relative p-2 rounded-md hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition z-10 flex items-center"
+        className="relative p-2.5 rounded-md hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent/50 transition flex items-center justify-center"
         aria-expanded={open}
+        aria-haspopup="menu"
+        aria-controls="periods-menu"
         onClick={() => setOpen((v) => !v)}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") setOpen(true);
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((v) => !v);
+          }
         }}
         title={open ? "Fechar lista de períodos" : "Abrir lista de períodos"}
       >
         <DotsThreeIcon size={18} />
+        <span className="sr-only">
+          {open ? "Fechar períodos" : "Abrir períodos"}
+        </span>
         {periods.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-accent text-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-accent text-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center ring-1 ring-border">
             {periods.length}
           </span>
         )}
@@ -97,17 +106,19 @@ const PeriodsDropdown: React.FC<Props> = ({
             exit="exit"
             variants={menuVariants}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            className="bg-card border border-border rounded-lg shadow-lg overflow-hidden"
+            className="bg-card border border-border rounded-lg shadow-lg overflow-hidden ring-1 ring-black/5"
             style={{
-              minWidth: 180,
+              minWidth: 200,
               maxHeight: 260,
               overflow: "hidden",
               position: "absolute",
-              top: typeof topOffset === "number" ? topOffset : "calc(100% + 6px)",
+              top:
+                typeof topOffset === "number" ? topOffset : "calc(100% + 6px)",
               right: typeof rightOffset === "number" ? rightOffset : 0,
             }}
             role="menu"
             aria-orientation="vertical"
+            id="periods-menu"
           >
             <div className="px-3 py-2 text-sm font-medium text-muted-foreground">
               Períodos
@@ -122,11 +133,11 @@ const PeriodsDropdown: React.FC<Props> = ({
                 <motion.button
                   key={p}
                   className={
-                    "flex items-center justify-between w-full text-left px-3 py-2 rounded focus:outline-none transition-colors " +
+                    "flex items-center justify-between w-full text-left px-3 py-2.5 rounded focus:outline-none transition-colors " +
                     ((activePeriods && activePeriods.includes(p)) ||
                     p === activePeriod
-                      ? "bg-accent/10"
-                      : "hover:bg-accent/5 focus:bg-accent/10")
+                      ? "bg-accent/10 font-medium"
+                      : "hover:bg-accent/15 focus-visible:ring-2 focus-visible:ring-accent/30")
                   }
                   variants={itemVariants}
                   initial="hidden"
@@ -143,7 +154,7 @@ const PeriodsDropdown: React.FC<Props> = ({
                   <span className="truncate">{p}</span>
                   {((activePeriods && activePeriods.includes(p)) ||
                     p === activePeriod) && (
-                    <span className="ml-2 text-primary">
+                    <span className="ml-2 text-primary flex items-center">
                       <Check size={16} weight="bold" />
                     </span>
                   )}
@@ -155,6 +166,6 @@ const PeriodsDropdown: React.FC<Props> = ({
       </AnimatePresence>
     </div>
   );
-};
+}
 
 export default PeriodsDropdown;
