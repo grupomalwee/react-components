@@ -51,18 +51,22 @@ type Story = StoryObj<typeof DateTimePicker>;
 const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(args.date);
   return <DateTimePicker {...args} date={date} onChange={setDate} />;
 };
 
 export const Default: Story = {
   render: Template,
+  args: {
+    date: new Date(2025, 9, 9, 14, 30, 0), 
+  },
 };
 
 export const WithTimePickerButton: Story = {
   render: Template,
   args: {
     label: "Data com Time Picker Button",
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -71,6 +75,7 @@ export const HideSeconds: Story = {
   args: {
     label: "Sem segundos",
     hideSeconds: true,
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -80,6 +85,7 @@ export const DateOnly: Story = {
     label: "Apenas data",
     hideHour: true,
     hideMinute: true,
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -88,6 +94,7 @@ export const HideMinutes: Story = {
   args: {
     label: "Sem minutos",
     hideMinute: true,
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -96,6 +103,7 @@ export const HideHour: Story = {
   args: {
     label: "Apenas minutos",
     hideHour: true,
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -104,6 +112,7 @@ export const Disabled: Story = {
   args: {
     label: "Campo desabilitado",
     disabled: true,
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
@@ -113,11 +122,13 @@ export const WithDateLimits: Story = {
     label: "Próximos 30 dias",
     fromDate: new Date(),
     toDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    date: new Date(2025, 9, 9, 14, 30, 0), 
   },
 };
 
-
 export const NoLabel: Story = {
   render: Template,
-  args: {},
+  args: {
+    date: new Date(2025, 9, 9, 14, 30, 0), 
+  },
 };

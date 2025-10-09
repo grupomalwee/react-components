@@ -20,7 +20,8 @@
     "test": "echo \"No tests yet\" && exit 0",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_8058ecbfa938af8"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --max-warnings=0"
@@ -65,6 +66,7 @@
     "@eslint/js": "^9.19.0",
     "@phosphor-icons/react": "^2.1.10",
     "@playwright/test": "^1.53.1",
+    "@storybook/addon-a11y": "^9.1.4",
     "@storybook/addon-docs": "^9.1.2",
     "@storybook/addon-onboarding": "^9.1.2",
     "@storybook/react-vite": "^9.1.2",
@@ -75,6 +77,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
+    "chromatic": "^13.3.0",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
