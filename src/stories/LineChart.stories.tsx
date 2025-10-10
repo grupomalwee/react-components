@@ -72,44 +72,58 @@ export const Default: Story = {
   ),
 };
 
-export const CustomHexColors: Story = {
+export const CustomColors: Story = {
+  name: "Cores Customizadas",
   render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        colors={["#ef4444", "#10b981", "#f59e0b"]}
-        strokeWidth={3}
-      />
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Hex Colors
+        </h3>
+        <CustomLineChart
+          {...args}
+          colors={["#ef4444", "#10b981", "#f59e0b"]}
+          strokeWidth={3}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          HSL Colors
+        </h3>
+        <CustomLineChart
+          {...args}
+          colors={[
+            "hsl(258, 88%, 66%)",
+            "hsl(188, 94%, 43%)",
+            "hsl(84, 81%, 44%)",
+          ]}
+          strokeWidth={3}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          RGB Colors
+        </h3>
+        <CustomLineChart
+          {...args}
+          colors={[
+            "rgb(236, 72, 153)",
+            "rgb(20, 184, 166)",
+            "rgb(251, 146, 60)",
+          ]}
+          strokeWidth={3}
+        />
+      </div>
     </div>
   ),
-};
-
-export const CustomHslColors: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        colors={[
-          "hsl(258, 88%, 66%)",
-          "hsl(188, 94%, 43%)",
-          "hsl(84, 81%, 44%)",
-        ]}
-        strokeWidth={3}
-      />
-    </div>
-  ),
-};
-
-export const CustomRgbColors: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        colors={["rgb(236, 72, 153)", "rgb(20, 184, 166)", "rgb(251, 146, 60)"]}
-        strokeWidth={3}
-      />
-    </div>
-  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story: "Demonstração de diferentes formatos de cores: Hex, HSL e RGB.",
+      },
+    },
+  },
 };
 
 export const CustomData: Story = {
@@ -130,92 +144,111 @@ export const CustomData: Story = {
   ),
 };
 
-export const WithoutGrid: Story = {
+export const StyleVariants: Story = {
+  name: "Variantes de Estilo",
   render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        showGrid={false}
-        colors={["#f97316", "#059669", "#7c3aed"]}
-        strokeWidth={3}
-      />
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Sem Grid
+        </h3>
+        <CustomLineChart
+          {...args}
+          showGrid={false}
+          colors={["#f97316", "#059669", "#7c3aed"]}
+          strokeWidth={3}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Grid Customizado
+        </h3>
+        <CustomLineChart
+          {...args}
+          gridColor="#8b5cf6"
+          colors={["#ef4444", "#10b981", "#f59e0b"]}
+          strokeWidth={3}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Linhas Grossas
+        </h3>
+        <CustomLineChart
+          {...args}
+          strokeWidth={5}
+          colors={["#ec4899", "#10b981", "#f59e0b"]}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Sem Pontos
+        </h3>
+        <CustomLineChart
+          {...args}
+          showDots={false}
+          strokeWidth={3}
+          colors={["#8b5cf6", "#059669", "#f59e0b"]}
+        />
+      </div>
     </div>
   ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Diferentes estilos visuais: sem grid, grid customizado, linhas grossas, sem pontos.",
+      },
+    },
+  },
 };
 
-export const CustomGrid: Story = {
+export const LayoutOptions: Story = {
+  name: "Opções de Layout",
   render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        gridColor="#8b5cf6"
-        colors={["#ef4444", "#10b981", "#f59e0b"]}
-        strokeWidth={3}
-      />
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Altura Compacta (sem legenda)
+        </h3>
+        <CustomLineChart
+          {...args}
+          height={200}
+          showLegend={false}
+          colors={["#ec4899", "#10b981", "#f59e0b"]}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Com Labels
+        </h3>
+        <CustomLineChart
+          {...args}
+          showLabels={true}
+          colors={["#6366f1", "#ef4444", "#10b981"]}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Com Título Centralizado
+        </h3>
+        <CustomLineChart
+          {...args}
+          title="Vendas Trimestrais 2024"
+          titlePosition="center"
+          colors={["#f59e0b", "#ef4444", "#8b5cf6"]}
+        />
+      </div>
     </div>
   ),
-};
-
-export const ThickLines: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        strokeWidth={5}
-        colors={["#ec4899", "#10b981", "#f59e0b"]}
-      />
-    </div>
-  ),
-};
-
-export const WithoutDots: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        showDots={false}
-        strokeWidth={3}
-        colors={["#8b5cf6", "#059669", "#f59e0b"]}
-      />
-    </div>
-  ),
-};
-
-export const CompactHeight: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        height={200}
-        showLegend={false}
-        colors={["#ec4899", "#10b981", "#f59e0b"]}
-      />
-    </div>
-  ),
-};
-
-export const WithLabels: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        showLabels={true}
-        colors={["#6366f1", "#ef4444", "#10b981"]}
-        title="Gráfico com Labels"
-      />
-    </div>
-  ),
-};
-
-export const WithTitle: Story = {
-  render: (args) => (
-    <div>
-      <CustomLineChart
-        {...args}
-        title="Vendas Trimestrais 2024"
-        titlePosition="center"
-        colors={["#f59e0b", "#ef4444", "#8b5cf6"]}
-      />
-    </div>
-  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Diferentes configurações de layout: altura compacta, labels, e títulos.",
+      },
+    },
+  },
 };

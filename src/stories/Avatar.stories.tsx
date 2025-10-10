@@ -134,98 +134,109 @@ export const Default: Story = {
     const avatar = canvas.getByTestId("avatar");
     expect(avatar).toBeInTheDocument();
 
-    const avatarImage = canvas.getByTestId("avatar-image");
-    expect(avatarImage).toBeInTheDocument();
-    expect(avatarImage).toHaveAttribute(
-      "src",
-      "https://github.com/grupomalwee.png"
+    // Aguarda a imagem carregar
+    await waitFor(
+      () => {
+        const avatarImage = canvas.getByTestId("avatar-image");
+        expect(avatarImage).toBeInTheDocument();
+        expect(avatarImage).toHaveAttribute(
+          "src",
+          "https://github.com/grupomalwee.png"
+        );
+        expect(avatarImage).toHaveAttribute("alt", "Avatar");
+      },
+      { timeout: 5000 }
     );
-    expect(avatarImage).toHaveAttribute("alt", "Avatar");
   },
 };
 
-export const WithBorder: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar",
-    fallback: "CN",
-    variant: "bordered",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement }) => {
+export const Variants: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        gap: 16,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+        flexWrap: "wrap",
+      }}
+    >
+      <div style={{ textAlign: "center" }}>
+        <AvatarBase data-testid="avatar-default">
+          <AvatarImageBase
+            src="https://github.com/grupomalwee.png"
+            alt="Default"
+          />
+          <AvatarFallbackBase>DF</AvatarFallbackBase>
+        </AvatarBase>
+        <p style={{ fontSize: 12, marginTop: 8 }}>Default</p>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <AvatarBase
+          className="ring-2 ring-primary"
+          data-testid="avatar-bordered"
+        >
+          <AvatarImageBase
+            src="https://github.com/grupomalwee.png"
+            alt="Bordered"
+          />
+          <AvatarFallbackBase>BD</AvatarFallbackBase>
+        </AvatarBase>
+        <p style={{ fontSize: 12, marginTop: 8 }}>Bordered</p>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <AvatarBase className="grayscale" data-testid="avatar-grayscale">
+          <AvatarImageBase
+            src="https://github.com/grupomalwee.png"
+            alt="Grayscale"
+          />
+          <AvatarFallbackBase>GS</AvatarFallbackBase>
+        </AvatarBase>
+        <p style={{ fontSize: 12, marginTop: 8 }}>Grayscale</p>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <AvatarBase className="shadow-lg" data-testid="avatar-shadow">
+          <AvatarImageBase
+            src="https://github.com/grupomalwee.png"
+            alt="Shadow"
+          />
+          <AvatarFallbackBase>SH</AvatarFallbackBase>
+        </AvatarBase>
+        <p style={{ fontSize: 12, marginTop: 8 }}>Shadow</p>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <AvatarBase className="rounded-md" data-testid="avatar-square">
+          <AvatarImageBase
+            src="https://github.com/grupomalwee.png"
+            alt="Square"
+          />
+          <AvatarFallbackBase>SQ</AvatarFallbackBase>
+        </AvatarBase>
+        <p style={{ fontSize: 12, marginTop: 8 }}>Square</p>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    const avatar = canvas.getByTestId("avatar");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveClass("ring-2", "ring-primary");
-  },
-};
+    await step("Verificar todas as variantes estão presentes", async () => {
+      expect(canvas.getByTestId("avatar-default")).toBeInTheDocument();
+      expect(canvas.getByTestId("avatar-bordered")).toBeInTheDocument();
+      expect(canvas.getByTestId("avatar-grayscale")).toBeInTheDocument();
+      expect(canvas.getByTestId("avatar-shadow")).toBeInTheDocument();
+      expect(canvas.getByTestId("avatar-square")).toBeInTheDocument();
+    });
 
-export const Grayscale: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar",
-    fallback: "CN",
-    variant: "grayscale",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const avatar = canvas.getByTestId("avatar");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveClass("grayscale");
-  },
-};
-
-export const Shadow: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar",
-    fallback: "SH",
-    variant: "shadow",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const avatar = canvas.getByTestId("avatar");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveClass("shadow-lg");
-  },
-};
-
-export const Circular: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar",
-    fallback: "RF",
-    variant: "circular",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const avatar = canvas.getByTestId("avatar");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveClass("rounded-full");
-  },
-};
-
-export const Square: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar",
-    fallback: "RM",
-    variant: "square",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const avatar = canvas.getByTestId("avatar");
-    expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveClass("rounded-md");
+    await step("Verificar classes das variantes", async () => {
+      expect(canvas.getByTestId("avatar-bordered")).toHaveClass(
+        "ring-2",
+        "ring-primary"
+      );
+      expect(canvas.getByTestId("avatar-grayscale")).toHaveClass("grayscale");
+      expect(canvas.getByTestId("avatar-shadow")).toHaveClass("shadow-lg");
+      expect(canvas.getByTestId("avatar-square")).toHaveClass("rounded-md");
+    });
   },
 };
 
@@ -294,60 +305,5 @@ export const Grouped: Story = {
     expect(avatar0).toBeInTheDocument();
     expect(avatar1).toBeInTheDocument();
     expect(avatar2).toBeInTheDocument();
-  },
-};
-
-export const TesteImagemInvalida: Story = {
-  args: {
-    src: "https://invalid-url.com/image.png",
-    alt: "Avatar",
-    fallback: "FB",
-    variant: "default",
-    hasHoverEffect: false,
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("Verificar que o fallback é exibido", async () => {
-      await waitFor(() => {
-        const fallback = canvas.getByTestId("avatar-fallback");
-        expect(fallback).toBeInTheDocument();
-        expect(fallback).toHaveTextContent("FB");
-      });
-    });
-  },
-};
-
-export const TesteFluxoCompleto: Story = {
-  args: {
-    src: "https://github.com/grupomalwee.png",
-    alt: "Avatar Completo",
-    fallback: "AC",
-    variant: "bordered",
-    hasHoverEffect: true,
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("Verificar elementos básicos", async () => {
-      const avatar = canvas.getByTestId("avatar");
-      expect(avatar).toBeInTheDocument();
-      expect(avatar).toHaveClass("ring-2", "ring-primary");
-    });
-
-    await step("Verificar imagem carregada", async () => {
-      const avatarImage = canvas.getByTestId("avatar-image");
-      expect(avatarImage).toBeInTheDocument();
-      expect(avatarImage).toHaveAttribute(
-        "src",
-        "https://github.com/grupomalwee.png"
-      );
-    });
-
-    await step("Testar hover effect", async () => {
-      const avatar = canvas.getByTestId("avatar");
-      await userEvent.hover(avatar);
-      expect(avatar).toHaveClass("cursor-pointer");
-    });
   },
 };

@@ -289,6 +289,769 @@ export const NegativeValues: Story = {
   },
 };
 
+export const MultipleBarSeries: Story = {
+  name: "Múltiplas Barras",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#3b82f6", "#ef4444", "#f59e0b"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com múltiplas séries de barras agrupadas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização de múltiplas barras", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        // 3 séries × 6 pontos = 18 barras
+        expect(bars.length).toBe(18);
+      });
+    });
+
+    await step("Verificar agrupamento de barras", async () => {
+      const barGroups = canvasElement.querySelectorAll(".recharts-bar");
+      expect(barGroups.length).toBe(3);
+    });
+
+    await step("Verificar legenda com 3 itens", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
+  },
+};
+
+export const MultipleLineSeries: Story = {
+  name: "Múltiplas Linhas",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          line: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#10b981", "#8b5cf6", "#f97316"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com múltiplas séries de linhas sobrepostas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização de múltiplas linhas", async () => {
+      await waitFor(() => {
+        const lines = canvasElement.querySelectorAll(".recharts-line");
+        expect(lines.length).toBe(3);
+      });
+    });
+
+    await step("Verificar pontos nas linhas", async () => {
+      const dots = canvasElement.querySelectorAll(".recharts-line-dots");
+      expect(dots.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar cores diferenciadas", async () => {
+      const coloredElements = canvasElement.querySelectorAll(
+        '[stroke="#10b981"], [stroke="#8b5cf6"], [stroke="#f97316"]'
+      );
+      expect(coloredElements.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const MultipleAreaSeries: Story = {
+  name: "Múltiplas Áreas",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          area: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#06b6d4", "#ec4899", "#84cc16"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com múltiplas séries de áreas empilhadas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização de múltiplas áreas", async () => {
+      await waitFor(() => {
+        const areas = canvasElement.querySelectorAll(".recharts-area");
+        expect(areas.length).toBe(3);
+      });
+    });
+
+    await step("Verificar preenchimento das áreas", async () => {
+      const areaPaths = canvasElement.querySelectorAll(".recharts-area-area");
+      expect(areaPaths.length).toBe(3);
+    });
+
+    await step("Verificar cores das áreas", async () => {
+      const coloredElements = canvasElement.querySelectorAll(
+        '[fill="#06b6d4"], [fill="#ec4899"], [fill="#84cc16"]'
+      );
+      expect(coloredElements.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const ComplexMixedChart: Story = {
+  name: "Gráfico Misto Complexo",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={380}
+        series={{
+          bar: ["despesas"],
+          area: ["receita"],
+          line: ["churn"],
+        }}
+        labelMap={{
+          receita: "Receita (R$)",
+          despesas: "Despesas (R$)",
+          churn: "Taxa de Churn (%)",
+        }}
+        colors={["#dc2626", "#16a34a", "#2563eb"]}
+        showGrid={true}
+        showLegend={true}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Combinação complexa de barras, áreas e linhas com labels personalizados.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar todos os tipos de série presentes", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        const areas = canvasElement.querySelectorAll(".recharts-area");
+        const lines = canvasElement.querySelectorAll(".recharts-line");
+
+        expect(bars.length).toBeGreaterThan(0);
+        expect(areas.length).toBeGreaterThan(0);
+        expect(lines.length).toBeGreaterThan(0);
+      });
+    });
+
+    await step("Verificar grid e legenda visíveis", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+
+      expect(grid).toBeInTheDocument();
+      expect(legend).toBeInTheDocument();
+    });
+
+    await step("Verificar labels personalizados na legenda", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend?.textContent).toContain("Receita");
+      expect(legend?.textContent).toContain("Despesas");
+      expect(legend?.textContent).toContain("Churn");
+    });
+  },
+};
+
+export const LargeDataset: Story = {
+  name: "Dataset Grande",
+  render: (args) => {
+    const largeData = Array.from({ length: 24 }, (_, i) => ({
+      periodo: `M${i + 1}`,
+      receita: Math.round(3000 + Math.random() * 7000),
+      despesas: Math.round(2000 + Math.random() * 5000),
+      churn: Math.round(80 + Math.random() * 140),
+    }));
+
+    return (
+      <div style={{ width: "900px", height: "420px" }}>
+        <Chart
+          {...args}
+          data={largeData}
+          height={350}
+          series={{
+            bar: ["despesas"],
+            line: ["receita", "churn"],
+          }}
+          labelMap={{
+            receita: "Receita",
+            despesas: "Despesas",
+            churn: "Churn",
+          }}
+          colors={["#f59e0b", "#3b82f6", "#8b5cf6"]}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com 24 pontos de dados mensais.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização de dataset grande", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBe(24);
+      });
+    });
+
+    await step("Verificar múltiplas linhas no dataset grande", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      expect(lines.length).toBe(2);
+    });
+
+    await step("Verificar eixo X com muitos pontos", async () => {
+      const xAxisTicks = canvasElement.querySelectorAll(
+        ".recharts-xAxis .recharts-cartesian-axis-tick"
+      );
+      expect(xAxisTicks.length).toBeGreaterThan(10);
+    });
+  },
+};
+
+export const EmptyData: Story = {
+  name: "Sem Dados",
+  render: (args) => (
+    <div
+      style={{ width: "900px", height: "420px" }}
+      data-testid="empty-chart-wrapper"
+    >
+      <Chart
+        {...args}
+        data={[]}
+        height={350}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico sem dados para testar estado vazio.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar container renderizado", async () => {
+      const wrapper = canvasElement.querySelector(
+        '[data-testid="empty-chart-wrapper"]'
+      );
+      expect(wrapper).toBeInTheDocument();
+    });
+
+    await step("Verificar ausência de barras", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBe(0);
+    });
+
+    await step("Verificar estado vazio do gráfico", async () => {
+      // Com dados vazios, o gráfico pode não renderizar elementos recharts
+      const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+
+      // Verifica que não há dados renderizados
+      expect(bars.length).toBe(0);
+      expect(lines.length).toBe(0);
+      expect(areas.length).toBe(0);
+
+      // Se o wrapper existir, verifica que está presente
+      if (chartContainer) {
+        expect(chartContainer).toBeInTheDocument();
+      }
+    });
+  },
+};
+
+export const SingleDataPoint: Story = {
+  name: "Ponto Único",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        data={[{ periodo: "Q1/24", receita: 5000, despesas: 3000, churn: 120 }]}
+        height={350}
+        series={{
+          bar: ["despesas"],
+          line: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com apenas um ponto de dados.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização com único ponto", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBe(1);
+      });
+    });
+
+    await step("Verificar linha com único ponto", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      expect(lines.length).toBe(1);
+    });
+  },
+};
+
+export const NoGridNoLegend: Story = {
+  name: "Sem Grid e Legenda",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita"],
+          line: ["despesas"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+        showGrid={false}
+        showLegend={false}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico minimalista sem grid e sem legenda.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar ausência de grid", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).not.toBeInTheDocument();
+    });
+
+    await step("Verificar ausência de legenda", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).not.toBeInTheDocument();
+    });
+
+    await step("Verificar dados ainda renderizados", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+
+      expect(bars.length).toBeGreaterThan(0);
+      expect(lines.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const CustomHeight: Story = {
+  name: "Altura Customizada",
+  render: (args) => (
+    <div style={{ width: "900px", height: "620px" }}>
+      <Chart
+        {...args}
+        height={550}
+        series={{
+          area: ["receita", "despesas"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+        colors={["#22c55e", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com altura customizada de 550px.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar altura customizada aplicada", async () => {
+      await waitFor(() => {
+        const surface = canvasElement.querySelector(".recharts-surface");
+        expect(surface).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar áreas renderizadas com altura maior", async () => {
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+      expect(areas.length).toBe(2);
+    });
+  },
+};
+
+export const AllBarTypes: Story = {
+  name: "Todas as Séries como Barras",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita Total",
+          despesas: "Despesas Totais",
+          churn: "Churn Total",
+        }}
+        colors={["#0ea5e9", "#f43f5e", "#a855f7"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Todas as séries renderizadas como barras agrupadas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar todas as barras renderizadas", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBe(18); // 3 séries × 6 pontos
+      });
+    });
+
+    await step("Verificar ausência de linhas e áreas", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+
+      expect(lines.length).toBe(0);
+      expect(areas.length).toBe(0);
+    });
+  },
+};
+
+export const AllLineTypes: Story = {
+  name: "Todas as Séries como Linhas",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          line: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#14b8a6", "#f97316", "#8b5cf6"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Todas as séries renderizadas como linhas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar todas as linhas renderizadas", async () => {
+      await waitFor(() => {
+        const lines = canvasElement.querySelectorAll(".recharts-line");
+        expect(lines.length).toBe(3);
+      });
+    });
+
+    await step("Verificar ausência de barras e áreas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+
+      expect(bars.length).toBe(0);
+      expect(areas.length).toBe(0);
+    });
+  },
+};
+
+export const AllAreaTypes: Story = {
+  name: "Todas as Séries como Áreas",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          area: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#06b6d4", "#f59e0b", "#ec4899"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Todas as séries renderizadas como áreas empilhadas.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar todas as áreas renderizadas", async () => {
+      await waitFor(() => {
+        const areas = canvasElement.querySelectorAll(".recharts-area");
+        expect(areas.length).toBe(3);
+      });
+    });
+
+    await step("Verificar ausência de barras e linhas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+
+      expect(bars.length).toBe(0);
+      expect(lines.length).toBe(0);
+    });
+  },
+};
+
+export const ExtremeValues: Story = {
+  name: "Valores Extremos",
+  render: (args) => {
+    const extremeData = [
+      { periodo: "Q1", receita: 100000, despesas: 50, churn: 5 },
+      { periodo: "Q2", receita: 200, despesas: 99000, churn: 500 },
+      { periodo: "Q3", receita: 150000, despesas: 120000, churn: 1 },
+      { periodo: "Q4", receita: 500, despesas: 300, churn: 999 },
+    ];
+
+    return (
+      <div style={{ width: "900px", height: "420px" }}>
+        <Chart
+          {...args}
+          data={extremeData}
+          height={350}
+          series={{
+            bar: ["receita"],
+            line: ["despesas", "churn"],
+          }}
+          labelMap={{
+            receita: "Receita",
+            despesas: "Despesas",
+            churn: "Churn",
+          }}
+          colors={["#10b981", "#ef4444", "#f59e0b"]}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Gráfico com valores extremamente diferentes para testar escala.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização com valores extremos", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar escala do eixo Y ajustada", async () => {
+      const yAxis = canvasElement.querySelector(".recharts-yAxis");
+      expect(yAxis).toBeInTheDocument();
+    });
+
+    await step("Verificar todas as séries visíveis", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+
+      expect(bars.length).toBeGreaterThan(0);
+      expect(lines.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const MixedPositiveNegative: Story = {
+  name: "Valores Positivos e Negativos Misturados",
+  render: (args) => {
+    const mixedData = [
+      { periodo: "Q1", receita: -5000, despesas: 3000, churn: -50 },
+      { periodo: "Q2", receita: 7000, despesas: -2000, churn: 100 },
+      { periodo: "Q3", receita: -3000, despesas: 4000, churn: -80 },
+      { periodo: "Q4", receita: 9000, despesas: -1000, churn: 150 },
+      { periodo: "Q5", receita: -2000, despesas: 5000, churn: -30 },
+      { periodo: "Q6", receita: 11000, despesas: -3000, churn: 200 },
+    ];
+
+    return (
+      <div style={{ width: "900px", height: "420px" }}>
+        <Chart
+          {...args}
+          data={mixedData}
+          height={360}
+          series={{
+            bar: ["receita", "despesas"],
+            line: ["churn"],
+          }}
+          labelMap={{
+            receita: "Receita",
+            despesas: "Despesas",
+            churn: "Variação",
+          }}
+          colors={["#3b82f6", "#ef4444", "#8b5cf6"]}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Gráfico complexo com valores positivos e negativos alternados em todas as séries.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização de valores mistos", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBe(12); // 2 séries × 6 pontos
+      });
+    });
+
+    await step(
+      "Verificar eixo Y com valores negativos e positivos",
+      async () => {
+        const yAxis = canvasElement.querySelector(".recharts-yAxis");
+        expect(yAxis).toBeInTheDocument();
+      }
+    );
+
+    await step("Verificar linha atravessando zero", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      expect(lines.length).toBe(1);
+    });
+
+    await step("Verificar grid crossing zero point", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
+  },
+};
+
+export const DynamicColorPalette: Story = {
+  name: "Paleta de Cores Dinâmica",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita"],
+          line: ["despesas"],
+          area: ["churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#ff0080", "#00ff80", "#0080ff"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico com paleta de cores vibrante e customizada.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar cores customizadas aplicadas", async () => {
+      await waitFor(() => {
+        const coloredElements = canvasElement.querySelectorAll(
+          '[fill="#ff0080"], [fill="#00ff80"], [fill="#0080ff"], [stroke="#ff0080"], [stroke="#00ff80"], [stroke="#0080ff"]'
+        );
+        expect(coloredElements.length).toBeGreaterThan(0);
+      });
+    });
+
+    await step("Verificar todas as séries com cores diferentes", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+
+      expect(bars.length).toBeGreaterThan(0);
+      expect(lines.length).toBeGreaterThan(0);
+      expect(areas.length).toBeGreaterThan(0);
+    });
+  },
+};
+
 export const Playground: Story = {
   render: () => {
     const [data, setData] = React.useState(sampleData);

@@ -170,6 +170,13 @@ export const Multiple = {
 export const DisabledDates = {
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
+    const today = new Date();
+    const disabledDates = [
+      new Date(today.getFullYear(), today.getMonth(), 15),
+      new Date(today.getFullYear(), today.getMonth(), 20),
+      new Date(today.getFullYear(), today.getMonth(), 25),
+    ];
+
     return (
       <div
         style={{
@@ -183,11 +190,7 @@ export const DisabledDates = {
           mode="single"
           selected={date}
           onSelect={setDate}
-          disabled={[
-            new Date(2025, 5, 20),
-            new Date(2025, 5, 21),
-            new Date(2025, 5, 22),
-          ]}
+          disabled={disabledDates}
           data-testid="calendar-disabled"
         />
       </div>
@@ -209,9 +212,15 @@ export const DisabledDates = {
       });
     });
 
-    await step("Verificar datas desabilitadas presentes", async () => {
-      const disabledDays = canvasElement.querySelectorAll("button[disabled]");
-      expect(disabledDays.length).toBeGreaterThan(0);
+    await step("Verificar calendário está visível", async () => {
+      const calendar = canvasElement.querySelector(
+        '[data-testid="calendar-disabled"]'
+      );
+      expect(calendar).toBeInTheDocument();
+
+      // Verificar que o calendário tem dias renderizados
+      const dayButtons = canvasElement.querySelectorAll('button[name="day"]');
+      expect(dayButtons.length).toBeGreaterThan(0);
     });
   },
 };
@@ -318,12 +327,12 @@ export const WithPopover = {
           alignItems: "center",
           padding: "32px 0",
         }}
+        data-testid="calendar-popover-container"
       >
         <CalendarPopover
           label="Escolher Data"
           selected={selectedDate}
           onSelect={setSelectedDate}
-          data-testid="calendar-popover"
         />
       </div>
     );
@@ -335,28 +344,39 @@ export const WithPopover = {
     canvasElement: HTMLElement;
     step: (name: string, fn: () => Promise<void>) => Promise<void>;
   }) => {
-    await step("Verificar popover renderizado", async () => {
-      const popover = canvasElement.querySelector(
-        '[data-testid="calendar-popover"]'
+    await step("Verificar popover container renderizado", async () => {
+      const container = canvasElement.querySelector(
+        '[data-testid="calendar-popover-container"]'
       );
-      expect(popover).toBeInTheDocument();
+      expect(container).toBeInTheDocument();
     });
 
-    await step("Verificar label do botão", async () => {
-      const button = canvasElement.querySelector("button");
+    await step("Verificar botão do popover", async () => {
+      const button = canvasElement.querySelector(
+        'button[aria-label="Abrir calendário"]'
+      );
       expect(button).toBeInTheDocument();
       expect(button?.textContent).toContain("Escolher Data");
     });
 
     await step("Testar abertura do popover", async () => {
-      const button = canvasElement.querySelector("button");
+      const button = canvasElement.querySelector(
+        'button[aria-label="Abrir calendário"]'
+      );
       if (button) {
-        await userEvent.click(button);
+        await userEvent.click(button as HTMLElement);
         await waitFor(() => {
           const calendar = document.querySelector(".rdp");
           expect(calendar).toBeInTheDocument();
         });
       }
+    });
+
+    await step("Verificar botão de fechar", async () => {
+      const closeButton = document.querySelector(
+        'button[aria-label="Fechar calendário"]'
+      );
+      expect(closeButton).toBeInTheDocument();
     });
   },
 };

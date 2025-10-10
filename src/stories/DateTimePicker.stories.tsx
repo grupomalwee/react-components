@@ -58,7 +58,140 @@ const Template = (
 export const Default: Story = {
   render: Template,
   args: {
-    date: new Date(2025, 9, 9, 14, 30, 0), 
+    date: new Date(2025, 9, 9, 14, 30, 0),
+  },
+};
+
+export const TimeVariants: Story = {
+  name: "Variantes de Tempo",
+  render: () => {
+    const [date1, setDate1] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date2, setDate2] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date3, setDate3] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date4, setDate4] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Sem Segundos
+          </h3>
+          <DateTimePicker
+            label="Sem segundos"
+            hideSeconds={true}
+            date={date1}
+            onChange={setDate1}
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Apenas Data (sem hora/minuto)
+          </h3>
+          <DateTimePicker
+            label="Apenas data"
+            hideHour={true}
+            hideMinute={true}
+            date={date2}
+            onChange={setDate2}
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Sem Minutos
+          </h3>
+          <DateTimePicker
+            label="Sem minutos"
+            hideMinute={true}
+            date={date3}
+            onChange={setDate3}
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Apenas Minutos (sem hora)
+          </h3>
+          <DateTimePicker
+            label="Apenas minutos"
+            hideHour={true}
+            date={date4}
+            onChange={setDate4}
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Diferentes configurações de exibição de tempo: sem segundos, apenas data, sem minutos, apenas minutos.",
+      },
+    },
+  },
+};
+
+export const ConfigurationOptions: Story = {
+  name: "Opções de Configuração",
+  render: () => {
+    const [date1, setDate1] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date2, setDate2] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date3, setDate3] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Desabilitado
+          </h3>
+          <DateTimePicker
+            label="Campo desabilitado"
+            disabled={true}
+            date={date1}
+            onChange={setDate1}
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Com Limites de Data (próximos 30 dias)
+          </h3>
+          <DateTimePicker
+            label="Próximos 30 dias"
+            fromDate={new Date()}
+            toDate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
+            date={date2}
+            onChange={setDate2}
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Sem Label
+          </h3>
+          <DateTimePicker date={date3} onChange={setDate3} />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Diferentes configurações: desabilitado, com limites de data, sem label.",
+      },
+    },
   },
 };
 
@@ -66,69 +199,6 @@ export const WithTimePickerButton: Story = {
   render: Template,
   args: {
     label: "Data com Time Picker Button",
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const HideSeconds: Story = {
-  render: Template,
-  args: {
-    label: "Sem segundos",
-    hideSeconds: true,
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const DateOnly: Story = {
-  render: Template,
-  args: {
-    label: "Apenas data",
-    hideHour: true,
-    hideMinute: true,
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const HideMinutes: Story = {
-  render: Template,
-  args: {
-    label: "Sem minutos",
-    hideMinute: true,
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const HideHour: Story = {
-  render: Template,
-  args: {
-    label: "Apenas minutos",
-    hideHour: true,
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const Disabled: Story = {
-  render: Template,
-  args: {
-    label: "Campo desabilitado",
-    disabled: true,
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const WithDateLimits: Story = {
-  render: Template,
-  args: {
-    label: "Próximos 30 dias",
-    fromDate: new Date(),
-    toDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    date: new Date(2025, 9, 9, 14, 30, 0), 
-  },
-};
-
-export const NoLabel: Story = {
-  render: Template,
-  args: {
-    date: new Date(2025, 9, 9, 14, 30, 0), 
+    date: new Date(2025, 9, 9, 14, 30, 0),
   },
 };

@@ -39,7 +39,7 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
                 Home
               </BreadcrumbLinkBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator" />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-1" />
             <BreadcrumbItemBase>
               <DropDownMenuBase>
                 <DropDownMenuTriggerBase
@@ -62,13 +62,13 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
                 </DropDownMenuContentBase>
               </DropDownMenuBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-2" />
             <BreadcrumbItemBase>
               <BreadcrumbLinkBase href="#" data-testid="breadcrumb-components">
                 Components
               </BreadcrumbLinkBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-3" />
             <BreadcrumbItemBase>
               <BreadcrumbPageBase data-testid="breadcrumb-current">
                 Breadcrumb
@@ -108,7 +108,7 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
                 Home
               </BreadcrumbLinkBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-1" />
             <BreadcrumbItemBase>
               <BreadcrumbLinkBase
                 href="#"
@@ -129,7 +129,7 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
                 Docs
               </BreadcrumbLinkBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-2" />
             <BreadcrumbItemBase>
               <BreadcrumbLinkBase
                 href="#"
@@ -155,7 +155,7 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
                 Components
               </BreadcrumbLinkBase>
             </BreadcrumbItemBase>
-            <BreadcrumbSeparatorBase />
+            <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-3" />
             <BreadcrumbItemBase>
               <BreadcrumbPageBase
                 className="flex items-center gap-1"
@@ -197,13 +197,13 @@ const BreadcrumbStory = ({ variant = "simple" }: BreadcrumbStoryProps) => {
               Home
             </BreadcrumbLinkBase>
           </BreadcrumbItemBase>
-          <BreadcrumbSeparatorBase data-testid="breadcrumb-separator" />
+          <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-1" />
           <BreadcrumbItemBase>
             <BreadcrumbLinkBase href="#" data-testid="breadcrumb-docs">
               Docs
             </BreadcrumbLinkBase>
           </BreadcrumbItemBase>
-          <BreadcrumbSeparatorBase />
+          <BreadcrumbSeparatorBase data-testid="breadcrumb-separator-2" />
           <BreadcrumbItemBase>
             <BreadcrumbPageBase data-testid="breadcrumb-current">
               Current
@@ -271,10 +271,13 @@ export const ComMenu: Story = {
     });
 
     await step("Verificar separadores presentes", async () => {
-      const separators = canvasElement.querySelectorAll(
-        '[data-testid="breadcrumb-separator"]'
-      );
-      expect(separators.length).toBeGreaterThan(0);
+      const separator1 = canvas.getByTestId("breadcrumb-separator-1");
+      const separator2 = canvas.getByTestId("breadcrumb-separator-2");
+      const separator3 = canvas.getByTestId("breadcrumb-separator-3");
+
+      expect(separator1).toBeInTheDocument();
+      expect(separator2).toBeInTheDocument();
+      expect(separator3).toBeInTheDocument();
     });
 
     await step("Testar menu dropdown", async () => {
@@ -316,10 +319,11 @@ export const Simples: Story = {
     });
 
     await step("Verificar separadores", async () => {
-      const separators = canvasElement.querySelectorAll(
-        '[data-testid="breadcrumb-separator"]'
-      );
-      expect(separators.length).toBe(2);
+      const separator1 = canvas.getByTestId("breadcrumb-separator-1");
+      const separator2 = canvas.getByTestId("breadcrumb-separator-2");
+
+      expect(separator1).toBeInTheDocument();
+      expect(separator2).toBeInTheDocument();
     });
 
     await step("Testar hover nos links", async () => {

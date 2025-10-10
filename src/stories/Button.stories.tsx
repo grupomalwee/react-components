@@ -202,9 +202,14 @@ export const Disabled: Story = {
       expect(button).toBeDisabled();
     });
 
-    await step("Verificar que botão não responde a hover", async () => {
+    await step("Verificar que botão tem pointer-events: none", async () => {
       const button = canvas.getByRole("button");
-      await userEvent.hover(button);
+      const styles = window.getComputedStyle(button);
+      expect(styles.pointerEvents).toBe("none");
+    });
+
+    await step("Verificar que botão não responde a clique", async () => {
+      const button = canvas.getByRole("button");
       expect(button).toBeDisabled();
     });
   },
