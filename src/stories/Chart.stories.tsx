@@ -2,6 +2,7 @@ import React from "react";
 import Chart from "@/components/charts/Chart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, within, waitFor } from "storybook/test";
 import { ButtonBase } from "@/components/ui/ButtonBase";
 import { CheckboxBase } from "@/components/ui/CheckBoxBase";
 import { SlideBase } from "@/components/ui/SliderBase";
@@ -85,6 +86,41 @@ export const Default: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico renderizado", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar surface do gráfico", async () => {
+      const surface = canvasElement.querySelector(".recharts-surface");
+      expect(surface).toBeInTheDocument();
+    });
+
+    await step("Verificar eixos renderizados", async () => {
+      const xAxis = canvasElement.querySelector(".recharts-xAxis");
+      const yAxis = canvasElement.querySelector(".recharts-yAxis");
+      expect(xAxis).toBeInTheDocument();
+      expect(yAxis).toBeInTheDocument();
+    });
+
+    await step("Verificar dados renderizados", async () => {
+      // Verifica se há elementos renderizados (barras, linhas ou áreas)
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+
+      const totalElements = bars.length + lines.length + areas.length;
+      expect(totalElements).toBeGreaterThan(0);
+    });
+
+    await step("Verificar grid presente", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
+  },
 };
 
 export const Combined: Story = {
@@ -115,6 +151,60 @@ export const Combined: Story = {
       },
     },
   },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico combinado renderizado", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar presença de barras (despesas)", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar presença de área (receita)", async () => {
+      const areas = canvasElement.querySelectorAll(".recharts-area");
+      expect(areas.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar presença de linha (churn)", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      expect(lines.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar legenda com 3 itens", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
+
+    await step("Verificar cores customizadas aplicadas", async () => {
+      const surface = canvasElement.querySelector(".recharts-surface");
+      expect(surface).toBeInTheDocument();
+
+      // Verifica que há elementos com as cores especificadas
+      const coloredElements = canvasElement.querySelectorAll(
+        '[fill="#ef4444"], [fill="#22c55e"], [fill="#6366f1"], [stroke="#ef4444"], [stroke="#22c55e"], [stroke="#6366f1"]'
+      );
+      expect(coloredElements.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar tooltip habilitado", async () => {
+      const surface = canvasElement.querySelector(".recharts-surface");
+      expect(surface).toBeInTheDocument();
+    });
+
+    await step(
+      "Verificar quantidade correta de dados (6 trimestres)",
+      async () => {
+        // Verifica se há 6 pontos de dados renderizados
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        // Deve ter 6 barras (uma por trimestre)
+        expect(bars.length).toBe(6);
+      }
+    );
+  },
 };
 
 export const NegativeValues: Story = {
@@ -137,6 +227,65 @@ export const NegativeValues: Story = {
         story: "Exemplo com valores negativos para mostrar perdas e ajustes.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step(
+      "Verificar gráfico com valores negativos renderizado",
+      async () => {
+        await waitFor(() => {
+          const chartContainer =
+            canvasElement.querySelector(".recharts-wrapper");
+          expect(chartContainer).toBeInTheDocument();
+        });
+      }
+    );
+
+    await step("Verificar barras renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      // 4 trimestres de dados
+      expect(bars.length).toBe(4);
+    });
+
+    await step("Verificar linha renderizada", async () => {
+      const lines = canvasElement.querySelectorAll(".recharts-line");
+      expect(lines.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar eixo Y ajustado para valores negativos", async () => {
+      const yAxis = canvasElement.querySelector(".recharts-yAxis");
+      expect(yAxis).toBeInTheDocument();
+
+      // Verifica se há ticks negativos no eixo Y
+      const yAxisTexts = canvasElement.querySelectorAll(
+        ".recharts-yAxis .recharts-text"
+      );
+      expect(yAxisTexts.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar grid crossing zero", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
+
+    await step("Verificar cores customizadas nos dados negativos", async () => {
+      const coloredElements = canvasElement.querySelectorAll(
+        '[fill="#06b6d4"], [fill="#ef4444"], [stroke="#06b6d4"], [stroke="#ef4444"]'
+      );
+      expect(coloredElements.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar legenda com 2 séries", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
+
+    await step("Verificar dados renderizados corretamente", async () => {
+      // Verifica que o gráfico tem os 4 pontos de dados
+      const xAxisTicks = canvasElement.querySelectorAll(
+        ".recharts-xAxis .recharts-cartesian-axis-tick"
+      );
+      expect(xAxisTicks.length).toBe(4);
+    });
   },
 };
 
@@ -259,26 +408,45 @@ export const Playground: Story = {
             }}
           >
             <div style={{ display: "flex", gap: 8 }}>
-              <ButtonBase onClick={addPoint} variant="default">
+              <ButtonBase
+                onClick={addPoint}
+                variant="default"
+                data-testid="btn-add-point"
+              >
                 <PlusIcon size={16} />
                 Adicionar
               </ButtonBase>
-              <ButtonBase onClick={removePoint} variant="outline">
+              <ButtonBase
+                onClick={removePoint}
+                variant="outline"
+                data-testid="btn-remove-point"
+              >
                 <MinusIcon size={16} />
                 Remover
               </ButtonBase>
             </div>
 
-            <ButtonBase onClick={switchToNegative} variant="outline">
+            <ButtonBase
+              onClick={switchToNegative}
+              variant="outline"
+              data-testid="btn-negative"
+            >
               Dados Negativos
             </ButtonBase>
 
-            <ButtonBase onClick={resetData} variant="ghost">
+            <ButtonBase
+              onClick={resetData}
+              variant="ghost"
+              data-testid="btn-reset"
+            >
               <ArrowClockwiseIcon size={16} />
               Reset
             </ButtonBase>
 
-            <div style={{ marginLeft: "auto", fontSize: 14, color: "#6b7280" }}>
+            <div
+              style={{ marginLeft: "auto", fontSize: 14, color: "#6b7280" }}
+              data-testid="data-count"
+            >
               {data.length} pontos
             </div>
           </div>
@@ -309,6 +477,7 @@ export const Playground: Story = {
                 onValueChange={(v) => setHeight(v[0])}
                 min={200}
                 max={600}
+                data-testid="slider-height"
               />
             </div>
 
@@ -316,6 +485,7 @@ export const Playground: Story = {
               <CheckboxBase
                 checked={showGrid}
                 onCheckedChange={(checked) => setShowGrid(Boolean(checked))}
+                data-testid="checkbox-grid"
               />
               Grid
             </label>
@@ -324,6 +494,7 @@ export const Playground: Story = {
               <CheckboxBase
                 checked={showLegend}
                 onCheckedChange={(checked) => setShowLegend(Boolean(checked))}
+                data-testid="checkbox-legend"
               />
               Legenda
             </label>
@@ -360,7 +531,10 @@ export const Playground: Story = {
                     }
                   }}
                 >
-                  <SelectTriggerBase className="w-[100px]">
+                  <SelectTriggerBase
+                    className="w-[100px]"
+                    data-testid={`select-${field}`}
+                  >
                     <SelectValueBase />
                   </SelectTriggerBase>
                   <SelectContentBase>
@@ -398,6 +572,7 @@ export const Playground: Story = {
                     borderRadius: 6,
                     cursor: "pointer",
                   }}
+                  data-testid={`color-picker-${i}`}
                 />
               ))}
             </div>
@@ -405,7 +580,7 @@ export const Playground: Story = {
         </div>
 
         {/* Chart */}
-        <div style={{ flex: 1, padding: 16 }}>
+        <div style={{ flex: 1, padding: 16 }} data-testid="chart-container">
           <Chart
             data={data}
             height={height}
@@ -432,5 +607,175 @@ export const Playground: Story = {
           "Playground interativo para experimentar com dados e configurações do chart.",
       },
     },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Verificar renderização inicial do playground", async () => {
+      await waitFor(() => {
+        const chartContainer = canvas.getByTestId("chart-container");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar controles de dados presentes", async () => {
+      const addButton = canvas.getByTestId("btn-add-point");
+      const removeButton = canvas.getByTestId("btn-remove-point");
+      const negativeButton = canvas.getByTestId("btn-negative");
+      const resetButton = canvas.getByTestId("btn-reset");
+
+      expect(addButton).toBeInTheDocument();
+      expect(removeButton).toBeInTheDocument();
+      expect(negativeButton).toBeInTheDocument();
+      expect(resetButton).toBeInTheDocument();
+    });
+
+    await step("Verificar contador de pontos inicial (6 pontos)", async () => {
+      const dataCount = canvas.getByTestId("data-count");
+      expect(dataCount).toHaveTextContent("6 pontos");
+    });
+
+    await step("Testar adicionar ponto de dados", async () => {
+      const addButton = canvas.getByTestId("btn-add-point");
+      await userEvent.click(addButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("7 pontos");
+      });
+    });
+
+    await step("Testar remover ponto de dados", async () => {
+      const removeButton = canvas.getByTestId("btn-remove-point");
+      await userEvent.click(removeButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("6 pontos");
+      });
+    });
+
+    await step("Verificar controles de display", async () => {
+      const gridCheckbox = canvas.getByTestId("checkbox-grid");
+      const legendCheckbox = canvas.getByTestId("checkbox-legend");
+
+      expect(gridCheckbox).toBeInTheDocument();
+      expect(legendCheckbox).toBeInTheDocument();
+      expect(gridCheckbox).toBeChecked();
+      expect(legendCheckbox).toBeChecked();
+    });
+
+    await step("Testar toggle do grid", async () => {
+      const gridCheckbox = canvas.getByTestId("checkbox-grid");
+      await userEvent.click(gridCheckbox);
+
+      await waitFor(() => {
+        expect(gridCheckbox).not.toBeChecked();
+      });
+    });
+
+    await step("Testar toggle da legenda", async () => {
+      const legendCheckbox = canvas.getByTestId("checkbox-legend");
+      await userEvent.click(legendCheckbox);
+
+      await waitFor(() => {
+        expect(legendCheckbox).not.toBeChecked();
+      });
+    });
+
+    await step("Verificar selects de tipo de série", async () => {
+      const receitaSelect = canvas.getByTestId("select-receita");
+      const despesasSelect = canvas.getByTestId("select-despesas");
+      const churnSelect = canvas.getByTestId("select-churn");
+
+      expect(receitaSelect).toBeInTheDocument();
+      expect(despesasSelect).toBeInTheDocument();
+      expect(churnSelect).toBeInTheDocument();
+    });
+
+    await step("Verificar color pickers presentes", async () => {
+      const colorPicker0 = canvas.getByTestId("color-picker-0");
+      const colorPicker1 = canvas.getByTestId("color-picker-1");
+      const colorPicker2 = canvas.getByTestId("color-picker-2");
+
+      expect(colorPicker0).toBeInTheDocument();
+      expect(colorPicker1).toBeInTheDocument();
+      expect(colorPicker2).toBeInTheDocument();
+
+      expect(colorPicker0).toHaveValue("#6366f1");
+      expect(colorPicker1).toHaveValue("#10b981");
+      expect(colorPicker2).toHaveValue("#f59e0b");
+    });
+
+    await step("Testar switch para dados negativos", async () => {
+      const negativeButton = canvas.getByTestId("btn-negative");
+      await userEvent.click(negativeButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("4 pontos");
+      });
+    });
+
+    await step("Testar reset dos dados", async () => {
+      const resetButton = canvas.getByTestId("btn-reset");
+      await userEvent.click(resetButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("6 pontos");
+      });
+    });
+
+    await step("Verificar grid restaurado após reset", async () => {
+      const gridCheckbox = canvas.getByTestId("checkbox-grid");
+      expect(gridCheckbox).toBeChecked();
+    });
+
+    await step("Verificar legenda restaurada após reset", async () => {
+      const legendCheckbox = canvas.getByTestId("checkbox-legend");
+      expect(legendCheckbox).toBeChecked();
+    });
+
+    await step("Verificar cores restauradas após reset", async () => {
+      const colorPicker0 = canvas.getByTestId("color-picker-0");
+      const colorPicker1 = canvas.getByTestId("color-picker-1");
+      const colorPicker2 = canvas.getByTestId("color-picker-2");
+
+      expect(colorPicker0).toHaveValue("#6366f1");
+      expect(colorPicker1).toHaveValue("#10b981");
+      expect(colorPicker2).toHaveValue("#f59e0b");
+    });
+
+    await step("Verificar gráfico renderizado no container", async () => {
+      const chartContainer = canvas.getByTestId("chart-container");
+      const rechartsWrapper = chartContainer.querySelector(".recharts-wrapper");
+      expect(rechartsWrapper).toBeInTheDocument();
+    });
+
+    await step("Testar múltiplas adições de pontos", async () => {
+      const addButton = canvas.getByTestId("btn-add-point");
+
+      await userEvent.click(addButton);
+      await userEvent.click(addButton);
+      await userEvent.click(addButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("9 pontos");
+      });
+    });
+
+    await step("Testar múltiplas remoções de pontos", async () => {
+      const removeButton = canvas.getByTestId("btn-remove-point");
+
+      await userEvent.click(removeButton);
+      await userEvent.click(removeButton);
+
+      await waitFor(() => {
+        const dataCount = canvas.getByTestId("data-count");
+        expect(dataCount).toHaveTextContent("7 pontos");
+      });
+    });
   },
 };

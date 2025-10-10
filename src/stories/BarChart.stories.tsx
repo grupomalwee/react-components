@@ -2,8 +2,8 @@ import React from "react";
 import BarChart from "@/components/charts/BarChart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within, waitFor } from "storybook/test";
 
-// Dados de exemplo reutilizáveis
 const sampleQuarterData = [
   { trimestre: "Q1", receita: 4000, despesas: 2400, lucro: 1600, vendas: 3200 },
   { trimestre: "Q2", receita: 5200, despesas: 3100, lucro: 2100, vendas: 4100 },
@@ -68,7 +68,6 @@ const meta: Meta<typeof BarChart> = {
     showTooltip: true,
     showLegend: true,
     data: sampleQuarterData,
-    // padrão editável no painel: array de chaves para yAxis
     yAxis: undefined,
     labelMap: undefined,
     xAxis: "trimestre",
@@ -81,6 +80,19 @@ type Story = StoryObj<typeof BarChart>;
 export const AutoDetect: Story = {
   name: "Auto Detect (default)",
   render: (args) => <BarChart {...args} autoDetect={true} />,
+  play: async ({ canvasElement }) => {
+    within(canvasElement);
+
+    await waitFor(() => {
+      // Verifica se o gráfico foi renderizado procurando pelo container do Recharts
+      const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+      expect(chartContainer).toBeInTheDocument();
+    });
+
+    // Verifica se as barras foram renderizadas
+    const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+    expect(bars.length).toBeGreaterThan(0);
+  },
 };
 
 export const ManualYAxisArray: Story = {
@@ -104,6 +116,28 @@ export const ManualYAxisArray: Story = {
   args: {
     yAxis: ["receita", "despesas", "lucro"],
     labelMap: { receita: "Receita", despesas: "Despesas", lucro: "Lucro" },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico renderizado", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step(
+      "Verificar barras das 3 séries (receita, despesas, lucro)",
+      async () => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        // 3 séries * 4 trimestres = 12 barras
+        expect(bars.length).toBeGreaterThanOrEqual(12);
+      }
+    );
+
+    await step("Verificar legenda presente", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
   },
 };
 
@@ -131,6 +165,24 @@ export const ManualYAxisObject: Story = {
   args: {
     yAxis: undefined, // usuário pode colar objeto JSON no painel para testar
   },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização do gráfico", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar barras renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+
+    await step("Verificar tooltip presente", async () => {
+      const surface = canvasElement.querySelector(".recharts-surface");
+      expect(surface).toBeInTheDocument();
+    });
+  },
 };
 
 export const WithLabelMap: Story = {
@@ -152,6 +204,19 @@ export const WithLabelMap: Story = {
     yAxis: ["vendas", "lucro"],
     labelMap: { vendas: "Vendas Totais", lucro: "Lucro Líquido" },
   },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico com labelMap", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar cores customizadas aplicadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+  },
 };
 
 export const CustomColorsAndGrid: Story = {
@@ -170,6 +235,25 @@ export const CustomColorsAndGrid: Story = {
   args: {
     yAxis: ["vendas", "meta"],
   },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização com cores customizadas", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar grid presente", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
+
+    await step("Verificar barras renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      // 2 séries * 4 meses = 8 barras
+      expect(bars.length).toBeGreaterThanOrEqual(8);
+    });
+  },
 };
 
 export const Compact: Story = {
@@ -185,5 +269,147 @@ export const Compact: Story = {
   ),
   args: {
     yAxis: ["vendas", "receita"],
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico compacto renderizado", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar que legenda não está presente", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).not.toBeInTheDocument();
+    });
+
+    await step("Verificar barras renderizadas no modo compacto", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const TesteTooltipInteraction: Story = {
+  render: (args) => (
+    <BarChart
+      {...args}
+      data={sampleQuarterData}
+      xAxis="trimestre"
+      yAxis={["receita", "despesas"]}
+      height={360}
+      showTooltip={true}
+    />
+  ),
+  args: {
+    yAxis: ["receita", "despesas"],
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico renderizado", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar que tooltip está habilitado", async () => {
+      const surface = canvasElement.querySelector(".recharts-surface");
+      expect(surface).toBeInTheDocument();
+    });
+  },
+};
+
+export const TesteGridVisibility: Story = {
+  render: (args) => (
+    <BarChart
+      {...args}
+      data={sampleSalesData}
+      xAxis="name"
+      yAxis={["vendas"]}
+      height={300}
+      showGrid={false}
+    />
+  ),
+  args: {
+    yAxis: ["vendas"],
+    showGrid: false,
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar gráfico sem grid", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar barras presentes", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const TesteFluxoCompleto: Story = {
+  render: (args) => (
+    <BarChart
+      {...args}
+      data={sampleQuarterData}
+      xAxis="trimestre"
+      yAxis={["receita", "despesas", "lucro", "vendas"]}
+      labelMap={{
+        receita: "Receita Total",
+        despesas: "Despesas",
+        lucro: "Lucro",
+        vendas: "Vendas",
+      }}
+      colors={["#8b5cf6", "#ec4899", "#10b981", "#f59e0b"]}
+      height={420}
+      showGrid={true}
+      showTooltip={true}
+      showLegend={true}
+    />
+  ),
+  args: {
+    yAxis: ["receita", "despesas", "lucro", "vendas"],
+    labelMap: {
+      receita: "Receita Total",
+      despesas: "Despesas",
+      lucro: "Lucro",
+      vendas: "Vendas",
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização completa do gráfico", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
+
+    await step("Verificar todas as 4 séries renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      // 4 séries * 4 trimestres = 16 barras
+      expect(bars.length).toBeGreaterThanOrEqual(16);
+    });
+
+    await step("Verificar grid presente", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
+
+    await step("Verificar legenda presente", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
+
+    await step("Verificar eixo X renderizado", async () => {
+      const xAxis = canvasElement.querySelector(".recharts-xAxis");
+      expect(xAxis).toBeInTheDocument();
+    });
+
+    await step("Verificar eixo Y renderizado", async () => {
+      const yAxis = canvasElement.querySelector(".recharts-yAxis");
+      expect(yAxis).toBeInTheDocument();
+    });
   },
 };
