@@ -54,7 +54,7 @@ export const ExcluirConta: Story = {
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
             <AlertDialogCancelBase>Cancelar</AlertDialogCancelBase>
-            <AlertDialogActionBase className="bg-destructive hover:bg-destructive/90">
+            <AlertDialogActionBase className="bg-destructive hover:bg-destructive/90 ml-2">
               Excluir
             </AlertDialogActionBase>
           </AlertDialogFooterBase>
@@ -82,7 +82,7 @@ export const Aviso: Story = {
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
             <AlertDialogCancelBase>Cancelar</AlertDialogCancelBase>
-            <AlertDialogActionBase className="bg-yellow-500 hover:bg-yellow-600 text-black">
+            <AlertDialogActionBase className=" ml-2 bg-yellow-500 hover:bg-yellow-600 text-black">
               Prosseguir
             </AlertDialogActionBase>
           </AlertDialogFooterBase>
@@ -127,7 +127,6 @@ export const Informacao: Story = {
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-blue-600">
-              {/* Info substitute */}
               <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3b82f6" strokeWidth="2"/><rect x="9" y="7" width="2" height="2" fill="#3b82f6"/><rect x="9" y="10" width="2" height="5" fill="#3b82f6"/></svg>
               <AlertDialogTitleBase>Importante saber!</AlertDialogTitleBase>
             </div>

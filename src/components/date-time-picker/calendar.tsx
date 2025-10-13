@@ -46,7 +46,7 @@ export function CalendarBase({
   return (
     <div
       className={cn(
-        "rounded-2xl border bg-background p-4 shadow-lg overflow-hidden w-full h-full flex flex-col",
+        "rounded-md border bg-background p-4 shadow-lg overflow-hidden w-full h-full flex flex-col",
         className
       )}
     >
