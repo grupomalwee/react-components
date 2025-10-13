@@ -90,10 +90,9 @@ export function DateTimePicker({
         <PopoverTriggerBase disabled={disabled} asChild>
           <ButtonBase
             variant={"outline"}
-            size={"lg"}
             className={cn(
               "w-full justify-start text-left min-w-0 overflow-hidden",
-              "min-h-[44px] sm:min-h-[48px] px-3 sm:px-4",
+              "",
               "text-sm sm:text-base",
               !date && "text-muted-foreground"
             )}
@@ -142,13 +141,13 @@ export function DateTimePicker({
                         "px-2 sm:px-3 py-1.5 sm:py-2",
                         "text-sm sm:text-base font-semibold w-full max-w-xs",
                         "border-2 border-primary/20 rounded-lg",
-                        "bg-primary/5 hover:bg-primary/10 hover:border-primary/30",
+                        "bg-background hover:bg-primary/10 hover:border-primary/30",
                         "transition-all duration-200",
                         "shadow-sm hover:shadow-md active:scale-[0.98]",
                         "min-h-[36px] sm:min-h-[40px]"
                       )}
                     >
-                      <ClockIcon className="text-primary/70 flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
+                      <ClockIcon className="text-primary flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
                       <span className="text-foreground truncate">
                         {internalDate
                           ? format(internalDate, getTimeFormat() || "HH:mm", {

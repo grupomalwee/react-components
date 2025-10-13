@@ -5,48 +5,113 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { cn } from "../../lib/utils";
 import LabelBase from "./LabelBase";
 
+/**
+ * Tipos disponíveis de progresso
+ */
+export type ProgressType = "bar" | "segments" | "panels" | "circles";
+
 export interface ProgressBaseProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+  /** Tipo de visualização do progresso */
+  variant?: ProgressType;
   label?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  /** Número de segmentos (usado quando variant="segments") */
+  segments?: number;
+  /** Array de etapas (usado quando variant="panels" ou "circles") */
+  steps?: string[];
+  /** Índice da etapa atual (usado quando variant="panels" ou "circles") */
+  currentStep?: number;
 }
 
 const ProgressBase = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   ProgressBaseProps
->(({ className, value, label, leftIcon, rightIcon, ...props }, ref) => {
-  return (
-    <div className="flex flex-col gap-1 w-full min-w-[150px]">
-      {label && <LabelBase className="py-2">{label}</LabelBase>}
-
-      <div className="flex items-center gap-2">
-        {leftIcon && (
-          <div className="flex items-center justify-center">{leftIcon}</div>
-        )}
-
-        <ProgressPrimitive.Root
-          ref={ref}
-          className={cn(
-            "relative h-3 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800 shadow-inner transition-all",
-            className
-          )}
-          value={value}
-          {...props}
-        >
-          <ProgressPrimitive.Indicator
-            className="h-full w-full flex-1 bg-primary transition-all duration-500 ease-in-out"
-            style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+>(
+  (
+    {
+      className,
+      value,
+      label,
+      leftIcon,
+      rightIcon,
+      variant = "bar",
+      segments = 5,
+      steps = [],
+      currentStep = 0,
+      ...props
+    },
+    ref
+  ) => {
+    // Renderiza baseado no variant
+    switch (variant) {
+      case "segments":
+        return (
+          <ProgressSegmentsBase
+            label={label}
+            segments={segments}
+            value={value || 0}
           />
-        </ProgressPrimitive.Root>
+        );
 
-        {rightIcon && (
-          <div className="flex items-center justify-center">{rightIcon}</div>
-        )}
-      </div>
-    </div>
-  );
-});
+      case "panels":
+        return (
+          <ProgressPanelsBase
+            label={label}
+            steps={steps}
+            currentStep={currentStep}
+          />
+        );
+
+      case "circles":
+        return (
+          <ProgressCirclesBase
+            label={label}
+            steps={steps}
+            currentStep={currentStep}
+          />
+        );
+
+      case "bar":
+      default:
+        return (
+          <div className="flex flex-col gap-1 w-full min-w-[150px]">
+            {label && <LabelBase className="py-2">{label}</LabelBase>}
+
+            <div className="flex items-center gap-2">
+              {leftIcon && (
+                <div className="flex items-center justify-center">
+                  {leftIcon}
+                </div>
+              )}
+
+              <ProgressPrimitive.Root
+                ref={ref}
+                className={cn(
+                  "relative h-3 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800 shadow-inner transition-all",
+                  className
+                )}
+                value={value}
+                {...props}
+              >
+                <ProgressPrimitive.Indicator
+                  className="h-full w-full flex-1 bg-primary transition-all duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+                />
+              </ProgressPrimitive.Root>
+
+              {rightIcon && (
+                <div className="flex items-center justify-center">
+                  {rightIcon}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+    }
+  }
+);
 
 ProgressBase.displayName = "ProgressBase";
 
@@ -81,8 +146,6 @@ const ProgressSegmentsBase = ({
     </div>
   );
 };
-
-
 
 // PANELS
 export interface ProgressPanelsBaseProps {
@@ -174,11 +237,11 @@ const ProgressCirclesBase = ({
 
       <div className="relative flex items-center justify-between w-full">
         <div className="absolute top-5 left-0 w-full h-1 bg-zinc-200 dark:bg-zinc-700" />
-        
+
         <div
           className="absolute top-5 left-0 h-1 bg-primary transition-all duration-300"
           style={{
-            width: `${currentStep / (steps.length - 1) * 100}%`,
+            width: `${(currentStep / (steps.length - 1)) * 100}%`,
           }}
         />
 
@@ -212,7 +275,6 @@ const ProgressCirclesBase = ({
     </div>
   );
 };
-
 
 export {
   ProgressBase,

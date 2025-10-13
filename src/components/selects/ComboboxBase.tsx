@@ -70,7 +70,7 @@ export function ComboboxBase<T extends string>({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "flex items-start gap-2 justify-between h-full border border-input",
+              "flex items-start gap-2 justify-between",
               errorMessage && "border-red-500"
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
