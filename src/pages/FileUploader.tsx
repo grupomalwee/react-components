@@ -22,7 +22,6 @@ export const FileUploaderPage = () => {
           value={files}
           onValueChange={handleValueChange}
           onUpload={handleUpload}
-          multiple={true}
           showPreview={true}
           dropzoneText="Arraste arquivos aqui ou clique para selecionar"
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
@@ -34,7 +33,6 @@ export const FileUploaderPage = () => {
           value={files}
           onValueChange={handleValueChange}
           onUpload={handleUpload}
-          multiple={true}
           showPreview={true}
           dropzoneText="Arraste arquivos aqui ou clique para selecionar"
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
@@ -46,7 +44,6 @@ export const FileUploaderPage = () => {
           value={files}
           onValueChange={handleValueChange}
           onUpload={handleUpload}
-          multiple={true}
           showPreview={true}
           dropzoneText="Arraste arquivos aqui ou clique para selecionar"
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
@@ -58,7 +55,6 @@ export const FileUploaderPage = () => {
           value={files}
           onValueChange={handleValueChange}
           onUpload={handleUpload}
-          multiple={true}
           showPreview={true}
           dropzoneText="Arraste arquivos aqui ou clique para selecionar"
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
