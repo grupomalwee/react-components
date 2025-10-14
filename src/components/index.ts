@@ -45,3 +45,6 @@ export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
 export * from "./charts";
+export * from "./ui/SmallButtons";
+export * from "./ui/DebounceInput";
+export * from "./ui/FileUploader";

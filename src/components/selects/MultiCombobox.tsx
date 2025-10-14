@@ -1,25 +1,26 @@
-import { useCallback, useMemo } from "react"
-import { ComboboxProps } from "./Combobox"
-import { ComboboxBase } from "./ComboboxBase"
-import { XIcon } from "@phosphor-icons/react"
-import LabelBase from "../ui/LabelBase"
-import { cn } from "@/lib/utils"
+import { useCallback, useMemo } from "react";
+import { ComboboxProps } from "./Combobox";
+import { ComboboxBase } from "./ComboboxBase";
+import { XIcon } from "@phosphor-icons/react";
+import LabelBase from "../ui/LabelBase";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface MultiComboboxTestIds {
-  root?: string
-  label?: string
-  selectedWrapper?: string
-  emptyPlaceholder?: string
-  selectedItem?: (value: string) => string
+  root?: string;
+  label?: string;
+  selectedWrapper?: string;
+  emptyPlaceholder?: string;
+  selectedItem?: (value: string) => string;
 }
 
 interface MultiComboboxProps<T extends string>
   extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
-  selected: T[]
-  onChange: (value: T[]) => void
-  label?: string
-  labelClassname?: string
-  testIds?: MultiComboboxTestIds
+  selected: T[];
+  onChange: (value: T[]) => void;
+  label?: string;
+  labelClassname?: string;
+  testIds?: MultiComboboxTestIds;
 }
 
 export function MultiCombobox<T extends string>({
@@ -33,69 +34,81 @@ export function MultiCombobox<T extends string>({
   labelClassname,
   testIds = {},
 }: MultiComboboxProps<T>) {
-  const selectedItems = items.filter((item) => selected.includes(item.value))
+  const selectedItems = items.filter((item) => selected.includes(item.value));
 
   const checkIsSelected = useCallback(
     (value: T) => selected.includes(value),
     [selected]
-  )
+  );
 
   const handleSelection = useCallback(
     (value: T) => {
-      const isSelected = selected.includes(value)
+      const isSelected = selected.includes(value);
       if (isSelected) {
-        onChange(selected.filter((item) => item !== value))
+        onChange(selected.filter((item) => item !== value));
       } else {
-        onChange([...selected, value])
+        onChange([...selected, value]);
       }
     },
     [selected, onChange]
-  )
+  );
 
   const renderSelected = useMemo(() => {
     if (selectedItems.length === 0) {
       return (
         <span
           data-testid={testIds.emptyPlaceholder ?? "combobox-selected-empty"}
-          className="text-gray-500"
+          className="text-gray-500 truncate"
         >
           {placeholder ?? "Selecione uma opção..."}
         </span>
-      )
+      );
     }
 
     return (
       <div
         data-testid={testIds.selectedWrapper ?? "combobox-selected-wrapper"}
-        className="flex w-full flex-wrap gap-2"
+        className="flex w-full flex-wrap gap-2 overflow-hidden pr-1.5"
       >
-        {selectedItems.map((item) => (
-          <div
-            key={item.value}
-            className="flex items-center gap-1 rounded-md border p-1"
-            data-testid={
-              testIds.selectedItem?.(item.value) ?? `combobox-selected-${item.value}`
-            }
-          >
-            <span className="whitespace-break-spaces text-xs">
-              {item.label}
-            </span>
-            <span
-              role="button"
-              tabIndex={0}
-              onClick={(e) => {
-                e.stopPropagation()
-                handleSelection(item.value)
+        <AnimatePresence mode="popLayout">
+          {selectedItems.map((item) => (
+            <motion.div
+              key={item.value}
+              layout
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30,
               }}
-              className="cursor-pointer p-0 m-0 text-xs flex items-center justify-center hover:text-red-500 hover:scale-110 transition-all"
+              className="flex items-center justify-between gap-2 my-1 rounded-md border p-1 max-w-full"
+              data-testid={
+                testIds.selectedItem?.(item.value) ??
+                `combobox-selected-${item.value}`
+              }
             >
-              <XIcon size={14} />
-            </span>
-          </div>
-        ))}
+              <span className="text-xs truncate">{item.label}</span>
+              <motion.span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSelection(item.value);
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="cursor-pointer p-0.5 text-xs flex items-center justify-center hover:text-red-500 transition-colors flex-shrink-0 rounded hover:bg-red-50 "
+              >
+                <XIcon size={14} />
+              </motion.span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-    )
-  }, [handleSelection, placeholder, selectedItems, testIds])
+    );
+  }, [handleSelection, placeholder, selectedItems, testIds]);
 
   return (
     <div
@@ -119,5 +132,5 @@ export function MultiCombobox<T extends string>({
         searchPlaceholder={searchPlaceholder}
       />
     </div>
-  )
+  );
 }

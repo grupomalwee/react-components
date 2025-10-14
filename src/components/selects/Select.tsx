@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/SelectBase";
 import { ScrollAreaBase } from "@/components/ui/ScrollareaBase";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface SelectItem<T extends string> {
   label: string;
@@ -63,10 +64,13 @@ export function Select<T extends string>({
 }: SelectProps<T>) {
   return (
     <div data-testid={testIds.root ?? "select-root"}>
-      <SelectBase onValueChange={onChange} data-testid={testIds.base ?? "select-base"}>
+      <SelectBase
+        onValueChange={onChange}
+        data-testid={testIds.base ?? "select-base"}
+      >
         <SelectTriggerBase
           className={cn(
-            "flex h-12 w-full content-start text-lg shadow-md",
+            "flex h-9 w-full content-start text-lg shadow-md",
             errorMessage && "border-red-500"
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
@@ -82,8 +86,13 @@ export function Select<T extends string>({
             {groupItems ? (
               <>
                 {Object.keys(groupItems).map((key) => (
-                  <SelectGroupBase key={key} data-testid={testIds.group ?? "select-group"}>
-                    <SelectLabelBase data-testid={testIds.label ?? "select-label"}>
+                  <SelectGroupBase
+                    key={key}
+                    data-testid={testIds.group ?? "select-group"}
+                  >
+                    <SelectLabelBase
+                      data-testid={testIds.label ?? "select-label"}
+                    >
                       {key}
                     </SelectLabelBase>
                     {groupItems[key].map((item) => (
@@ -91,7 +100,8 @@ export function Select<T extends string>({
                         key={item.value}
                         value={item.value}
                         data-testid={
-                          testIds.item?.(item.value) ?? `select-item-${item.value}`
+                          testIds.item?.(item.value) ??
+                          `select-item-${item.value}`
                         }
                       >
                         {item.label}
@@ -119,14 +129,20 @@ export function Select<T extends string>({
         </ScrollAreaBase>
       </SelectBase>
 
-      {errorMessage && (
-        <p
-          className="text-sm text-red-500"
-          data-testid={testIds.error ?? "select-error"}
-        >
-          {errorMessage}
-        </p>
-      )}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="text-sm text-red-500"
+            data-testid={testIds.error ?? "select-error"}
+          >
+            {errorMessage}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
