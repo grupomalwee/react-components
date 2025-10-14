@@ -2,6 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import DebouncedInput from "../components/ui/DebounceInput";
 import { useState } from "react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DebouncedInput> = {
   title: "forms/DebouncedInput",
@@ -67,7 +68,7 @@ const DebouncedInputWrapper = (
 
   return (
     <div style={{ width: "300px", maxWidth: "100%" }}>
-      <DebouncedInput {...args} value={value} onChange={handleChange} />
+      <DebouncedInput {...args} value={value} onChange={handleChange} rightIcon={<MagnifyingGlassIcon/>}/>
       <div
         style={{
           marginTop: "12px",
