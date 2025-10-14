@@ -15,7 +15,9 @@ const SelectValueBase = SelectPrimitive.Value;
 
 const SelectTriggerBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { open?: boolean }
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    open?: boolean;
+  }
 >(({ className, children, open, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
@@ -52,7 +54,8 @@ const SelectScrollUpButtonBase = React.forwardRef<
     <CaretUpIcon className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
-SelectScrollUpButtonBase.displayName = SelectPrimitive.ScrollUpButton.displayName;
+SelectScrollUpButtonBase.displayName =
+  SelectPrimitive.ScrollUpButton.displayName;
 
 const SelectScrollDownButtonBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
@@ -69,49 +72,63 @@ const SelectScrollDownButtonBase = React.forwardRef<
     <CaretDownIcon className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
-SelectScrollDownButtonBase.displayName = SelectPrimitive.ScrollDownButton.displayName;
+SelectScrollDownButtonBase.displayName =
+  SelectPrimitive.ScrollDownButton.displayName;
 
 const SelectContentBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & { testid?: string }
->(({ className, children, position = "popper", testid: dataTestId = "select-content", ...props }, ref) => (
-  <SelectPrimitive.Portal>
-    <AnimatePresence>
-      <SelectPrimitive.Content
-        ref={ref}
-        className={cn(
-          "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
-          className
-        )}
-        position={position}
-        data-testid={dataTestId}
-        {...props}
-        asChild
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & {
+    testid?: string;
+  }
+>(
+  (
+    {
+      className,
+      children,
+      position = "popper",
+      testid: dataTestId = "select-content",
+      ...props
+    },
+    ref
+  ) => (
+    <SelectPrimitive.Portal>
+      <AnimatePresence>
+        <SelectPrimitive.Content
+          ref={ref}
+          className={cn(
+            "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
+            className
+          )}
+          position={position}
+          data-testid={dataTestId}
+          {...props}
+          asChild
         >
-          <>
-            <SelectScrollUpButtonBase />
-            <SelectPrimitive.Viewport
-              className={cn(
-                "p-1",
-                position === "popper" &&
-                  "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
-              )}
-            >
-              {children}
-            </SelectPrimitive.Viewport>
-            <SelectScrollDownButtonBase />
-          </>
-        </motion.div>
-      </SelectPrimitive.Content>
-    </AnimatePresence>
-  </SelectPrimitive.Portal>
-));
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            <>
+              <SelectScrollUpButtonBase />
+              <SelectPrimitive.Viewport
+                className={cn(
+                  "p-1",
+                  position === "popper" &&
+                    "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+                )}
+              >
+                {children}
+              </SelectPrimitive.Viewport>
+              <SelectScrollDownButtonBase />
+            </>
+          </motion.div>
+        </SelectPrimitive.Content>
+      </AnimatePresence>
+    </SelectPrimitive.Portal>
+  )
+);
 SelectContentBase.displayName = SelectPrimitive.Content.displayName;
 
 const SelectLabelBase = React.forwardRef<
@@ -133,17 +150,30 @@ const SelectItemBase = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors",
       className
     )}
     {...props}
+    asChild
   >
-    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
-      <SelectPrimitive.ItemIndicator>
-        <CheckIcon className="h-4 w-4" />
-      </SelectPrimitive.ItemIndicator>
-    </span>
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    <motion.div
+      whileHover={{ x: 4 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
+    >
+      <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+        <SelectPrimitive.ItemIndicator>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <CheckIcon className="h-4 w-4" />
+          </motion.div>
+        </SelectPrimitive.ItemIndicator>
+      </span>
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </motion.div>
   </SelectPrimitive.Item>
 ));
 SelectItemBase.displayName = SelectPrimitive.Item.displayName;

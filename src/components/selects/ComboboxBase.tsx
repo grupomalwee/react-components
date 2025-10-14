@@ -15,6 +15,7 @@ import { ButtonBase } from "@/components/ui/ButtonBase";
 import { cn } from "@/lib/utils";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { ReactNode, useState } from "react";
+import { motion } from "framer-motion";
 
 export interface ComboboxItem<T extends string> {
   label: string;
@@ -66,17 +67,23 @@ export function ComboboxBase<T extends string>({
           className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]"
         >
           <ButtonBase
-            variant="outline"
+            variant="select"
+            size="select"
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "flex items-start gap-2 justify-between",
+              "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
               errorMessage && "border-red-500"
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
-            <CaretDownIcon size={16} className="mt-0.5" />
+            <motion.div
+              animate={{ rotate: open ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CaretDownIcon size={16} className="mt-0.5 flex-shrink-0" />
+            </motion.div>
           </ButtonBase>
         </PopoverTriggerBase>
 
@@ -112,17 +119,27 @@ export function ComboboxBase<T extends string>({
                       data-testid={testIds.option ?? "combobox-option"}
                     >
                       {item.label}
-                      <CheckIcon
-                        className={cn(
-                          "ml-auto",
-                          isSelected ? "opacity-100" : "opacity-0"
-                        )}
-                        data-testid={
-                          isSelected
-                            ? testIds.check ?? "combobox-option-check"
-                            : undefined
-                        }
-                      />
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: isSelected ? 1 : 0 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 30,
+                        }}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "ml-auto",
+                            isSelected ? "opacity-100" : "opacity-0"
+                          )}
+                          data-testid={
+                            isSelected
+                              ? testIds.check ?? "combobox-option-check"
+                              : undefined
+                          }
+                        />
+                      </motion.div>
                     </CommandItemBase>
                   );
                 })}
