@@ -92,9 +92,9 @@ export function DateTimePicker({
             variant={"outline"}
             className={cn(
               "w-full justify-start text-left min-w-0 overflow-hidden",
-              "",
+              "text-muted-foreground/90",
               "text-sm sm:text-base",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground/"
             )}
           >
             <span className="truncate flex-1">
