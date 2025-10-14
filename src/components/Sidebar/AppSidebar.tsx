@@ -95,10 +95,14 @@ import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
 import ChartPage from "@/pages/Chart";
 import DatePickerPage from "@/pages/DatePicker";
+import { FileUploaderPage } from "@/pages/FileUploader";
+import { DebounceInputPage } from "@/pages/DebounceInput";
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },
   { title: "Chart", url: "/chart", icon: HouseIcon },
+  { title: "File", url: "/file", icon: HouseIcon },
+  { title: "Debounce Input", url: "/debounce-input", icon: HouseIcon },
   { title: "Alert Dialog", url: "/alert-dialog", icon: WarningCircleIcon },
   { title: "Destructive Dialog", url: "/destructive-dialog", icon: WarningCircleIcon },
   { title: "Avatar", url: "/avatar", icon: UserCircleIcon },
@@ -175,6 +179,8 @@ export function AppSidebar() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<ChartPage />} />
+          <Route path="/file" element={<FileUploaderPage />} />
+          <Route path="/debounce-input" element={<DebounceInputPage />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
           <Route path="/destructive-dialog" element={<DestructiveDialogPage />} />
           <Route path="/avatar" element={<AvatarPage />} />
