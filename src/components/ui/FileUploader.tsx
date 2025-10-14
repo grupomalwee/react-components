@@ -5,7 +5,6 @@ import {
   CloudArrowUpIcon,
   CheckIcon,
   XIcon,
-  SpinnerIcon,
   FileTextIcon,
   FilePdfIcon,
   FileImageIcon,
@@ -22,19 +21,16 @@ import { DeleteButton } from "./SmallButtons";
 
 export interface FileWithPreview extends File {
   id?: string;
-  progress?: number;
   error?: string;
-  status?: "idle" | "uploading" | "success" | "error";
-  preview?: string; // URL do preview da imagem
+  preview?: string;
 }
 
 export interface FileUploaderProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onDrop"> {
   accept: string[];
   maxSize: number;
-  maxFiles: number;
+  maxFiles?: number;
   onValueChange: (files: FileWithPreview[]) => void;
-  multiple?: boolean;
   disabled?: boolean;
   value?: FileWithPreview[];
   onUpload?: (files: FileWithPreview[]) => Promise<void>;
@@ -42,7 +38,6 @@ export interface FileUploaderProps
   dropzoneText?: string;
   dropzoneSubtext?: string;
   animate?: boolean;
-  showProgress?: boolean;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -88,7 +83,6 @@ const getFileTypeIcon = (file: File) => {
     return <FileTextIcon size={20} className="text-gray-500" />;
   }
 
-  // Mídia
   if (mimeType.startsWith("image/")) {
     return <FileImageIcon size={20} className="text-purple-500" />;
   }
@@ -99,12 +93,10 @@ const getFileTypeIcon = (file: File) => {
     return <FileAudioIcon size={20} className="text-indigo-500" />;
   }
 
-  // Arquivos comprimidos
   if (["zip", "rar", "7z", "tar", "gz"].includes(extension)) {
     return <FileZipIcon size={20} className="text-yellow-600" />;
   }
 
-  // Padrão
   return <FileIcon size={20} className="text-muted-foreground" />;
 };
 
@@ -132,8 +124,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       className,
       accept,
       maxSize,
-      maxFiles,
-      multiple = true,
+      maxFiles = 1,
       disabled = false,
       value = [],
       onValueChange,
@@ -142,7 +133,6 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       dropzoneText = "Arraste arquivos aqui ou clique para selecionar",
       dropzoneSubtext,
       animate = true,
-      showProgress = true,
       ...props
     },
     ref
@@ -151,6 +141,9 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     const [files, setFiles] = React.useState<FileWithPreview[]>(value);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const dragCounterRef = React.useRef(0);
+
+    // Determina automaticamente se é múltiplo baseado em maxFiles
+    const multiple = maxFiles > 1;
 
     React.useEffect(() => {
       setFiles(value);
@@ -519,49 +512,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                               {file.error}
                             </motion.p>
                           )}
-
-                          {file.status === "uploading" && showProgress && (
-                            <motion.div
-                              className="mt-2 h-1 overflow-hidden rounded-full bg-muted"
-                              initial={{ scaleX: 0 }}
-                              animate={{ scaleX: 1 }}
-                            >
-                              <motion.div
-                                className="h-full bg-primary"
-                                initial={{ width: "0%" }}
-                                animate={{ width: `${file.progress || 0}%` }}
-                                transition={{ duration: 0.3 }}
-                              />
-                            </motion.div>
-                          )}
                         </div>
-
-                        {file.status === "success" && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 dark:bg-green-900"
-                          >
-                            <CheckIcon
-                              size={12}
-                              className="text-green-600 dark:text-green-400"
-                            />
-                          </motion.div>
-                        )}
-
-                        {file.status === "uploading" && showProgress && (
-                          <motion.div
-                            className="h-5 w-5 flex items-center justify-center"
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                          >
-                            <SpinnerIcon size={20} className="text-primary" />
-                          </motion.div>
-                        )}
 
                         <DeleteButton
                           type="button"

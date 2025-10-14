@@ -11,7 +11,7 @@ const meta: Meta<typeof FileUploader> = {
     docs: {
       description: {
         component:
-          "Componente para upload de arquivos com drag & drop, preview de imagens e ícones específicos por tipo de arquivo. Suporta validação, progress e estados de upload.",
+          "Componente para upload de arquivos com drag & drop, preview de imagens e ícones específicos por tipo de arquivo. O comportamento múltiplo é determinado automaticamente pelo valor de maxFiles (1 = único, >1 = múltiplo).",
       },
     },
     backgrounds: {
@@ -34,11 +34,8 @@ const meta: Meta<typeof FileUploader> = {
     },
     maxFiles: {
       control: "number",
-      description: "Número máximo de arquivos permitidos",
-    },
-    multiple: {
-      control: "boolean",
-      description: "Permitir múltiplos arquivos",
+      description:
+        "Número máximo de arquivos permitidos (1 = único, >1 = múltiplo)",
     },
     disabled: {
       control: "boolean",
@@ -52,10 +49,6 @@ const meta: Meta<typeof FileUploader> = {
       control: "boolean",
       description: "Habilitar animações",
     },
-    showProgress: {
-      control: "boolean",
-      description: "Mostrar barra de progresso",
-    },
     dropzoneText: {
       control: "text",
       description: "Texto principal da dropzone",
@@ -66,14 +59,12 @@ const meta: Meta<typeof FileUploader> = {
     },
   },
   args: {
-    accept: ["image/*", ".pdf", ".doc", ".docx"],
-    maxSize: 10 * 1024 * 1024, // 10MB
+    accept: [],
+    maxSize: 10 * 1024 * 1024,
     maxFiles: 5,
-    multiple: true,
     disabled: false,
     showPreview: true,
     animate: true,
-    showProgress: true,
     dropzoneText: "Arraste arquivos aqui ou clique para selecionar",
     dropzoneSubtext: "Suporta imagens e documentos até 10MB",
   },
@@ -82,7 +73,6 @@ const meta: Meta<typeof FileUploader> = {
 export default meta;
 type Story = StoryObj<typeof FileUploader>;
 
-// Wrapper component para gerenciar estado
 const FileUploaderWrapper = (
   args: React.ComponentProps<typeof FileUploader>
 ) => {
@@ -92,7 +82,6 @@ const FileUploaderWrapper = (
     uploadFiles: FileWithPreview[]
   ): Promise<void> => {
     console.log("Uploading files:", uploadFiles);
-    // Simular upload
     return new Promise((resolve) => {
       setTimeout(() => resolve(), 2000);
     });
@@ -129,7 +118,6 @@ export const SingleFile: Story = {
   render: (args) => (
     <FileUploaderWrapper
       {...args}
-      multiple={false}
       maxFiles={1}
       dropzoneText="Selecione um arquivo"
       dropzoneSubtext="Apenas um arquivo por vez"
