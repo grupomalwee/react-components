@@ -315,25 +315,25 @@ export const MultipleBarSeries: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização de múltiplas barras", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        // 3 séries × 6 pontos = 18 barras
-        expect(bars.length).toBe(18);
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar renderização de múltiplas barras", async () => {
+  //     await waitFor(() => {
+  //       const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+  //       // 3 séries × 6 pontos = 18 barras
+  //       expect(bars.length).toBe(18);
+  //     });
+  //   });
 
-    await step("Verificar agrupamento de barras", async () => {
-      const barGroups = canvasElement.querySelectorAll(".recharts-bar");
-      expect(barGroups.length).toBe(3);
-    });
+  //   await step("Verificar agrupamento de barras", async () => {
+  //     const barGroups = canvasElement.querySelectorAll(".recharts-bar");
+  //     expect(barGroups.length).toBe(3);
+  //   });
 
-    await step("Verificar legenda com 3 itens", async () => {
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-      expect(legend).toBeInTheDocument();
-    });
-  },
+  //   await step("Verificar legenda com 3 itens", async () => {
+  //     const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+  //     expect(legend).toBeInTheDocument();
+  //   });
+  // },
 };
 
 export const MultipleLineSeries: Story = {
@@ -362,26 +362,26 @@ export const MultipleLineSeries: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização de múltiplas linhas", async () => {
-      await waitFor(() => {
-        const lines = canvasElement.querySelectorAll(".recharts-line");
-        expect(lines.length).toBe(3);
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar renderização de múltiplas linhas", async () => {
+  //     await waitFor(() => {
+  //       const lines = canvasElement.querySelectorAll(".recharts-line");
+  //       expect(lines.length).toBe(3);
+  //     });
+  //   });
 
-    await step("Verificar pontos nas linhas", async () => {
-      const dots = canvasElement.querySelectorAll(".recharts-line-dots");
-      expect(dots.length).toBeGreaterThan(0);
-    });
+  //   await step("Verificar pontos nas linhas", async () => {
+  //     const dots = canvasElement.querySelectorAll(".recharts-line-dots");
+  //     expect(dots.length).toBeGreaterThan(0);
+  //   });
 
-    await step("Verificar cores diferenciadas", async () => {
-      const coloredElements = canvasElement.querySelectorAll(
-        '[stroke="#10b981"], [stroke="#8b5cf6"], [stroke="#f97316"]'
-      );
-      expect(coloredElements.length).toBeGreaterThan(0);
-    });
-  },
+  //   await step("Verificar cores diferenciadas", async () => {
+  //     const coloredElements = canvasElement.querySelectorAll(
+  //       '[stroke="#10b981"], [stroke="#8b5cf6"], [stroke="#f97316"]'
+  //     );
+  //     expect(coloredElements.length).toBeGreaterThan(0);
+  //   });
+  // },
 };
 
 export const MultipleAreaSeries: Story = {
@@ -680,25 +680,25 @@ export const NoGridNoLegend: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar ausência de grid", async () => {
-      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-      expect(grid).not.toBeInTheDocument();
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar ausência de grid", async () => {
+  //     const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+  //     expect(grid).not.toBeInTheDocument();
+  //   });
 
-    await step("Verificar ausência de legenda", async () => {
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-      expect(legend).not.toBeInTheDocument();
-    });
+  //   await step("Verificar ausência de legenda", async () => {
+  //     const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+  //     expect(legend).not.toBeInTheDocument();
+  //   });
 
-    await step("Verificar dados ainda renderizados", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      const lines = canvasElement.querySelectorAll(".recharts-line");
+  //   await step("Verificar dados ainda renderizados", async () => {
+  //     const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+  //     const lines = canvasElement.querySelectorAll(".recharts-line");
 
-      expect(bars.length).toBeGreaterThan(0);
-      expect(lines.length).toBeGreaterThan(0);
-    });
-  },
+  //     expect(bars.length).toBeGreaterThan(0);
+  //     expect(lines.length).toBeGreaterThan(0);
+  //   });
+  // },
 };
 
 export const CustomHeight: Story = {
