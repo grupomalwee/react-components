@@ -3,10 +3,6 @@ name: Chromatic CI
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Escolha a branch que quer rodar'
-        required: true
-        default: 'main'
       run_chromatic:
         description: 'Rodar Chromatic? (y/N)'
         required: false
@@ -20,10 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.run_chromatic == 'y' }}
     steps:
-      - name: Checkout branch
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
