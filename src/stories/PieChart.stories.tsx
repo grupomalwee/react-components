@@ -59,32 +59,48 @@ export const Default: Story = {
   ),
 };
 
-export const CustomHexColors: Story = {
+export const CustomColors: Story = {
+  name: "Cores Customizadas",
   render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        colors={["#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4"]}
-      />
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Hex Colors
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            colors={["#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4"]}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          HSL Colors
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            colors={[
+              "hsl(258, 88%, 66%)",
+              "hsl(188, 94%, 43%)",
+              "hsl(84, 81%, 44%)",
+              "hsl(12, 76%, 61%)",
+              "hsl(280, 100%, 70%)",
+            ]}
+          />
+        </div>
+      </div>
     </div>
   ),
-};
-
-export const CustomHslColors: Story = {
-  render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        colors={[
-          "hsl(258, 88%, 66%)",
-          "hsl(188, 94%, 43%)",
-          "hsl(84, 81%, 44%)",
-          "hsl(12, 76%, 61%)",
-          "hsl(280, 100%, 70%)",
-        ]}
-      />
-    </div>
-  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story: "Diferentes formatos de cores: Hex e HSL.",
+      },
+    },
+  },
 };
 
 export const CustomData: Story = {
@@ -103,73 +119,90 @@ export const CustomData: Story = {
   ),
 };
 
-export const DonutChart: Story = {
+export const Variants: Story = {
+  name: "Variantes",
   render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        innerRadius={60}
-        outerRadius={120}
-        colors={["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f0932b"]}
-      />
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Donut Chart (innerRadius)
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            innerRadius={60}
+            outerRadius={120}
+            colors={["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f0932b"]}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Market Share - Donut Médio
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            data={[
+              { name: "Chrome", value: 65 },
+              { name: "Safari", value: 18 },
+              { name: "Edge", value: 8 },
+              { name: "Firefox", value: 6 },
+              { name: "Outros", value: 3 },
+            ]}
+            colors={["#4285f4", "#34c759", "#0078d4", "#ff9500", "#8e8e93"]}
+            innerRadius={40}
+            outerRadius={100}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Sem Labels
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            showLabels={false}
+            colors={["#f97316", "#059669", "#7c3aed", "#dc2626", "#0891b2"]}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Sem Legenda
+        </h3>
+        <div style={{ width: "600px", height: "500px" }}>
+          <PieChart
+            {...args}
+            showLegend={false}
+            colors={["#ec4899", "#14b8a6", "#f59e0b", "#8b5cf6", "#06b6d4"]}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Compacto (menor raio, sem legenda)
+        </h3>
+        <div style={{ width: "400px", height: "350px" }}>
+          <PieChart
+            {...args}
+            height={300}
+            outerRadius={80}
+            showLegend={false}
+            colors={["#55af7d", "#8e68ff", "#2273e1", "#f59e0b", "#ef4444"]}
+          />
+        </div>
+      </div>
     </div>
   ),
-};
-
-export const MarketShare: Story = {
-  render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        data={[
-          { name: "Chrome", value: 65 },
-          { name: "Safari", value: 18 },
-          { name: "Edge", value: 8 },
-          { name: "Firefox", value: 6 },
-          { name: "Outros", value: 3 },
-        ]}
-        colors={["#4285f4", "#34c759", "#0078d4", "#ff9500", "#8e8e93"]}
-        innerRadius={40}
-        outerRadius={100}
-      />
-    </div>
-  ),
-};
-
-export const WithoutLabels: Story = {
-  render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        showLabels={false}
-        colors={["#f97316", "#059669", "#7c3aed", "#dc2626", "#0891b2"]}
-      />
-    </div>
-  ),
-};
-
-export const WithoutLegend: Story = {
-  render: (args) => (
-    <div style={{ width: "600px", height: "500px" }}>
-      <PieChart
-        {...args}
-        showLegend={false}
-        colors={["#ec4899", "#14b8a6", "#f59e0b", "#8b5cf6", "#06b6d4"]}
-      />
-    </div>
-  ),
-};
-
-export const Compact: Story = {
-  render: (args) => (
-    <div style={{ width: "400px", height: "350px" }}>
-      <PieChart
-        {...args}
-        height={300}
-        outerRadius={80}
-        showLegend={false}
-        colors={["#55af7d", "#8e68ff", "#2273e1", "#f59e0b", "#ef4444"]}
-      />
-    </div>
-  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Diferentes variantes: donut, market share, sem labels, sem legenda, compacto.",
+      },
+    },
+  },
 };

@@ -2,8 +2,8 @@ import React from "react";
 import BarChart from "@/components/charts/BarChart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within, waitFor } from "storybook/test";
 
-// Dados de exemplo reutilizáveis
 const sampleQuarterData = [
   { trimestre: "Q1", receita: 4000, despesas: 2400, lucro: 1600, vendas: 3200 },
   { trimestre: "Q2", receita: 5200, despesas: 3100, lucro: 2100, vendas: 4100 },
@@ -68,7 +68,6 @@ const meta: Meta<typeof BarChart> = {
     showTooltip: true,
     showLegend: true,
     data: sampleQuarterData,
-    // padrão editável no painel: array de chaves para yAxis
     yAxis: undefined,
     labelMap: undefined,
     xAxis: "trimestre",
@@ -81,109 +80,211 @@ type Story = StoryObj<typeof BarChart>;
 export const AutoDetect: Story = {
   name: "Auto Detect (default)",
   render: (args) => <BarChart {...args} autoDetect={true} />,
+  play: async ({ canvasElement }) => {
+    within(canvasElement);
+
+    await waitFor(() => {
+      const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+      expect(chartContainer).toBeInTheDocument();
+    });
+
+    const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+    expect(bars.length).toBeGreaterThan(0);
+  },
 };
 
-export const ManualYAxisArray: Story = {
-  name: "Manual yAxis (array)",
+export const YAxisConfigs: Story = {
+  name: "Configurações yAxis",
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Manual yAxis (array)
+        </h3>
+        <BarChart
+          data={sampleQuarterData}
+          xAxis="trimestre"
+          yAxis={["receita", "despesas", "lucro"]}
+          labelMap={{
+            receita: "Receita",
+            despesas: "Despesas",
+            lucro: "Lucro",
+          }}
+          height={420}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Manual yAxis (object com cores)
+        </h3>
+        <BarChart
+          data={sampleSalesData}
+          xAxis="name"
+          yAxis={{
+            vendas: { label: "Vendas", color: "#ef4444" },
+            meta: { label: "Meta", color: "#10b981" },
+            crescimento: { label: "Crescimento", color: "#f59e0b" },
+          }}
+          height={420}
+        />
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Diferentes configurações de yAxis: array de strings e objeto com labels/cores customizados.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar ambos os gráficos renderizados", async () => {
+      await waitFor(() => {
+        const chartContainers =
+          canvasElement.querySelectorAll(".recharts-wrapper");
+        expect(chartContainers.length).toBe(2);
+      });
+    });
+
+    await step("Verificar barras renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const CustomStyles: Story = {
+  name: "Estilos Customizados",
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          LabelMap Override
+        </h3>
+        <BarChart
+          data={sampleQuarterData}
+          xAxis="trimestre"
+          yAxis={["vendas", "lucro"]}
+          labelMap={{ vendas: "Vendas Totais", lucro: "Lucro Líquido" }}
+          colors={["#6366f1", "#06b6d4"]}
+          height={380}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Cores e Grid Customizados
+        </h3>
+        <BarChart
+          data={sampleSalesData}
+          xAxis="name"
+          yAxis={["vendas", "meta"]}
+          colors={["#4ecdc4", "#45b7d1"]}
+          gridColor="#e6e6fa"
+          height={340}
+        />
+      </div>
+      <div>
+        <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+          Sem Grid
+        </h3>
+        <BarChart
+          data={sampleSalesData}
+          xAxis="name"
+          yAxis={["vendas"]}
+          height={300}
+          showGrid={false}
+        />
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Estilos customizados: labelMap, cores/grid customizados, sem grid.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar todos os gráficos renderizados", async () => {
+      await waitFor(() => {
+        const chartContainers =
+          canvasElement.querySelectorAll(".recharts-wrapper");
+        expect(chartContainers.length).toBe(3);
+      });
+    });
+
+    await step("Verificar barras e grid", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThan(0);
+
+      const grids = canvasElement.querySelectorAll(".recharts-cartesian-grid");
+      expect(grids.length).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const CompleteExample: Story = {
+  name: "Exemplo Completo",
   render: (args) => (
     <BarChart
       {...args}
-      data={args.data ?? sampleQuarterData}
-      xAxis={args.xAxis ?? "trimestre"}
-      yAxis={args.yAxis as string[]}
-      labelMap={
-        args.labelMap ?? {
-          receita: "Receita",
-          despesas: "Despesas",
-          lucro: "Lucro",
-        }
-      }
+      data={sampleQuarterData}
+      xAxis="trimestre"
+      yAxis={["receita", "despesas", "lucro", "vendas"]}
+      labelMap={{
+        receita: "Receita Total",
+        despesas: "Despesas",
+        lucro: "Lucro",
+        vendas: "Vendas",
+      }}
+      colors={["#8b5cf6", "#ec4899", "#10b981", "#f59e0b"]}
       height={420}
+      showGrid={true}
+      showTooltip={true}
+      showLegend={true}
     />
   ),
   args: {
-    yAxis: ["receita", "despesas", "lucro"],
-    labelMap: { receita: "Receita", despesas: "Despesas", lucro: "Lucro" },
+    yAxis: ["receita", "despesas", "lucro", "vendas"],
+    labelMap: {
+      receita: "Receita Total",
+      despesas: "Despesas",
+      lucro: "Lucro",
+      vendas: "Vendas",
+    },
   },
-};
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar renderização completa do gráfico", async () => {
+      await waitFor(() => {
+        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+        expect(chartContainer).toBeInTheDocument();
+      });
+    });
 
-export const ManualYAxisObject: Story = {
-  name: "Manual yAxis (object)",
-  render: (args) => (
-    <BarChart
-      {...args}
-      data={args.data ?? sampleSalesData}
-      xAxis={args.xAxis ?? "name"}
-      // permite passar objeto via story args (use painel -> JSON)
-      yAxis={
-        (args.yAxis as unknown as Record<
-          string,
-          { label?: string; color?: string }
-        >) ?? {
-          vendas: { label: "Vendas", color: "#ef4444" },
-          meta: { label: "Meta", color: "#10b981" },
-          crescimento: { label: "Crescimento", color: "#f59e0b" },
-        }
-      }
-      height={420}
-    />
-  ),
-  args: {
-    yAxis: undefined, // usuário pode colar objeto JSON no painel para testar
-  },
-};
+    await step("Verificar todas as 4 séries renderizadas", async () => {
+      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+      expect(bars.length).toBeGreaterThanOrEqual(16);
+    });
 
-export const WithLabelMap: Story = {
-  name: "Label Map Override",
-  render: (args) => (
-    <BarChart
-      {...args}
-      data={args.data ?? sampleQuarterData}
-      xAxis={args.xAxis ?? "trimestre"}
-      yAxis={(args.yAxis as string[]) ?? ["vendas", "lucro"]}
-      labelMap={
-        args.labelMap ?? { vendas: "Vendas Totais", lucro: "Lucro Líquido" }
-      }
-      colors={["#6366f1", "#06b6d4"]}
-      height={380}
-    />
-  ),
-  args: {
-    yAxis: ["vendas", "lucro"],
-    labelMap: { vendas: "Vendas Totais", lucro: "Lucro Líquido" },
-  },
-};
+    await step("Verificar grid presente", async () => {
+      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
+      expect(grid).toBeInTheDocument();
+    });
 
-export const CustomColorsAndGrid: Story = {
-  name: "Custom colors & grid",
-  render: (args) => (
-    <BarChart
-      {...args}
-      data={args.data ?? sampleSalesData}
-      xAxis={args.xAxis ?? "name"}
-      yAxis={(args.yAxis as string[]) ?? ["vendas", "meta"]}
-      colors={["#4ecdc4", "#45b7d1"]}
-      gridColor="#e6e6fa"
-      height={340}
-    />
-  ),
-  args: {
-    yAxis: ["vendas", "meta"],
-  },
-};
+    await step("Verificar legenda presente", async () => {
+      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
+      expect(legend).toBeInTheDocument();
+    });
 
-export const Compact: Story = {
-  render: (args) => (
-    <BarChart
-      {...args}
-      data={args.data ?? sampleQuarterData}
-      xAxis={args.xAxis ?? "trimestre"}
-      yAxis={(args.yAxis as string[]) ?? ["vendas", "receita"]}
-      height={220}
-      showLegend={false}
-    />
-  ),
-  args: {
-    yAxis: ["vendas", "receita"],
+    await step("Verificar eixos renderizados", async () => {
+      const xAxis = canvasElement.querySelector(".recharts-xAxis");
+      const yAxis = canvasElement.querySelector(".recharts-yAxis");
+      expect(xAxis).toBeInTheDocument();
+      expect(yAxis).toBeInTheDocument();
+    });
   },
 };
