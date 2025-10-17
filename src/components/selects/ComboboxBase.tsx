@@ -12,10 +12,11 @@ import {
   PopoverTriggerBase,
 } from "@/components/ui/PopoverBase";
 import { ButtonBase } from "@/components/ui/ButtonBase";
-import { cn } from "@/lib/utils";
-import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
-import { ReactNode, useState } from "react";
+
 import { motion } from "framer-motion";
+import { ReactNode, useState } from "react";
+import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 
 export interface ComboboxItem<T extends string> {
   label: string;
@@ -40,6 +41,8 @@ export interface ComboboxBaseProps<T extends string> {
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
   checkIsSelected: (value: T) => boolean;
+  keepOpen?: boolean;
+  closeAll?: ReactNode;
   searchPlaceholder?: string;
   errorMessage?: string;
   testIds?: ComboboxTestIds;
@@ -50,6 +53,8 @@ export function ComboboxBase<T extends string>({
   renderSelected,
   handleSelection,
   checkIsSelected,
+  keepOpen = false,
+  closeAll,
   searchPlaceholder,
   errorMessage,
   testIds = {},
@@ -78,11 +83,13 @@ export function ComboboxBase<T extends string>({
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
+            {closeAll}
             <motion.div
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3 }}
+              className="flex"
             >
-              <CaretDownIcon size={16} className="mt-0.5 flex-shrink-0" />
+              <CaretDownIcon className=" flex-shrink-0" />
             </motion.div>
           </ButtonBase>
         </PopoverTriggerBase>
@@ -92,7 +99,7 @@ export function ComboboxBase<T extends string>({
           data-testid={testIds.popover ?? "combobox-popover"}
         >
           <CommandBase
-            className="dark:text-white"
+            className="dark:text-white hover:bg-rsecondary"
             data-testid={testIds.command ?? "combobox-command"}
           >
             <CommandInputBase
@@ -114,7 +121,7 @@ export function ComboboxBase<T extends string>({
                       value={item.value}
                       onSelect={(value) => {
                         handleSelection(value as T);
-                        setOpen(false);
+                        if (!keepOpen) setOpen(false);
                       }}
                       data-testid={testIds.option ?? "combobox-option"}
                     >
@@ -127,6 +134,7 @@ export function ComboboxBase<T extends string>({
                           stiffness: 500,
                           damping: 30,
                         }}
+                        className="ml-auto "
                       >
                         <CheckIcon
                           className={cn(

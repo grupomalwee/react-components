@@ -5,24 +5,21 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { cn } from "../../lib/utils";
 import LabelBase from "./LabelBase";
 
-/**
- * Tipos disponíveis de progresso
- */
 export type ProgressType = "bar" | "segments" | "panels" | "circles";
 
 export interface ProgressBaseProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  /** Tipo de visualização do progresso */
   variant?: ProgressType;
   label?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  /** Número de segmentos (usado quando variant="segments") */
+  showValue?: boolean;
+  valuePosition?: "left" | "right" | "inside";
   segments?: number;
-  /** Array de etapas (usado quando variant="panels" ou "circles") */
   steps?: string[];
-  /** Índice da etapa atual (usado quando variant="panels" ou "circles") */
   currentStep?: number;
+  autocolor?: number[];
+  plusIndicator?: boolean;
 }
 
 const ProgressBase = React.forwardRef<
@@ -32,7 +29,7 @@ const ProgressBase = React.forwardRef<
   (
     {
       className,
-      value,
+      value: rawValue,
       label,
       leftIcon,
       rightIcon,
@@ -40,11 +37,17 @@ const ProgressBase = React.forwardRef<
       segments = 5,
       steps = [],
       currentStep = 0,
+      showValue = false,
+      valuePosition = "right",
+      autocolor,
+      plusIndicator,
       ...props
     },
     ref
   ) => {
-    // Renderiza baseado no variant
+    const value = Number(rawValue || 0);
+    const indicatorWidth = Math.min(value, 100);
+
     switch (variant) {
       case "segments":
         return (
@@ -80,6 +83,11 @@ const ProgressBase = React.forwardRef<
             {label && <LabelBase className="py-2">{label}</LabelBase>}
 
             <div className="flex items-center gap-2">
+              {showValue && valuePosition === "left" && (
+                <div className="w-12 text-sm text-right font-extrabold">
+                  {Math.round(value || 0)}%
+                </div>
+              )}
               {leftIcon && (
                 <div className="flex items-center justify-center">
                   {leftIcon}
@@ -89,18 +97,83 @@ const ProgressBase = React.forwardRef<
               <ProgressPrimitive.Root
                 ref={ref}
                 className={cn(
-                  "relative h-3 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800 shadow-inner transition-all",
+                  " relative h-3 w-full overflow-visible rounded-full bg-muted/80 shadow-inner transition-all ",
                   className
                 )}
                 value={value}
                 {...props}
               >
                 <ProgressPrimitive.Indicator
-                  className="h-full w-full flex-1 bg-primary transition-all duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+                  className={cn(
+                    "h-full w-full flex-1 transition-all duration-500 ease-in-out rounded-lg  ",
+                    autocolor && autocolor.length >= 2
+                      ? "bg-transparent"
+                      : "bg-primary"
+                  )}
+                  style={{ transform: `translateX(-${100 - indicatorWidth}%)` }}
                 />
+
+                {autocolor &&
+                  Array.isArray(autocolor) &&
+                  autocolor.length >= 2 &&
+                  (() => {
+                    const [t1Raw, t2Raw] = autocolor;
+                    const [t1, t2] = [Number(t1Raw), Number(t2Raw)].sort(
+                      (a, b) => a - b
+                    );
+                    const v = Number(value || 0);
+                    let colorClass = "bg-red-500";
+
+                    if (v <= t1) {
+                      colorClass = "bg-red-500";
+                    } else if (v <= t2) {
+                      colorClass = "bg-yellow-500";
+                    } else {
+                      colorClass = "bg-emerald-500";
+                    }
+                    return (
+                      <div
+                        aria-hidden
+                        className={cn(
+                          "absolute top-0 left-0 h-full transition-all duration-500 ease-in-out rounded-lg",
+                          colorClass
+                        )}
+                        style={{ width: `${indicatorWidth}%` }}
+                      />
+                    );
+                  })()}
+
+                {plusIndicator && value > 100 && (
+                  <div
+                    aria-hidden="true"
+                    className="absolute top-0 bottom-0 w-0.5 bg-black/70 transition-all duration-500 ease-in-out pointer-events-none"
+                    style={{
+                      left: `${(100 / value) * 100}%`,
+                    }}
+                  >
+                    {value > 115 && (
+                      <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 text-xs whitespace-nowrap font-extrabold">{`+${Math.round(
+                        value - 100
+                      )}%`}</div>
+                    )}
+                  </div>
+                )}
+
+                {showValue && valuePosition === "inside" && (
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-sm select-none pointer-events-none text-secondary font-extrabold"
+                    aria-hidden
+                  >
+                    {Math.round(value || 0)}%
+                  </span>
+                )}
               </ProgressPrimitive.Root>
 
+              {showValue && valuePosition === "right" && (
+                <div className="w-12 text-sm font-extrabold text-left">
+                  {Math.round(value || 0)}%
+                </div>
+              )}
               {rightIcon && (
                 <div className="flex items-center justify-center">
                   {rightIcon}
@@ -282,3 +355,5 @@ export {
   ProgressPanelsBase,
   ProgressCirclesBase,
 };
+
+export default ProgressBase;

@@ -67,6 +67,10 @@ export const ButtonPage = () => {
           <AddButton />
           <CloseButton />
           <DeleteButton />
+          <DeleteButton
+            destructiveTitle="retttt"
+            destructiveDescription="Tem certeza de que deseja excluir este item?"
+          />
           <DownloadButton />
           <UploadButton />
           <CopyButton />

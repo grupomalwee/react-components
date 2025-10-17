@@ -92,7 +92,7 @@ export function DateTimePicker({
             variant={"outline"}
             className={cn(
               "w-full justify-start text-left min-w-0 overflow-hidden",
-              "text-muted-foreground/90",
+              "text-foreground/70",
               "text-sm sm:text-base",
               !date && "text-muted-foreground/"
             )}
@@ -123,7 +123,7 @@ export function DateTimePicker({
               initialFocus
               fromDate={fromDate}
               toDate={toDate}
-              className="w-full"
+              className={cn("w-full", hideHour && hideMinute && "border-0")}
             />
 
             {!(hideHour && hideMinute) && (
@@ -148,7 +148,7 @@ export function DateTimePicker({
                       )}
                     >
                       <ClockIcon className="text-primary flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-foreground truncate">
+                      <span className="text-black truncate">
                         {internalDate
                           ? format(internalDate, getTimeFormat() || "HH:mm", {
                               locale: ptBR,

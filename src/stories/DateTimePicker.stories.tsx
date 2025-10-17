@@ -47,7 +47,6 @@ const meta: Meta<typeof DateTimePicker> = {
 export default meta;
 type Story = StoryObj<typeof DateTimePicker>;
 
-// Template para controlar o estado
 const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {

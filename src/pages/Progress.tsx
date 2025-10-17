@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
- ProgressBase,
+  ProgressBase,
   ProgressSegmentsBase,
   ProgressPanelsBase,
   ProgressCirclesBase,
@@ -21,12 +21,32 @@ export const ProgressPage = () => {
     <div className="min-h-screen w-full px-6 py-10 flex flex-col gap-10 bg-background">
       <section className="flex flex-col gap-6">
         <ProgressBase
-          value={progress}
+          value={120}
+          label="Download "
+          leftIcon={<DownloadIcon />}
+          showValue
+          valuePosition="right"
+          autocolor={[70, 100]}
+          plusIndicator
+        />
+        <ProgressBase
+          value={120}
+          className="w-full "
+          label="Download "
+          leftIcon={<DownloadIcon />}
+          showValue
+          valuePosition="right"
+          autocolor={[70, 100]}
+        />
+        <ProgressBase
+          value={120}
           className="w-full"
           label="Download "
           leftIcon={<DownloadIcon />}
+          showValue
+          valuePosition="right"
         />
-        <ProgressSegmentsBase segments={10} value={progress} label="Segment"/>
+        <ProgressSegmentsBase segments={10} value={progress} label="Segment" />
         <ProgressPanelsBase
           steps={["Briefing", "Design", "Dev", "Deploy"]}
           currentStep={2}

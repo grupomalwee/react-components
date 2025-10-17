@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 import { ButtonBase } from "./ButtonBase";
+import { DestructiveDialog } from "./DestructiveDialog";
 import {
   PencilSimpleIcon,
   FloppyDiskIcon,
@@ -26,6 +27,7 @@ import {
   EyeSlashIcon,
   LockIcon,
   LockOpenIcon,
+  ArrowsLeftRightIcon,
 } from "@phosphor-icons/react";
 
 interface QuickButtonProps
@@ -46,175 +48,293 @@ interface QuickButtonProps
   size?: "default" | "sm" | "lg" | "icon";
 }
 
-export const EditButton: React.FC<QuickButtonProps> = ({
-  disabled,
-  onClick,
-  testid = "button-edit",
-  className,
-  iconSize = 18,
-  iconColor,
-  variant = "default",
-  size = "icon",
-  ...props
-}) => (
-  <ButtonBase
-    variant={variant}
-    size={size}
-    onClick={onClick}
-    disabled={disabled}
-    testid={testid}
-    className={cn(
-      "transition-all duration-200 ease-in-out group",
-      "hover:scale-105 hover:bg-primary",
-      "active:scale-95",
-      "disabled:hover:scale-100",
-      className
-    )}
-    {...props}
-  >
-    <PencilSimpleIcon
-      size={iconSize}
-      color={iconColor}
-      className="transition-transform duration-200 group-hover:-rotate-12"
-    />
-  </ButtonBase>
+export const EditButton = React.forwardRef<HTMLButtonElement, QuickButtonProps>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-edit",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "default",
+      size = "icon",
+      ...props
+    },
+    ref
+  ) => (
+    <ButtonBase
+      ref={ref}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      disabled={disabled}
+      testid={testid}
+      className={cn(
+        "transition-all duration-200 ease-in-out group",
+        "hover:scale-105",
+        "active:scale-95",
+        "disabled:hover:scale-100",
+        className
+      )}
+      {...props}
+    >
+      <PencilSimpleIcon
+        size={iconSize}
+        color={iconColor}
+        className="transition-transform duration-200 group-hover:-rotate-12"
+      />
+    </ButtonBase>
+  )
 );
+EditButton.displayName = "EditButton";
+export const ChangeButton = React.forwardRef<
+  HTMLButtonElement,
+  QuickButtonProps
+>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-edit",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "default",
+      size = "icon",
+      ...props
+    },
+    ref
+  ) => (
+    <ButtonBase
+      ref={ref}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      disabled={disabled}
+      testid={testid}
+      className={cn(
+        "transition-all duration-200 ease-in-out group",
+        "hover:scale-105",
+        "active:scale-95",
+        "disabled:hover:scale-100",
+        className
+      )}
+      {...props}
+    >
+      <ArrowsLeftRightIcon  
+        size={iconSize}
+        color={iconColor}
+        className="transition-transform duration-200 group-hover:-rotate-180"
+      />
+    </ButtonBase>
+  )
+);
+ChangeButton.displayName = "ChangeButton";
 
-export const SaveButton: React.FC<QuickButtonProps> = ({
-  disabled,
-  onClick,
-  testid = "button-save",
-  className,
-  iconSize = 18,
-  iconColor,
-  variant = "default",
-  size = "icon",
-  ...props
-}) => (
-  <ButtonBase
-    variant={variant}
-    size={size}
-    onClick={onClick}
-    disabled={disabled}
-    testid={testid}
-    className={cn(
-      "transition-all duration-200 ease-in-out group",
-      "hover:scale-105",
-      "active:scale-95",
-      "disabled:hover:scale-100",
-      className
-    )}
-    {...props}
-  >
-    <FloppyDiskIcon
-      size={iconSize}
-      color={iconColor}
-      className="transition-transform duration-200 group-hover:scale-110"
-    />
-  </ButtonBase>
+export const SaveButton = React.forwardRef<HTMLButtonElement, QuickButtonProps>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-save",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "default",
+      size = "icon",
+      ...props
+    },
+    ref
+  ) => (
+    <ButtonBase
+      ref={ref}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      disabled={disabled}
+      testid={testid}
+      className={cn(
+        "transition-all duration-200 ease-in-out group",
+        "hover:scale-105",
+        "active:scale-95",
+        "disabled:hover:scale-100",
+        className
+      )}
+      {...props}
+    >
+      <FloppyDiskIcon
+        size={iconSize}
+        color={iconColor}
+        className="transition-transform duration-200 group-hover:scale-110"
+      />
+    </ButtonBase>
+  )
 );
+SaveButton.displayName = "SaveButton";
 
-export const AddButton: React.FC<QuickButtonProps> = ({
-  disabled,
-  onClick,
-  testid = "button-add",
-  className,
-  iconSize = 18,
-  iconColor,
-  variant = "default",
-  size = "icon",
-  ...props
-}) => (
-  <ButtonBase
-    variant={variant}
-    size={size}
-    onClick={onClick}
-    disabled={disabled}
-    testid={testid}
-    className={cn(
-      "transition-all duration-200 ease-in-out",
-      "hover:scale-105",
-      "active:scale-95",
-      "disabled:hover:scale-100",
-      className
-    )}
-    {...props}
-  >
-    <PlusIcon
-      size={iconSize}
-      color={iconColor}
-      className="transition-transform duration-300"
-    />
-  </ButtonBase>
+export const AddButton = React.forwardRef<HTMLButtonElement, QuickButtonProps>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-add",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "default",
+      size = "icon",
+      ...props
+    },
+    ref
+  ) => (
+    <ButtonBase
+      ref={ref}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      disabled={disabled}
+      testid={testid}
+      className={cn(
+        "transition-all duration-200 ease-in-out",
+        "hover:scale-105",
+        "active:scale-95",
+        "disabled:hover:scale-100",
+        className
+      )}
+      {...props}
+    >
+      <PlusIcon
+        size={iconSize}
+        color={iconColor}
+        className="transition-transform duration-300"
+      />
+    </ButtonBase>
+  )
 );
+AddButton.displayName = "AddButton";
 
-export const CloseButton: React.FC<QuickButtonProps> = ({
-  disabled,
-  onClick,
-  testid = "button-close",
-  className,
-  iconSize = 18,
-  iconColor,
-  variant = "ghost",
-  size = "icon",
-  ...props
-}) => (
-  <ButtonBase
-    variant={variant}
-    size={size}
-    onClick={onClick}
-    disabled={disabled}
-    testid={testid}
-    className={cn(
-      "transition-all duration-200 ease-in-out",
-      "hover:scale-110 hover:rotate-90 hover:bg-destructive/10",
-      "active:scale-95 active:rotate-0",
-      "disabled:hover:scale-100 disabled:hover:rotate-0",
-      className
-    )}
-    {...props}
-  >
-    <XIcon
-      size={iconSize}
-      color={iconColor}
-      className="transition-transform duration-300"
-    />
-  </ButtonBase>
+export const CloseButton = React.forwardRef<
+  HTMLButtonElement,
+  QuickButtonProps
+>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-close",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "ghost",
+      size = "icon",
+      ...props
+    },
+    ref
+  ) => (
+    <ButtonBase
+      ref={ref}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      disabled={disabled}
+      testid={testid}
+      className={cn(
+        "transition-all duration-200 ease-in-out",
+        "hover:scale-110 hover:rotate-90 hover:bg-destructive/10",
+        "active:scale-95 active:rotate-0",
+        "disabled:hover:scale-100 disabled:hover:rotate-0",
+        className
+      )}
+      {...props}
+    >
+      <XIcon
+        size={iconSize}
+        color={iconColor}
+        className="transition-transform duration-300"
+      />
+    </ButtonBase>
+  )
 );
+CloseButton.displayName = "CloseButton";
 
-export const DeleteButton: React.FC<QuickButtonProps> = ({
-  disabled,
-  onClick,
-  testid = "button-delete",
-  className,
-  iconSize = 18,
-  iconColor,
-  variant = "destructive",
-  size = "icon",
-  ...props
-}) => (
-  <ButtonBase
-    variant={variant}
-    size={size}
-    onClick={onClick}
-    disabled={disabled}
-    testid={testid}
-    className={cn(
-      "transition-all duration-200 ease-in-out group",
-      "hover:scale-105",
-      "active:scale-95",
-      "disabled:hover:scale-100",
-      className
-    )}
-    {...props}
-  >
-    <TrashIcon
-      size={iconSize}
-      color={iconColor}
-      className="transition-transform duration-200 group-hover:scale-110"
-    />
-  </ButtonBase>
+interface DeleteButtonProps extends QuickButtonProps {
+  destructiveTitle?: string;
+  destructiveDescription?: string;
+  destructiveOnConfirm?: () => void;
+  destructiveOnCancel?: () => void;
+  destructiveTriggerContent?: React.ReactNode;
+}
+
+export const DeleteButton = React.forwardRef<
+  HTMLButtonElement,
+  DeleteButtonProps
+>(
+  (
+    {
+      disabled,
+      onClick,
+      testid = "button-delete",
+      className,
+      iconSize = 18,
+      iconColor,
+      variant = "destructive",
+      size = "icon",
+      destructiveTitle,
+      destructiveDescription,
+      destructiveOnConfirm,
+      destructiveOnCancel,
+      destructiveTriggerContent,
+      ...props
+    },
+    ref
+  ) => {
+    const effectiveDestructiveTitle =
+      destructiveTitle ?? (props.title as string | undefined);
+
+    const trigger = (
+      <ButtonBase
+        ref={ref}
+        variant={variant}
+        size={size}
+        onClick={onClick}
+        disabled={disabled}
+        testid={testid}
+        className={cn(
+          "transition-all duration-200 ease-in-out group",
+          "hover:scale-105",
+          "active:scale-95",
+          "disabled:hover:scale-100",
+          className
+        )}
+        {...props}
+      >
+        <TrashIcon
+          size={iconSize}
+          color={iconColor}
+          className="transition-transform duration-200 group-hover:scale-110"
+        />
+      </ButtonBase>
+    );
+
+    if (effectiveDestructiveTitle) {
+      return (
+        <DestructiveDialog
+          title={effectiveDestructiveTitle}
+          description={destructiveDescription ?? "Essa ação é irreversível."}
+          onConfirm={destructiveOnConfirm ?? (() => {})}
+          onCancel={destructiveOnCancel}
+          triggerContent={destructiveTriggerContent}
+        >
+          {trigger}
+        </DestructiveDialog>
+      );
+    }
+
+    return trigger;
+  }
 );
+DeleteButton.displayName = "DeleteButton";
 
 export const DownloadButton: React.FC<QuickButtonProps> = ({
   disabled,

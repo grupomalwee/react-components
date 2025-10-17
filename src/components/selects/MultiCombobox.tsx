@@ -5,6 +5,7 @@ import { XIcon } from "@phosphor-icons/react";
 import LabelBase from "../ui/LabelBase";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { ButtonBase } from "@/components/ui/ButtonBase";
 
 interface MultiComboboxTestIds {
   root?: string;
@@ -12,6 +13,7 @@ interface MultiComboboxTestIds {
   selectedWrapper?: string;
   emptyPlaceholder?: string;
   selectedItem?: (value: string) => string;
+  clearAll?: string;
 }
 
 interface MultiComboboxProps<T extends string>
@@ -21,8 +23,8 @@ interface MultiComboboxProps<T extends string>
   label?: string;
   labelClassname?: string;
   testIds?: MultiComboboxTestIds;
+  keepOpen?: boolean;
 }
-
 export function MultiCombobox<T extends string>({
   items,
   selected,
@@ -33,6 +35,7 @@ export function MultiCombobox<T extends string>({
   label,
   labelClassname,
   testIds = {},
+  keepOpen = true,
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
@@ -52,6 +55,23 @@ export function MultiCombobox<T extends string>({
     },
     [selected, onChange]
   );
+  const closeAll =
+    selectedItems.length > 0 ? (
+      <div className=" flex items-center">
+        <ButtonBase
+          variant="ghost"
+          data-testid={testIds.clearAll ?? "combobox-clear-all"}
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange([]);
+          }}
+          className="text-xs  hover:bg-red-50 hover:text-red-500 transition-colors rounded-md mr-2"
+        >
+          <XIcon />
+        </ButtonBase>
+      </div>
+    ) : null;
 
   const renderSelected = useMemo(() => {
     if (selectedItems.length === 0) {
@@ -129,6 +149,8 @@ export function MultiCombobox<T extends string>({
         renderSelected={renderSelected}
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
+        keepOpen={keepOpen}
+        closeAll={closeAll}
         searchPlaceholder={searchPlaceholder}
       />
     </div>

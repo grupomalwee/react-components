@@ -46,7 +46,7 @@ export function CalendarBase({
   return (
     <div
       className={cn(
-        "rounded-md border bg-background p-4 shadow-lg overflow-hidden w-full h-full flex flex-col",
+        "rounded-md border bg-background p-2 overflow-hidden flex flex-col",
         className
       )}
     >
@@ -94,12 +94,12 @@ export function CalendarBase({
                 ),
                 day: cn(
                   buttonVariantsBase({ variant: "ghost" }),
-                  "w-full h-full p-0 rounded-lg",
-                  "aria-selected:opacity-100 hover:bg-muted text-[clamp(0.75rem,2vw,1rem)] flex items-center justify-center",
-                  "touch-manipulation transition-all duration-200 ease-out hover:scale-105 active:scale-95"
+                  "w-full h-full p-0",
+                  "aria-selected:opacity-100 hover:bg-muted flex items-center justify-center",
+                  " transition-all duration-200 ease-out hover:scale-105 active:scale-95"
                 ),
                 day_selected:
-                  "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold",
+                  "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white",
                 day_today:
                   "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset",
                 day_outside:

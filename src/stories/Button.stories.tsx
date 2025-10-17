@@ -2,6 +2,29 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import { ButtonBase, ButtonGroupBase } from "../components/ui/ButtonBase";
+import {
+  AddButton,
+  BackButton,
+  ChangeButton,
+  CheckButton,
+  CloseButton,
+  CopyButton,
+  DeleteButton,
+  DownloadButton,
+  EditButton,
+  FavoriteButton,
+  FilterButton,
+  LikeButton,
+  LockButton,
+  MoreButton,
+  NotificationButton,
+  RefreshButton,
+  SaveButton,
+  SearchButton,
+  SettingsButton,
+  UploadButton,
+  VisibilityButton,
+} from "@/components/ui/SmallButtons";
 
 const meta: Meta<typeof ButtonBase> = {
   title: "forms/Button",
@@ -273,4 +296,44 @@ export const Group: Story = {
       expect(recusarBtn).toBeInTheDocument();
     });
   },
+};
+export const Small: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <div className="grid grid-cols-6 gap-3">
+        <EditButton />
+        <SaveButton />
+        <ChangeButton />
+        <AddButton />
+        <CloseButton />
+        <DeleteButton />
+        <DeleteButton
+          destructiveTitle="retttt"
+          destructiveDescription="Tem certeza de que deseja excluir este item?"
+        />
+        <DownloadButton />
+        <UploadButton />
+        <CopyButton />
+        <RefreshButton />
+        <SearchButton />
+        <BackButton />
+        <SettingsButton />
+        <NotificationButton />
+        <MoreButton />
+        <CheckButton />
+        <FilterButton />
+        <LikeButton />
+        <LockButton />
+        <VisibilityButton />
+        <FavoriteButton />
+      </div>
+    </div>
+  ),
 };

@@ -1,7 +1,6 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ProgressBase } from "../components/ui/ProgressBase";
-import { DownloadIcon } from "@phosphor-icons/react";
 import * as React from "react";
 
 const meta: Meta<typeof ProgressBase> = {
@@ -15,7 +14,7 @@ const meta: Meta<typeof ProgressBase> = {
       description: "Tipo de visualização do progresso",
     },
     value: {
-      control: { type: "range", min: 0, max: 100, step: 1 },
+      control: { type: "range", min: 0, max: 100, step: 10 },
       description: "Valor do progresso (0-100)",
     },
     segments: {
@@ -30,6 +29,20 @@ const meta: Meta<typeof ProgressBase> = {
     label: {
       control: "text",
       description: "Texto do label exibido acima do progresso",
+    },
+    showValue: {
+      control: "boolean",
+      description: "Exibe o valor em porcentagem ao lado/por dentro da barra",
+    },
+    valuePosition: {
+      control: { type: "select" },
+      options: ["left", "right", "inside"],
+      description: "Posição do valor quando showValue=true",
+    },
+    autocolor: {
+      control: { type: "object" },
+      description:
+        "Array com dois thresholds [t1, t2]. 0..t1 = vermelho, t1..t2 = amarelo, >t2 = verde",
     },
   },
   parameters: {
@@ -62,32 +75,23 @@ export const Default: Story = {
 };
 
 export const Bar: Story = {
-  render: () => {
-    const [progress, setProgress] = React.useState(13);
-    React.useEffect(() => {
-      const timer = setTimeout(() => setProgress(66), 500);
-      return () => clearTimeout(timer);
-    }, []);
-    return (
-      <div style={{ width: "400px" }}>
-        <ProgressBase
-          variant="bar"
-          value={progress}
-          label="Download"
-          leftIcon={<DownloadIcon size={20} />}
-        />
-      </div>
-    );
+  args: {
+    variant: "bar",
+    value: 13,
+    label: "Download",
+    showValue: true,
+    valuePosition: "right",
   },
 };
 
-export const BarWithIcons: Story = {
+
+export const BarValueLeft: Story = {
   args: {
     variant: "bar",
-    value: 75,
-    label: "Progresso com Ícones",
-    leftIcon: <DownloadIcon size={20} />,
-    rightIcon: <span className="text-sm font-medium">{75}%</span>,
+    value: 42,
+    label: "Left Value",
+    showValue: true,
+    valuePosition: "left",
   },
 };
 
@@ -111,8 +115,6 @@ export const Segments: Story = {
   },
 };
 
-
-
 export const Panels: Story = {
   render: () => {
     const [currentStep, setCurrentStep] = React.useState(0);
@@ -133,8 +135,6 @@ export const Panels: Story = {
   },
 };
 
-
-
 export const Circles: Story = {
   render: () => {
     const [currentStep, setCurrentStep] = React.useState(0);
@@ -152,5 +152,17 @@ export const Circles: Story = {
         />
       </div>
     );
+  },
+};
+
+export const BarAutoColor: Story = {
+  args: {
+    variant: "bar",
+
+    label: "Auto Color",
+    showValue: true,
+    valuePosition: "right",
+    autocolor: [70, 100],
+    className: "w-96",
   },
 };

@@ -7,7 +7,6 @@ import { ButtonBase } from "@/components/ui/ButtonBase";
 export const TextareaPage = () => {
   return (
     <div>
-      {/* TextArea Examples */}
       <div className="mt-5 ml-5 flex gap-5 p-3 rounded-sm">
         <div className="flex flex-col items-start gap-2">
           <LabelBase className="pb-3" htmlFor="message">
