@@ -98,15 +98,21 @@ import DatePickerPage from "@/pages/DatePicker";
 import { FileUploaderPage } from "@/pages/FileUploader";
 import { DebounceInputPage } from "@/pages/DebounceInput";
 import ModalBasePage from "@/pages/Modal";
+import RangePickerPage from "@/pages/RangePicker";
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },
   { title: "Chart", url: "/chart", icon: HouseIcon },
   { title: "File", url: "/file", icon: HouseIcon },
+  { title: "range", url: "/range", icon: HouseIcon },
   { title: "Modal", url: "/modal", icon: HouseIcon },
   { title: "Debounce Input", url: "/debounce-input", icon: HouseIcon },
   { title: "Alert Dialog", url: "/alert-dialog", icon: WarningCircleIcon },
-  { title: "Destructive Dialog", url: "/destructive-dialog", icon: WarningCircleIcon },
+  {
+    title: "Destructive Dialog",
+    url: "/destructive-dialog",
+    icon: WarningCircleIcon,
+  },
   { title: "Avatar", url: "/avatar", icon: UserCircleIcon },
   { title: "Bagde", url: "/badge", icon: MedalIcon },
   { title: "Bar Chart", url: "/bar-chart", icon: SpinnerGapIcon },
@@ -116,7 +122,11 @@ const items = [
   { title: "Button", url: "/button", icon: CursorIcon },
   { title: "Calendar", url: "/calender", icon: CalendarBlankIcon },
   { title: "Card", url: "/card", icon: SquaresFourIcon },
-  { title: "ContextMenu", url: "/contextmenu", icon: DotsThreeOutlineVerticalIcon },
+  {
+    title: "ContextMenu",
+    url: "/contextmenu",
+    icon: DotsThreeOutlineVerticalIcon,
+  },
   { title: "Checkbox", url: "/checkbox", icon: CheckSquareIcon },
   { title: "Collapsible", url: "/collapsible", icon: ListDashesIcon },
   { title: "Command", url: "/command", icon: TerminalWindowIcon },
@@ -164,7 +174,10 @@ export function AppSidebar() {
                   {items.map((item) => (
                     <SidebarMenuItemBase key={item.title}>
                       <SidebarMenuButtonBase asChild>
-                        <Link to={item.url} style={{ display: "flex", alignItems: "center" }}>
+                        <Link
+                          to={item.url}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
                           <item.icon size={18} style={{ marginRight: 8 }} />
                           <span>{item.title}</span>
                         </Link>
@@ -182,10 +195,14 @@ export function AppSidebar() {
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<ChartPage />} />
           <Route path="/file" element={<FileUploaderPage />} />
+          <Route path="/range" element={<RangePickerPage />} />
           <Route path="/modal" element={<ModalBasePage />} />
           <Route path="/debounce-input" element={<DebounceInputPage />} />
           <Route path="/alert-dialog" element={<AlertDialogPage />} />
-          <Route path="/destructive-dialog" element={<DestructiveDialogPage />} />
+          <Route
+            path="/destructive-dialog"
+            element={<DestructiveDialogPage />}
+          />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/badge" element={<BadgePage />} />
           <Route path="/bar-chart" element={<BarChartPage />} />
