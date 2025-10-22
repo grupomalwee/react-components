@@ -24,6 +24,7 @@ interface MultiComboboxProps<T extends string>
   labelClassname?: string;
   testIds?: MultiComboboxTestIds;
   keepOpen?: boolean;
+  showClearAll?: boolean;
 }
 export function MultiCombobox<T extends string>({
   items,
@@ -36,6 +37,7 @@ export function MultiCombobox<T extends string>({
   labelClassname,
   testIds = {},
   keepOpen = true,
+  showClearAll = false,
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
 
@@ -56,7 +58,7 @@ export function MultiCombobox<T extends string>({
     [selected, onChange]
   );
   const closeAll =
-    selectedItems.length > 0 ? (
+    showClearAll && selectedItems.length > 0 ? (
       <div className=" flex items-center">
         <ButtonBase
           variant="ghost"
@@ -88,7 +90,7 @@ export function MultiCombobox<T extends string>({
     return (
       <div
         data-testid={testIds.selectedWrapper ?? "combobox-selected-wrapper"}
-        className="flex w-full flex-wrap gap-2 overflow-hidden pr-1.5"
+        className="flex w-full flex-wrap gap-2 overflow-hidden "
       >
         <AnimatePresence mode="popLayout">
           {selectedItems.map((item) => (
@@ -119,7 +121,7 @@ export function MultiCombobox<T extends string>({
                 }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="cursor-pointer p-0.5 text-xs flex items-center justify-center hover:text-red-500 transition-colors flex-shrink-0 rounded hover:bg-red-50 "
+                className="cursor-pointer text-xs flex items-center justify-center hover:text-red-500 transition-colors flex-shrink-0 rounded hover:bg-red-50 "
               >
                 <XIcon size={14} />
               </motion.span>

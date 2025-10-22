@@ -147,62 +147,55 @@ export const Default: Story = {
             <ModalHeaderBase>
               <ModalTitleBase>Editar item</ModalTitleBase>
               <ModalDescriptionBase>
-                Use este modal para editar informações do item. Abaixo há campos
-                de exemplo (nome, localização e outro campo) — adapte conforme
-                necessário.
+                Formulário para editar os dados do item selecionado. Altere os
+                campos necessários e confirme para salvar as mudanças.
               </ModalDescriptionBase>
             </ModalHeaderBase>
 
             <div className="py-4 space-y-3">
-              <InputBase type="text" placeholder="Nome" label="Nome" />
+              <InputBase type="text" placeholder="Nome atual" label="Nome" />
 
               <InputBase
                 type="text"
-                placeholder="Localização"
+                placeholder="Localização atual"
                 label="Local"
                 leftIcon={<MapPinLineIcon size={16} />}
               />
               <SelectBase
                 open={open}
                 onOpenChange={setOpen}
-                data-testid="select-base"
+                data-testid="select-base-edit"
               >
                 <SelectTriggerBase open={open} data-testid="select-trigger">
                   <SelectValueBase
-                    placeholder="Select a fruit"
+                    placeholder="Selecione uma categoria"
                     data-testid="select-value"
                   />
                 </SelectTriggerBase>
                 <SelectContentBase>
                   <SelectGroupBase data-testid="select-group">
                     <SelectLabelBase data-testid="select-label">
-                      Fruits
+                      Categoria
                     </SelectLabelBase>
-                    <SelectItemBase value="apple" data-testid="select-item">
-                      Apple
+                    <SelectItemBase value="cat1" data-testid="select-item">
+                      Categoria 1
                     </SelectItemBase>
-                    <SelectItemBase value="banana" data-testid="select-item">
-                      Banana
+                    <SelectItemBase value="cat2" data-testid="select-item">
+                      Categoria 2
                     </SelectItemBase>
-                    <SelectItemBase value="blueberry" data-testid="select-item">
-                      Blueberry
-                    </SelectItemBase>
-                    <SelectItemBase value="grapes" data-testid="select-item">
-                      Grapes
-                    </SelectItemBase>
-                    <SelectItemBase value="pineapple" data-testid="select-item">
-                      Pineapple
+                    <SelectItemBase value="cat3" data-testid="select-item">
+                      Categoria 3
                     </SelectItemBase>
                   </SelectGroupBase>
                 </SelectContentBase>
               </SelectBase>
-              <LabelBase>Outro campo</LabelBase>
-              <TextAreaBase placeholder="Outro campo" />
+              <LabelBase>Observações</LabelBase>
+              <TextAreaBase placeholder="Observações sobre o item" />
             </div>
 
             <ModalFooterBase>
               <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Confirmar</ButtonBase>
+              <ButtonBase>Salvar</ButtonBase>
             </ModalFooterBase>
           </ModalContentBase>
         </ModalBase>
@@ -212,64 +205,39 @@ export const Default: Story = {
           </ModalTriggerBase>
           <ModalContentBase>
             <ModalHeaderBase>
-              <ModalTitleBase>Editar item</ModalTitleBase>
+              <ModalTitleBase>Alterar status</ModalTitleBase>
               <ModalDescriptionBase>
-                Use este modal para editar informações do item. Abaixo há campos
-                de exemplo (nome, localização e outro campo) — adapte conforme
-                necessário.
+                Use este modal para alterar propriedades ou status do item.
+                Exemplos: mudar prioridade, categoria ou visibilidade.
               </ModalDescriptionBase>
             </ModalHeaderBase>
 
             <div className="py-4 space-y-3">
-              <InputBase type="text" placeholder="Nome" label="Nome" />
-
-              <InputBase
-                type="text"
-                placeholder="Localização"
-                label="Local"
-                leftIcon={<MapPinLineIcon size={16} />}
-              />
+              <LabelBase>Nova categoria</LabelBase>
               <SelectBase
                 open={open}
                 onOpenChange={setOpen}
-                data-testid="select-base"
+                data-testid="select-base-change"
               >
                 <SelectTriggerBase open={open} data-testid="select-trigger">
-                  <SelectValueBase
-                    placeholder="Select a fruit"
-                    data-testid="select-value"
-                  />
+                  <SelectValueBase placeholder="Selecione" />
                 </SelectTriggerBase>
                 <SelectContentBase>
-                  <SelectGroupBase data-testid="select-group">
-                    <SelectLabelBase data-testid="select-label">
-                      Fruits
-                    </SelectLabelBase>
-                    <SelectItemBase value="apple" data-testid="select-item">
-                      Apple
-                    </SelectItemBase>
-                    <SelectItemBase value="banana" data-testid="select-item">
-                      Banana
-                    </SelectItemBase>
-                    <SelectItemBase value="blueberry" data-testid="select-item">
-                      Blueberry
-                    </SelectItemBase>
-                    <SelectItemBase value="grapes" data-testid="select-item">
-                      Grapes
-                    </SelectItemBase>
-                    <SelectItemBase value="pineapple" data-testid="select-item">
-                      Pineapple
-                    </SelectItemBase>
+                  <SelectGroupBase>
+                    <SelectItemBase value="low">Baixa</SelectItemBase>
+                    <SelectItemBase value="medium">Média</SelectItemBase>
+                    <SelectItemBase value="high">Alta</SelectItemBase>
                   </SelectGroupBase>
                 </SelectContentBase>
               </SelectBase>
-              <LabelBase>Outro campo</LabelBase>
-              <TextAreaBase placeholder="Outro campo" />
+
+              <LabelBase>Comentários rápidos</LabelBase>
+              <TextAreaBase placeholder="Observação curta" />
             </div>
 
             <ModalFooterBase>
               <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Confirmar</ButtonBase>
+              <ButtonBase>Aplicar</ButtonBase>
             </ModalFooterBase>
           </ModalContentBase>
         </ModalBase>
@@ -279,81 +247,31 @@ export const Default: Story = {
           </ModalTriggerBase>
           <ModalContentBase>
             <ModalHeaderBase>
-              <ModalTitleBase>Editar item</ModalTitleBase>
+              <ModalTitleBase>Excluir item</ModalTitleBase>
               <ModalDescriptionBase>
-                Use este modal para editar informações do item. Abaixo há campos
-                de exemplo (nome, localização e outro campo) — adapte conforme
-                necessário.
+                A exclusão é permanente. Confirme abaixo se deseja remover o
+                item selecionado.
               </ModalDescriptionBase>
             </ModalHeaderBase>
 
             <div className="py-4 space-y-3">
-              <InputBase type="text" placeholder="Nome" label="Nome" />
-
-              <InputBase
-                type="text"
-                placeholder="Localização"
-                label="Local"
-                leftIcon={<MapPinLineIcon size={16} />}
-              />
-              <SelectBase
-                open={open}
-                onOpenChange={setOpen}
-                data-testid="select-base"
-              >
-                <SelectTriggerBase open={open} data-testid="select-trigger">
-                  <SelectValueBase
-                    placeholder="Select a fruit"
-                    data-testid="select-value"
-                  />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase data-testid="select-group">
-                    <SelectLabelBase data-testid="select-label">
-                      Fruits
-                    </SelectLabelBase>
-                    <SelectItemBase value="apple" data-testid="select-item">
-                      Apple
-                    </SelectItemBase>
-                    <SelectItemBase value="banana" data-testid="select-item">
-                      Banana
-                    </SelectItemBase>
-                    <SelectItemBase value="blueberry" data-testid="select-item">
-                      Blueberry
-                    </SelectItemBase>
-                    <SelectItemBase value="grapes" data-testid="select-item">
-                      Grapes
-                    </SelectItemBase>
-                    <SelectItemBase value="pineapple" data-testid="select-item">
-                      Pineapple
-                    </SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-              <LabelBase>Outro campo</LabelBase>
-              <TextAreaBase placeholder="Outro campo" />
+              <p>
+                Tem certeza que deseja excluir este item? Esta ação não pode ser
+                desfeita.
+              </p>
             </div>
 
             <ModalFooterBase>
               <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Confirmar</ButtonBase>
+              <ButtonBase variant="destructive">Excluir</ButtonBase>
             </ModalFooterBase>
           </ModalContentBase>
         </ModalBase>
-        <div>
-          <DeleteButton
-            className="rounded-full"
-            variant="destructive"
-            title="Teste"
-            destructiveDescription="rtuytututyu"
-          />
-        </div>
       </div>
     );
   },
 };
 
-// Snippet consumer-facing para Modal
 meta.parameters = {
   ...meta.parameters,
   docs: {
