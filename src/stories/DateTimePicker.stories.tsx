@@ -14,6 +14,9 @@ const meta: Meta<typeof DateTimePicker> = {
         component:
           "Componente para seleção de data e hora com diversas opções de configuração. Permite ocultar partes específicas do tempo e personalizar a experiência do usuário.",
       },
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -58,6 +61,13 @@ export const Default: Story = {
   render: Template,
   args: {
     date: new Date(2025, 9, 9, 14, 30, 0),
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
+      },
+    },
   },
 };
 
@@ -127,11 +137,11 @@ export const TimeVariants: Story = {
       </div>
     );
   },
+
   parameters: {
     docs: {
-      description: {
-        story:
-          "Diferentes configurações de exibição de tempo: sem segundos, apenas data, sem minutos, apenas minutos.",
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function TimeVariants() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  const [d4, setD4] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Sem segundos' hideSeconds date={d1} onChange={setD1} />\n      <DateTimePicker label='Apenas data' hideHour hideMinute date={d2} onChange={setD2} />\n      <DateTimePicker label='Sem minutos' hideMinute date={d3} onChange={setD3} />\n      <DateTimePicker label='Apenas minutos' hideHour date={d4} onChange={setD4} />\n    </>\n  );\n}`,
       },
     },
   },
@@ -184,11 +194,11 @@ export const ConfigurationOptions: Story = {
       </div>
     );
   },
+
   parameters: {
     docs: {
-      description: {
-        story:
-          "Diferentes configurações: desabilitado, com limites de data, sem label.",
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function ConfigurationOptions() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Campo desabilitado' disabled date={d1} onChange={setD1} />\n      <DateTimePicker label='Próximos 30 dias' fromDate={new Date()} toDate={new Date(Date.now() + 30*24*60*60*1000)} date={d2} onChange={setD2} />\n      <DateTimePicker date={d3} onChange={setD3} />\n    </>\n  );\n}`,
       },
     },
   },
@@ -199,5 +209,12 @@ export const WithTimePickerButton: Story = {
   args: {
     label: "Data com Time Picker Button",
     date: new Date(2025, 9, 9, 14, 30, 0),
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithTimePickerButton() {\n  const [date, setDate] = useState(new Date());\n  return <DateTimePicker label='Data com Time Picker Button' date={date} onChange={setDate} />;\n}`,
+      },
+    },
   },
 };

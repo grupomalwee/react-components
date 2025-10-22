@@ -17,6 +17,16 @@ const meta: Meta<typeof CalendarBase> = {
         component:
           "Calendário para seleção de datas, com modos single, range, múltiplo e popover.",
       },
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase, CalendarPopover } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} />;
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -32,6 +42,20 @@ const meta: Meta<typeof CalendarBase> = {
 export default meta;
 
 export const SingleDate = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function SingleDate() {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} data-testid="calendar-single" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     return (
@@ -76,6 +100,20 @@ export const SingleDate = {
 };
 
 export const Range = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function Range() {
+  const [range, setRange] = useState<{ from: Date | undefined; to?: Date | undefined } | undefined>(undefined);
+  return <CalendarBase mode="range" selected={range} onSelect={setRange} data-testid="calendar-range" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [range, setRange] = useState<
       { from: Date | undefined; to?: Date | undefined } | undefined
@@ -124,6 +162,20 @@ export const Range = {
 };
 
 export const Multiple = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function Multiple() {
+  const [multiple, setMultiple] = useState<Date[]>([]);
+  return <CalendarBase mode="multiple" selected={multiple} onSelect={(days) => setMultiple(days ?? [])} data-testid="calendar-multiple" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [multiple, setMultiple] = useState<Date[]>([]);
     return (
@@ -168,6 +220,27 @@ export const Multiple = {
 };
 
 export const DisabledDates = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function DisabledDates() {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const today = new Date();
+  const disabledDates = [
+    new Date(today.getFullYear(), today.getMonth(), 15),
+    new Date(today.getFullYear(), today.getMonth(), 20),
+    new Date(today.getFullYear(), today.getMonth(), 25),
+  ];
+
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} disabled={disabledDates} data-testid="calendar-disabled" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const today = new Date();
@@ -226,6 +299,20 @@ export const DisabledDates = {
 };
 
 export const NoWeekends = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function NoWeekends() {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} disabled={(d) => [0,6].includes(d.getDay())} data-testid="calendar-no-weekends" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     return (
@@ -271,6 +358,20 @@ export const NoWeekends = {
 };
 
 export const DateLimits = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase } from '@mlw-packages/react-components';
+
+export default function DateLimits() {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} fromDate={new Date(2025,5,15)} toDate={new Date(2025,5,30)} data-testid="calendar-limits" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     return (
@@ -317,6 +418,20 @@ export const DateLimits = {
 };
 
 export const WithPopover = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarPopover } from '@mlw-packages/react-components';
+
+export default function WithPopover() {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  return <CalendarPopover label="Escolher Data" selected={selectedDate} onSelect={setSelectedDate} />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     return (

@@ -105,12 +105,14 @@ const ProgressBase = React.forwardRef<
               >
                 <ProgressPrimitive.Indicator
                   className={cn(
-                    "h-full w-full flex-1 transition-all duration-500 ease-in-out rounded-lg  ",
+                    "h-full transition-all duration-500 ease-in-out rounded-lg",
+                    // quando não usa autocolor, Indicator deve mostrar a cor primária
                     autocolor && autocolor.length >= 2
                       ? "bg-transparent"
                       : "bg-primary"
                   )}
-                  style={{ transform: `translateX(-${100 - indicatorWidth}%)` }}
+                  // usar width é mais previsível do que transform para representar o progresso
+                  style={{ width: `${indicatorWidth}%` }}
                 />
 
                 {autocolor &&
@@ -147,9 +149,7 @@ const ProgressBase = React.forwardRef<
                   <div
                     aria-hidden="true"
                     className="absolute top-0 bottom-0 w-0.5 bg-black/70 transition-all duration-500 ease-in-out pointer-events-none"
-                    style={{
-                      left: `${(100 / value) * 100}%`,
-                    }}
+                    style={{ left: `100%` }}
                   >
                     {value > 115 && (
                       <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 text-xs whitespace-nowrap font-extrabold">{`+${Math.round(

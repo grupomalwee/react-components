@@ -41,6 +41,24 @@ const meta: Meta<typeof Chart> = {
         component:
           "Chart combinado que aceita barras, linhas e áreas em um único gráfico.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const sampleData = [
+  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
+  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
+];
+
+export default function Example() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={sampleData} xAxis="periodo" series={{ bar: ['despesas'] }} labelMap={{ despesas: 'Despesas' }} height={360} />
+    </div>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -80,9 +98,25 @@ export const Default: Story = {
   render: Template,
   parameters: {
     docs: {
-      description: {
-        story:
-          "Exemplo básico com dados trimestrais. Use os controles para modificar as propriedades.",
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const sampleData = [
+  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
+  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
+  { periodo: 'Q3/24', receita: 6800, despesas: 3800, churn: 120 },
+  { periodo: 'Q4/24', receita: 7500, despesas: 4200, churn: 100 },
+];
+
+export default function Default() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={sampleData} xAxis="periodo" height={360} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -148,6 +182,24 @@ export const Combined: Story = {
     docs: {
       description: {
         story: "Combina barras, áreas e linhas em um único gráfico.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [
+  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
+  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
+];
+
+export default function Combined() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={data} xAxis="periodo" series={{ bar: ['despesas'], area: ['receita'], line: ['churn'] }} labelMap={{ despesas: 'Despesas', receita: 'Receita', churn: 'Churn' }} colors={["#ef4444","#22c55e","#6366f1"]} height={350} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -225,6 +277,24 @@ export const NegativeValues: Story = {
     docs: {
       description: {
         story: "Exemplo com valores negativos para mostrar perdas e ajustes.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const negativeData = [
+  { periodo: 'Q1/24', receita: -2000, despesas: 1800 },
+  { periodo: 'Q2/24', receita: 3000, despesas: -800 },
+];
+
+export default function NegativeValues() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={negativeData} xAxis="periodo" series={{ bar: ['despesas'] }} labelMap={{ receitas: 'Receita', despesas: 'Despesas' }} colors={["#06b6d4","#ef4444"]} height={360} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -313,6 +383,23 @@ export const MultipleBarSeries: Story = {
       description: {
         story: "Gráfico com múltiplas séries de barras agrupadas.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function MultipleBarSeries() {
+  const data = [
+    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
+    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
+  ];
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={data} xAxis="periodo" series={{ bar: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#3b82f6","#ef4444","#f59e0b"]} height={350} />
+    </div>
+  );
+}
+`,
+      },
     },
   },
   // play: async ({ canvasElement, step }) => {
@@ -359,6 +446,23 @@ export const MultipleLineSeries: Story = {
     docs: {
       description: {
         story: "Gráfico com múltiplas séries de linhas sobrepostas.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function MultipleLineSeries() {
+  const data = [
+    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
+    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
+  ];
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={data} xAxis="periodo" series={{ line: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#10b981","#8b5cf6","#f97316"]} height={350} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -407,6 +511,23 @@ export const MultipleAreaSeries: Story = {
     docs: {
       description: {
         story: "Gráfico com múltiplas séries de áreas empilhadas.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function MultipleAreaSeries() {
+  const data = [
+    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
+    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
+  ];
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={data} xAxis="periodo" series={{ area: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#06b6d4","#ec4899","#84cc16"]} height={350} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -460,6 +581,23 @@ export const ComplexMixedChart: Story = {
       description: {
         story:
           "Combinação complexa de barras, áreas e linhas com labels personalizados.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function ComplexMixedChart() {
+  const data = [
+    { periodo: 'Q1', receita: 100000, despesas: 50, churn: 5 },
+    { periodo: 'Q2', receita: 200, despesas: 99000, churn: 500 },
+  ];
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={data} xAxis="periodo" series={{ bar: ['despesas'], area: ['receita'], line: ['churn'] }} labelMap={{ receita: 'Receita (R$)', despesas: 'Despesas (R$)', churn: 'Taxa de Churn (%)' }} colors={["#dc2626","#16a34a","#2563eb"]} height={380} showGrid showLegend />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -528,6 +666,21 @@ export const LargeDataset: Story = {
       description: {
         story: "Gráfico com 24 pontos de dados mensais.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const largeData = Array.from({ length: 24 }, (_, i) => ({ periodo: 'M' + (i+1), receita: Math.round(3000 + Math.random()*7000), despesas: Math.round(2000 + Math.random()*5000), churn: Math.round(80 + Math.random()*140) }));
+
+export default function LargeDataset() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={largeData} xAxis="periodo" series={{ bar: ['despesas'], line: ['receita','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#f59e0b","#3b82f6","#8b5cf6"]} height={350} />
+    </div>
+  );
+}
+`,
+      },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -576,6 +729,19 @@ export const EmptyData: Story = {
     docs: {
       description: {
         story: "Gráfico sem dados para testar estado vazio.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function EmptyData() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={[]} xAxis="periodo" series={{ bar: ['receita'] }} labelMap={{ receita: 'Receita' }} height={350} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -1368,6 +1534,20 @@ export const Playground: Story = {
       description: {
         story:
           "Playground interativo para experimentar com dados e configurações do chart.",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function Playground() {
+  const [data, setData] = useState([]);
+  return (
+    <div style={{ width: '100%', height: '100vh' }}>
+      <Chart data={data} xAxis="periodo" series={{ bar: ['despesas'] }} height={360} />
+    </div>
+  );
+}
+`,
       },
     },
   },

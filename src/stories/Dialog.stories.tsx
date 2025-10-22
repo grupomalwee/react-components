@@ -26,6 +26,9 @@ const meta: Meta<typeof DialogBase> = {
         component:
           "Dialog para modais, alertas, confirmação e formulários. Personalizável e acessível.",
       },
+      source: {
+        code: `import React from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase>Open</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase>Title</DialogTitleBase>\n          <DialogDescriptionBase>Description goes here.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='outline'>Close</ButtonBase>\n          </DialogCloseBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -89,6 +92,13 @@ export const ShareDialog: Story = {
       </DialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase, InputBase, LabelBase } from '@mlw-packages/react-components';\nimport { CopyIcon } from '@phosphor-icons/react';\n\nexport default function ShareDialog() {\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase variant='outline'>Share</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase>Share link</DialogTitleBase>\n          <DialogDescriptionBase>Anyone with this link can view this page.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <div>\n          <LabelBase htmlFor='link' className='sr-only'>Link</LabelBase>\n          <InputBase id='link' defaultValue='https://...' readOnly />\n        </div>\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='secondary'>Close</ButtonBase>\n          </DialogCloseBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}`,
+      },
+    },
+  },
 };
 
 export const FormDialog: Story = {
@@ -150,6 +160,13 @@ export const FormDialog: Story = {
       </DialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase, InputBase, LabelBase, CheckboxBase } from '@mlw-packages/react-components';\n\nexport default function FormDialog() {\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase>Subscribe</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase>Subscribe to newsletter</DialogTitleBase>\n          <DialogDescriptionBase>Stay updated with our latest news.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <div>\n          <LabelBase htmlFor='name'>Name</LabelBase>\n          <InputBase id='name' placeholder='Your name' />\n          <LabelBase htmlFor='email'>Email</LabelBase>\n          <InputBase id='email' placeholder='you@example.com' />\n          <div>\n            <CheckboxBase id='terms' />\n            <LabelBase htmlFor='terms'>I accept terms and conditions</LabelBase>\n          </div>\n        </div>\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='outline'>Cancel</ButtonBase>\n          </DialogCloseBase>\n          <ButtonBase>Subscribe</ButtonBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}`,
+      },
+    },
+  },
 };
 
 export const ConfirmDialog: Story = {
@@ -188,4 +205,11 @@ export const ConfirmDialog: Story = {
       </DialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase } from '@mlw-packages/react-components';\nimport { WarningIcon, TrashIcon } from '@phosphor-icons/react';\n\nexport default function ConfirmDialog() {\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase variant='destructive'>Delete</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase><WarningIcon /> Confirm deletion</DialogTitleBase>\n          <DialogDescriptionBase>This action cannot be undone.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='outline'>Cancel</ButtonBase>\n          </DialogCloseBase>\n          <ButtonBase variant='destructive'><TrashIcon /> Delete</ButtonBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}`,
+      },
+    },
+  },
 };

@@ -72,6 +72,50 @@ export const Default: Story = {
   ),
 };
 
+// snippet consumer-facing para docs
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { LineChartBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const data = [
+    { name: 'Q1', vendas: 15000, meta: 12000 },
+    { name: 'Q2', vendas: 18000, meta: 15000 },
+    { name: 'Q3', vendas: 22000, meta: 18000 },
+    { name: 'Q4', vendas: 25000, meta: 20000 },
+  ];
+
+  return (
+    <div style={{ padding: 24 }}>
+      <LineChartBase data={data} colors={["#ef4444", "#10b981", "#f59e0b"]} height={350} width={900} />
+    </div>
+  );
+}`,
+    },
+  },
+};
+
+Default.parameters = {
+  ...Default.parameters,
+  docs: {
+    ...Default.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { LineChartBase } from '@mlw-packages/react-components';
+
+export const Default = () => (
+  <div style={{ padding: 24 }}>
+    <LineChartBase />
+  </div>
+);`,
+    },
+  },
+};
+
 export const CustomColors: Story = {
   name: "Cores Customizadas",
   render: (args) => (

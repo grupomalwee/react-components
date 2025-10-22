@@ -28,6 +28,29 @@ const meta: Meta<typeof BarChart> = {
         component:
           "Gráfico de barras responsivo usando Recharts — mostra casos de uso comuns: detecção automática, mapeamento manual de séries (yAxis), e labelMap para rótulos legíveis.",
       },
+      // Exemplo de uso mostrado no painel 'Show code' (visão do consumidor)
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+const sampleQuarterData = [
+  { trimestre: 'Q1', receita: 4000, despesas: 2400, lucro: 1600 },
+  { trimestre: 'Q2', receita: 5200, despesas: 3100, lucro: 2100 },
+];
+
+export default function Example() {
+  return (
+    <BarChart
+      data={sampleQuarterData}
+      xAxis="trimestre"
+      yAxis={["receita", "despesas"]}
+      labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
+      height={360}
+    />
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -80,6 +103,24 @@ type Story = StoryObj<typeof BarChart>;
 export const AutoDetect: Story = {
   name: "Auto Detect (default)",
   render: (args) => <BarChart {...args} autoDetect={true} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+export default function AutoDetect() {
+  const data = [
+    { trimestre: 'Q1', receita: 4000, despesas: 2400, lucro: 1600 },
+    { trimestre: 'Q2', receita: 5200, despesas: 3100, lucro: 2100 },
+  ];
+
+  return <BarChart data={data} xAxis="trimestre" height={360} autoDetect />;
+}
+`,
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     within(canvasElement);
 
@@ -131,11 +172,25 @@ export const YAxisConfigs: Story = {
     </div>
   ),
   parameters: {
-    layout: "padded",
     docs: {
-      description: {
-        story:
-          "Diferentes configurações de yAxis: array de strings e objeto com labels/cores customizados.",
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+const sampleQuarterData = [
+  { trimestre: 'Q1', receita: 4000, despesas: 2400, lucro: 1600, vendas: 3200 },
+  { trimestre: 'Q2', receita: 5200, despesas: 3100, lucro: 2100, vendas: 4100 },
+];
+
+export default function YAxisConfigs() {
+  return (
+    <div>
+      <BarChart data={sampleQuarterData} xAxis="trimestre" yAxis={["receita","despesas","lucro"]} labelMap={{ receita: 'Receita', despesas: 'Despesas', lucro: 'Lucro' }} height={420} />
+      <BarChart data={sampleQuarterData} xAxis="trimestre" yAxis={{ vendas: { label: 'Vendas', color: '#ef4444' } }} height={420} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -200,11 +255,26 @@ export const CustomStyles: Story = {
     </div>
   ),
   parameters: {
-    layout: "padded",
     docs: {
-      description: {
-        story:
-          "Estilos customizados: labelMap, cores/grid customizados, sem grid.",
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+const sampleQuarterData = [
+  { trimestre: 'Q1', vendas: 3200, lucro: 1600 },
+  { trimestre: 'Q2', vendas: 4100, lucro: 2100 },
+];
+
+export default function CustomStyles() {
+  return (
+    <div>
+      <BarChart data={sampleQuarterData} xAxis="trimestre" yAxis={["vendas","lucro"]} labelMap={{ vendas: 'Vendas Totais', lucro: 'Lucro Líquido' }} colors={["#6366f1", "#06b6d4"]} height={380} />
+      <BarChart data={sampleQuarterData} xAxis="trimestre" yAxis={["vendas","meta"]} colors={["#4ecdc4", "#45b7d1"]} gridColor="#e6e6fa" height={340} />
+      <BarChart data={sampleQuarterData} xAxis="trimestre" yAxis={["vendas"]} height={300} showGrid={false} />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -248,6 +318,38 @@ export const CompleteExample: Story = {
       showLegend={true}
     />
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+const sampleQuarterData = [
+  { trimestre: 'Q1', receita: 4000, despesas: 2400, lucro: 1600, vendas: 3200 },
+  { trimestre: 'Q2', receita: 5200, despesas: 3100, lucro: 2100, vendas: 4100 },
+  { trimestre: 'Q3', receita: 6800, despesas: 3800, lucro: 3000, vendas: 5400 },
+  { trimestre: 'Q4', receita: 7500, despesas: 4200, lucro: 3300, vendas: 6000 },
+];
+
+export default function CompleteExample() {
+  return (
+    <BarChart
+      data={sampleQuarterData}
+      xAxis="trimestre"
+      yAxis={["receita","despesas","lucro","vendas"]}
+      labelMap={{ receita: 'Receita Total', despesas: 'Despesas', lucro: 'Lucro', vendas: 'Vendas' }}
+      colors={["#8b5cf6", "#ec4899", "#10b981", "#f59e0b"]}
+      height={420}
+      showGrid
+      showTooltip
+      showLegend
+    />
+  );
+}
+`,
+      },
+    },
+  },
   args: {
     yAxis: ["receita", "despesas", "lucro", "vendas"],
     labelMap: {

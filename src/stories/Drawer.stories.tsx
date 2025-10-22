@@ -1,7 +1,6 @@
-
 import "../style/global.css";
 import * as React from "react";
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   DrawerBase,
   DrawerTriggerBase,
@@ -11,10 +10,10 @@ import {
   DrawerDescriptionBase,
   DrawerFooterBase,
   DrawerCloseBase,
-} from '../components/ui/DrawerBase';
-import { InputBase } from '../components/ui/InputBase';
-import { ButtonBase } from '../components/ui/ButtonBase';
-import { MinusIcon, PlusIcon } from '@phosphor-icons/react';
+} from "../components/ui/DrawerBase";
+import { InputBase } from "../components/ui/InputBase";
+import { ButtonBase } from "../components/ui/ButtonBase";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   Bar,
   BarChart,
@@ -22,26 +21,30 @@ import {
   XAxis,
   YAxis,
   Tooltip as RechartsTooltip,
-} from 'recharts';
+} from "recharts";
 
 const meta: Meta<typeof DrawerBase> = {
-  title: 'overlays/Drawer',
+  title: "overlays/Drawer",
   component: DrawerBase,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'Drawer para navegação lateral, formulários e gráficos. Personalizável e interativo.'
-      }
+        component:
+          "Drawer para navegação lateral, formulários e gráficos. Personalizável e interativo.",
+      },
+      source: {
+        code: `import React, { useState, useRef } from 'react';\nimport { DrawerBase, DrawerTriggerBase, DrawerContentBase, DrawerHeaderBase, DrawerTitleBase, DrawerDescriptionBase, DrawerFooterBase, DrawerCloseBase, InputBase, ButtonBase } from '@mlw-packages/react-components';\nimport { MinusIcon, PlusIcon } from '@phosphor-icons/react';\nimport { BarChart, ResponsiveContainer, XAxis, YAxis, Bar } from 'recharts';\n\nexport default function Example() {\n  const [goal, setGoal] = useState(350);\n  const [data, setData] = useState([{ id: 1, value: 350 }]);\n  return (\n    <DrawerBase>\n      <DrawerTriggerBase asChild>\n        <ButtonBase variant='outline'>Abrir Drawer</ButtonBase>\n      </DrawerTriggerBase>\n      <DrawerContentBase>\n        <DrawerHeaderBase>\n          <DrawerTitleBase>Meta de Movimento</DrawerTitleBase>\n          <DrawerDescriptionBase>Ajuste sua meta diária e visualize o gráfico.</DrawerDescriptionBase>\n        </DrawerHeaderBase>\n        <InputBase defaultValue={goal} readOnly />\n        <DrawerFooterBase>\n          <DrawerCloseBase asChild>\n            <ButtonBase variant='outline'>Cancelar</ButtonBase>\n          </DrawerCloseBase>\n          <ButtonBase onClick={() => setData(prev => [...prev, { id: prev.length + 1, value: goal }])}>Confirmar</ButtonBase>\n        </DrawerFooterBase>\n      </DrawerContentBase>\n    </DrawerBase>\n  );\n}`,
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -74,7 +77,14 @@ export const WithGoalControls: Story = {
     }
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
         <div className=" bg-background p-8 text-foreground flex flex-col">
           <DrawerBase>
             <DrawerTriggerBase asChild>
@@ -107,10 +117,16 @@ export const WithGoalControls: Story = {
                         <InputBase
                           ref={inputRef}
                           defaultValue={goal}
-                          onBlur={(e) => handleEditConfirm((e.target as HTMLInputElement).value)}
+                          onBlur={(e) =>
+                            handleEditConfirm(
+                              (e.target as HTMLInputElement).value
+                            )
+                          }
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              handleEditConfirm((e.target as HTMLInputElement).value);
+                              handleEditConfirm(
+                                (e.target as HTMLInputElement).value
+                              );
                             } else if (e.key === "Escape") {
                               setIsEditing(false);
                             }
@@ -163,7 +179,10 @@ export const WithGoalControls: Story = {
                           tickLine={false}
                           width={40}
                         />
-                        <RechartsTooltip cursor={{ fill: "transparent" }} content={() => null} />
+                        <RechartsTooltip
+                          cursor={{ fill: "transparent" }}
+                          content={() => null}
+                        />
                         <Bar
                           dataKey="value"
                           fill="hsl(var(--primary, 220 90% 56%))"
@@ -202,5 +221,12 @@ export const WithGoalControls: Story = {
         </div>
       </div>
     );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DrawerBase, DrawerTriggerBase, DrawerContentBase, DrawerHeaderBase, DrawerTitleBase, DrawerDescriptionBase, DrawerFooterBase, DrawerCloseBase, InputBase, ButtonBase } from '@mlw-packages/react-components';\nimport { MinusIcon, PlusIcon } from '@phosphor-icons/react';\nimport { BarChart, ResponsiveContainer, XAxis, YAxis, Bar } from 'recharts';\n\nexport default function WithGoalControls() {\n  const [goal, setGoal] = useState(350);\n  const [data, setData] = useState([{ id: 1, value: 350 }]);\n  return (\n    <DrawerBase>\n      <DrawerTriggerBase asChild>\n        <ButtonBase variant='outline'>Abrir Drawer</ButtonBase>\n      </DrawerTriggerBase>\n      <DrawerContentBase>\n        <DrawerHeaderBase>\n          <DrawerTitleBase>Meta de Movimento</DrawerTitleBase>\n          <DrawerDescriptionBase>Ajuste sua meta diária e adicione barras ao gráfico.</DrawerDescriptionBase>\n        </DrawerHeaderBase>\n        <InputBase defaultValue={goal} />\n        <DrawerFooterBase>\n          <DrawerCloseBase asChild>\n            <ButtonBase variant='outline'>Cancelar</ButtonBase>\n          </DrawerCloseBase>\n          <ButtonBase onClick={() => setData(prev => [...prev, { id: prev.length + 1, value: goal }])}>Confirmar</ButtonBase>\n        </DrawerFooterBase>\n      </DrawerContentBase>\n    </DrawerBase>\n  );\n}`,
+      },
+    },
   },
 };

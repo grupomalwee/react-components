@@ -14,6 +14,9 @@ const meta: Meta<typeof DebouncedInput> = {
         component:
           "Input com debounce para reduzir chamadas de API e melhorar performance. Ideal para campos de busca e validação em tempo real.",
       },
+      source: {
+        code: `import React, { useState } from 'react';\nimport DebouncedInput from '@mlw-packages/react-components';\nimport { MagnifyingGlassIcon } from '@phosphor-icons/react';\n\nexport default function Example() {\n  const [value, setValue] = useState('');\n  return (\n    <DebouncedInput value={value} onChange={setValue} debounce={500} placeholder='Digite algo...' rightIcon={<MagnifyingGlassIcon />} />\n  );\n}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -68,7 +71,12 @@ const DebouncedInputWrapper = (
 
   return (
     <div style={{ width: "300px", maxWidth: "100%" }}>
-      <DebouncedInput {...args} value={value} onChange={handleChange} rightIcon={<MagnifyingGlassIcon/>}/>
+      <DebouncedInput
+        {...args}
+        value={value}
+        onChange={handleChange}
+        rightIcon={<MagnifyingGlassIcon />}
+      />
       <div
         style={{
           marginTop: "12px",
@@ -87,4 +95,11 @@ const DebouncedInputWrapper = (
 
 export const Default: Story = {
   render: (args) => <DebouncedInputWrapper {...args} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport DebouncedInput from '@mlw-packages/react-components';\nimport { MagnifyingGlassIcon } from '@phosphor-icons/react';\n\nexport default function Example() {\n  const [value, setValue] = useState('');\n  return (\n    <DebouncedInput value={value} onChange={setValue} debounce={500} placeholder='Digite algo...' rightIcon={<MagnifyingGlassIcon />} />\n  );\n}`,
+      },
+    },
+  },
 };

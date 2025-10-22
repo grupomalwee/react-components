@@ -10,7 +10,7 @@ const meta: Meta<typeof Toaster> = {
   parameters: {
     docs: {
       description: {
-        component: 'Sonner para notificações, feedback de sucesso, erro, aviso, info e loading.'
+        component: 'Sonner para notificações, feedback de sucesso, erro, aviso, info e loading. Para o uso, importe o  "Toaster" no App.tsx/jsx.'
       }
     },
     backgrounds: {

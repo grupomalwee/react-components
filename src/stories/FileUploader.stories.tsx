@@ -124,3 +124,115 @@ export const SingleFile: Story = {
     />
   ),
 };
+
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  async function handleUpload(uploadFiles) {
+    // enviar para o servidor
+    console.log('Uploading', uploadFiles);
+  }
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        accept={[]}
+        maxSize={10 * 1024 * 1024}
+        maxFiles={5}
+        showPreview
+        onValueChange={setFiles}
+        onUpload={handleUpload}
+      />
+    </div>
+  );
+}
+
+export default Example;`,
+    },
+  },
+};
+
+Default.parameters = {
+  ...Default.parameters,
+  docs: {
+    ...Default.parameters?.docs,
+    source: {
+      code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader value={files} onValueChange={setFiles} onUpload={() => {}} />
+    </div>
+  );
+}
+
+export default Example;`,
+    },
+  },
+};
+
+ImagesOnly.parameters = {
+  ...ImagesOnly.parameters,
+  docs: {
+    ...ImagesOnly.parameters?.docs,
+    source: {
+      code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        accept={["image/*"]}
+        dropzoneText='Apenas imagens'
+        dropzoneSubtext='PNG, JPEG, GIF, WebP até 10MB'
+        value={files}
+        onValueChange={setFiles}
+      />
+    </div>
+  );
+}
+
+export default Example;`,
+    },
+  },
+};
+
+SingleFile.parameters = {
+  ...SingleFile.parameters,
+  docs: {
+    ...SingleFile.parameters?.docs,
+    source: {
+      code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        maxFiles={1}
+        dropzoneText='Selecione um arquivo'
+        dropzoneSubtext='Apenas um arquivo por vez'
+        value={files}
+        onValueChange={setFiles}
+      />
+    </div>
+  );
+}
+
+export default Example;`,
+    },
+  },
+};

@@ -90,6 +90,34 @@ export const Default: Story = {
   },
 };
 
+// Snippet consumer-facing no nível do meta
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { MultiComboboxBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const items = [
+    { label: 'tag1', value: 'tag1' },
+    { label: 'tag2', value: 'tag2' },
+    { label: 'tag3', value: 'tag3' },
+  ];
+
+  const [selected, setSelected] = React.useState([items[0].value]);
+
+  return (
+    <div style={{ padding: 24 }}>
+      <MultiComboboxBase items={items} selected={selected} onChange={setSelected} />
+    </div>
+  );
+}`,
+    },
+  },
+};
+
 export const Empty: Story = {
   name: "Vazio",
   render: () => {
@@ -151,6 +179,27 @@ export const Empty: Story = {
       );
       expect(root).toBeInTheDocument();
     });
+  },
+};
+
+Empty.parameters = {
+  ...Empty.parameters,
+  docs: {
+    ...Empty.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { MultiComboboxBase } from '@mlw-packages/react-components';
+
+export const Empty = () => {
+  const items = [
+    { label: 'React', value: 'react' },
+    { label: 'Vue', value: 'vue' },
+    { label: 'Angular', value: 'angular' },
+  ];
+  const [selected, setSelected] = React.useState([]);
+  return <MultiComboboxBase items={items} selected={selected} onChange={setSelected} placeholder="Selecione frameworks..." />;
+};`,
+    },
   },
 };
 
@@ -233,6 +282,27 @@ export const MultipleSelected: Story = {
   },
 };
 
+MultipleSelected.parameters = {
+  ...MultipleSelected.parameters,
+  docs: {
+    ...MultipleSelected.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { MultiComboboxBase } from '@mlw-packages/react-components';
+
+export const MultipleSelected = () => {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+    { label: 'Python', value: 'py' },
+  ];
+  const [selected, setSelected] = React.useState(['js','ts','py']);
+  return <MultiComboboxBase items={items} selected={selected} onChange={setSelected} />;
+};`,
+    },
+  },
+};
+
 export const LargeList: Story = {
   name: "Lista Grande",
   render: () => {
@@ -296,6 +366,23 @@ export const LargeList: Story = {
       expect(content).toContain("Item 1");
       expect(content).toContain("Item 2");
     });
+  },
+};
+
+LargeList.parameters = {
+  ...LargeList.parameters,
+  docs: {
+    ...LargeList.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { MultiComboboxBase } from '@mlw-packages/react-components';
+
+export const LargeList = () => {
+  const items = Array.from({ length: 50 }, (_, i) => ({ label: Item }));
+  const [selected, setSelected] = React.useState(['item-1','item-2']);
+  return <MultiComboboxBase items={items} selected={selected} onChange={setSelected} />;
+};`,
+    },
   },
 };
 
@@ -366,5 +453,25 @@ export const SpecialCharacters: Story = {
       expect(content).toContain("C++");
       expect(content).toContain("🚀");
     });
+  },
+};
+
+SpecialCharacters.parameters = {
+  ...SpecialCharacters.parameters,
+  docs: {
+    ...SpecialCharacters.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { MultiComboboxBase } from '@mlw-packages/react-components';
+
+export const SpecialCharacters = () => {
+  const items = [
+    { label: 'C++', value: 'cpp' },
+    { label: 'Emoji 🚀', value: 'emoji' },
+  ];
+  const [selected, setSelected] = React.useState(['cpp','emoji']);
+  return <MultiComboboxBase items={items} selected={selected} onChange={setSelected} />;
+};`,
+    },
   },
 };

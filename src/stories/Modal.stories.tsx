@@ -72,7 +72,6 @@ export const Default: Story = {
         <ModalBase>
           <ModalTriggerBase asChild>
             <ButtonBase>
-            
               <PlusIcon size={16} />
               Insert
             </ButtonBase>
@@ -209,7 +208,7 @@ export const Default: Story = {
         </ModalBase>
         <ModalBase>
           <ModalTriggerBase asChild>
-            < ChangeButton className="rounded-full" variant="secondary" />
+            <ChangeButton className="rounded-full" variant="secondary" />
           </ModalTriggerBase>
           <ModalContentBase>
             <ModalHeaderBase>
@@ -342,9 +341,86 @@ export const Default: Story = {
           </ModalContentBase>
         </ModalBase>
         <div>
-          <DeleteButton className="rounded-full" variant="destructive" title="Teste" destructiveDescription="rtuytututyu"/>
+          <DeleteButton
+            className="rounded-full"
+            variant="destructive"
+            title="Teste"
+            destructiveDescription="rtuytututyu"
+          />
         </div>
       </div>
     );
+  },
+};
+
+// Snippet consumer-facing para Modal
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import {
+  ModalBase,
+  ModalTriggerBase,
+  ModalContentBase,
+  ModalHeaderBase,
+  ModalTitleBase,
+  ModalDescriptionBase,
+  ModalFooterBase,
+} from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <ModalBase>
+      <ModalTriggerBase asChild>
+        <ButtonBase>Open</ButtonBase>
+      </ModalTriggerBase>
+      <ModalContentBase>
+        <ModalHeaderBase>
+          <ModalTitleBase>Title</ModalTitleBase>
+          <ModalDescriptionBase>Description text</ModalDescriptionBase>
+        </ModalHeaderBase>
+        <div style={{ padding: 16 }}>
+          Content goes here
+        </div>
+        <ModalFooterBase>
+          <ButtonBase variant="outline">Cancel</ButtonBase>
+          <ButtonBase>Confirm</ButtonBase>
+        </ModalFooterBase>
+      </ModalContentBase>
+    </ModalBase>
+  );
+}`,
+    },
+  },
+};
+
+Default.parameters = {
+  ...Default.parameters,
+  docs: {
+    ...Default.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { ModalBase, ModalTriggerBase, ModalContentBase, ModalTitleBase, ModalDescriptionBase, ModalFooterBase } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export const Default = () => (
+  <ModalBase>
+    <ModalTriggerBase asChild>
+      <ButtonBase>Open</ButtonBase>
+    </ModalTriggerBase>
+    <ModalContentBase>
+      <ModalTitleBase>Title</ModalTitleBase>
+      <ModalDescriptionBase>Content</ModalDescriptionBase>
+      <ModalFooterBase>
+        <ButtonBase variant="outline">Cancel</ButtonBase>
+        <ButtonBase>Confirm</ButtonBase>
+      </ModalFooterBase>
+    </ModalContentBase>
+  </ModalBase>
+);`,
+    },
   },
 };

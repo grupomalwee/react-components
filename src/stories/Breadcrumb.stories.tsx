@@ -225,6 +225,38 @@ const meta: Meta<typeof BreadcrumbStory> = {
         component:
           "Breadcrumb para navegação hierárquica, com suporte a ícones, menus e customização.",
       },
+      source: {
+        code: `import React from 'react';
+import {
+  BreadcrumbBase,
+  BreadcrumbListBase,
+  BreadcrumbItemBase,
+  BreadcrumbLinkBase,
+  BreadcrumbSeparatorBase,
+  BreadcrumbPageBase,
+} from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <BreadcrumbBase>
+      <BreadcrumbListBase>
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Home</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Docs</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbPageBase>Current</BreadcrumbPageBase>
+        </BreadcrumbItemBase>
+      </BreadcrumbListBase>
+    </BreadcrumbBase>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -250,6 +282,61 @@ type Story = StoryObj<typeof BreadcrumbStory>;
 export const ComMenu: Story = {
   args: {
     variant: "withMenu",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  BreadcrumbBase,
+  BreadcrumbListBase,
+  BreadcrumbItemBase,
+  BreadcrumbLinkBase,
+  BreadcrumbSeparatorBase,
+  BreadcrumbPageBase,
+  BreadcrumbEllipsisBase,
+} from '../components/ui/BreadcrumbBase';
+import {
+  DropDownMenuBase,
+  DropDownMenuTriggerBase,
+  DropDownMenuContentBase,
+  DropDownMenuItemBase,
+} from '../components/ui/DropDownMenuBase';
+
+export default function Example() {
+  return (
+    <BreadcrumbBase>
+      <BreadcrumbListBase>
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Home</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <DropDownMenuBase>
+            <DropDownMenuTriggerBase>
+              <BreadcrumbEllipsisBase />
+            </DropDownMenuTriggerBase>
+            <DropDownMenuContentBase align="start">
+              <DropDownMenuItemBase>Documentation</DropDownMenuItemBase>
+              <DropDownMenuItemBase>Themes</DropDownMenuItemBase>
+            </DropDownMenuContentBase>
+          </DropDownMenuBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Components</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbPageBase>Breadcrumb</BreadcrumbPageBase>
+        </BreadcrumbItemBase>
+      </BreadcrumbListBase>
+    </BreadcrumbBase>
+  );
+}
+`,
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -300,6 +387,42 @@ export const Simples: Story = {
   args: {
     variant: "simple",
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  BreadcrumbBase,
+  BreadcrumbListBase,
+  BreadcrumbItemBase,
+  BreadcrumbLinkBase,
+  BreadcrumbSeparatorBase,
+  BreadcrumbPageBase,
+} from '../components/ui/BreadcrumbBase';
+
+export default function Example() {
+  return (
+    <BreadcrumbBase>
+      <BreadcrumbListBase>
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Home</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#">Docs</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbPageBase>Current</BreadcrumbPageBase>
+        </BreadcrumbItemBase>
+      </BreadcrumbListBase>
+    </BreadcrumbBase>
+  );
+}
+`,
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -337,6 +460,47 @@ export const Simples: Story = {
 export const ComIcones: Story = {
   args: {
     variant: "withIcons",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  BreadcrumbBase,
+  BreadcrumbListBase,
+  BreadcrumbItemBase,
+  BreadcrumbLinkBase,
+  BreadcrumbSeparatorBase,
+  BreadcrumbPageBase,
+} from '../components/ui/BreadcrumbBase';
+
+export default function Example() {
+  return (
+    <BreadcrumbBase>
+      <BreadcrumbListBase>
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#" className="flex items-center gap-1">
+            <svg width="16" height="16" fill="none">
+              <path d="M2 8L8 2L14 8V14A2 2 0 0 1 12 16H4A2 2 0 0 1 2 14V8Z" stroke="#6366f1" strokeWidth="2" />
+            </svg>
+            Home
+          </BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbLinkBase href="#" className="flex items-center gap-1">Docs</BreadcrumbLinkBase>
+        </BreadcrumbItemBase>
+        <BreadcrumbSeparatorBase />
+        <BreadcrumbItemBase>
+          <BreadcrumbPageBase className="flex items-center gap-1">Breadcrumb</BreadcrumbPageBase>
+        </BreadcrumbItemBase>
+      </BreadcrumbListBase>
+    </BreadcrumbBase>
+  );
+}
+`,
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

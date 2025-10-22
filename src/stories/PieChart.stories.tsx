@@ -59,6 +59,48 @@ export const Default: Story = {
   ),
 };
 
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { PieChartBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const data = [
+    { name: 'Desktop', value: 45 },
+    { name: 'Mobile', value: 35 },
+    { name: 'Tablet', value: 20 },
+  ];
+
+  return (
+    <div style={{ width: 600, height: 500 }}>
+      <PieChartBase data={data} colors={["#3b82f6", "#ef4444", "#10b981"]} />
+    </div>
+  );
+}`,
+    },
+  },
+};
+
+Default.parameters = {
+  ...Default.parameters,
+  docs: {
+    ...Default.parameters?.docs,
+    source: {
+      code: `import React from 'react';
+import { PieChartBase } from '@mlw-packages/react-components';
+
+export const Default = () => (
+  <div style={{ width: 600, height: 500 }}>
+    <PieChartBase />
+  </div>
+);`,
+    },
+  },
+};
+
 export const CustomColors: Story = {
   name: "Cores Customizadas",
   render: (args) => (

@@ -7,25 +7,50 @@ import {
 } from "../components/filter/services/types";
 import { MemoryRouter } from "react-router-dom";
 import { TooltipProviderBase } from "../components/ui/TooltipBase";
+import "../global.css"
 
 export default {
   title: "diversos/FilterDialog",
   component: FilterDialog,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'FilterDialog para filtros avançados, seleção dinâmica e múltiplos tipos de campo.'
-      }
+        component:
+          "FilterDialog para filtros avançados, seleção dinâmica e múltiplos tipos de campo.",
+      },
+      source: {
+        code: `import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { TooltipProviderBase, FilterBase } from '@mlw-packages/react-components';
+
+const availableFilters = [ /* configure seus filtros conforme a story */ ];
+
+function Example() {
+  const [filters, setFilters] = React.useState(availableFilters);
+
+  return (
+    <MemoryRouter>
+      <TooltipProviderBase>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
+          <FilterBase availableFilters={filters} />
+        </div>
+      </TooltipProviderBase>
+    </MemoryRouter>
+  );
+}
+
+export default Example;`,
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -158,7 +183,14 @@ const availableFilters: AvailableFilter<FilterValues>[] = [
 export const Default = () => {
   const [filters] = useState<AvailableFilter<FilterValues>[]>(availableFilters);
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <MemoryRouter>
         <TooltipProviderBase>
           <div className="flex flex-col gap-4">

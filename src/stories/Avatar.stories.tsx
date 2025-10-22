@@ -75,6 +75,20 @@ const meta: Meta<typeof AvatarStory> = {
         component:
           "Avatar para exibição de imagem de usuário, com fallback, agrupamento e variações visuais.",
       },
+      source: {
+        code: `import React from 'react';
+import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <AvatarBase>
+      <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Avatar" />
+      <AvatarFallbackBase>CN</AvatarFallbackBase>
+    </AvatarBase>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -148,6 +162,24 @@ export const Default: Story = {
       { timeout: 5000 }
     );
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '@mlw-packages/react-components';
+
+export default function Default() {
+  return (
+    <AvatarBase>
+      <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Avatar" />
+      <AvatarFallbackBase>CN</AvatarFallbackBase>
+    </AvatarBase>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const Variants: Story = {
@@ -217,6 +249,46 @@ export const Variants: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '@mlw-packages/react-components';
+
+export default function Variants() {
+  return (
+    <div style={{ display: 'flex', gap: 16 }}>
+      <AvatarBase variant="default">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Default" />
+        <AvatarFallbackBase>DF</AvatarFallbackBase>
+      </AvatarBase>
+
+      <AvatarBase variant="bordered">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Bordered" />
+        <AvatarFallbackBase>BD</AvatarFallbackBase>
+      </AvatarBase>
+
+      <AvatarBase variant="grayscale">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Grayscale" />
+        <AvatarFallbackBase>GS</AvatarFallbackBase>
+      </AvatarBase>
+
+      <AvatarBase variant="shadow">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Shadow" />
+        <AvatarFallbackBase>SH</AvatarFallbackBase>
+      </AvatarBase>
+
+      <AvatarBase variant="square">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Square" />
+        <AvatarFallbackBase>SQ</AvatarFallbackBase>
+      </AvatarBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -266,6 +338,24 @@ export const HoverEffect: Story = {
       );
     });
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '@mlw-packages/react-components';
+
+export default function HoverEffect() {
+  return (
+    <AvatarBase hasHoverEffect>
+      <AvatarImageBase src="https://github.com/grupomalwee.png" alt="Avatar" />
+      <AvatarFallbackBase>HE</AvatarFallbackBase>
+    </AvatarBase>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const Grouped: Story = {
@@ -305,5 +395,28 @@ export const Grouped: Story = {
     expect(avatar0).toBeInTheDocument();
     expect(avatar1).toBeInTheDocument();
     expect(avatar2).toBeInTheDocument();
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarBase, AvatarImageBase, AvatarFallbackBase } from '@mlw-packages/react-components';
+
+export default function Grouped() {
+  return (
+    <div className="flex -space-x-3">
+      <AvatarBase variant="bordered">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="A" />
+        <AvatarFallbackBase>CN</AvatarFallbackBase>
+      </AvatarBase>
+      <AvatarBase variant="shadow">
+        <AvatarImageBase src="https://github.com/grupomalwee.png" alt="B" />
+        <AvatarFallbackBase>LR</AvatarFallbackBase>
+      </AvatarBase>
+    </div>
+  );
+}`,
+      },
+    },
   },
 };

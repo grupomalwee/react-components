@@ -1,27 +1,50 @@
 import "../style/global.css";
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { InputBase } from '../components/ui/InputBase';
-import { ButtonBase } from '../components/ui/ButtonBase';
-import { MapPinLineIcon } from '@phosphor-icons/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { InputBase } from "../components/ui/InputBase";
+import { ButtonBase } from "../components/ui/ButtonBase";
+import { MapPinLineIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof InputBase> = {
-  title: 'forms/Input',
+  title: "forms/Input",
   component: InputBase,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'Input para campos de texto, email, arquivo e ícones. Personalizável e acessível.'
-      }
+        component:
+          "Input para campos de texto, email, arquivo e ícones. Personalizável e acessível.",
+      },
+      source: {
+        code: `import { InputBase, ButtonBase } from '@mlw-packages/react-components';
+import { MapPinLineIcon } from '@phosphor-icons/react';
+
+function Example() {
+  return (
+    <div style={{ width: 400 }}>
+      <InputBase id='email' label='E-mail' placeholder='seu@email.com' />
+      <InputBase id='picture' type='file' label='Picture' />
+      <div style={{ display: 'flex', gap: 8 }}>
+        <InputBase type='email' placeholder='Email' />
+        <ButtonBase type='submit'>Subscribe</ButtonBase>
+      </div>
+      <InputBase disabled type='email' placeholder='Email' />
+      <InputBase type='text' placeholder='Localização' label='Local' leftIcon={<MapPinLineIcon size={16} />} />
+      <InputBase type='text' placeholder='Localização' label='Local' rightIcon={<MapPinLineIcon size={16} />} />
+    </div>
+  );
+}
+
+export default Example;`,
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -30,7 +53,14 @@ type Story = StoryObj<typeof InputBase>;
 
 export const Default: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
@@ -63,5 +93,5 @@ export const Default: Story = {
         </div>
       </div>
     </div>
-  )
+  ),
 };

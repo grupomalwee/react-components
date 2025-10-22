@@ -20,6 +20,23 @@ const meta: Meta<typeof CollapsibleBase> = {
         component:
           "Componente interativo que permite mostrar e esconder conteúdo de forma animada. Ideal para FAQs, configurações e navegação.",
       },
+      source: {
+        code: `import React from 'react';
+import { CollapsibleBase, CollapsibleTriggerBase, CollapsibleContentBase } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <CollapsibleBase className="w-[350px] border rounded-lg">
+      <CollapsibleTriggerBase>@peduarte starred 3 repositories</CollapsibleTriggerBase>
+      <CollapsibleContentBase>
+        <div>Conteúdo</div>
+      </CollapsibleContentBase>
+    </CollapsibleBase>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -53,6 +70,32 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CollapsibleBase, CollapsibleTriggerBase, CollapsibleContentBase } from '@mlw-packages/react-components';
+
+export default function Default() {
+  return (
+    <CollapsibleBase className="w-[350px] border rounded-lg">
+      <CollapsibleTriggerBase>@peduarte starred 3 repositories</CollapsibleTriggerBase>
+      <div className="px-4 pb-2">
+        <div className="rounded-md border px-4 py-3 font-mono text-sm bg-muted/30">@radix-ui/primitives</div>
+      </div>
+      <CollapsibleContentBase>
+        <div className="space-y-2 px-4 pb-4">
+          <div className="rounded-md border px-4 py-3 font-mono text-sm bg-muted/30">@radix-ui/colors</div>
+          <div className="rounded-md border px-4 py-3 font-mono text-sm bg-muted/30">@stitches/react</div>
+        </div>
+      </CollapsibleContentBase>
+    </CollapsibleBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => {
     const [isOpen, setIsOpen] = React.useState(args.defaultOpen || false);
 
@@ -189,6 +232,28 @@ export const Default: Story = {
 };
 
 export const WithLeftIcon: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CollapsibleBase, CollapsibleTriggerBase, CollapsibleContentBase } from '@mlw-packages/react-components';
+import { User } from '@phosphor-icons/react';
+
+export default function WithLeftIcon() {
+  return (
+    <CollapsibleBase className="border rounded-lg">
+      <CollapsibleTriggerBase leftIcon={<User />}>Perfil do Usuário</CollapsibleTriggerBase>
+      <CollapsibleContentBase>
+        <div>Nome: João Silva</div>
+        <div>Email: joao@exemplo.com</div>
+      </CollapsibleContentBase>
+    </CollapsibleBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => {
     const [isOpen, setIsOpen] = React.useState(args.defaultOpen || false);
 
@@ -306,6 +371,41 @@ export const WithLeftIcon: Story = {
 };
 
 export const FAQ: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CollapsibleBase, CollapsibleTriggerBase, CollapsibleContentBase } from '@mlw-packages/react-components';
+import { Question, Gear, Star } from '@phosphor-icons/react';
+
+function CollapsibleFAQItem({ question, answer, icon }) {
+  return (
+    <CollapsibleBase className="border rounded-lg">
+      <CollapsibleTriggerBase leftIcon={icon}>{question}</CollapsibleTriggerBase>
+      <CollapsibleContentBase>{answer}</CollapsibleContentBase>
+    </CollapsibleBase>
+  );
+}
+
+export default function FAQ() {
+  const items = [
+    { question: 'O que é o Collapsible?', answer: 'O Collapsible é um componente...', icon: <Question /> },
+    { question: 'Como usar o Collapsible?', answer: 'Importe os componentes...', icon: <Gear /> },
+    { question: 'É possível customizar?', answer: 'Sim, via classes CSS', icon: <Star /> },
+  ];
+
+  return (
+    <div>
+      {items.map((it, i) => (
+        <CollapsibleFAQItem key={i} question={it.question} answer={it.answer} icon={it.icon} />
+      ))}
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: () => {
     const faqItems = [
       {
@@ -514,6 +614,39 @@ export const FAQ: Story = {
 };
 
 export const RichContent: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CollapsibleBase, CollapsibleTriggerBase, CollapsibleContentBase } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function RichContent() {
+  return (
+    <CollapsibleBase className="w-[450px] border rounded-lg">
+      <CollapsibleTriggerBase leftIcon={<></>}>Configurações Avançadas</CollapsibleTriggerBase>
+      <CollapsibleContentBase>
+        <div>
+          <label>API Key</label>
+          <input placeholder="sk-..." />
+          <label>Environment</label>
+          <select>
+            <option>Development</option>
+            <option>Production</option>
+          </select>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ButtonBase variant="outline" size="sm">Cancelar</ButtonBase>
+            <ButtonBase size="sm">Salvar</ButtonBase>
+          </div>
+        </div>
+      </CollapsibleContentBase>
+    </CollapsibleBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => {
     const [isOpen, setIsOpen] = React.useState(args.defaultOpen || false);
 

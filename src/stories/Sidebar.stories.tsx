@@ -19,15 +19,12 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'Sidebar para navegação entre seções, menus e agrupamentos. Veja exemplos de uso das props abaixo.'
-      }
-    },
-    backgrounds: {
-      default: 'light',
-      values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        component:
+          "Sidebar para navegação entre seções, menus e agrupamentos. Veja exemplos de uso das props abaixo.",
+      },
+      source: {
+        code: `import React from 'react';\nimport { MemoryRouter } from 'react-router-dom';\nimport { SidebarBase, SidebarProviderBase, SidebarContentBase, SidebarGroupBase, SidebarGroupLabelBase, SidebarGroupContentBase, SidebarMenuBase, SidebarMenuItemBase, SidebarMenuButtonBase, SidebarTriggerBase } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const items = [\n    { title: 'Home', url: '/' },\n    { title: 'Avatar', url: '/' }\n  ];\n\n  return (\n    <MemoryRouter>\n      <SidebarProviderBase>\n        <SidebarBase>\n          <SidebarContentBase>\n            <SidebarGroupBase>\n              <SidebarGroupLabelBase>Components</SidebarGroupLabelBase>\n              <SidebarGroupContentBase>\n                <SidebarMenuBase>\n                  {items.map((i) => (\n                    <SidebarMenuItemBase key={i.title}>\n                      <SidebarMenuButtonBase asChild>\n                        <a href={i.url}>{i.title}</a>\n                      </SidebarMenuButtonBase>\n                    </SidebarMenuItemBase>\n                  ))}\n                </SidebarMenuBase>\n              </SidebarGroupContentBase>\n            </SidebarGroupBase>\n          </SidebarContentBase>\n        </SidebarBase>\n        <SidebarTriggerBase />\n      </SidebarProviderBase>\n    </MemoryRouter>\n  );\n}\n`,
+      },
     },
   },
 };

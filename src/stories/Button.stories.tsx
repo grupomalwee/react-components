@@ -36,6 +36,24 @@ const meta: Meta<typeof ButtonBase> = {
         component:
           "Botão base para ações primárias, secundárias e de destaque. Personalizável por variante, tamanho e estado.",
       },
+      source: {
+        code: `import React from 'react';
+import { ButtonBase, ButtonGroupBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div>
+      <ButtonBase variant="default">Default</ButtonBase>
+      <ButtonBase variant="destructive">Destructive</ButtonBase>
+      <ButtonGroupBase>
+        <ButtonBase>Ok</ButtonBase>
+        <ButtonBase variant="outline">Cancel</ButtonBase>
+      </ButtonGroupBase>
+    </div>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -77,6 +95,19 @@ export default meta;
 type Story = StoryObj<typeof ButtonBase>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Default() {
+  return <ButtonBase>ButtonBase</ButtonBase>;
+}
+`,
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -88,6 +119,28 @@ export const Default: Story = {
 };
 
 export const Variants: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Variants() {
+  return (
+    <div>
+      <ButtonBase variant="default">Default</ButtonBase>
+      <ButtonBase variant="destructive">Destructive</ButtonBase>
+      <ButtonBase variant="outline">Outline</ButtonBase>
+      <ButtonBase variant="secondary">Secondary</ButtonBase>
+      <ButtonBase variant="ghost">Ghost</ButtonBase>
+      <ButtonBase variant="link">Link</ButtonBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => (
     <div
       style={{
@@ -152,6 +205,26 @@ export const Variants: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Sizes() {
+  return (
+    <div>
+      <ButtonBase size="sm">Small</ButtonBase>
+      <ButtonBase size="default">Default</ButtonBase>
+      <ButtonBase size="lg">Large</ButtonBase>
+      <ButtonBase size="icon" aria-label="icon only"><span>★</span></ButtonBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => (
     <div
       style={{
@@ -211,6 +284,19 @@ export const Sizes: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Disabled() {
+  return <ButtonBase disabled>Disabled</ButtonBase>;
+}
+`,
+      },
+    },
+  },
   args: {
     disabled: true,
     children: "Disabled",
@@ -239,6 +325,25 @@ export const Disabled: Story = {
 };
 
 export const Group: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase, ButtonGroupBase } from '@mlw-packages/react-components';
+
+export default function Group() {
+  return (
+    <ButtonGroupBase>
+      <ButtonBase>Aceitar</ButtonBase>
+      <ButtonBase variant="outline">Talvez</ButtonBase>
+      <ButtonBase variant="destructive">Recusar</ButtonBase>
+    </ButtonGroupBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => (
     <div
       style={{
@@ -298,6 +403,26 @@ export const Group: Story = {
   },
 };
 export const Small: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EditButton, SaveButton, ChangeButton, AddButton } from '@mlw-packages/react-components';
+
+export default function Small() {
+  return (
+    <div>
+      <EditButton />
+      <SaveButton />
+      <ChangeButton />
+      <AddButton />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{

@@ -14,6 +14,9 @@ const meta: Meta<typeof DraggableTooltip> = {
         component:
           "Componente de tooltip arrastável para gráficos com funcionalidades avançadas como botão 'Fechar Todos' e labels customizáveis.",
       },
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nconst sampleData = { name: 'Q1 2024', receita: 4000, despesas: 2400 };\nconst dataKeys = ['receita', 'despesas'];\n\nexport default function Example() {\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-1' data={sampleData} position={{ top: 100, left: 100 }} dataKeys={dataKeys} finalColors={{ receita: '#55af7d', despesas: '#8e68ff' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -114,6 +117,13 @@ export const Default: Story = {
     dataLabel: "Dados do Período",
     showCloseAllButton: false,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nconst data = { name: 'Q1 2024', receita: 4000, despesas: 2400 };\nconst dataKeys = ['receita', 'despesas'];\n\nexport default function Example() {\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-1' data={data} position={{ top: 100, left: 100 }} dataKeys={dataKeys} finalColors={{ receita: '#55af7d', despesas: '#8e68ff' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
+  },
 };
 
 // Story para BarChart
@@ -151,6 +161,13 @@ export const BarChartStyle: Story = {
     dataLabel: "Dados do Período",
     showCloseAllButton: false,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function BarChartStyle() {\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-bar' data={{ name: 'Q1', receita: 4000 }} position={{ top: 120, left: 150 }} dataKeys={['receita']} finalColors={{ receita: '#55af7d' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
+  },
 };
 
 // Story para LineChart
@@ -187,6 +204,13 @@ export const LineChartStyle: Story = {
     periodLabel: "Ponto Selecionado",
     dataLabel: "Dados do Ponto",
     showCloseAllButton: false,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function LineChartStyle() {\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-line' data={{ name: 'Ponto A', receita: 3200 }} position={{ top: 80, left: 200 }} dataKeys={['receita']} finalColors={{ receita: '#2273e1' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
   },
 };
 
@@ -289,6 +313,13 @@ export const WithCloseAllButton: Story = {
     closeAllButtonPosition: "top-center",
     closeAllButtonVariant: "floating",
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function WithCloseAllButton() {\n  const data = { name: 'Q1', receita: 4000 };\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-1' data={data} position={{ top: 100, left: 100 }} showCloseAllButton globalTooltipCount={3} onCloseAll={() => {}} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
+  },
 };
 
 // Story com botão inline
@@ -347,6 +378,13 @@ export const WithInlineCloseButton: Story = {
     closeAllButtonPosition: "top-right",
     closeAllButtonVariant: "inline",
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function WithInlineCloseButton() {\n  const data = { name: 'Item 1', receita: 3200 };\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='tooltip-1' data={data} position={{ top: 100, left: 100 }} showCloseAllButton={false} closeAllButtonVariant='inline' onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
+  },
 };
 
 // Story: Single tooltip explicit (should not show guides)
@@ -379,6 +417,13 @@ export const SingleTooltipNoGuides: Story = {
   },
   args: {
     title: "Single Tooltip (no guides)",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function SingleTooltipNoGuides() {\n  const data = { name: 'Single', receita: 3000 };\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='single-tooltip' data={data} position={{ top: 180, left: 240 }} dataKeys={['receita']} finalColors={{ receita: '#55af7d' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
   },
 };
 
@@ -421,6 +466,13 @@ export const AnchorCenterDemo: Story = {
         />
       </div>
     );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function AnchorCenterDemo() {\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <DraggableTooltip id='center-tooltip' data={{ name: 'Ponto Central', receita: 3200 }} position={{ top: 260, left: 420 }} dataKeys={['receita']} finalColors={{ receita: '#4ecdc4' }} onClose={() => {}} />\n    </div>\n  );\n}`,
+      },
+    },
   },
 };
 
@@ -489,5 +541,12 @@ export const Playground: Story = {
   },
   args: {
     title: "Playground",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport DraggableTooltip from '@mlw-packages/react-components';\n\nexport default function Playground() {\n  const [tooltips, setTooltips] = useState([{ id: 'play-1', top: 120, left: 140 }]);\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      {tooltips.map(t => (\n        <DraggableTooltip key={t.id} id={t.id} data={{ name: t.id, receita: 1000 }} position={{ top: t.top, left: t.left }} dataKeys={['receita']} finalColors={{ receita: '#55af7d' }} onClose={() => {}} />\n      ))}\n    </div>\n  );\n}`,
+      },
+    },
   },
 };

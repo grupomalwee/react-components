@@ -43,6 +43,15 @@ const meta: Meta<typeof BadgeStory> = {
         component:
           "Badge para exibir status, categorias ou informações rápidas. Várias cores e estilos.",
       },
+      source: {
+        code: `import React from 'react';
+import { BadgeBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return <BadgeBase>Default</BadgeBase>;
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -73,6 +82,19 @@ export const Default: Story = {
   args: {
     text: "Badge padrão",
     variant: "default",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { BadgeBase } from '@mlw-packages/react-components';
+
+export default function Default() {
+  return <BadgeBase>Badge padrão</BadgeBase>;
+}
+`,
+      },
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -116,6 +138,24 @@ export const Variants: Story = {
       </BadgeBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { BadgeBase } from '@mlw-packages/react-components';
+
+export default function Variants() {
+  return (
+    <div style={{ display: 'flex', gap: 12 }}>
+      <BadgeBase>Default</BadgeBase>
+      <BadgeBase className="bg-green-100 text-green-800">Sucesso</BadgeBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

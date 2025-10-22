@@ -1,5 +1,5 @@
 import "../style/global.css";
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   AlertDialogBase,
   AlertDialogActionBase,
@@ -10,26 +10,67 @@ import {
   AlertDialogHeaderBase,
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
-} from '../components/ui/AlertDialogBase';
+} from "../components/ui/AlertDialogBase";
+import {
+  CheckCircleIcon,
+  WarningCircleIcon,
+  XCircleIcon,
+  InfoIcon,
+} from "@phosphor-icons/react";
 
 const meta: Meta<typeof AlertDialogBase> = {
-  title: 'feedback/AlertDialog',
+  title: "feedback/AlertDialog",
   component: AlertDialogBase,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'AlertDialog para avisos, confirmações e feedbacks visuais.'
-      }
+        component: "AlertDialog para avisos, confirmações e feedbacks visuais.",
+      },
+      source: {
+        code: `import React from 'react';
+import {
+  AlertDialogBase,
+  AlertDialogTriggerBase,
+  AlertDialogContentBase,
+  AlertDialogHeaderBase,
+  AlertDialogTitleBase,
+  AlertDialogDescriptionBase,
+  AlertDialogFooterBase,
+  AlertDialogCancelBase,
+  AlertDialogActionBase,
+} from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <AlertDialogBase>
+      <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
+      <AlertDialogContentBase>
+        <AlertDialogHeaderBase>
+          <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>
+          <AlertDialogDescriptionBase>
+            Essa ação não pode ser desfeita.
+          </AlertDialogDescriptionBase>
+        </AlertDialogHeaderBase>
+        <AlertDialogFooterBase>
+          <AlertDialogCancelBase>Cancelar</AlertDialogCancelBase>
+          <AlertDialogActionBase className="bg-destructive">Excluir</AlertDialogActionBase>
+        </AlertDialogFooterBase>
+      </AlertDialogContentBase>
+    </AlertDialogBase>
+  );
+}
+`,
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -38,18 +79,26 @@ type Story = StoryObj<typeof AlertDialogBase>;
 
 export const ExcluirConta: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      {/* Estrutura basica do AlertDialog */}
       <AlertDialogBase>
         <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-destructive">
-              {/* XCircle substitute */}
-              <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="9" stroke="#ef4444" strokeWidth="2"/><line x1="7" y1="7" x2="13" y2="13" stroke="#ef4444" strokeWidth="2"/><line x1="13" y1="7" x2="7" y2="13" stroke="#ef4444" strokeWidth="2"/></svg>
+              <XCircleIcon />
               <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              Essa ação não pode ser desfeita. Isso vai excluir permanentemente sua conta e remover seus dados dos nossos servidores.
+              Essa ação não pode ser desfeita. Isso vai excluir permanentemente
+              sua conta e remover seus dados dos nossos servidores.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -62,22 +111,66 @@ export const ExcluirConta: Story = {
       </AlertDialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  AlertDialogBase,
+  AlertDialogTriggerBase,
+  AlertDialogContentBase,
+  AlertDialogHeaderBase,
+  AlertDialogTitleBase,
+  AlertDialogDescriptionBase,
+  AlertDialogFooterBase,
+  AlertDialogCancelBase,
+  AlertDialogActionBase,
+} from '@mlw-packages/react-components';
+
+export default function ExcluirConta() {
+  return (
+    <AlertDialogBase>
+      <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
+      <AlertDialogContentBase>
+        <AlertDialogHeaderBase>
+          <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>
+          <AlertDialogDescriptionBase>Essa ação não pode ser desfeita.</AlertDialogDescriptionBase>
+        </AlertDialogHeaderBase>
+        <AlertDialogFooterBase>
+          <AlertDialogCancelBase>Cancelar</AlertDialogCancelBase>
+          <AlertDialogActionBase className="bg-destructive">Excluir</AlertDialogActionBase>
+        </AlertDialogFooterBase>
+      </AlertDialogContentBase>
+    </AlertDialogBase>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const Aviso: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <AlertDialogBase>
         <AlertDialogTriggerBase>Aviso</AlertDialogTriggerBase>
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-yellow-500">
-              {/* Warning substitute */}
-              <svg width="20" height="20" fill="none"><polygon points="10,2 18,18 2,18" stroke="#f59e0b" strokeWidth="2" fill="none"/><circle cx="10" cy="14" r="1" fill="#f59e0b"/><rect x="9" y="7" width="2" height="5" fill="#f59e0b"/></svg>
+              <WarningCircleIcon />
               <AlertDialogTitleBase>Olha, preste atenção!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              Você está prestes a fazer uma alteração que pode impactar outros usuários.
+              Você está prestes a fazer uma alteração que pode impactar outros
+              usuários.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -90,19 +183,64 @@ export const Aviso: Story = {
       </AlertDialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  AlertDialogBase,
+  AlertDialogTriggerBase,
+  AlertDialogContentBase,
+  AlertDialogHeaderBase,
+  AlertDialogTitleBase,
+  AlertDialogDescriptionBase,
+  AlertDialogFooterBase,
+  AlertDialogCancelBase,
+  AlertDialogActionBase,
+} from '@mlw-packages/react-components';
+
+export default function Aviso() {
+  return (
+    <AlertDialogBase>
+      <AlertDialogTriggerBase>Aviso</AlertDialogTriggerBase>
+      <AlertDialogContentBase>
+        <AlertDialogHeaderBase>
+          <AlertDialogTitleBase>Olha, preste atenção!</AlertDialogTitleBase>
+          <AlertDialogDescriptionBase>Você está prestes a fazer uma alteração que pode impactar outros usuários.</AlertDialogDescriptionBase>
+        </AlertDialogHeaderBase>
+        <AlertDialogFooterBase>
+          <AlertDialogCancelBase>Cancelar</AlertDialogCancelBase>
+          <AlertDialogActionBase className="ml-2 bg-yellow-500 text-black">Prosseguir</AlertDialogActionBase>
+        </AlertDialogFooterBase>
+      </AlertDialogContentBase>
+    </AlertDialogBase>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const Sucesso: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <AlertDialogBase>
         <AlertDialogTriggerBase>Ação Concluída</AlertDialogTriggerBase>
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-emerald-600">
-              {/* CheckCircle substitute */}
-              <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="9" stroke="#10b981" strokeWidth="2"/><polyline points="6,11 9,14 14,7" fill="none" stroke="#10b981" strokeWidth="2"/></svg>
-              <AlertDialogTitleBase>Operação bem-sucedida!</AlertDialogTitleBase>
+              <CheckCircleIcon />
+              <AlertDialogTitleBase>
+                Operação bem-sucedida!
+              </AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
               Sua ação foi concluída com sucesso. Pode fechar essa janela.
@@ -117,21 +255,64 @@ export const Sucesso: Story = {
       </AlertDialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  AlertDialogBase,
+  AlertDialogTriggerBase,
+  AlertDialogContentBase,
+  AlertDialogHeaderBase,
+  AlertDialogTitleBase,
+  AlertDialogDescriptionBase,
+  AlertDialogFooterBase,
+  AlertDialogActionBase,
+} from '@mlw-packages/react-components';
+
+export default function Sucesso() {
+  return (
+    <AlertDialogBase>
+      <AlertDialogTriggerBase>Ação Concluída</AlertDialogTriggerBase>
+      <AlertDialogContentBase>
+        <AlertDialogHeaderBase>
+          <AlertDialogTitleBase>Operação bem-sucedida!</AlertDialogTitleBase>
+          <AlertDialogDescriptionBase>Sua ação foi concluída com sucesso.</AlertDialogDescriptionBase>
+        </AlertDialogHeaderBase>
+        <AlertDialogFooterBase>
+          <AlertDialogActionBase className="bg-emerald-600">Fechar</AlertDialogActionBase>
+        </AlertDialogFooterBase>
+      </AlertDialogContentBase>
+    </AlertDialogBase>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const Informacao: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <AlertDialogBase>
         <AlertDialogTriggerBase>Informação</AlertDialogTriggerBase>
         <AlertDialogContentBase>
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-blue-600">
-              <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3b82f6" strokeWidth="2"/><rect x="9" y="7" width="2" height="2" fill="#3b82f6"/><rect x="9" y="10" width="2" height="5" fill="#3b82f6"/></svg>
+              <InfoIcon />
               <AlertDialogTitleBase>Importante saber!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              O sistema passará por manutenção amanhã das 00h às 04h. Alguns serviços poderão ficar indisponíveis.
+              O sistema passará por manutenção amanhã das 00h às 04h. Alguns
+              serviços poderão ficar indisponíveis.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -143,4 +324,39 @@ export const Informacao: Story = {
       </AlertDialogBase>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  AlertDialogBase,
+  AlertDialogTriggerBase,
+  AlertDialogContentBase,
+  AlertDialogHeaderBase,
+  AlertDialogTitleBase,
+  AlertDialogDescriptionBase,
+  AlertDialogFooterBase,
+  AlertDialogActionBase,
+} from '@mlw-packages/react-components';
+
+export default function Informacao() {
+  return (
+    <AlertDialogBase>
+      <AlertDialogTriggerBase>Informação</AlertDialogTriggerBase>
+      <AlertDialogContentBase>
+        <AlertDialogHeaderBase>
+          <AlertDialogTitleBase>Importante saber!</AlertDialogTitleBase>
+          <AlertDialogDescriptionBase>O sistema passará por manutenção amanhã.</AlertDialogDescriptionBase>
+        </AlertDialogHeaderBase>
+        <AlertDialogFooterBase>
+          <AlertDialogActionBase className="bg-blue-600">Entendi</AlertDialogActionBase>
+        </AlertDialogFooterBase>
+      </AlertDialogContentBase>
+    </AlertDialogBase>
+  );
+}
+`,
+      },
+    },
+  },
 };

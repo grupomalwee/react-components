@@ -1,6 +1,5 @@
-
 import "../style/global.css";
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ContextMenuBase,
   ContextMenuTriggerBase,
@@ -15,26 +14,30 @@ import {
   ContextMenuSubBase,
   ContextMenuSubContentBase,
   ContextMenuSubTriggerBase,
-} from '../components/ui/ContextMenuBase';
+} from "../components/ui/ContextMenuBase";
 
 const meta: Meta<typeof ContextMenuBase> = {
-  title: 'navigation/ContextMenu',
+  title: "navigation/ContextMenu",
   component: ContextMenuBase,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component: 'ContextMenu para ações contextuais, com suporte a grupos, atalhos, submenus e seleção.'
-      }
+        component:
+          "ContextMenu para ações contextuais, com suporte a grupos, atalhos, submenus e seleção.",
+      },
+      source: {
+        code: `import React from 'react';\nimport { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  return (\n    <ContextMenu>\n      <ContextMenuTrigger>Clique com o botão direito aqui</ContextMenuTrigger>\n      <ContextMenuContent>\n        <ContextMenuItem>Voltar<ContextMenuShortcut>⌘[</ContextMenuShortcut></ContextMenuItem>\n        <ContextMenuItem disabled>Avançar<ContextMenuShortcut>⌘]</ContextMenuShortcut></ContextMenuItem>\n        <ContextMenuSeparator />\n        <ContextMenuSub>\n          <ContextMenuSubTrigger>Mais ferramentas</ContextMenuSubTrigger>\n          <ContextMenuSubContent>\n            <ContextMenuItem>Salvar página...</ContextMenuItem>\n            <ContextMenuItem>Ferramentas de desenvolvedor</ContextMenuItem>\n          </ContextMenuSubContent>\n        </ContextMenuSub>\n        <ContextMenuSeparator />\n        <ContextMenuCheckboxItem checked>Mostrar favoritos</ContextMenuCheckboxItem>\n        <ContextMenuSeparator />\n        <ContextMenuRadioGroup value="pedro">\n          <ContextMenuLabel>Pessoas</ContextMenuLabel>\n          <ContextMenuRadioItem value="pedro">Pedro Duarte</ContextMenuRadioItem>\n          <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>\n        </ContextMenuRadioGroup>\n      </ContextMenuContent>\n    </ContextMenu>\n  );\n}`,
+      },
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#f6f6f6' },
-        { name: 'dark', value: '#222' }
-      ]
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
     },
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -43,7 +46,14 @@ type Story = StoryObj<typeof ContextMenuBase>;
 
 export const Default: Story = {
   render: () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '32px 0' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <div className="p-8">
         <ContextMenuBase>
           <ContextMenuTriggerBase className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
@@ -71,7 +81,9 @@ export const Default: Story = {
                 <ContextMenuItemBase>Criar atalho...</ContextMenuItemBase>
                 <ContextMenuItemBase>Nomear janela...</ContextMenuItemBase>
                 <ContextMenuSeparatorBase />
-                <ContextMenuItemBase>Ferramentas de desenvolvedor</ContextMenuItemBase>
+                <ContextMenuItemBase>
+                  Ferramentas de desenvolvedor
+                </ContextMenuItemBase>
                 <ContextMenuSeparatorBase />
                 <ContextMenuItemBase variant="destructive">
                   Deletar
@@ -100,4 +112,11 @@ export const Default: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  return (\n    <ContextMenu>\n      <ContextMenuTrigger>Clique com o botão direito aqui</ContextMenuTrigger>\n      <ContextMenuContent>\n        <ContextMenuItem>Voltar<ContextMenuShortcut>⌘[</ContextMenuShortcut></ContextMenuItem>\n        <ContextMenuItem disabled>Avançar<ContextMenuShortcut>⌘]</ContextMenuShortcut></ContextMenuItem>\n        <ContextMenuSeparator />\n        <ContextMenuSub>\n          <ContextMenuSubTrigger>Mais ferramentas</ContextMenuSubTrigger>\n          <ContextMenuSubContent>\n            <ContextMenuItem>Salvar página...</ContextMenuItem>\n            <ContextMenuItem>Ferramentas de desenvolvedor</ContextMenuItem>\n          </ContextMenuSubContent>\n        </ContextMenuSub>\n        <ContextMenuSeparator />\n        <ContextMenuCheckboxItem checked>Mostrar favoritos</ContextMenuCheckboxItem>\n        <ContextMenuSeparator />\n        <ContextMenuRadioGroup value="pedro">\n          <ContextMenuLabel>Pessoas</ContextMenuLabel>\n          <ContextMenuRadioItem value="pedro">Pedro Duarte</ContextMenuRadioItem>\n          <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>\n        </ContextMenuRadioGroup>\n      </ContextMenuContent>\n    </ContextMenu>\n  );\n}`,
+      },
+    },
+  },
 };

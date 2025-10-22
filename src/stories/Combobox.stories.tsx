@@ -2,7 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Combobox } from "@/components/selects/Combobox";
 import React from "react";
-import { expect} from "storybook/test";
+import { expect } from "storybook/test";
 
 const meta: Meta<typeof Combobox> = {
   title: "selects/Combobox",
@@ -13,6 +13,20 @@ const meta: Meta<typeof Combobox> = {
       description: {
         component:
           "Combobox para seleção de opções, com busca, controle e visualização centralizada.",
+      },
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+  ];
+  const [selected, setSelected] = React.useState(items[0].value);
+  return <Combobox items={items} selected={selected} onChange={setSelected} label="Linguagem" />;
+}
+`,
       },
     },
     backgrounds: {
@@ -63,8 +77,22 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
-      description: {
-        story: "Combobox básico com seleção inicial.",
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function Padrão() {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+    { label: 'Python', value: 'py' },
+    { label: 'Java', value: 'java' },
+  ];
+  const [selected, setSelected] = React.useState(items[0].value);
+
+  return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Linguagem de Programação" />;
+}
+`,
       },
     },
   },
@@ -124,9 +152,19 @@ export const Empty: Story = {
   },
   parameters: {
     docs: {
-      description: {
-        story:
-          "Combobox sem nenhum item selecionado, exibindo placeholder customizado.",
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function Vazio() {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+  ];
+  const [selected, setSelected] = React.useState(null);
+  return <Combobox items={items} selected={selected} onChange={setSelected} placeholder="Escolha uma linguagem..." />;
+}
+`,
       },
     },
   },
@@ -181,9 +219,16 @@ export const LargeList: Story = {
   },
   parameters: {
     docs: {
-      description: {
-        story:
-          "Combobox com uma lista extensa de 100 itens para testar performance e scroll.",
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function LargeList() {
+  const items = Array.from({ length: 100 }, (_, i) => ({ label: Item, value: item- }));
+  const [selected, setSelected] = React.useState('item-50');
+  return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Lista com 100 itens" searchPlaceholder="Buscar item..." />;
+}
+`,
       },
     },
   },
@@ -240,9 +285,20 @@ export const SpecialCharacters: Story = {
   },
   parameters: {
     docs: {
-      description: {
-        story:
-          "Combobox com caracteres especiais, emojis, símbolos e acentuação.",
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function SpecialCharacters() {
+  const items = [
+    { label: 'C++', value: 'cpp' },
+    { label: 'C#', value: 'csharp' },
+    { label: 'Emoji 🚀 Test', value: 'emoji' },
+  ];
+  const [selected, setSelected] = React.useState('emoji');
+  return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Opções com Caracteres Especiais" />;
+}
+`,
       },
     },
   },

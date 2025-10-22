@@ -13,6 +13,14 @@ const meta: Meta<typeof TextAreaBase> = {
 TextArea para entrada de texto, comentários e formulários.
         `,
       },
+      source: {
+        code: `import React from 'react';
+import { TextAreaBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return <TextAreaBase placeholder="Digite algo..." maxLength={200} clearable />;
+}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -61,6 +69,15 @@ type Story = StoryObj<typeof TextAreaBase>;
 export const Default: Story = {
   args: {
     placeholder: "Digite algo...",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import { TextAreaBase } from '@mlw-packages/react-components';
+
+<TextAreaBase placeholder="Digite algo..." />`,
+      },
+    },
   },
   render: (args) => (
     <div

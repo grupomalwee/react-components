@@ -14,6 +14,21 @@ const meta: Meta<typeof CheckboxBase> = {
         component:
           "Checkbox para seleção única ou múltipla, com grupo, desabilitado e label.",
       },
+      source: {
+        code: `import React from 'react';
+import { CheckboxBase } from '@mlw-packages/react-components';
+import LabelBase from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div>
+      <CheckboxBase id="terms" />
+      <LabelBase htmlFor="terms">Aceito os termos e condições</LabelBase>
+    </div>
+  );
+}
+`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -30,6 +45,25 @@ export default meta;
 type Story = StoryObj<typeof CheckboxBase>;
 
 export const Simples: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CheckboxBase } from '@mlw-packages/react-components';
+import LabelBase from '@mlw-packages/react-components';
+
+export default function Simples() {
+  return (
+    <div>
+      <CheckboxBase id="terms" data-testid="checkbox-terms" />
+      <LabelBase htmlFor="terms">Aceito os termos e condições</LabelBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{
@@ -92,6 +126,36 @@ export const Simples: Story = {
 };
 
 export const Grupo: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CheckboxBase } from '@mlw-packages/react-components';
+import LabelBase from '@mlw-packages/react-components';
+
+export default function Grupo() {
+  return (
+    <div>
+      <h4>Notificações</h4>
+      <div>
+        <CheckboxBase id="email" defaultChecked />
+        <LabelBase htmlFor="email">Email</LabelBase>
+      </div>
+      <div>
+        <CheckboxBase id="sms" />
+        <LabelBase htmlFor="sms">SMS</LabelBase>
+      </div>
+      <div>
+        <CheckboxBase id="push" />
+        <LabelBase htmlFor="push">Push Notification</LabelBase>
+      </div>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{
@@ -228,6 +292,25 @@ export const Grupo: Story = {
 };
 
 export const Desabilitado: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CheckboxBase } from '@mlw-packages/react-components';
+import LabelBase from '@mlw-packages/react-components';
+
+export default function Desabilitado() {
+  return (
+    <div className="opacity-50">
+      <CheckboxBase id="disabled" disabled />
+      <LabelBase htmlFor="disabled">Desabilitado</LabelBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{

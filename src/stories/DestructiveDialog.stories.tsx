@@ -107,6 +107,7 @@ export const WithChildIcon: Story = {
 
     return (
       <div className="p-6">
+        {/* estrutura */}
         <DestructiveDialog
           {...args}
           onConfirm={handleConfirm}
