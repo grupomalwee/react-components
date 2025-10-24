@@ -9,7 +9,6 @@ import {
 import {
   CaretLeftIcon,
   CaretRightIcon,
-  XIcon,
   CalendarBlankIcon,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,8 @@ import {
   PopoverContentBase,
 } from "@/components/ui/PopoverBase";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { CloseButton, DeleteButton } from "../ui/SmallButtons";
+import {DeleteButton } from "../ui/SmallButtons";
+import { CalendarDotIcon } from "@phosphor-icons/react/dist/ssr";
 
 export interface RangePickerProps {
   value?: DateRange;
@@ -100,27 +100,7 @@ export function RangePicker({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
-            >
-              <div className="flex items-center justify-between p-4 border-b bg-muted/50">
-                <motion.span
-                  className="font-semibold text-md tracking-tight"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.08, duration: 0.18 }}
-                >
-                  Selecione o intervalo
-                </motion.span>
-                <div className="flex gap-2">
-                  <motion.div
-                    whileTap={{ scale: 0.85 }}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    <CloseButton onClick={() => setOpen(false)}>
-                      <XIcon className="h-4 w-4 transition-transform group-hover:rotate-90" />
-                    </CloseButton>
-                  </motion.div>
-                </div>
-              </div>
+            >           
               <div className="p-4">
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
@@ -200,10 +180,29 @@ export function RangePicker({
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.95 }}
                   >
+                    <ButtonBase
+                      variant="outline"
+                      onClick={() => {
+                        setRange({
+                          from: new Date(),
+                          to: new Date(),
+                        });
+                      }}
+                    >
+                      <CalendarDotIcon />
+                    </ButtonBase>
+                  </motion.div>
+                </div>
+                <div style={{ display: "inline-block" }}>
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     <DeleteButton
-                      variant="destructive"
+                      variant="outline"
                       onClick={handleClear}
                       disabled={!range?.from && !range?.to}
+                      className="hover:bg-destructive hover:text-white"
                     >
                       Limpar
                     </DeleteButton>
@@ -219,7 +218,7 @@ export function RangePicker({
                       onClick={() => setOpen(false)}
                       disabled={!range?.from || !range?.to}
                     >
-                      OK
+                      Selecionar
                     </ButtonBase>
                   </motion.div>
                 </div>

@@ -7,7 +7,7 @@ export default function RangePickerPage() {
 
   return (
     <div className="p-8">
-      <RangePicker value={range} onChange={setRange} label="Gw tnyrywrbyrywrtttt"/>
+      <RangePicker value={range} onChange={setRange}/>
     </div>
   );
 }
