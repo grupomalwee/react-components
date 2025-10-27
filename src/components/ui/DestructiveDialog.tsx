@@ -32,8 +32,7 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
   children,
   triggerContent,
 }) => {
-  const titleId = "destructive-dialog-title";
-  const descriptionId = "destructive-dialog-description";
+
 
   const triggerEl = React.isValidElement(children) ? (
     <AlertDialogTriggerBase asChild>{children}</AlertDialogTriggerBase>
@@ -50,10 +49,6 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
       {triggerEl}
 
       <AlertDialogContentBase
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
         className={cn("border border-destructive bg-background")}
       >
         <div className="flex items-start gap-4">
@@ -63,13 +58,11 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
 
           <div className="flex-1">
             <AlertDialogTitleBase
-              id={titleId}
               className="text-lg sm:text-xl font-semibold text-destructive"
             >
               {title}
             </AlertDialogTitleBase>
             <AlertDialogDescriptionBase
-              id={descriptionId}
               className="mt-2 text-sm text-muted-foreground"
             >
               {description}
