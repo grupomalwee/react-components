@@ -100,7 +100,7 @@ export function DateTimePicker({
             <span className="truncate flex-1">
               {date
                 ? format(date, getDisplayFormat(), { locale: ptBR })
-                : "Pick a date"}
+                : "Selecione uma Data"}
             </span>
 
             <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
