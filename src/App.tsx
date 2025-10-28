@@ -1,14 +1,12 @@
-import { ThemeProviderBase } from "@/components/theme-provider";
+import { ThemeProviderBase } from "./components/theme-provider";
 
 import "./style/global.css";
 
-// Components
-
 import { ModeToggleBase } from "./components/mode-toggle";
 
-import { SidebarProviderBase } from "@/components/ui/navigation/SidebarBase";
-import { AppSidebar } from "@/components/sidebar/AppSidebar";
-import { Toaster } from "@/components/ui/feedback/SonnerBase";
+import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
+import { AppSidebar } from "./components/sidebar/AppSidebar";
+import { Toaster } from "./components/ui/feedback/SonnerBase";
 
 function App() {
   return (
