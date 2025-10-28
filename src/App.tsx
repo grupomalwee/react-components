@@ -5,8 +5,8 @@ import "./style/global.css";
 import { ModeToggleBase } from "./components/mode-toggle";
 
 import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
-import { AppSidebar } from "./components/sidebar/AppSidebar";
 import { Toaster } from "./components/ui/feedback/SonnerBase";
+import { AppSidebar } from "./components/Sidebar/AppSidebar";
 
 function App() {
   return (
