@@ -1,18 +1,6 @@
-<div style="display:flex; align-items:center; gap:12px; margin:0;">
-  <img 
-    src="public/pwa-512x512.png" 
-    alt="Malwee Logo" 
-    width="45" 
-    height="45" 
-    style="border-radius:8px;"
-  />
-  <div style="display:flex; flex-direction:column; gap:2px; margin-top:6px;">
-    <h1 style="margin:0;">@mlw-packages/react-components</h1>
-    <p style="margin:0; font-size:0.875rem; color:#555;">
-      Biblioteca de componentes React pronta para produção • TypeScript + Tailwind
-    </p>
-  </div>
-</div>
+## @mlw-packages/react-components
+
+Biblioteca de componentes React pronta para produção • TypeScript + Tailwind
 
 ---
 
