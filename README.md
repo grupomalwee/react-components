@@ -1,11 +1,18 @@
-<p style="display:flex;align-items:center;justify-items:center;gap:12px;margin:0 flex-direction:row;">
-  <img src="public/pwa-512x512.png" alt="Malwee Logo" width="40" height="40" style="border-radius:8px;">
-  <span style="display:flex;flex-direction:column;gap:0">
-    <strong style="font-size:2rem">@mlw-packages/react-components</strong><small style="color:var(--muted);">
-   <p> Biblioteca de componentes React pronta para produção • TypeScript + Tailwind </p>
-
-  </span> 
-</p>
+<div style="display:flex; align-items:center; gap:12px; margin:0;">
+  <img 
+    src="public/pwa-512x512.png" 
+    alt="Malwee Logo" 
+    width="45" 
+    height="45" 
+    style="border-radius:8px;"
+  />
+  <div style="display:flex; flex-direction:column; gap:2px; margin-top:6px;">
+    <h1 style="margin:0;">@mlw-packages/react-components</h1>
+    <p style="margin:0; font-size:0.875rem; color:#555;">
+      Biblioteca de componentes React pronta para produção • TypeScript + Tailwind
+    </p>
+  </div>
+</div>
 
 ---
 
