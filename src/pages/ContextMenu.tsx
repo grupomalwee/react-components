@@ -12,7 +12,7 @@ import {
   ContextMenuSubContentBase,
   ContextMenuSubTriggerBase,
   ContextMenuTriggerBase,
-} from "@/components/ui/ContextMenuBase";
+} from "@/components/ui/navigation/ContextMenuBase";
 
 export function ContextMenuPage() {
   return (

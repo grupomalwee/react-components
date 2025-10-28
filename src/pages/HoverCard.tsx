@@ -2,13 +2,13 @@ import {
   AvatarBase,
   AvatarFallbackBase,
   AvatarImageBase,
-} from "@/components/ui/AvatarBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+} from "@/components/ui/data/AvatarBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   HoverCardBase,
   HoverCardContentBase,
   HoverCardTriggerBase,
-} from "@/components/ui/HoverCardBase";
+} from "@/components/ui/form/HoverCardBase";
 
 export function HoverCardPage() {
   return (

@@ -5,7 +5,7 @@ import {
   InputOTPGroupBase,
   InputOTPSeparatorBase,
   InputOTPSlotBase,
-} from "@/components/ui/Input-OTP-Base";
+} from "@/components/ui/form/Input-OTP-Base";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import * as React from "react";
 

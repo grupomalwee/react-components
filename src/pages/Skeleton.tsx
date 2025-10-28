@@ -1,11 +1,10 @@
 "use client";
 
-import { SkeletonBase } from "@/components/ui/SkeletonBase";
+import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
 
 export const SkeletonPage = () => {
   return (
     <div className="p-6 flex flex-col gap-10">
-
       <div className="flex gap-5">
         <SkeletonBase className="w-[350px] h-24 rounded-2xl" />
         <SkeletonBase className="w-[350px] h-24 rounded-2xl" />

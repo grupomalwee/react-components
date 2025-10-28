@@ -1,8 +1,8 @@
 "use client";
 
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { InputBase } from "@/components/ui/InputBase";
-import LabelBase from "@/components/ui/LabelBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 import {
   SheetBase,
   SheetCloseBase,
@@ -12,12 +12,11 @@ import {
   SheetHeaderBase,
   SheetTitleBase,
   SheetTriggerBase,
-} from "@/components/ui/SheetBase";
+} from "@/components/ui/overlays/SheetBase";
 
 export const SheetPage = () => {
   return (
     <div className="flex flex-col gap-10 m-6">
-
       {/* ✅ Sheet Básico */}
       <div className="flex gap-5">
         <SheetBase>
@@ -28,7 +27,8 @@ export const SheetPage = () => {
             <SheetHeaderBase>
               <SheetTitleBase>Editar Perfil</SheetTitleBase>
               <SheetDescriptionBase>
-                Altere as informações do seu perfil aqui. Clique em salvar quando terminar.
+                Altere as informações do seu perfil aqui. Clique em salvar
+                quando terminar.
               </SheetDescriptionBase>
             </SheetHeaderBase>
             <div className="grid gap-4 py-4">
@@ -42,7 +42,11 @@ export const SheetPage = () => {
                   <LabelBase htmlFor={id} className="text-right">
                     {label}
                   </LabelBase>
-                  <InputBase id={id} defaultValue={value} className="col-span-3" />
+                  <InputBase
+                    id={id}
+                    defaultValue={value}
+                    className="col-span-3"
+                  />
                 </div>
               ))}
             </div>

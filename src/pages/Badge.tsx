@@ -1,5 +1,11 @@
-import { BadgeBase } from "@/components/ui/BadgeBase";
-import { CheckIcon, StarIcon, BellIcon, HeartIcon, ShieldIcon } from "@phosphor-icons/react";
+import { BadgeBase } from "@/components/ui/data/BadgeBase";
+import {
+  CheckIcon,
+  StarIcon,
+  BellIcon,
+  HeartIcon,
+  ShieldIcon,
+} from "@phosphor-icons/react";
 
 export function BadgePage() {
   return (
@@ -68,7 +74,7 @@ export function BadgePage() {
       {/* Badge com status */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Status Indicators</h2>
-      
+
         <div className="flex gap-8">
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">

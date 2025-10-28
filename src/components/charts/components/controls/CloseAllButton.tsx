@@ -1,6 +1,6 @@
 import React from "react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 interface CloseAllButtonProps {
   count: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { SeparatorBase } from "@/components/ui/SeparatorBase";
+import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 
 export const SeparatorPage = () => {
   return (
@@ -12,7 +12,7 @@ export const SeparatorPage = () => {
         <SeparatorBase className="my-5 w-full border-t-2 border-gray-300" />
         <h1>Section 2</h1>
         <p>This is the second section content.</p>
-         <SeparatorBase className="my-5 w-full border-t-2 border-gray-300" />
+        <SeparatorBase className="my-5 w-full border-t-2 border-gray-300" />
         <h1>Section 3</h1>
         <p>This is the third section content.</p>
       </div>

@@ -7,19 +7,18 @@ import {
   SelectTriggerBase,
   SelectValueBase,
 } from "@/components/ui/SelectBase";
-import { ScrollAreaBase } from "@/components/ui/ScrollareaBase";
+import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
+import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
 export interface SelectItem<T extends string> {
   label: string;
   value: T;
 }
 
-interface DefaultSelectProps {
+interface DefaultSelectProps extends ErrorMessageProps {
   placeholder: string;
   onChange: (value: string) => void;
-  errorMessage?: string;
 }
 
 interface SelectTestIds {
@@ -59,7 +58,7 @@ export function Select<T extends string>({
   groupItems,
   placeholder,
   onChange,
-  errorMessage,
+  error,
   testIds = {},
 }: SelectProps<T>) {
   return (
@@ -71,7 +70,7 @@ export function Select<T extends string>({
         <SelectTriggerBase
           className={cn(
             "flex h-9 w-full content-start text-lg shadow-md",
-            errorMessage && "border-red-500"
+            error && "border-red-500"
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
         >
@@ -129,20 +128,7 @@ export function Select<T extends string>({
         </ScrollAreaBase>
       </SelectBase>
 
-      <AnimatePresence>
-        {errorMessage && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="text-sm text-red-500"
-            data-testid={testIds.error ?? "select-error"}
-          >
-            {errorMessage}
-          </motion.p>
-        )}
-      </AnimatePresence>
+      <ErrorMessage error={error} />
     </div>
   );
 }

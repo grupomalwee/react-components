@@ -1,9 +1,9 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SheetBase } from "../components/ui/SheetBase";
-import { ButtonBase } from "../components/ui/ButtonBase";
-import { InputBase } from "../components/ui/InputBase";
-import LabelBase from "../components/ui/LabelBase";
+import { SheetBase } from "../components/ui/overlays/SheetBase";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { InputBase } from "../components/ui/form/InputBase";
+import LabelBase from "../components/ui/form/LabelBase";
 import {
   SheetCloseBase,
   SheetContentBase,
@@ -12,7 +12,7 @@ import {
   SheetHeaderBase,
   SheetTitleBase,
   SheetTriggerBase,
-} from "../components/ui/SheetBase";
+} from "../components/ui/overlays/SheetBase";
 
 const meta: Meta<typeof SheetBase> = {
   title: "overlays/Sheet",

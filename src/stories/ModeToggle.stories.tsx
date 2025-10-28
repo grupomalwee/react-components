@@ -4,7 +4,7 @@ import { ModeToggleBase } from "../components/mode-toggle";
 import { ThemeProviderBase } from "../components/theme-provider";
 
 const meta: Meta<typeof ModeToggleBase> = {
-  title: "ModeToggle",
+  title: "Mode Toggle",
   component: ModeToggleBase,
   tags: ["autodocs"],
   parameters: {

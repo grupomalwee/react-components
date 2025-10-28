@@ -10,7 +10,7 @@ import {
   AlertDialogHeaderBase,
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
-} from "../components/ui/AlertDialogBase";
+} from "../components/ui/feedback/AlertDialogBase";
 import {
   CheckCircleIcon,
   WarningCircleIcon,
@@ -19,7 +19,7 @@ import {
 } from "@phosphor-icons/react";
 
 const meta: Meta<typeof AlertDialogBase> = {
-  title: "feedback/AlertDialog",
+  title: "feedback/Alert Dialog",
   component: AlertDialogBase,
   tags: ["autodocs"],
   parameters: {

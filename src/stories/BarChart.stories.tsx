@@ -19,7 +19,7 @@ const sampleSalesData = [
 ];
 
 const meta: Meta<typeof BarChart> = {
-  title: "charts/BarChart",
+  title: "charts/Bar Chart",
   component: BarChart,
   tags: ["autodocs"],
   parameters: {

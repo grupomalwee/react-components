@@ -14,10 +14,10 @@ import {
   ContextMenuSubBase,
   ContextMenuSubContentBase,
   ContextMenuSubTriggerBase,
-} from "../components/ui/ContextMenuBase";
+} from "../components/ui/navigation/ContextMenuBase";
 
 const meta: Meta<typeof ContextMenuBase> = {
-  title: "navigation/ContextMenu",
+  title: "navigation/Context Menu",
   component: ContextMenuBase,
   tags: ["autodocs"],
   parameters: {

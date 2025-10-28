@@ -1,7 +1,7 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { ButtonBase, ButtonGroupBase } from "../components/ui/ButtonBase";
+import { ButtonBase, ButtonGroupBase } from "../components/ui/form/ButtonBase";
 import {
   AddButton,
   BackButton,
@@ -24,7 +24,7 @@ import {
   SettingsButton,
   UploadButton,
   VisibilityButton,
-} from "@/components/ui/SmallButtons";
+} from "@/components/ui/form/SmallButtons";
 
 const meta: Meta<typeof ButtonBase> = {
   title: "forms/Button",

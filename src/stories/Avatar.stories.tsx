@@ -5,7 +5,7 @@ import {
   AvatarBase,
   AvatarImageBase,
   AvatarFallbackBase,
-} from "../components/ui/AvatarBase";
+} from "../components/ui/data/AvatarBase";
 
 interface AvatarStoryProps {
   src: string;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { LoadingBase } from "../components/ui/LoadingBase";
-import { ButtonBase } from "../components/ui/ButtonBase";
+import { LoadingBase } from "../components/ui/feedback/LoadingBase";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
 
 const ModalBasePage = () => {
   const [showOverlay, setShowOverlay] = useState(false);

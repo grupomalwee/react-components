@@ -9,15 +9,15 @@ import {
   ModalFooterBase,
   ModalTitleBase,
   ModalDescriptionBase,
-} from "../components/ui/ModalBase";
-import { ButtonBase } from "../components/ui/ButtonBase";
-import { InputBase } from "../components/ui/InputBase";
+} from "../components/ui/feedback/ModalBase";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { InputBase } from "../components/ui/form/InputBase";
 import { MapPinLineIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   ChangeButton,
   DeleteButton,
   EditButton,
-} from "../components/ui/SmallButtons";
+} from "../components/ui/form/SmallButtons";
 import {
   SelectBase,
   SelectTriggerBase,
@@ -27,8 +27,8 @@ import {
   SelectLabelBase,
   SelectItemBase,
 } from "../components/ui/SelectBase";
-import { TextAreaBase } from "../components/ui/TextAreaBase";
-import LabelBase from "../components/ui/LabelBase";
+import { TextAreaBase } from "../components/ui/form/TextAreaBase";
+import LabelBase from "../components/ui/form/LabelBase";
 
 const meta: Meta<typeof ModalBase> = {
   title: "feedback/Modal",

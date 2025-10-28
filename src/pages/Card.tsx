@@ -1,4 +1,4 @@
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   CardBase,
   CardContentBase,
@@ -6,10 +6,10 @@ import {
   CardFooterBase,
   CardHeaderBase,
   CardTitleBase,
-} from "@/components/ui/CardBase";
+} from "@/components/ui/data/CardBase";
 
-import { InputBase } from "@/components/ui/InputBase";
-import LabelBase from "@/components/ui/LabelBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 
 import {
   SelectBase,

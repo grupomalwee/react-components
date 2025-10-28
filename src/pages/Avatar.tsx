@@ -2,8 +2,8 @@ import {
   AvatarBase,
   AvatarFallbackBase,
   AvatarImageBase,
-} from "@/components/ui/AvatarBase";
-import { BadgeBase } from "@/components/ui/BadgeBase";
+} from "@/components/ui/data/AvatarBase";
+import { BadgeBase } from "@/components/ui/data/BadgeBase";
 
 export const AvatarPage = () => {
   return (
@@ -84,7 +84,9 @@ export const AvatarPage = () => {
               </AvatarBase>
               <BadgeBase status="success" aria-label="Online" title="Online" />
             </div>
-            <span className="text-sm text-muted-foreground">Badge (Online)</span>
+            <span className="text-sm text-muted-foreground">
+              Badge (Online)
+            </span>
           </div>
           {/* Badge Offline */}
           <div className="flex flex-col items-center gap-2">
@@ -93,9 +95,15 @@ export const AvatarPage = () => {
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="desactivated" aria-label="Offline" title="Offline" />
+              <BadgeBase
+                status="desactivated"
+                aria-label="Offline"
+                title="Offline"
+              />
             </div>
-            <span className="text-sm text-muted-foreground">Badge (Offline)</span>
+            <span className="text-sm text-muted-foreground">
+              Badge (Offline)
+            </span>
           </div>
           {/* Badge Busy */}
           <div className="flex flex-col items-center gap-2">

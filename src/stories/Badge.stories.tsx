@@ -1,7 +1,7 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
-import { BadgeBase } from "../components/ui/BadgeBase";
+import { BadgeBase } from "../components/ui/data/BadgeBase";
 
 interface BadgeStoryProps {
   text: string;

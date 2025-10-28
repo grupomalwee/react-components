@@ -2,10 +2,10 @@
 
 import { useCallback, useMemo } from "react";
 import { ComboboxBase, ComboboxItem } from "./ComboboxBase";
-import LabelBase from "../ui/LabelBase";
+import { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import LabelBase from "../ui/form/LabelBase";
 import { cn } from "@/lib/utils";
 
-// Reutilizando tipagem já existente do Base
 export interface ComboboxTestIds {
   root?: string;
   trigger?: string;
@@ -20,7 +20,7 @@ export interface ComboboxTestIds {
   selected?: string;
 }
 
-export interface ComboboxProps<T extends string> {
+export interface ComboboxProps<T extends string> extends ErrorMessageProps {
   items: ComboboxItem<T>[];
   selected: ComboboxItem<T>["value"] | null;
   onChange: (value: ComboboxItem<T>["value"] | null) => void;
@@ -42,6 +42,7 @@ export function Combobox<T extends string>({
   label,
   labelClassname,
   testIds,
+  error,
 }: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
@@ -78,9 +79,9 @@ export function Combobox<T extends string>({
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
         searchPlaceholder={searchPlaceholder}
+        error={error}
         testIds={testIds}
       />
-      
     </div>
   );
 }

@@ -11,7 +11,6 @@ export const MultiComboboxPage = () => {
       <div className="flex gap-5 justify-center w-96">
         <MultiCombobox
           label="Selecione os cargos"
-          
           items={[
             {
               label: "Desenvolvedor junio eduardo ronchi de araujo",

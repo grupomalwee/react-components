@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { InputBase } from "@/components/ui/InputBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
 import { Combobox } from "@/components/selects/Combobox";
 import { MultiCombobox } from "@/components/selects/MultiCombobox";
-import { DateTimePicker } from "@/components/date-time-picker/DateTimePicker";
+import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import React from "react";
 
 const cargos = [
@@ -49,12 +49,7 @@ function ComparisonRowGrid({
       />
       <ButtonBase>Comparar</ButtonBase>
 
-      <DateTimePicker
-        date={date}
-        onChange={setDate}
-        hideSeconds
-     
-      />
+      <DateTimePicker date={date} onChange={setDate} hideSeconds />
     </section>
   );
 }
@@ -93,12 +88,7 @@ function ComparisonRowFlex({
         onChange={(e) => setInputValue(e.target.value)}
       />
       <ButtonBase>Comparar</ButtonBase>
-      <DateTimePicker
-        date={date}
-        onChange={setDate}
-        hideSeconds
-        
-      />
+      <DateTimePicker date={date} onChange={setDate} hideSeconds />
     </section>
   );
 }
@@ -126,7 +116,7 @@ export default function Comparison() {
 
         <div className="space-y-2">
           <h2 className="text-xl font-semibold  text-primary">Grid</h2>
-          <ComparisonRowGrid  
+          <ComparisonRowGrid
             selected={selected}
             setSelected={setSelected}
             selectedMulti={selectedMulti}

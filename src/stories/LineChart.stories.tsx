@@ -3,7 +3,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof CustomLineChart> = {
-  title: "charts/LineChart",
+  title: "charts/Line Chart",
   component: CustomLineChart,
   tags: ["autodocs"],
   parameters: {

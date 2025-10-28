@@ -1,6 +1,9 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ComboboxBase, ComboboxItem } from "../components/selects/ComboboxBase";
+import {
+  ComboboxBase,
+  ComboboxItem,
+} from "../components/selects/ComboboxBase";
 import React from "react";
 
 const meta: Meta<typeof ComboboxBase> = {
@@ -106,6 +109,71 @@ export default function Default() {
             }
             handleSelection={(value) => setSelected(value)}
             checkIsSelected={(value) => selected === value}
+          />
+        </div>
+      </div>
+    );
+  },
+};
+export const WithError: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
+
+export default function Default() {
+  const items: ComboboxItem<string>[] = [
+    { value: 'Item A', label: 'Item A' },
+    { value: 'Item B', label: 'Item B' },
+    { value: 'Item C', label: 'Item C' },
+  ];
+  const [selected, setSelected] = React.useState<string | null>(items[0].value);
+
+  return (
+    <div style={{ width: 320 }}>
+      <ComboboxBase
+        items={items}
+        renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
+        handleSelection={value => setSelected(value)}
+        checkIsSelected={value => selected === value}
+        error="Você deve selecionar uma opção"
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const items: ComboboxItem<string>[] = [
+      { value: "Item A", label: "Item A" },
+      { value: "Item B", label: "Item B" },
+      { value: "Item C", label: "Item C" },
+    ];
+    const [selected, setSelected] = React.useState<string | null>(
+      items[0].value
+    );
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div style={{ width: 320 }}>
+          <ComboboxBase
+            items={items}
+            renderSelected={
+              <span>{items.find((i) => i.value === selected)?.label}</span>
+            }
+            handleSelection={(value) => setSelected(value)}
+            checkIsSelected={(value) => selected === value}
+            error="Você deve selecionar uma opção"
           />
         </div>
       </div>

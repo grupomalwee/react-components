@@ -5,13 +5,14 @@ import {
   CommandInputBase,
   CommandItemBase,
   CommandListBase,
-} from "@/components/ui/CommandBase";
+} from "@/components/ui/navigation/CommandBase";
 import {
   PopoverBase,
   PopoverContentBase,
   PopoverTriggerBase,
-} from "@/components/ui/PopoverBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+} from "@/components/ui/overlays/PopoverBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
 
 import { motion } from "framer-motion";
 import { ReactNode, useState } from "react";
@@ -36,7 +37,7 @@ export interface ComboboxTestIds {
   check?: string;
 }
 
-export interface ComboboxBaseProps<T extends string> {
+export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   items: ComboboxItem<T>[];
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
@@ -44,7 +45,6 @@ export interface ComboboxBaseProps<T extends string> {
   keepOpen?: boolean;
   closeAll?: ReactNode;
   searchPlaceholder?: string;
-  errorMessage?: string;
   testIds?: ComboboxTestIds;
 }
 
@@ -56,7 +56,7 @@ export function ComboboxBase<T extends string>({
   keepOpen = false,
   closeAll,
   searchPlaceholder,
-  errorMessage,
+  error,
   testIds = {},
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
@@ -78,7 +78,7 @@ export function ComboboxBase<T extends string>({
             aria-expanded={open}
             className={cn(
               "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
-              errorMessage && "border-red-500"
+              error && "border-red-500"
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
@@ -156,6 +156,7 @@ export function ComboboxBase<T extends string>({
           </CommandBase>
         </PopoverContentBase>
       </PopoverBase>
+      <ErrorMessage error={error} />
     </div>
   );
 }

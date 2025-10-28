@@ -1,8 +1,8 @@
 "use client";
 
-import { SlideBase } from "@/components/ui/SliderBase";
+import { SlideBase } from "@/components/ui/form/SliderBase";
 import { useState } from "react";
-import { SunIcon,  LadderIcon } from "@phosphor-icons/react";
+import { SunIcon, LadderIcon } from "@phosphor-icons/react";
 
 export const SliderPage = () => {
   const [value1, setValue1] = useState<number[]>([20]);

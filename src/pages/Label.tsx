@@ -1,5 +1,5 @@
-import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import  LabelBase  from "@/components/ui/LabelBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 
 export function LabelPage() {
   return (

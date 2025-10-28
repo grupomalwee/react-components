@@ -1,47 +1,65 @@
-# @mlw-packages/react-components
+<p style="display:flex;align-items:center;justify-items:center;gap:12px;margin:0 flex-direction:row;">
+  <img src="public/pwa-512x512.png" alt="Malwee Logo" width="40" height="40" style="border-radius:8px;">
+  <span style="display:flex;flex-direction:column;gap:0">
+    <strong style="font-size:1.75rem">@mlw-packages/react-components</strong><small style="color:var(--muted);">Biblioteca de componentes React pronta para produção • TypeScript + Tailwind</small>
 
-Biblioteca de componentes React reutilizáveis, focada em acelerar o desenvolvimento de aplicações web modernas, acessíveis e com design consistente. Construída com Tailwind CSS para máxima customização, performance e escalabilidade.
-
----
-
-## Instalação
-
-Instale via npm ou yarn:
-
-```bash
-npm install @mlw-packages/react-components
-# ou
-yarn add @mlw-packages/react-components
-```
+  </span> 
+</p>
 
 ---
 
-## Uso Básico
+[![npm version]][npm] [![storybook badge](https://img.shields.io/badge/storybook-live-ff4785)]({{storybookUrl}})
+[![license]](LICENSE)
 
-Importe os componentes que precisa e use direto no JSX:
+> Coleção de _building blocks_ UI — pensada para velocidade de desenvolvimento, consistência visual, acessibilidade e performance.
 
-# @mlw-packages/react-components
+---
 
-Biblioteca de componentes React reutilizáveis, pronta para produção. Projetada para acelerar o desenvolvimento de interfaces acessíveis, responsivas e customizáveis, usando Tailwind CSS e TypeScript.
+## Índice
+
+- [Visão geral](#visão-geral)
+- [Principles (princípios)](#principles-princ%C3%ADpios)
+- [Instalação](#instala%C3%A7%C3%A3o)
+- [Quick start](#quick-start)
+- [Uso e boas práticas](#uso-e-boas-pr%C3%A1ticas)
+- [Storybook (demos)](#storybook-demos)
+- [Componentes principais](#componentes-principais)
+- [Lista completa de componentes (stories)](#lista-completa-de-componentes-stories)
+- [Desenvolvimento local](#desenvolvimento-local)
+- [Testes & Quality Gates](#testes--quality-gates)
+- [Problemas comuns](#problemas-comuns)
+- [Contribuição](#contribui%C3%A7%C3%A3o)
+- [Changelog & Releases](#changelog--releases)
+- [Contato & Licença](#contato--licen%C3%A7a)
+
+---
 
 ## Visão geral
 
-Esta biblioteca fornece um conjunto consistente de componentes UI (botões, inputs, modais, tabelas, menus, etc.) pensados para integração em aplicações modernas. Os componentes foram desenvolvidos com foco em:
+`@mlw-packages/react-components` fornece um conjunto coeso de componentes reutilizáveis (Buttons, Cards, Inputs, Modals, Tables, etc.) com foco em:
 
-- Acessibilidade (atributos ARIA e navegação por teclado);
-- Customização via classes Tailwind e props;
-- Compatibilidade com React 18+ e TypeScript;
-- Testabilidade (suporte a data-testid configuráveis).
+- API simples e tipada (TypeScript) — documentação via Storybook.
+- Estilos orientados a Tailwind para customização via `className`.
+- Padrões de acessibilidade (aria, keyboard, focus management).
+- Baixas dependências — ícones e extras como _peer deps_.
 
-## Compatibilidade
+Use quando precisar padronizar UI e acelerar entregas sem sacrificar qualidade.
 
-- React: 18+
-- TypeScript: compatível com tsconfig do projeto
-- Estilos: Tailwind CSS (é necessário configurar Tailwind no projeto que consumir a lib)
+---
+
+## Principles (princípios)
+
+1. **Composição sobre herança** — componentes pequenos, combináveis.
+2. **Acessibilidade primeiro** — keyboard-friendly, roles, labels.
+3. **Tailwind como API** — `className` para customização limitada.
+4. **Mínimas dependências** — pacote enxuto para bundles menores.
+5. **Testabilidade** — props determinísticas e `data-testid` opcionais.
+
+---
 
 ## Instalação
 
-Instale a versão publicada via npm / yarn / pnpm:
+Compatível com npm, yarn e pnpm:
 
 ```bash
 npm install @mlw-packages/react-components
@@ -51,110 +69,290 @@ yarn add @mlw-packages/react-components
 pnpm add @mlw-packages/react-components
 ```
 
-Observação: a biblioteca geralmente é distribuída como pacote que requer as dependências peer do projeto consumidor (por exemplo, React, Tailwind). Verifique o `package.json` publicado para a lista completa de peerDependencies.
+> **Peer deps**: React 18+ e Tailwind configurado. Se usar ícones, instale `@phosphor-icons/react` como peer-dep.
 
-## Uso rápido
+---
 
-Importe os componentes que precisa e o CSS global (se estiver usando o CSS fornecido):
+## Quick start
 
 ```tsx
 import React from "react";
-import { ButtonBase, CardBase } from "@mlw-packages/react-components";
-import "@mlw-packages/react-components/style/global.css"; // opcional — dep. de como você monta os estilos
+import { CardBase, ButtonBase } from "@mlw-packages/react-components";
+import "@mlw-packages/react-components/style/global.css";
 
 export function App() {
   return (
-    <CardBase className="p-6">
-      <ButtonBase variant="primary">Clique aqui</ButtonBase>
-    </CardBase>
+    <main className="p-6 max-w-3xl mx-auto">
+      <CardBase className="p-6">
+        <h3 className="text-lg font-semibold">Bem-vindo</h3>
+        <p className="mt-2">Use os componentes para acelerar o layout.</p>
+        <div className="mt-4">
+          <ButtonBase variant="primary">Clique aqui</ButtonBase>
+        </div>
+      </CardBase>
+    </main>
   );
 }
 ```
 
-Para investigar os componentes disponíveis e suas props, consulte a pasta `src/pages` e `src/components/ui` no repositório fonte.
+**Notas rápidas**
 
-## Exemplos e documentação local
-
-Este repositório contém stories e páginas de exemplo (Storybook / exemplos em `src/pages`). Para executar o ambiente de desenvolvimento local e ver os componentes:
-
-```bash
-# instalar dependências
-npm install
-
-# rodar storybook (se o projeto incluir) ou Vite (ex.: site de documentação)
-npm run storybook
-# ou
-npm run dev
-```
-
-Se não houver scripts acima no `package.json`, consulte-o para os comandos disponíveis.
-
-## Data-testid e testes automatizados
-
-Todos os componentes suportam configuração opcional de identificadores para testes (`data-testid`) através de props `testIds` ou props específicas para cada componente. Isso facilita a escrita de testes E2E e unitários.
-
-Exemplo (Combobox):
-
-```tsx
-<ComboboxBase
-  items={items}
-  renderSelected={renderSelected}
-  handleSelection={handleSelection}
-  testIds={{
-    root: "combobox-root",
-    trigger: "combobox-trigger",
-    option: (v) => `combobox-option-${v}`,
-  }}
-/>
-```
-
-## Boas práticas de customização
-
-- Prefira passar `className` ou `tw` (se aplicável) para ajustar estilos em vez de alterar o CSS interno.
-- Use as variantes e tokens de design oferecidos pelos componentes para manter consistência.
-- Se for necessário alterar comportamento interno, prefira estender o componente ou usar composição.
-
-## Desenvolvimento e contribuição
-
-Contribuições são bem-vindas. Siga estes passos básicos:
-
-1. Fork o repositório e crie uma branch com um nome descritivo.
-2. Faça suas mudanças e adicione testes quando aplicável.
-3. Execute os checks locais:
-
-```bash
-npm install
-npm run lint   # se disponível
-npm run test   # se houver testes
-npm run build  # opcional
-```
-
-4. Abra um Pull Request descrevendo o que foi alterado e por quê.
-
-Dicas:
-
-- Mantenha commits pequenos e focados.
-- Documente API pública dos componentes quando adicionar ou alterar props.
-
-## Manutenção e versionamento
-
-Siga as regras de versionamento semântico (semver). Notifique breaking changes no changelog e nas notas da release.
-
-## Problemas comuns / Troubleshooting
-
-- Se os estilos do Tailwind não aparecerem, verifique se o Tailwind está configurado no projeto consumidor e se o arquivo global de estilos da biblioteca está importado.
-- Caso haja conflito de versões do React ou de dependências peer, alinhe as versões no `package.json` do projeto consumidor.
-
-## Contato e Licença
-
-Mantido por Grupo Malwee — veja o repositório para detalhes de contato e histórico.
-
-Licença: MIT — sinta-se livre para usar, modificar e distribuir.
+- `className` é exposto na maioria dos componentes para customização.
+- Variantes comuns: `primary`, `secondary`, `ghost`.
 
 ---
 
-Se quiser, posso também:
+## Uso e boas práticas
 
-- gerar um sumário de componentes automaticamente a partir de `src/components/ui`;
-- adicionar um arquivo CONTRIBUTING.md com checklist e template de PR;
-- ou criar um badge/quickstart no topo do README.
+- **Composição**: prefira combinar componentes ao invés de alterar internals.
+- **Acessibilidade**: passe `aria-*` quando aplicável (ex.: `aria-label` em botões iconográficos).
+- **SSR**: componentes são compatíveis com server-side rendering; evite acessar `window` direto.
+- **Theming**: use classes utilitárias do Tailwind e tokenize valores em `tailwind.config.js` quando necessário.
+
+---
+
+## Storybook (demos)
+
+Veja as demos interativas e a documentação de props no Storybook:
+
+> [Abrir Storybook]({{storybookUrl}})
+
+Use **Controls** para testar props dinamicamente e **Docs** para copiar snippets.
+
+---
+
+### Lista completa de componentes
+
+Abaixo está a lista completa de componentes :
+
+- AlertDialog
+
+- Avatar
+
+- Badge
+
+- BarChart
+
+- Breadcrumb
+
+- Button
+
+- Calendar
+
+- Card
+
+- Carousel
+
+- Chart
+
+- CheckBox
+
+- Collapsible
+
+- Combobox
+
+- ComboboxBase
+
+- Command
+
+- ContextMenu
+
+- DateTimePicker
+
+- DebouncedInput
+
+- DestructiveDialog
+
+- Dialog
+
+- DraggableTooltip
+
+- Drawer
+
+- DropDownMenu
+
+- FileUploader
+
+- Filter
+
+- Home
+
+- HoverCard
+
+- Input
+
+- Input-OTP
+
+- Label
+
+- LineChart
+
+- Loading
+
+- Modal
+
+- ModeToggle
+
+- MultiCombobox
+
+- NavigationMenu
+
+- PieChart
+
+- Popover
+
+- rogress
+
+- RangePicker
+
+- Scrollarea
+
+- Select
+
+- Separator
+
+- Sheet
+
+- Sidebar
+
+- Skeleton
+
+- Slider
+
+- Sonner
+
+- Switch
+
+- Table
+
+- Tabs
+
+- TextArea
+
+- Tooltip
+
+---
+
+## Desenvolvimento local
+
+```bash
+git clone git@github.com:grupo-malwee/react-components.git
+cd react-components
+npm install
+npm run storybook
+# lint/test/build
+npm run lint
+npm run test
+npm run build
+```
+
+Dica: use `pnpm` para monorepos e instalações mais rápidas.
+
+---
+
+## Problemas comuns & diagnóstico
+
+Segue uma versão formatada e mais direta da seção de _Issues_ com passos para diagnóstico e ações rápidas.
+
+### Componente não aparece / tela em branco
+
+- Abra o console do navegador e verifique erros (ex.: export faltando, erro de runtime).
+- Confirme o import na story e que todas as props obrigatórias estão sendo passadas.
+- Se o componente depende de dados remotos, garanta mocks ou dados de exemplo na story.
+
+Checklist rápido:
+
+- [ ] Console limpo
+- [ ] Import correto
+- [ ] Props obrigatórias fornecidas
+- [ ] Dados/mocks presentes
+
+### Componente pisca ou muda de estado sozinho
+
+- Verifique addons do Storybook (Controls, Interactions) que possam disparar updates automaticamente.
+- Revise timers (clearInterval / clearTimeout) e efeitos (`useEffect`) com dependências corretas.
+- Use Actions para inspecionar eventos que dispararam mudanças.
+
+### Estilos incorretos entre temas
+
+- Verifique variáveis de tema e classes condicionais.
+- Confirme se o decorator de tema do Storybook está aplicado na preview.
+- Atenção ao purge do Tailwind: classes dinâmicas podem ser removidas. Use `safelist` quando necessário.
+
+### Dependências / peer deps
+
+Conflitos de peer-deps podem quebrar o build. Para instalar localmente (workaround):
+
+```bash
+npm i @mlw-packages/react-components --legacy-peer-deps
+```
+
+(mesma abordagem pode ser necessária para ícones Phosphor em alguns ambientes.)
+
+### Ícones (Phosphor) não renderam
+
+Instale o pacote se estiver faltando:
+
+```bash
+npm i @phosphor-icons/react
+```
+
+Se ainda não renderizar, confirme se o bundler transpila pacotes ESM/TSX corretamente (Vite normalmente já faz isso; em setups customizados pode ser preciso configurar `optimizeDeps` ou `esbuild` / `babel` transpile).
+
+
+### Dicas rápidas
+
+- Se uma story funciona localmente mas falha no Storybook hospedado, compare environment vars e versões de dependências.
+- Para problemas de Tailwind, adicione classes dinâmicas ao `safelist` do `tailwind.config.js`.
+- Ao reportar um issue, inclua: versão do pacote, trecho mínimo reproduzível, saída do console e versão do Node/NPM.
+
+## Testes & Quality Gates
+
+- Jest + Testing Library para unit e componentes.
+- ESLint com regras TypeScript estritas.
+- CI deve bloquear merges sem `lint`/`test`/`build` bem-sucedidos.
+
+---
+
+## Problemas comuns
+
+- **Classes Tailwind desaparecendo**: cuidado com classes dinâmicas — adicione `safelist` no `tailwind.config.js`.
+- **Ícones faltando**: instale `@phosphor-icons/react` e verifique transpile ESM.
+- **Peer deps**: resolver explicitamente em CI preferível a `--legacy-peer-deps`.
+
+---
+
+## Contribuição
+
+Siga o fluxo padrão:
+
+1. Fork → branch com `feature/<descrição>` → PR para `main`.
+2. Inclua descrição clara, screenshots quando necessário e testes básicos.
+3. Use `pnpm`/`npm` consistentemente conforme `.github/workflows`.
+
+Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/test/build).
+
+---
+
+## Changelog & Releases
+
+- Versionamento semântico (SemVer). Releases automatizadas via CI (GitHub Actions + OIDC publishing quando aplicável).
+
+---
+
+## Contato & Licença
+
+- Mantido por: **Grupo Malwee**
+- Licença: **MIT**
+
+---
+
+<!-- Links de badges -->
+
+[npm]: https://www.npmjs.com/package/@mlw-packages/react-components
+[ci]: https://github.com/grupo-malwee/react-components/actions
+[storybook]: https://68e80310a069c2f10b546ef3-ecmququezd.chromatic.com/
+[npm version]: https://img.shields.io/npm/v/@mlw-packages/react-components
+[build status]: https://img.shields.io/github/actions/workflow/status/grupo-malwee/react-components/ci.yml
+[storybook badge]: https://img.shields.io/badge/storybook-live-ff4785
+[license]: https://img.shields.io/badge/license-MIT-brightgreen

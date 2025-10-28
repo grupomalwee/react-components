@@ -1,7 +1,7 @@
 "use client";
 
-import { ButtonBase } from "../components/ui/ButtonBase";
-import { Toaster, toast } from "@/components/ui/SonnerBase";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { Toaster, toast } from "@/components/ui/feedback/SonnerBase";
 
 export default function RootLayout() {
   return (
@@ -15,21 +15,21 @@ export default function RootLayout() {
         >
           Sucesso
         </ButtonBase>
-      
+
         <ButtonBase
           testid="button-error"
           onClick={() => toast.error("Opa! Algo deu errado.")}
         >
           Erro
         </ButtonBase>
-      
+
         <ButtonBase
           testid="button-warning"
           onClick={() => toast.warning("Atenção! Confira os dados.")}
         >
           Aviso
         </ButtonBase>
-      
+
         <ButtonBase
           testid="button-info"
           onClick={() => toast.info("Informação: nada demais, só avisando.")}
@@ -37,7 +37,7 @@ export default function RootLayout() {
           Info
         </ButtonBase>
         <ButtonBase
-        testid="button-loading"
+          testid="button-loading"
           onClick={() =>
             toast.loading("Loading: baixando  C: /System/system32.")
           }

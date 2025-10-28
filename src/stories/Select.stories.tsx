@@ -94,3 +94,36 @@ export const Default: Story = {
     );
   },
 };
+
+export const WithError: Story = {
+  render: () => {
+    const [open, setOpen] = React.useState(false);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "200px",
+          padding: "32px 0",
+        }}
+      >
+        <SelectBase open={open} onOpenChange={setOpen} >
+          <SelectTriggerBase open={open} className="w-[180px]"  error="Você deve selecionar uma opção" >
+            <SelectValueBase placeholder="Select a fruit" />
+          </SelectTriggerBase>
+          <SelectContentBase >
+            <SelectGroupBase>
+              <SelectLabelBase>Fruits</SelectLabelBase>
+              <SelectItemBase value="apple">Apple</SelectItemBase>
+              <SelectItemBase value="banana">Banana</SelectItemBase>
+              <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
+              <SelectItemBase value="grapes">Grapes</SelectItemBase>
+              <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
+            </SelectGroupBase>
+          </SelectContentBase>
+        </SelectBase >
+      </div>
+    );
+  },
+};

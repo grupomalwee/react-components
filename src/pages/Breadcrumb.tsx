@@ -3,7 +3,7 @@ import {
   DropDownMenuContentBase,
   DropDownMenuItemBase,
   DropDownMenuTriggerBase,
-} from "@/components/ui/DropDownMenuBase";
+} from "@/components/ui/navigation/DropDownMenuBase";
 
 import {
   BreadcrumbBase,
@@ -13,7 +13,7 @@ import {
   BreadcrumbListBase,
   BreadcrumbPageBase,
   BreadcrumbSeparatorBase,
-} from "@/components/ui/BreadcrumbBase";
+} from "@/components/ui/navigation/BreadcrumbBase";
 import { HouseIcon, BookIcon, PuzzlePieceIcon } from "@phosphor-icons/react";
 
 function handleNavigate(path: string) {
@@ -205,9 +205,8 @@ export function BreadcrumbPage() {
           </BreadcrumbItemBase>
         </BreadcrumbListBase>
       </BreadcrumbBase>
-    
 
-    <div className="my-8">
+      <div className="my-8">
         <h3 className="text-xl font-semibold mb-3">Documentação</h3>
         <div className="border-t-2 border-gray-300 mb-4"></div>
 
@@ -279,4 +278,4 @@ import {
       </div>
     </section>
   );
-};
+}

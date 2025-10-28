@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DateTimePicker } from "@/components/date-time-picker/DateTimePicker";
+import { DateTimePicker } from "@/components/picker/DateTimePicker";
 
 export default function DatePickerPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -9,11 +9,7 @@ export default function DatePickerPage() {
   return (
     <main className="p-8 flex flex-col">
       <div>
-        <DateTimePicker
-          label="Data e hora"
-          date={date}
-          onChange={setDate}
-        />
+        <DateTimePicker label="Data e hora" date={date} onChange={setDate} />
       </div>
       <div>
         <DateTimePicker
@@ -34,11 +30,7 @@ export default function DatePickerPage() {
         />
       </div>
       <div>
-        <DateTimePicker
-          label="Data e hora"
-          date={date}
-          onChange={setDate}
-        />
+        <DateTimePicker label="Data e hora" date={date} onChange={setDate} />
       </div>
 
       <div className="my-8 mx-5">

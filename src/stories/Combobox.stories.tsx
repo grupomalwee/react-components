@@ -316,3 +316,70 @@ export default function SpecialCharacters() {
     });
   },
 };
+export const WithError: Story = {
+  name: "Padrão com Erro",
+  render: () => {
+    const items = [
+      { label: "C++", value: "cpp" },
+      { label: "C#", value: "csharp" },
+      { label: "F#", value: "fsharp" },
+      { label: "@angular/core", value: "angular" },
+      { label: "Emoji Test", value: "emoji" },
+    ];
+    const [selected, setSelected] = React.useState<string>("emoji");
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-10">
+          <Combobox
+            items={items}
+            selected={selected}
+            onChange={(value) => {
+              if (value !== null) setSelected(value);
+            }}
+            label="Exemplo com Erro"
+            error="Você deve selecionar uma opção"
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function WithError() {
+  const items = [
+    { label: 'C++', value: 'cpp' },
+    { label: 'C#', value: 'csharp' },
+    { label: 'Emoji Test', value: 'emoji' },
+  ];
+  const [selected, setSelected] = React.useState('emoji');
+  return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Opções com Caracteres Especiais" error="Você deve selecionar uma opção" />;
+}
+`,
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar caracteres especiais renderizados", async () => {
+      const selected = canvasElement.querySelector(
+        '[data-testid="combobox-selected"]'
+      );
+      expect(selected).toBeInTheDocument();
+    });
+
+    await step("Verificar emoji presente", async () => {
+      const content = canvasElement.textContent;
+      expect(content).toContain("🚀");
+    });
+  },
+};

@@ -7,11 +7,11 @@ import {
   DropDownMenuItemBase,
   DropDownMenuLabelBase,
   DropDownMenuSeparatorBase,
-} from "../components/ui/DropDownMenuBase";
+} from "../components/ui/navigation/DropDownMenuBase";
 import { CheckIcon, ListIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DropDownMenuBase> = {
-  title: "navigation/DropDownMenu",
+  title: "navigation/DropDown Menu",
   component: DropDownMenuBase,
   tags: ["autodocs"],
   parameters: {

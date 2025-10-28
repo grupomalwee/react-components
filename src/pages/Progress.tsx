@@ -6,7 +6,7 @@ import {
   ProgressSegmentsBase,
   ProgressPanelsBase,
   ProgressCirclesBase,
-} from "@/components/ui/ProgressBase";
+} from "@/components/ui/feedback/ProgressBase";
 import { DownloadIcon } from "@phosphor-icons/react";
 
 export const ProgressPage = () => {

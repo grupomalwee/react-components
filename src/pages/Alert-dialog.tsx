@@ -8,22 +8,28 @@ import {
   AlertDialogHeaderBase,
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
-} from "@/components/ui/AlertDialogBase";
-import { CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react";
+} from "@/components/ui/feedback/AlertDialogBase";
+import {
+  CheckCircleIcon,
+  InfoIcon,
+  WarningIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react";
 
 export const AlertDialogPage = () => (
   <div className="p-6 space-y-8">
     <div className="flex flex-wrap gap-6 justify-between">
       <AlertDialogBase>
         <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
-        <AlertDialogContentBase >
-          <AlertDialogHeaderBase >
+        <AlertDialogContentBase>
+          <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-destructive">
               <XCircleIcon className="w-5 h-5" />
               <AlertDialogTitleBase>Tem certeza absoluta?</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              Essa ação não pode ser desfeita. Isso vai excluir permanentemente sua conta e remover seus dados dos nossos servidores.
+              Essa ação não pode ser desfeita. Isso vai excluir permanentemente
+              sua conta e remover seus dados dos nossos servidores.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -44,7 +50,8 @@ export const AlertDialogPage = () => (
               <AlertDialogTitleBase>Olha, preste atenção!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              Você está prestes a fazer uma alteração que pode impactar outros usuários.
+              Você está prestes a fazer uma alteração que pode impactar outros
+              usuários.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -62,7 +69,9 @@ export const AlertDialogPage = () => (
           <AlertDialogHeaderBase>
             <div className="flex items-center gap-2 text-emerald-600">
               <CheckCircleIcon className="w-5 h-5" />
-              <AlertDialogTitleBase>Operação bem-sucedida!</AlertDialogTitleBase>
+              <AlertDialogTitleBase>
+                Operação bem-sucedida!
+              </AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
               Sua ação foi concluída com sucesso. Pode fechar essa janela.
@@ -85,7 +94,8 @@ export const AlertDialogPage = () => (
               <AlertDialogTitleBase>Importante saber!</AlertDialogTitleBase>
             </div>
             <AlertDialogDescriptionBase>
-              O sistema passará por manutenção amanhã das 00h às 04h. Alguns serviços poderão ficar indisponíveis.
+              O sistema passará por manutenção amanhã das 00h às 04h. Alguns
+              serviços poderão ficar indisponíveis.
             </AlertDialogDescriptionBase>
           </AlertDialogHeaderBase>
           <AlertDialogFooterBase>
@@ -105,7 +115,7 @@ export const AlertDialogPage = () => (
         <h5 className="font-medium mb-2">Como importar:</h5>
         <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto">
           <code>
-{`import {
+            {`import {
   AlertDialogBase,
   AlertDialogActionBase,
   AlertDialogCancelBase,
@@ -125,7 +135,7 @@ export const AlertDialogPage = () => (
         <h5 className="font-medium mb-2">Como usar:</h5>
         <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto">
           <code>
-{`<AlertDialogBase>
+            {`<AlertDialogBase>
   <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
   <AlertDialogContentBase>
     <AlertDialogHeaderBase>

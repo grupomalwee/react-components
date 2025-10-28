@@ -2,7 +2,7 @@
 
 import { CopyIcon, TrashIcon, WarningIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { toast, Toaster } from "@/components/ui/SonnerBase";
+import { toast, Toaster } from "@/components/ui/feedback/SonnerBase";
 
 import {
   DialogBase,
@@ -13,12 +13,11 @@ import {
   DialogTriggerBase,
   DialogFooterBase,
   DialogCloseBase,
-} from "@/components/ui/DialogBase";
-import { InputBase } from "@/components/ui/InputBase";
-import LabelBase from "@/components/ui/LabelBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-
+} from "@/components/ui/feedback/DialogBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
 
 export const DialogPage = () => {
   const [link] = useState("https://ui.shadcn.com/docs/installation");

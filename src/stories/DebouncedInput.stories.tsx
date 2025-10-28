@@ -1,11 +1,11 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DebouncedInput from "../components/ui/DebounceInput";
+import DebouncedInput from "../components/ui/form/DebounceInput";
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DebouncedInput> = {
-  title: "forms/DebouncedInput",
+  title: "forms/Debounced Input",
   component: DebouncedInput,
   tags: ["autodocs"],
   parameters: {
@@ -99,6 +99,18 @@ export const Default: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';\nimport DebouncedInput from '@mlw-packages/react-components';\nimport { MagnifyingGlassIcon } from '@phosphor-icons/react';\n\nexport default function Example() {\n  const [value, setValue] = useState('');\n  return (\n    <DebouncedInput value={value} onChange={setValue} debounce={500} placeholder='Digite algo...' rightIcon={<MagnifyingGlassIcon />} />\n  );\n}`,
+      },
+    },
+  },
+};
+export const WithError: Story = {
+  render: (args) => (
+    <DebouncedInputWrapper {...args} error="Falha na pesquisa" />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport DebouncedInput from '@mlw-packages/react-components';\nimport { MagnifyingGlassIcon } from '@phosphor-icons/react';\n\nexport default function Example() {\n  const [value, setValue] = useState('');\n  return (\n    <DebouncedInput value={value} onChange={setValue} debounce={500} placeholder='Digite algo...' rightIcon={<MagnifyingGlassIcon />} error='Campo obrigatório' />\n  );\n}`,
       },
     },
   },

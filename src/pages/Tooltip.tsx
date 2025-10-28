@@ -5,8 +5,8 @@ import {
   TooltipContentBase,
   TooltipProviderBase,
   TooltipTriggerBase,
-} from "@/components/ui/TooltipBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+} from "@/components/ui/feedback/TooltipBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { InfoIcon } from "@phosphor-icons/react";
 
 export const TooltipPage = () => {
@@ -59,7 +59,10 @@ export const TooltipPage = () => {
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">Título</span>
                 <span className="text-sm">Texto com mais informações.</span>
-                <a href="#" className="text-white dark:text-black underline text-xs">
+                <a
+                  href="#"
+                  className="text-white dark:text-black underline text-xs"
+                >
                   Saiba mais
                 </a>
               </div>

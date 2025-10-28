@@ -9,7 +9,7 @@ import {
   SidebarMenuButtonBase,
   SidebarMenuItemBase,
   SidebarTriggerBase,
-} from "@/components/ui/SidebarBase";
+} from "@/components/ui/navigation/SidebarBase";
 
 import {
   HouseIcon,

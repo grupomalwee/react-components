@@ -1,7 +1,7 @@
 import Chart from "@/components/charts/Chart";
 import { Select } from "@/components/selects/Select";
-import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import LabelBase from "@/components/ui/LabelBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 import { useState } from "react";
 
 export const ChartPage = () => {

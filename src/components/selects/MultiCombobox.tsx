@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { ComboboxProps } from "./Combobox";
+import { ErrorMessageProps } from "@/components/ui/ErrorMessage";
 import { ComboboxBase } from "./ComboboxBase";
 import { XIcon } from "@phosphor-icons/react";
-import LabelBase from "../ui/LabelBase";
+import LabelBase from "../ui/form/LabelBase";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { ButtonBase } from "@/components/ui/ButtonBase";
-
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 interface MultiComboboxTestIds {
   root?: string;
   label?: string;
@@ -17,7 +17,8 @@ interface MultiComboboxTestIds {
 }
 
 interface MultiComboboxProps<T extends string>
-  extends Omit<ComboboxProps<T>, "selected" | "onChange"> {
+  extends Omit<ComboboxProps<T>, "selected" | "onChange">,
+    ErrorMessageProps {
   selected: T[];
   onChange: (value: T[]) => void;
   label?: string;
@@ -36,16 +37,15 @@ export function MultiCombobox<T extends string>({
   label,
   labelClassname,
   testIds = {},
+  error,
   keepOpen = true,
   showClearAll = false,
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
-
   const checkIsSelected = useCallback(
     (value: T) => selected.includes(value),
     [selected]
   );
-
   const handleSelection = useCallback(
     (value: T) => {
       const isSelected = selected.includes(value);
@@ -74,7 +74,6 @@ export function MultiCombobox<T extends string>({
         </ButtonBase>
       </div>
     ) : null;
-
   const renderSelected = useMemo(() => {
     if (selectedItems.length === 0) {
       return (
@@ -86,7 +85,6 @@ export function MultiCombobox<T extends string>({
         </span>
       );
     }
-
     return (
       <div
         data-testid={testIds.selectedWrapper ?? "combobox-selected-wrapper"}
@@ -131,7 +129,6 @@ export function MultiCombobox<T extends string>({
       </div>
     );
   }, [handleSelection, placeholder, selectedItems, testIds]);
-
   return (
     <div
       className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}
@@ -145,7 +142,6 @@ export function MultiCombobox<T extends string>({
           {label}
         </LabelBase>
       )}
-
       <ComboboxBase
         items={items}
         renderSelected={renderSelected}
@@ -154,6 +150,7 @@ export function MultiCombobox<T extends string>({
         keepOpen={keepOpen}
         closeAll={closeAll}
         searchPlaceholder={searchPlaceholder}
+        error={error}
       />
     </div>
   );

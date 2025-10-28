@@ -1,13 +1,13 @@
 import "../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DestructiveDialog } from "../components/ui/DestructiveDialog";
-import { ButtonBase } from "../components/ui/ButtonBase";
-import { DeleteButton } from "../components/ui/SmallButtons";
+import { DestructiveDialog } from "../components/ui/feedback/DestructiveDialog";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { DeleteButton } from "../components/ui/form/SmallButtons";
 import { TrashIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DestructiveDialog> = {
-  title: "feedback/DestructiveDialog",
+  title: "feedback/Destructive Dialog",
   component: DestructiveDialog,
   tags: ["autodocs"],
   parameters: {

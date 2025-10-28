@@ -3,9 +3,9 @@ import Chart from "@/components/charts/Chart";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within, waitFor } from "storybook/test";
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import { SlideBase } from "@/components/ui/SliderBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
+import { SlideBase } from "@/components/ui/form/SliderBase";
 import {
   SelectBase,
   SelectTriggerBase,

@@ -1,4 +1,7 @@
-import { ScrollAreaBase, ScrollBarBase } from "@/components/ui/ScrollareaBase";
+import {
+  ScrollAreaBase,
+  ScrollBarBase,
+} from "@/components/ui/layout/ScrollareaBase";
 
 interface Artwork {
   artist: string;

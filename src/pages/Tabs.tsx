@@ -5,7 +5,7 @@ import {
   TabsListBase,
   TabsTriggerBase,
   TabsContentBase,
-} from "@/components/ui/TabsBase";
+} from "@/components/ui/layout/TabsBase";
 
 export const TabsPage = () => {
   return (
@@ -17,7 +17,6 @@ export const TabsPage = () => {
             <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
             <TabsTriggerBase value="tab3">Infantil</TabsTriggerBase>
             <div className="w-96"></div>
-            
           </TabsListBase>
 
           <TabsContentBase value="tab1">

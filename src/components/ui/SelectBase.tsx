@@ -6,6 +6,8 @@ import { CheckIcon, CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";
+import type { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 const SelectBase = SelectPrimitive.Root;
 
@@ -15,28 +17,36 @@ const SelectValueBase = SelectPrimitive.Value;
 
 const SelectTriggerBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
-    open?: boolean;
-  }
->(({ className, children, open, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-      className
-    )}
-    {...props}
-  >
-    {children}
-    <motion.span
-      animate={{ rotate: open ? 180 : 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex items-center"
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
+    ErrorMessageProps & {
+      open?: boolean;
+    }
+>(({ className, children, open, error, ...props }, ref) => (
+  <div className={cn("w-full", error && "mb-0") }>
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        error
+          ? "border-destructive focus:ring-1 focus:ring-destructive"
+          : "border-input focus:ring-1 focus:ring-ring",
+        className
+      )}
+      {...props}
     >
-      <CaretDownIcon className="h-4 w-4 opacity-50" />
-    </motion.span>
-  </SelectPrimitive.Trigger>
+      {children}
+      <motion.span
+        animate={{ rotate: open ? 180 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex items-center"
+      >
+        <CaretDownIcon className="h-4 w-4 opacity-50" />
+      </motion.span>
+    </SelectPrimitive.Trigger>
+    {error ? <ErrorMessage error={error} /> : null}
+  </div>
 ));
+
 SelectTriggerBase.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButtonBase = React.forwardRef<

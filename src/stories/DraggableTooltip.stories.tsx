@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useDrag } from "@/hooks/use-drag";
 
 const meta: Meta<typeof DraggableTooltip> = {
-  title: "charts/DraggableTooltip",
+  title: "charts/Draggable Tooltip",
   component: DraggableTooltip,
   tags: ["autodocs"],
   parameters: {

@@ -1,8 +1,8 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
-import { LoadingBase } from "@/components/ui/LoadingBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { LoadingBase } from "@/components/ui/feedback/LoadingBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const meta: Meta<typeof LoadingBase> = {
   title: "forms/Loading",

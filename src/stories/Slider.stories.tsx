@@ -1,6 +1,6 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SlideBase } from "../components/ui/SliderBase";
+import { SlideBase } from "../components/ui/form/SliderBase";
 import { useState } from "react";
 import { SunIcon, LadderIcon } from "@phosphor-icons/react";
 

@@ -1,11 +1,11 @@
 import "../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DateTimePicker } from "../components/date-time-picker/DateTimePicker";
+import { DateTimePicker } from "../components/picker/DateTimePicker";
 import { useState } from "react";
 
 const meta: Meta<typeof DateTimePicker> = {
-  title: "forms/DateTimePicker",
+  title: "forms/Date Time Picker",
   component: DateTimePicker,
   tags: ["autodocs"],
   parameters: {
@@ -209,6 +209,37 @@ export const WithTimePickerButton: Story = {
   args: {
     label: "Data com Time Picker Button",
     date: new Date(2025, 9, 9, 14, 30, 0),
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithTimePickerButton() {\n  const [date, setDate] = useState(new Date());\n  return <DateTimePicker label='Data com Time Picker Button' date={date} onChange={setDate} />;\n}`,
+      },
+    },
+  },
+};
+
+export const DisplayOnly: Story = {
+  render: Template,
+  args: {
+    label: "Data (dd/MM/yyyy)",
+    date: new Date(2025, 9, 9, 14, 30, 0),
+    display: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function DisplayOnly() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return <DateTimePicker label='Data (dd/MM/yyyy)' date={date} onChange={setDate} display />;\n}`,
+      },
+    },
+  },
+};
+export const WithError: Story = {
+  render: Template,
+  args: {
+    label: "Data com Erro",
+    date: new Date(2025, 9, 9, 14, 30, 0),
+    error: "Data inválida",
   },
   parameters: {
     docs: {

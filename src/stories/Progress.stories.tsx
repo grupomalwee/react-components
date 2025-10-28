@@ -1,6 +1,6 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ProgressBase } from "../components/ui/ProgressBase";
+import { ProgressBase } from "../components/ui/feedback/ProgressBase";
 import * as React from "react";
 
 const meta: Meta<typeof ProgressBase> = {

@@ -1,8 +1,8 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within, waitFor } from "storybook/test";
-import { CheckboxBase } from "../components/ui/CheckBoxBase";
-import LabelBase from "../components/ui/LabelBase";
+import { CheckboxBase } from "../components/ui/form/CheckBoxBase";
+import LabelBase from "../components/ui/form/LabelBase";
 
 const meta: Meta<typeof CheckboxBase> = {
   title: "forms/CheckBox",

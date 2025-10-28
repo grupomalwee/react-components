@@ -1,4 +1,4 @@
-import DebouncedInput from "@/components/ui/DebounceInput";
+import DebouncedInput from "@/components/ui/form/DebounceInput";
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
@@ -19,9 +19,7 @@ export const DebounceInputPage = () => {
               placeholder="Digite para buscar..."
               rightIcon={<MagnifyingGlassIcon size={16} />}
             />
-            <p className="text-xs text-muted-foreground">
-              {searchValue}
-            </p>
+            <p className="text-xs text-muted-foreground">{searchValue}</p>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import LabelBase from "../components/ui/LabelBase";
+import LabelBase from "../components/ui/form/LabelBase";
 
 const meta: Meta<typeof LabelBase> = {
   title: "forms/Label",

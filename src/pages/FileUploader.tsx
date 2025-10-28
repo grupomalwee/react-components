@@ -1,4 +1,7 @@
-import { FileUploader, FileWithPreview } from "@/components/ui/FileUploader";
+import {
+  FileUploader,
+  FileWithPreview,
+} from "@/components/ui/data/FileUploader";
 import { useState } from "react";
 
 export const FileUploaderPage = () => {

@@ -8,7 +8,7 @@ import {
   InputOTPGroupBase,
   InputOTPSeparatorBase,
   InputOTPSlotBase,
-} from "@/components/ui/Input-OTP-Base";
+} from "@/components/ui/form/Input-OTP-Base";
 
 export default function InputOTPPage() {
   const [controlledValue, setControlledValue] = React.useState("");

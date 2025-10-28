@@ -1,13 +1,13 @@
 "use client";
 
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { InputBase } from "@/components/ui/InputBase";
-import LabelBase from "@/components/ui/LabelBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 import {
   PopoverBase,
   PopoverContentBase,
   PopoverTriggerBase,
-} from "@/components/ui/PopoverBase";
+} from "@/components/ui/overlays/PopoverBase";
 
 export function PopoverPage() {
   return (

@@ -9,7 +9,7 @@ import {
   SidebarMenuItemBase,
   SidebarProviderBase,
   SidebarTriggerBase,
-} from "@/components/ui/SidebarBase";
+} from "@/components/ui/navigation/SidebarBase";
 import { Link, MemoryRouter } from "react-router-dom";
 
 export default {

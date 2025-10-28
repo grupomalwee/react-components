@@ -8,10 +8,10 @@ import {
   NavigationMenuTriggerBase,
   NavigationMenuLinkBase,
   NavigationMenuIndicatorBase,
-} from "../components/ui/NavigationMenuBase";
+} from "../components/ui/navigation/NavigationMenuBase";
 
 const meta: Meta<typeof NavigationMenuBase> = {
-  title: "navigation/NavigationMenu",
+  title: "navigation/Navigation Menu",
   component: NavigationMenuBase,
   tags: ["autodocs"],
   parameters: {

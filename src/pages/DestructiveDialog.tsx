@@ -1,5 +1,5 @@
-import { ButtonBase } from "@/components/ui/ButtonBase";
-import { DestructiveDialog } from "@/components/ui/DestructiveDialog";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { DestructiveDialog } from "@/components/ui/feedback/DestructiveDialog";
 import { TrashIcon } from "@phosphor-icons/react";
 import React from "react";
 
@@ -22,8 +22,8 @@ export const DestructiveDialogPage: React.FC = () => {
           description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
           onConfirm={handleConfirm}
           onCancel={() => console.log("Cancelado")}
-          triggerContent={"Exemplo"} 
-          />
+          triggerContent={"Exemplo"}
+        />
 
         <DestructiveDialog
           title="Excluir recurso"

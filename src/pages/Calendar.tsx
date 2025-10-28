@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  CalendarBase,
-  CalendarPopover,
-} from "@/components/date-time-picker/calendar";
-import { CardBase } from "@/components/ui/CardBase";
+import { CalendarBase, CalendarPopover } from "@/components/picker/calendar";
+import { CardBase } from "@/components/ui/data/CardBase";
 import { DateRange } from "react-day-picker";
 
 export const CalendarPage = () => {
@@ -103,7 +100,7 @@ export const CalendarPage = () => {
             }}
           />
         </Card>
-         <div className="">
+        <div className="">
           <h1 className="text-xl font-bold pb-3">Popover</h1>
           <CalendarPopover
             label="Escolher Data"

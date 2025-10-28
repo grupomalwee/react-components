@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 interface Props {
   showOnlyHighlighted: boolean;

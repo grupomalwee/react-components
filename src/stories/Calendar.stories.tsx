@@ -1,10 +1,7 @@
 import "../style/global.css";
 import type { Meta } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
-import {
-  CalendarBase,
-  CalendarPopover,
-} from "../components/date-time-picker/calendar";
+import { CalendarBase, CalendarPopover } from "../components/picker/calendar";
 import { useState } from "react";
 
 const meta: Meta<typeof CalendarBase> = {

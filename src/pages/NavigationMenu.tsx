@@ -9,7 +9,7 @@ import {
   NavigationMenuLinkBase,
   NavigationMenuListBase,
   NavigationMenuTriggerBase,
-} from "@/components/ui/NavigationMenuBase";
+} from "@/components/ui/navigation/NavigationMenuBase";
 import { CheckIcon, CircleIcon } from "@phosphor-icons/react";
 
 const components = [
@@ -107,9 +107,7 @@ export function NavigationMenuPage() {
 
           {/* Docs */}
           <NavigationMenuItemBase>
-            <NavigationMenuLinkBase
-              asChild
-            >
+            <NavigationMenuLinkBase asChild>
               <a href="#">Docs</a>
             </NavigationMenuLinkBase>
           </NavigationMenuItemBase>

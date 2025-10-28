@@ -1,4 +1,4 @@
-import { ButtonBase, ButtonGroupBase } from "@/components/ui/ButtonBase";
+import { ButtonBase, ButtonGroupBase } from "@/components/ui/form/ButtonBase";
 import {
   AddButton,
   BackButton,
@@ -20,7 +20,7 @@ import {
   SettingsButton,
   UploadButton,
   VisibilityButton,
-} from "@/components/ui/SmallButtons";
+} from "@/components/ui/form/SmallButtons";
 
 export const ButtonPage = () => {
   return (

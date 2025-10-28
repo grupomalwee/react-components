@@ -6,8 +6,8 @@ import {
   CollapsibleBase,
   CollapsibleContentBase,
   CollapsibleTriggerBase,
-} from "@/components/ui/CollapsibleBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+} from "@/components/ui/form/CollapsibleBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { expect, userEvent, within, waitFor } from "storybook/test";
 
 const meta: Meta<typeof CollapsibleBase> = {

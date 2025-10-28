@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { ButtonBase } from "./ButtonBase";
+import { ButtonBase } from "./form/ButtonBase";
 import {
   DialogBase,
   DialogContentBase,
@@ -8,7 +8,7 @@ import {
   DialogHeaderBase,
   DialogTitleBase,
   DialogTriggerBase,
-} from "./DialogBase";
+} from "./feedback/DialogBase";
 import { useSearchParams } from "react-router-dom";
 import {
   AvailableFilter,
@@ -16,14 +16,14 @@ import {
   FilterConditions,
 } from "../filter/services/types";
 import { buildFilterSummary } from "../filter/utils/build-summary";
-import { InputBase } from "./InputBase";
+import { InputBase } from "./form/InputBase";
 import { Combobox } from "@/components/selects/Combobox";
 import { MultiCombobox } from "@/components/selects/MultiCombobox";
 import {
   TooltipBase,
   TooltipContentBase,
   TooltipTriggerBase,
-} from "./TooltipBase";
+} from "./feedback/TooltipBase";
 import { FunnelSimpleIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import colors from "tailwindcss/colors";
 

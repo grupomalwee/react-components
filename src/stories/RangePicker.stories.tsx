@@ -1,11 +1,11 @@
 import "../style/global.css";
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { RangePicker } from "../components/date-time-picker/RangePicker";
+import { RangePicker } from "../components/picker/RangePicker";
 import type { DateRange } from "react-day-picker";
 
 const meta: Meta<typeof RangePicker> = {
-  title: "forms/RangePicker",
+  title: "forms/Range Picker",
   component: RangePicker,
   tags: ["autodocs"],
   parameters: {
@@ -57,5 +57,12 @@ export const NoLabel: Story = {
   args: {
     label: "",
     value: undefined,
+  },
+};
+export const WithError: Story = {
+  render: Template,
+  args: {
+    value: undefined,
+    error: "Intervalo inválido", 
   },
 };

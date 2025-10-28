@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   DrawerBase,
   DrawerTriggerBase,
@@ -21,8 +21,8 @@ import {
   DrawerDescriptionBase,
   DrawerFooterBase,
   DrawerCloseBase,
-} from "@/components/ui/DrawerBase";
-import { InputBase } from "@/components/ui/InputBase";
+} from "@/components/ui/overlays/DrawerBase";
+import { InputBase } from "@/components/ui/form/InputBase";
 
 export default function DrawerPage() {
   const [goal, setGoal] = React.useState(350);
@@ -97,7 +97,9 @@ export default function DrawerPage() {
                         onBlur={(e) => handleEditConfirm(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            handleEditConfirm((e.target as HTMLInputElement).value);
+                            handleEditConfirm(
+                              (e.target as HTMLInputElement).value
+                            );
                           } else if (e.key === "Escape") {
                             setIsEditing(false);
                           }
@@ -152,7 +154,10 @@ export default function DrawerPage() {
                         tickLine={false}
                         width={40}
                       />
-                      <Tooltip cursor={{ fill: "transparent" }} content={() => null} />
+                      <Tooltip
+                        cursor={{ fill: "transparent" }}
+                        content={() => null}
+                      />
                       <Bar
                         dataKey="value"
                         fill="hsl(var(--primary))"

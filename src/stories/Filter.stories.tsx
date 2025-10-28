@@ -6,8 +6,8 @@ import {
   SelectItem,
 } from "../components/filter/services/types";
 import { MemoryRouter } from "react-router-dom";
-import { TooltipProviderBase } from "../components/ui/TooltipBase";
-import "../global.css"
+import { TooltipProviderBase } from "../components/ui/feedback/TooltipBase";
+import "../global.css";
 
 export default {
   title: "diversos/FilterDialog",

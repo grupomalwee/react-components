@@ -1,15 +1,12 @@
-import { CheckboxBase } from "@/components/ui/CheckBoxBase";
-import LabelBase from "@/components/ui/LabelBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 
 export const CheckBoxPage = () => {
   return (
     <div className="mt-5 ml-5 flex flex-col gap-8 p-3 rounded-sm">
-
       <div className="flex items-center space-x-2">
         <CheckboxBase id="terms" />
-        <LabelBase htmlFor="terms">
-          Aceito os termos e condições
-        </LabelBase>
+        <LabelBase htmlFor="terms">Aceito os termos e condições</LabelBase>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -41,7 +38,7 @@ export const CheckBoxPage = () => {
           <h5 className="font-medium mb-2">Como importar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-{`import { CheckboxBase } from "@/components/ui/CheckBoxBase";
+              {`import { CheckboxBase } from "@/components/ui/CheckBoxBase";
 import LabelBase from "@/components/ui/LabelBase";`}
             </code>
           </pre>
@@ -51,7 +48,7 @@ import LabelBase from "@/components/ui/LabelBase";`}
           <h5 className="font-medium mb-2">Como usar:</h5>
           <pre className="bg-gray-900 p-3 rounded-sm">
             <code>
-{`<div className="flex items-center space-x-2">
+              {`<div className="flex items-center space-x-2">
   <CheckboxBase id="terms" />
   <LabelBase htmlFor="terms">
     Aceito os termos e condições

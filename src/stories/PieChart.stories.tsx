@@ -3,7 +3,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof PieChart> = {
-  title: "charts/PieChart",
+  title: "charts/Pie Chart",
   component: PieChart,
   tags: ["autodocs"],
   parameters: {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RangePicker } from "@/components/date-time-picker/RangePicker";
+import { RangePicker } from "@/components/picker/RangePicker";
 import { DateRange } from "react-day-picker";
 
 export default function RangePickerPage() {
@@ -7,7 +7,7 @@ export default function RangePickerPage() {
 
   return (
     <div className="p-8">
-      <RangePicker value={range} onChange={setRange}/>
+      <RangePicker value={range} onChange={setRange} />
     </div>
   );
 }

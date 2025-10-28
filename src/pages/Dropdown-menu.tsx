@@ -5,7 +5,7 @@ import {
   DropDownMenuLabelBase,
   DropDownMenuSeparatorBase,
   DropDownMenuTriggerBase,
-} from "@/components/ui/DropDownMenuBase";
+} from "@/components/ui/navigation/DropDownMenuBase";
 import { CheckIcon, ListIcon } from "@phosphor-icons/react";
 
 export const DropDownMenuPage = () => {
@@ -24,7 +24,7 @@ export const DropDownMenuPage = () => {
             <DropDownMenuItemBase
               onClick={(e) => {
                 e.preventDefault();
-                console.log('event')
+                console.log("event");
               }}
             >
               Profile

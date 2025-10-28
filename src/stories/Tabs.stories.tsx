@@ -1,11 +1,11 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TabsBase } from "../components/ui/TabsBase";
+import { TabsBase } from "../components/ui/layout/TabsBase";
 import {
   TabsListBase,
   TabsTriggerBase,
   TabsContentBase,
-} from "../components/ui/TabsBase";
+} from "../components/ui/layout/TabsBase";
 
 const meta: Meta<typeof TabsBase> = {
   title: "layout/Tabs",

@@ -3,7 +3,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 interface MapperEntry {
   label?: string;

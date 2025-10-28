@@ -1,9 +1,9 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TextAreaBase } from "../components/ui/TextAreaBase";
+import { TextAreaBase } from "../components/ui/form/TextAreaBase";
 
 const meta: Meta<typeof TextAreaBase> = {
-  title: "forms/TextArea",
+  title: "forms/Text Area",
   component: TextAreaBase,
   tags: ["autodocs"],
   parameters: {

@@ -8,7 +8,7 @@ import {
   CommandListBase,
   CommandSeparatorBase,
   // CommandShortcutBase,
-} from "@/components/ui/CommandBase";
+} from "@/components/ui/navigation/CommandBase";
 
 export const CommandPage = () => {
   return (

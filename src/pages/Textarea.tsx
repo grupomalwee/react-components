@@ -1,8 +1,8 @@
 "use client";
 
-import { TextAreaBase } from "@/components/ui/TextAreaBase";
-import  LabelBase  from "@/components/ui/LabelBase";
-import { ButtonBase } from "@/components/ui/ButtonBase";
+import { TextAreaBase } from "@/components/ui/form/TextAreaBase";
+import LabelBase from "@/components/ui/form/LabelBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 export const TextareaPage = () => {
   return (

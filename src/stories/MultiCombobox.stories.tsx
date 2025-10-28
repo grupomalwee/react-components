@@ -1,8 +1,8 @@
-import { MultiCombobox } from "@/components/selects/MultiCombobox";
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 import React from "react";
+import { MultiCombobox } from "@/components/selects/MultiCombobox";
 
 const meta: Meta<typeof MultiCombobox> = {
   title: "selects/MultiCombobox",
