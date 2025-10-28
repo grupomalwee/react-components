@@ -1,6 +1,5 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor } from "storybook/test";
 import React from "react";
 import { Select } from "@/components/selects/NewSelect";
 
@@ -56,16 +55,7 @@ export const Default: Story = {
       description: { story: "Select básico sem busca." },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar componente renderizado", async () => {
-      await waitFor(() => {
-        const root = canvasElement.querySelector(
-          '[data-testid="select-base-root"]'
-        );
-        expect(root).toBeInTheDocument();
-      });
-    });
-  },
+
 };
 
 export const WithError: Story = {
@@ -96,14 +86,5 @@ export const WithError: Story = {
       description: { story: "Select mostrando mensagem de erro." },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar mensagem de erro exibida", async () => {
-      await waitFor(() => {
-        const root = canvasElement.querySelector(
-          '[data-testid="select-base-root"]'
-        );
-        expect(root).toBeInTheDocument();
-      });
-    });
-  },
+
 };

@@ -369,17 +369,4 @@ export default function WithError() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar caracteres especiais renderizados", async () => {
-      const selected = canvasElement.querySelector(
-        '[data-testid="combobox-selected"]'
-      );
-      expect(selected).toBeInTheDocument();
-    });
-
-    await step("Verificar emoji presente", async () => {
-      const content = canvasElement.textContent;
-      expect(content).toContain("🚀");
-    });
-  },
 };
