@@ -1,14 +1,15 @@
 <p style="display:flex;align-items:center;justify-items:center;gap:12px;margin:0 flex-direction:row;">
   <img src="public/pwa-512x512.png" alt="Malwee Logo" width="40" height="40" style="border-radius:8px;">
   <span style="display:flex;flex-direction:column;gap:0">
-    <strong style="font-size:1.75rem">@mlw-packages/react-components</strong><small style="color:var(--muted);">Biblioteca de componentes React pronta para produção • TypeScript + Tailwind</small>
+    <strong style="font-size:2rem">@mlw-packages/react-components</strong><small style="color:var(--muted);">
+   <p> Biblioteca de componentes React pronta para produção • TypeScript + Tailwind </p>
 
   </span> 
 </p>
 
 ---
 
-[![npm version]][npm] [![storybook badge](https://img.shields.io/badge/storybook-live-ff4785)]({{storybookUrl}})
+[![npm version]][npm] [![storybook badge](https://img.shields.io/badge/storybook-live-ff4785)](https://main--68e80310a069c2f10b546ef3.chromatic.com)
 [![license]](LICENSE)
 
 > Coleção de _building blocks_ UI — pensada para velocidade de desenvolvimento, consistência visual, acessibilidade e performance.
@@ -115,7 +116,7 @@ export function App() {
 
 Veja as demos interativas e a documentação de props no Storybook:
 
-> [Abrir Storybook]({{storybookUrl}})
+> [Abrir Storybook](https://main--68e80310a069c2f10b546ef3.chromatic.com)
 
 Use **Controls** para testar props dinamicamente e **Docs** para copiar snippets.
 
@@ -299,7 +300,6 @@ npm i @phosphor-icons/react
 
 Se ainda não renderizar, confirme se o bundler transpila pacotes ESM/TSX corretamente (Vite normalmente já faz isso; em setups customizados pode ser preciso configurar `optimizeDeps` ou `esbuild` / `babel` transpile).
 
-
 ### Dicas rápidas
 
 - Se uma story funciona localmente mas falha no Storybook hospedado, compare environment vars e versões de dependências.
@@ -351,7 +351,7 @@ Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/
 
 [npm]: https://www.npmjs.com/package/@mlw-packages/react-components
 [ci]: https://github.com/grupo-malwee/react-components/actions
-[storybook]: https://68e80310a069c2f10b546ef3-ecmququezd.chromatic.com/
+[storybook]: https://main--68e80310a069c2f10b546ef3.chromatic.com
 [npm version]: https://img.shields.io/npm/v/@mlw-packages/react-components
 [build status]: https://img.shields.io/github/actions/workflow/status/grupo-malwee/react-components/ci.yml
 [storybook badge]: https://img.shields.io/badge/storybook-live-ff4785
