@@ -1,5 +1,8 @@
 {
   "name": "@mlw-packages/react-components",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.7.0",
   "homepage": "https://main--68e80310a069c2f10b546ef3.chromatic.com/",
   "repository": {

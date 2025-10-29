@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version_type:
-        description: 'Tipo de versionamento (patch, minor, major)'
+        description: "Tipo de versionamento (patch, minor, major)"
         required: false
         type: choice
         options:
@@ -12,17 +12,12 @@ on:
           - minor
           - major
       publish:
-        description: 'Publicar no npm? (y/N)'
+        description: "Publicar no npm? (y/N)"
         required: false
         type: choice
         options:
           - y
           - N
-
-permissions:
-  id-token: write  # essencial para OIDC
-  contents: read
-
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -33,9 +28,9 @@ jobs:
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
-        with:
-          node-version: '20'
 
+        with:
+          node-version: "20"
       - name: Install dependencies
         run: npm ci
 
@@ -56,31 +51,32 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.version_type != '' }}
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: git config
+      - name: Git config
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build JS (Tsup)
+      - name: Build package
         run: npm run build
 
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
-
-      - name: Publicar no npm (condicional)
+      - name: Publish to npm (OIDC)
         if: ${{ github.event.inputs.publish == 'y' }}
-        run: npm publish --no-git-checks
+        env:
+          NPM_CONFIG_PROVENANCE: true
+        run: npm publish --provenance --access public --no-git-checks
