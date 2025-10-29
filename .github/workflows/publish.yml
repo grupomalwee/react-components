@@ -78,5 +78,5 @@ jobs:
       - name: Publish to npm (OIDC)
         if: ${{ github.event.inputs.publish == 'y' }}
         env:
-          NPM_CONFIG_PROVENANCE: true
-        run: npm publish --provenance --access public --no-git-checks
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
+        run: npm publish --no-git-checks
