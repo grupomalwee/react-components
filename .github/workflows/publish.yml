@@ -83,4 +83,6 @@ jobs:
 
       - name: Publicar no npm (condicional)
         if: ${{ github.event.inputs.publish == 'y' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
         run: npm publish --no-git-checks
