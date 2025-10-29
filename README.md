@@ -4,8 +4,14 @@ Biblioteca de componentes React pronta para produção • TypeScript + Tailwind
 
 ---
 
-[![npm version]][npm] [![storybook badge](https://img.shields.io/badge/storybook-live-ff4785)](https://main--68e80310a069c2f10b546ef3.chromatic.com)
-[![license]](LICENSE)
+<p align="center">
+  <a href="https://www.npmjs.com/package/@mlw-packages/react-components">
+    <img alt="npm version" src="https://img.shields.io/npm/v/@mlw-packages/react-components?style=for-the-badge&label=npm&logo=npm&color=CB3837" />
+  </a>
+  <a href="https://main--68e80310a069c2f10b546ef3.chromatic.com">
+    <img alt="storybook" src="https://img.shields.io/badge/storybook-live-ff4785?style=for-the-badge&logo=storybook" />
+  </a>
+</p>
 
 > Coleção de _building blocks_ UI — pensada para velocidade de desenvolvimento, consistência visual, acessibilidade e performance.
 
@@ -335,14 +341,11 @@ Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/
 
 ---
 
-## Contato & Licença
+## Contato
 
 - Mantido por: **Grupo Malwee**
-- Licença: **MIT**
 
 ---
-
-<!-- Links de badges -->
 
 [npm]: https://www.npmjs.com/package/@mlw-packages/react-components
 [ci]: https://github.com/grupo-malwee/react-components/actions
@@ -350,4 +353,3 @@ Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/
 [npm version]: https://img.shields.io/npm/v/@mlw-packages/react-components
 [build status]: https://img.shields.io/github/actions/workflow/status/grupo-malwee/react-components/ci.yml
 [storybook badge]: https://img.shields.io/badge/storybook-live-ff4785
-[license]: https://img.shields.io/badge/license-MIT-brightgreen
