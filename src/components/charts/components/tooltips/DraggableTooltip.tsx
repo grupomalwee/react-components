@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import CloseAllButton from "../controls/CloseAllButton";
+import { valueFormatter } from "../../utils";
 
 // Constantes para alinhamento
 const ALIGNMENT_THRESHOLD = 25;
@@ -122,6 +123,7 @@ interface DraggableTooltipProps {
   highlightedSeries?: Set<string>;
   toggleHighlight?: (key: string) => void;
   showOnlyHighlighted?: boolean;
+  valueFormatter?: valueFormatter;
 }
 
 const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
@@ -144,6 +146,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
   highlightedSeries,
   toggleHighlight,
   showOnlyHighlighted,
+  valueFormatter,
 }) => {
   // keys currently visible inside the tooltip (respecting showOnlyHighlighted)
   const visibleKeys = useMemo(
@@ -155,29 +158,41 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
   );
 
   // Componente interno para exibir total - memorizado para evitar re-renders
-  const TotalDisplay = React.memo<{ data: TooltipData; visibleKeys: string[] }>(
-    ({ data, visibleKeys }) => {
-      const total = useMemo(() => {
-        const numeric = visibleKeys
-          .map((k) => data[k])
-          .filter((v) => typeof v === "number") as number[];
-        return numeric.reduce((s, v) => s + (v || 0), 0);
-      }, [data, visibleKeys]);
+  const TotalDisplay = React.memo<{
+    data: TooltipData;
+    visibleKeys: string[];
+    valueFormatter?: valueFormatter;
+  }>(({ data, visibleKeys, valueFormatter: localformatter }) => {
+    const total = useMemo(() => {
+      const numeric = visibleKeys
+        .map((k) => data[k])
+        .filter((v) => typeof v === "number") as number[];
+      return numeric.reduce((s, v) => s + (v || 0), 0);
+    }, [data, visibleKeys]);
 
-      return (
-        <div className="text-sm">
-          <div className="text-sm text-muted-foreground">Total</div>
-          <div
-            className={`text-base font-semibold ${
-              total < 0 ? "text-destructive" : "text-foreground"
-            }`}
-          >
-            {total.toLocaleString("pt-BR")}
-          </div>
+    const defaultTotalFormatted = total.toLocaleString("pt-BR");
+    const displayTotal = localformatter
+      ? localformatter({
+          value: total,
+          formattedValue: defaultTotalFormatted,
+          dataKey: "total",
+          name: "Total",
+        })
+      : defaultTotalFormatted;
+
+    return (
+      <div className="text-sm">
+        <div className="text-sm text-muted-foreground">Total</div>
+        <div
+          className={`text-base font-semibold ${
+            total < 0 ? "text-destructive" : "text-foreground"
+          }`}
+        >
+          {displayTotal}
         </div>
-      );
-    }
-  );
+      </div>
+    );
+  });
 
   // internal position state so tooltip can move locally and notify parent
   const [localPos, setLocalPos] = useState<Position>(position);
@@ -643,7 +658,11 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                 </p>
               </div>
               <div className="text-right">
-                <TotalDisplay data={data} visibleKeys={visibleKeys} />
+                <TotalDisplay
+                  data={data}
+                  visibleKeys={visibleKeys}
+                  valueFormatter={valueFormatter}
+                />
               </div>
             </div>
           </div>
@@ -670,6 +689,17 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                     typeof value === "number"
                       ? value
                       : Number(value as unknown) || 0;
+
+                  const defaultFormatted = val.toLocaleString("pt-BR");
+                  const displayValue = valueFormatter
+                    ? valueFormatter({
+                        value: value,
+                        formattedValue: defaultFormatted,
+                        dataKey: key,
+                        name: key.charAt(0).toUpperCase() + key.slice(1),
+                      })
+                    : defaultFormatted;
+
                   const pct =
                     absDenominator > 0
                       ? (Math.abs(val) / absDenominator) * 100
@@ -723,7 +753,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                               val < 0 ? "text-destructive" : "text-foreground"
                             }`}
                           >
-                            {val.toLocaleString("pt-BR")}
+                            {displayValue}
                           </span>
                           <span className="text-xs text-muted-foreground">
                             {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
@@ -752,6 +782,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                 highlightedSeries,
                 toggleHighlight,
                 finalColors,
+                valueFormatter,
               ]
             )}
 

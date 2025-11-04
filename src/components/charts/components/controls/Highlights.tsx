@@ -7,7 +7,7 @@ import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 interface MapperEntry {
   label?: string;
-  formatter?: (value: string | number) => string | number;
+  valueFormatter?: (value: string | number) => string | number;
   color?: string;
   type?: string;
   visible?: boolean;

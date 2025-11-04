@@ -705,6 +705,206 @@ export default function LargeDataset() {
   },
 };
 
+export const Customformatter: Story = {
+  name: "Formatador de Labels Personalizado",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita", "despesas"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+        showLabels={true}
+        valueFormatter={(props) => `R$ ${props.formattedValue}`}
+        colors={["#10b981", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo de como usar valueFormatter para adicionar símbolos customizados aos labels dos dados (R$, %, €, etc).",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [
+  { periodo: 'Q1/24', receita: 4000, despesas: 2400 },
+  { periodo: 'Q2/24', receita: 5200, despesas: 3100 },
+];
+
+export default function Customformatter() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart 
+        data={data} 
+        xAxis="periodo" 
+        series={{ bar: ['receita', 'despesas'] }} 
+        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
+        showLabels={true}
+        valueFormatter={(props) => \`R$ \${props.formattedValue}\`}
+        colors={["#10b981", "#ef4444"]}
+        height={350} 
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+};
+
+export const Advancedformatter: Story = {
+  name: "Formatador Avançado",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita", "despesas"],
+          line: ["churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        showLabels={true}
+        valueFormatter={(props) => {
+          const numValue =
+            typeof props.value === "number"
+              ? props.value
+              : parseFloat(String(props.value || "0"));
+
+          if (numValue < 0) {
+            return `${props.formattedValue}`;
+          } else if (numValue > 5000) {
+            return `R$ ${props.formattedValue}`;
+          } else if (numValue < 200) {
+            return `${props.formattedValue}%`;
+          } else {
+            return `R$ ${props.formattedValue}`;
+          }
+        }}
+        colors={["#10b981", "#ef4444", "#f59e0b"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo avançado com formatação condicional baseada no valor dos dados.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function Advancedformatter() {
+  const data = [{ periodo: 'Q1', receita: 8000, despesas: 3000, churn: 120 }];
+  
+  return (
+    <Chart 
+      data={data} 
+      valueFormatter={(props) => {
+        const numValue = typeof props.value === 'number' ? props.value : parseFloat(String(props.value || '0'));
+        
+        if (numValue < 0) {
+          return \`⚠️ \${props.formattedValue}\`;
+        } else if (numValue > 5000) {
+          return \`🚀 R$ \${props.formattedValue}\`;
+        } else if (numValue < 200) {
+          return \`\${props.formattedValue}%\`;
+        } else {
+          return \`R$ \${props.formattedValue}\`;
+        }
+      }}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+};
+
+export const TooltipWithformatter: Story = {
+  name: "Tooltips com Formatador",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={350}
+        series={{
+          bar: ["receita", "despesas"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+        showLabels={true}
+        showTooltip={true}
+        showTooltipTotal={true}
+        enableDraggableTooltips={true}
+        valueFormatter={(props) => {
+          if (props.dataKey === "receita" || props.dataKey === "despesas") {
+            return `R$ ${props.formattedValue}`;
+          } else if (props.dataKey === "total") {
+            return `tota ${props.formattedValue}`;
+          } else {
+            return `${props.formattedValue}%`;
+          }
+        }}
+        colors={["#10b981", "#ef4444"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo mostrando formatação personalizada nos tooltips (hover e draggable) e labels.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function TooltipWithformatter() {
+  const data = [{ periodo: 'Q1', receita: 8000, despesas: 3000 }];
+  
+  return (
+    <Chart 
+      data={data}
+      showTooltip={true}
+      showTooltipTotal={true}
+      enableDraggableTooltips={true}
+      valueFormatter={(props) => {
+        if (props.dataKey === 'receita' || props.dataKey === 'despesas') {
+          return \`R$ \${props.formattedValue}\`;
+        } else if (props.dataKey === 'total') {
+          return \`Total: R$ \${props.formattedValue}\`;
+        } else {
+          return \`\${props.formattedValue}%\`;
+        }
+      }}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+};
+
 export const EmptyData: Story = {
   name: "Sem Dados",
   render: (args) => (

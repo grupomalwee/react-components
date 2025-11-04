@@ -1,4 +1,5 @@
 import React from "react";
+import { valueFormatter } from "../../utils";
 
 type TooltipPayloadItem = {
   dataKey: string;
@@ -13,6 +14,7 @@ interface Props {
   label?: string;
   finalColors?: Record<string, string>;
   periodLabel?: string;
+  valueFormatter?: valueFormatter;
 }
 
 const TooltipSimple: React.FC<Props> = ({
@@ -21,6 +23,7 @@ const TooltipSimple: React.FC<Props> = ({
   label,
   finalColors = {},
   periodLabel = "Período",
+  valueFormatter,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -44,6 +47,17 @@ const TooltipSimple: React.FC<Props> = ({
         {payload.map((entry, index: number) => {
           const value = typeof entry.value === "number" ? entry.value : 0;
           const color = finalColors[entry.dataKey] || entry.color || "#999";
+
+          const defaultFormatted = value.toLocaleString("pt-BR");
+          const displayValue = valueFormatter
+            ? valueFormatter({
+                value: entry.value,
+                formattedValue: defaultFormatted,
+                dataKey: entry.dataKey,
+                name: entry.name,
+              })
+            : defaultFormatted;
+
           return (
             <div
               key={index}
@@ -66,7 +80,7 @@ const TooltipSimple: React.FC<Props> = ({
                     value < 0 ? "text-destructive" : "text-foreground"
                   }`}
                 >
-                  {value.toLocaleString("pt-BR")}
+                  {displayValue}
                 </span>
               </div>
             </div>

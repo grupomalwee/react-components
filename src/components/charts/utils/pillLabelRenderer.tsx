@@ -36,6 +36,12 @@ const formatCompactNumber = (value: number): string => {
   return isNegative ? `-${formatted}` : formatted;
 };
 
+type valueFormatter = (props: {
+  value: number | string | undefined;
+  formattedValue: string;
+  [key: string]: unknown;
+}) => string;
+
 const parseNumber = (v: number | string | undefined) => {
   if (typeof v === "number") return v;
   if (typeof v === "string" && v.trim() !== "" && !Number.isNaN(Number(v)))
@@ -43,13 +49,26 @@ const parseNumber = (v: number | string | undefined) => {
   return undefined;
 };
 
-export const renderPillLabel = (color: string, variant: Variant) => {
+export const renderPillLabel = (
+  color: string,
+  variant: Variant,
+  valueFormatter?: valueFormatter
+) => {
   return (props: LabelRendererProps) => {
     const { x, y, value } = props;
-    const text =
+
+    const defaultFormatted =
       typeof value === "number"
         ? formatCompactNumber(value)
         : String(value ?? "");
+
+    const text = valueFormatter
+      ? valueFormatter({
+          value,
+          formattedValue: defaultFormatted,
+          ...props,
+        })
+      : defaultFormatted;
     const paddingX = 8;
     const approxCharWidth = 7;
     const pillWidth = Math.max(
@@ -169,6 +188,6 @@ export const renderPillLabel = (color: string, variant: Variant) => {
   };
 };
 
-export type { LabelRendererProps };
+export type { LabelRendererProps, valueFormatter };
 
 export default renderPillLabel;

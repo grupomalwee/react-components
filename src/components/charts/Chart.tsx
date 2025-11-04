@@ -40,7 +40,7 @@ import {
   PeriodsDropdown,
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
-import { renderPillLabel } from "./utils";
+import { renderPillLabel, valueFormatter } from "./utils";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -48,13 +48,13 @@ interface ChartData {
 interface XAxisConfig {
   dataKey: string;
   label?: string;
-  formatter?: (value: string | number) => string;
+  valueFormatter?: (value: string | number) => string;
   autoLabel?: boolean;
 }
 interface DataMapper {
   [dataKey: string]: {
     label?: string;
-    formatter?: (value: string | number) => string | number;
+    valueFormatter?: (value: string | number) => string | number;
     color?: string;
     type?: "number" | "string" | "auto";
     visible?: boolean;
@@ -86,6 +86,7 @@ interface ChartProps {
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
   labelMap?: Record<string, string>;
+  valueFormatter?: valueFormatter;
   xAxis?: XAxisConfig | string;
   enableHighlights?: boolean;
   enableShowOnly?: boolean;
@@ -113,6 +114,7 @@ const Chart: React.FC<ChartProps> = ({
   showLabels = false,
   xAxis,
   labelMap,
+  valueFormatter,
   enableHighlights = false,
   enableShowOnly = false,
   enablePeriodsDropdown = false,
@@ -140,7 +142,7 @@ const Chart: React.FC<ChartProps> = ({
             label:
               (xAxis as XAxisConfig)?.label ??
               formatFieldName(resolvedXAxisKey),
-            formatter: (xAxis as XAxisConfig)?.formatter,
+            valueFormatter: (xAxis as XAxisConfig)?.valueFormatter,
             autoLabel: (xAxis as XAxisConfig)?.autoLabel ?? true,
           };
 
@@ -678,7 +680,7 @@ const Chart: React.FC<ChartProps> = ({
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={xAxisConfig.formatter}
+              tickFormatter={xAxisConfig.valueFormatter}
             />
             <YAxis
               stroke="hsl(var(--muted-foreground))"
@@ -701,9 +703,15 @@ const Chart: React.FC<ChartProps> = ({
               <Tooltip
                 content={
                   showTooltipTotal ? (
-                    <RechartTooltipWithTotal finalColors={finalColors} />
+                    <RechartTooltipWithTotal
+                      finalColors={finalColors}
+                      valueFormatter={valueFormatter}
+                    />
                   ) : (
-                    <TooltipSimple finalColors={finalColors} />
+                    <TooltipSimple
+                      finalColors={finalColors}
+                      valueFormatter={valueFormatter}
+                    />
                   )
                 }
                 cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
@@ -760,7 +768,11 @@ const Chart: React.FC<ChartProps> = ({
                         dataKey={key}
                         position="top"
                         content={
-                          renderPillLabel(color, "filled") as LabelListContent
+                          renderPillLabel(
+                            color,
+                            "filled",
+                            valueFormatter
+                          ) as LabelListContent
                         }
                         offset={8}
                       />
@@ -796,7 +808,11 @@ const Chart: React.FC<ChartProps> = ({
                         dataKey={key}
                         position="top"
                         content={
-                          renderPillLabel(color, "filled") as LabelListContent
+                          renderPillLabel(
+                            color,
+                            "filled",
+                            valueFormatter
+                          ) as LabelListContent
                         }
                         offset={14}
                       />
@@ -832,7 +848,11 @@ const Chart: React.FC<ChartProps> = ({
                         dataKey={key}
                         position="top"
                         content={
-                          renderPillLabel(color, "soft") as LabelListContent
+                          renderPillLabel(
+                            color,
+                            "soft",
+                            valueFormatter
+                          ) as LabelListContent
                         }
                         offset={12}
                       />
@@ -864,6 +884,7 @@ const Chart: React.FC<ChartProps> = ({
               onPositionChange={onTooltipPositionChange}
               periodLabel="Período Selecionado"
               dataLabel="Dados do Período"
+              valueFormatter={valueFormatter}
               globalTooltipCount={activeTooltips.length}
               onCloseAll={() =>
                 window.dispatchEvent(new Event("closeAllTooltips"))

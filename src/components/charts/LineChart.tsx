@@ -11,8 +11,16 @@ import {
   LabelList,
 } from "recharts";
 import { DraggableTooltip } from "./components";
-import { Padding, Margins, resolveContainerPaddingLeft, generateAdditionalColors, niceCeil, resolveChartMargins, compactTick, renderPillLabel } from "./utils";
-
+import {
+  Padding,
+  Margins,
+  resolveContainerPaddingLeft,
+  generateAdditionalColors,
+  niceCeil,
+  resolveChartMargins,
+  compactTick,
+  renderPillLabel,
+} from "./utils";
 
 interface LineChartData {
   name: string;
@@ -625,7 +633,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
           <YAxis
             className="fill-muted-foreground text-xs"
             fontSize={12}
-            tickFormatter={(value) => compactTick(Number(value))}
+            tickformatter={(value) => compactTick(Number(value))}
             domain={[0, niceMax]}
             tickCount={6}
           />

@@ -12,7 +12,18 @@ import {
   LabelList,
 } from "recharts";
 import { DraggableTooltip } from "./components";
-import { Padding, Margins, resolveContainerPaddingLeft, detectXAxis, detectDataFields, formatFieldName, generateAdditionalColors, niceCeil, resolveChartMargins, renderPillLabel } from "./utils";
+import {
+  Padding,
+  Margins,
+  resolveContainerPaddingLeft,
+  detectXAxis,
+  detectDataFields,
+  formatFieldName,
+  generateAdditionalColors,
+  niceCeil,
+  resolveChartMargins,
+  renderPillLabel,
+} from "./utils";
 
 // Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {
@@ -23,7 +34,7 @@ interface BarChartData {
 interface XAxisConfig {
   dataKey: string; // Campo que será usado como eixo X
   label?: string; // Label opcional
-  formatter?: (value: string | number) => string; // Formatador opcional
+  valueFormatter?: (value: string | number) => string;
   autoLabel?: boolean; // Se deve gerar label automaticamente baseado no dataKey
 }
 
@@ -31,7 +42,7 @@ interface XAxisConfig {
 interface DataMapper {
   [dataKey: string]: {
     label?: string; // Nome para exibição (se não informado, usa o dataKey formatado)
-    formatter?: (value: string | number) => string | number;
+    valueFormatter?: (value: string | number) => string | number;
     color?: string; // Cor específica (se não informada, usa cores automáticas)
     type?: "number" | "string" | "auto";
     visible?: boolean; // Se deve ser exibido (padrão: true)
@@ -766,7 +777,7 @@ const BarChart: React.FC<BarChartProps> = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={xAxisConfig.formatter}
+          tickFormatter={xAxisConfig.valueFormatter}
         />
         <YAxis
           stroke="hsl(var(--muted-foreground))"

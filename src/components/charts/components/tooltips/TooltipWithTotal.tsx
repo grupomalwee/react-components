@@ -1,4 +1,5 @@
 import React from "react";
+import { valueFormatter } from "../../utils";
 
 type TooltipPayloadItem = {
   dataKey: string;
@@ -14,6 +15,7 @@ interface Props {
   finalColors?: Record<string, string>;
   periodLabel?: string;
   totalLabel?: string;
+  valueFormatter?: valueFormatter;
 }
 
 const RechartTooltipWithTotal: React.FC<Props> = ({
@@ -23,6 +25,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
   finalColors = {},
   periodLabel = "Período",
   totalLabel = "Total",
+  valueFormatter,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -32,6 +35,16 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
 
   const total = numeric.reduce((sum, p) => sum + (p.value || 0), 0);
   const isTotalNegative = total < 0;
+
+  const defaultTotalFormatted = total.toLocaleString("pt-BR");
+  const displayTotal = valueFormatter
+    ? valueFormatter({
+        value: total,
+        formattedValue: defaultTotalFormatted,
+        dataKey: "total",
+        name: "Total",
+      })
+    : defaultTotalFormatted;
 
   const absDenominator = numeric.reduce(
     (sum, p) => sum + Math.abs(typeof p.value === "number" ? p.value : 0),
@@ -58,7 +71,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
               isTotalNegative ? "text-rose-500" : "text-foreground"
             }`}
           >
-            {total.toLocaleString("pt-BR")}
+            {displayTotal}
           </p>
         </div>
       </div>
@@ -70,6 +83,15 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
             absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
           const baseColor = finalColors[entry.dataKey] || entry.color || "#999";
           const isNeg = value < 0;
+          const defaultFormatted = value.toLocaleString("pt-BR");
+          const displayValue = valueFormatter
+            ? valueFormatter({
+                value: entry.value,
+                formattedValue: defaultFormatted,
+                dataKey: entry.dataKey,
+                name: entry.name,
+              })
+            : defaultFormatted;
 
           return (
             <div key={index} className="flex flex-col gap-1">
@@ -91,7 +113,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                       isNeg ? "text-rose-500" : "text-foreground"
                     } font-medium`}
                   >
-                    {value.toLocaleString("pt-BR")}
+                    {displayValue}
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
