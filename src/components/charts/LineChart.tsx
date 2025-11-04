@@ -633,7 +633,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({
           <YAxis
             className="fill-muted-foreground text-xs"
             fontSize={12}
-            tickformatter={(value) => compactTick(Number(value))}
+            tickFormatter={(value) => compactTick(Number(value))}
             domain={[0, niceMax]}
             tickCount={6}
           />
