@@ -44,7 +44,7 @@ export default meta;
 type Story = StoryObj<typeof SeparatorBase>;
 
 export const Default: Story = {
-  name: "Exemplo com múltiplas seções",
+  name: "Múltiplas seções",
   render: () => (
     <div
       style={{

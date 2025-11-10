@@ -5,8 +5,7 @@ import { useState } from "react";
 import {
   SunIcon,
   MoonIcon,
-  BellIcon,
-  BellSlashIcon,
+
 } from "@phosphor-icons/react";
 
 const meta: Meta<typeof SwitchBase> = {
@@ -59,7 +58,7 @@ export const Default: Story = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "32px 0",
+        padding: "32px 32px",
       }}
     >
       <SwitchBase defaultChecked />
@@ -85,43 +84,17 @@ export const Basico: Story = {
     },
   },
   render: () => (
-    <div className="flex items-center gap-4">
+    <div  style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 32px",
+        gap: 12
+      }}>
       <span className="text-sm">Switch Básico</span>
       <SwitchBase />
     </div>
   ),
-};
-
-export const Notificacoes: Story = {
-  name: "Ativar Notificações",
-  parameters: {
-    docs: {
-      description: {
-        story: "Switch controlado para ativar/desativar notificações.",
-      },
-      source: {
-        code: `import React, { useState } from 'react';
-import { SwitchBase } from '@mlw-packages/react-components';
-
-function Example() {
-  const [notifications, setNotifications] = useState(true);
-  return <SwitchBase checked={notifications} onCheckedChange={setNotifications} />;
-}`,
-      },
-    },
-  },
-  render: () => {
-    const [notifications, setNotifications] = useState(true);
-    return (
-      <div className="flex items-center gap-4">
-        <span className="text-sm">Ativar notificações</span>
-        <SwitchBase
-          checked={notifications}
-          onCheckedChange={setNotifications}
-        />
-      </div>
-    );
-  },
 };
 
 export const DarkMode: Story = {
@@ -136,7 +109,13 @@ export const DarkMode: Story = {
   render: () => {
     const [darkMode, setDarkMode] = useState(false);
     return (
-      <div className="flex items-center gap-4">
+      <div  style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 32px",
+        gap: 12,
+      }}>
         <SunIcon size={20} />
         <SwitchBase checked={darkMode} onCheckedChange={setDarkMode} />
         <MoonIcon size={20} />
@@ -145,49 +124,3 @@ export const DarkMode: Story = {
   },
 };
 
-export const Energia: Story = {
-  name: "Modo Energia",
-  parameters: {
-    docs: {
-      description: {
-        story: "Switch controlado para ligar/desligar modo energia.",
-      },
-    },
-  },
-  render: () => {
-    const [power, setPower] = useState(false);
-    return (
-      <div className="flex items-center gap-4">
-        <span className="text-sm">Modo Energia</span>
-        <SwitchBase checked={power} onCheckedChange={setPower} />
-        <span className="text-sm">{power ? "Ligado" : "Desligado"}</span>
-      </div>
-    );
-  },
-};
-
-export const NotificacoesIcone: Story = {
-  name: "Notificações com Ícone",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Switch estilizado com ícones de sino para ativar/desativar notificações.",
-      },
-    },
-  },
-  render: () => {
-    const [notifications, setNotifications] = useState(true);
-    return (
-      <div className="flex items-center gap-4">
-        <BellIcon size={20} />
-        <SwitchBase
-          className="bg-gray-700 data-[state=checked]:bg-green-500"
-          checked={notifications}
-          onCheckedChange={setNotifications}
-        />
-        <BellSlashIcon size={20} />
-      </div>
-    );
-  },
-};

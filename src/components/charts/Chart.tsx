@@ -87,6 +87,12 @@ interface ChartProps {
   showLabels?: boolean;
   labelMap?: Record<string, string>;
   valueFormatter?: valueFormatter;
+  /** Formata valores categóricos (ex.: "BANANA" -> "Banana") apenas para exibição */
+  categoryFormatter?: (value: string | number) => string;
+  /** Label a ser exibido abaixo do eixo X */
+  xAxisLabel?: string;
+  /** Label a ser exibido ao lado do eixo Y */
+  yAxisLabel?: string;
   xAxis?: XAxisConfig | string;
   enableHighlights?: boolean;
   enableShowOnly?: boolean;
@@ -94,6 +100,8 @@ interface ChartProps {
   enableDraggableTooltips?: boolean;
   showTooltipTotal?: boolean;
   maxTooltips?: number;
+  /** Quando true, formata valores numéricos no formato pt-BR (ex: 00.000,00) */
+  formatBR?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -113,14 +121,18 @@ const Chart: React.FC<ChartProps> = ({
   titlePosition = "left",
   showLabels = false,
   xAxis,
+  xAxisLabel,
+  yAxisLabel,
   labelMap,
   valueFormatter,
+  categoryFormatter,
   enableHighlights = false,
   enableShowOnly = false,
   enablePeriodsDropdown = false,
   enableDraggableTooltips = false,
   showTooltipTotal = false,
   maxTooltips = 5,
+  formatBR = false,
   chartMargin,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
@@ -452,6 +464,96 @@ const Chart: React.FC<ChartProps> = ({
     () => "text-xl font-semibold text-foreground mb-3",
     []
   );
+  const finalValueFormatter = useMemo(() => {
+    const nf = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    // If user provided a custom formatter
+    if (valueFormatter) {
+      // If formatBR is requested, wrap the user's formatter so that
+      // `formattedValue` received by the user's formatter is the pt-BR formatted string.
+      if (formatBR) {
+        const wrapped: valueFormatter = (props) => {
+          const { value, formattedValue } = props as {
+            value: number | string | undefined;
+            formattedValue: string;
+            [key: string]: unknown;
+          };
+
+          let num: number = NaN;
+          if (typeof value === "number") num = value;
+          else if (typeof value === "string" && value.trim() !== "") {
+            const parsed = Number(value);
+            num = Number.isNaN(parsed) ? NaN : parsed;
+          }
+
+          const brFormatted = !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
+
+          return valueFormatter({
+            ...(props as object),
+            formattedValue: brFormatted,
+            value: undefined
+          });
+        };
+        return wrapped;
+      }
+
+      return valueFormatter;
+    }
+
+    if (!formatBR) return undefined;
+
+    const builtIn: valueFormatter = (props) => {
+      const { value, formattedValue } = props as {
+        value: number | string | undefined;
+        formattedValue: string;
+        [key: string]: unknown;
+      };
+
+      let num: number = NaN;
+      if (typeof value === "number") num = value;
+      else if (typeof value === "string" && value.trim() !== "") {
+        const parsed = Number(value);
+        num = Number.isNaN(parsed) ? NaN : parsed;
+      }
+
+      if (!Number.isNaN(num)) return nf.format(num);
+
+      return String(formattedValue ?? value ?? "");
+    };
+
+    return builtIn;
+  }, [valueFormatter, formatBR]);
+
+  const yTickFormatter = useMemo(() => {
+    const nf = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");
+
+    if (finalValueFormatter) {
+      return (v: number | string) => {
+        const num = Number(String(v));
+        const formatted = Number.isNaN(num) ? String(v ?? "") : nf.format(num);
+        const out = finalValueFormatter({
+          value: v as number | string,
+          formattedValue: formatted,
+        });
+        return stripCurrency(String(out));
+      };
+    }
+
+    return (value: number | string) => {
+      const num = Number(String(value));
+      return Number.isNaN(num) ? String(value ?? "") : nf.format(num);
+    };
+  }, [finalValueFormatter]);
   const finalEnableHighlights = enableHighlights;
   const finalEnableShowOnly = enableShowOnly;
   const finalEnablePeriodsDropdown =
@@ -463,9 +565,14 @@ const Chart: React.FC<ChartProps> = ({
   const containerPaddingLeft = 16;
 
   const finalChartRightMargin = chartMargin?.right ?? defaultChartRightMargin;
-  const finalChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
+  const finalChartLeftMargin =
+    chartMargin?.left ?? (yAxisLabel ? 40 : defaultChartLeftMargin);
   const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
-  const finalChartBottomMargin = chartMargin?.bottom ?? 5;
+  const baseBottom = chartMargin?.bottom ?? 5;
+  const extraForXAxisLabel = xAxisLabel ? 22 : 0;
+  const extraForLegend = showLegend ? 36 : 0;
+  const finalChartBottomMargin =
+    baseBottom + extraForXAxisLabel + extraForLegend;
   const measuredInner = measuredWidth
     ? Math.max(0, measuredWidth - 32)
     : undefined;
@@ -680,16 +787,53 @@ const Chart: React.FC<ChartProps> = ({
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={xAxisConfig.valueFormatter}
+              tickFormatter={(value) => {
+                if (categoryFormatter)
+                  return categoryFormatter(value as string | number);
+                if (xAxisConfig.valueFormatter)
+                  return xAxisConfig.valueFormatter(value as string | number);
+                return String(value ?? "");
+              }}
+              label={
+                xAxisLabel
+                  ? {
+                      value: xAxisLabel,
+                      position: "insideBottomRight",
+                      offset: -5,
+                      style: {
+                        fontSize: 12,
+                        fill: "hsl(var(--muted-foreground))",
+                        fontWeight: 500,
+                      },
+                    }
+                  : undefined
+              }
             />
             <YAxis
               stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => Number(value).toLocaleString("pt-BR")}
+              tickFormatter={yTickFormatter}
               domain={[Math.min(minDataValue, 0), niceMax]}
               tickCount={6}
+              label={
+                yAxisLabel
+                  ? {
+                      value: yAxisLabel,
+                      angle: -90,
+                      // Render the label to the left (outside) of the chart area
+                      // to avoid overlapping the Y values / bars.
+                      position: "left",
+                      style: {
+                        fontSize: 12,
+                        fill: "hsl(var(--muted-foreground))",
+                        fontWeight: 500,
+                        textAnchor: "middle",
+                      },
+                    }
+                  : undefined
+              }
             />
             {minDataValue < 0 && (
               <ReferenceLine
@@ -705,12 +849,14 @@ const Chart: React.FC<ChartProps> = ({
                   showTooltipTotal ? (
                     <RechartTooltipWithTotal
                       finalColors={finalColors}
-                      valueFormatter={valueFormatter}
+                      valueFormatter={finalValueFormatter}
+                      categoryFormatter={categoryFormatter}
                     />
                   ) : (
                     <TooltipSimple
                       finalColors={finalColors}
-                      valueFormatter={valueFormatter}
+                      valueFormatter={finalValueFormatter}
+                      categoryFormatter={categoryFormatter}
                     />
                   )
                 }
@@ -722,10 +868,10 @@ const Chart: React.FC<ChartProps> = ({
                 wrapperStyle={{
                   color: "hsl(var(--foreground))",
                   fontSize: "14px",
+                  paddingTop: "8px",
                 }}
               />
             )}
-
             {seriesOrder.map((s) => {
               const key = s.key;
               if (showOnlyHighlighted && !highlightedSeries.has(key))
@@ -771,7 +917,7 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "filled",
-                            valueFormatter
+                            finalValueFormatter
                           ) as LabelListContent
                         }
                         offset={8}
@@ -811,7 +957,7 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "filled",
-                            valueFormatter
+                            finalValueFormatter
                           ) as LabelListContent
                         }
                         offset={14}
@@ -851,7 +997,7 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "soft",
-                            valueFormatter
+                            finalValueFormatter
                           ) as LabelListContent
                         }
                         offset={12}
@@ -884,7 +1030,8 @@ const Chart: React.FC<ChartProps> = ({
               onPositionChange={onTooltipPositionChange}
               periodLabel="Período Selecionado"
               dataLabel="Dados do Período"
-              valueFormatter={valueFormatter}
+              valueFormatter={finalValueFormatter}
+              categoryFormatter={categoryFormatter}
               globalTooltipCount={activeTooltips.length}
               onCloseAll={() =>
                 window.dispatchEvent(new Event("closeAllTooltips"))

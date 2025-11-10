@@ -17,7 +17,7 @@ import {
   FilePptIcon,
   FileDocIcon,
 } from "@phosphor-icons/react";
-import { DeleteButton } from "../form/SmallButtons";
+import { ButtonBase } from "../form/ButtonBase";
 
 export interface FileWithPreview extends File {
   id?: string;
@@ -514,8 +514,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                           )}
                         </div>
 
-                        <DeleteButton
-                          type="button"
+                        <ButtonBase
                           variant="destructive"
                           size="icon"
                           onClick={(e) => {
@@ -525,7 +524,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                           className=""
                         >
                           <XIcon size={12} />
-                        </DeleteButton>
+                        </ButtonBase>
                       </motion.div>
                     ))}
                   </AnimatePresence>

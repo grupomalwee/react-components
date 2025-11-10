@@ -1,0 +1,449 @@
+import "../style/global.css";
+import React, { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CopyButton } from "@/components/ui/form/SmallButtons";
+import {
+  CardBase,
+  CardHeaderBase,
+  CardTitleBase,
+  CardDescriptionBase,
+  CardContentBase,
+} from "@/components/ui/data/CardBase";
+import {
+  TerminalIcon,
+  CheckCircleIcon,
+  WarningIcon,
+  GearIcon,
+} from "@phosphor-icons/react";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+
+const meta: Meta = {
+  title: "Instalação",
+  tags: ["!autodocs"],
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Guia: Instalação, Dependências, Configuração e Solução de Problemas (cada story separado).",
+      },
+    },
+  },
+};
+export default meta;
+type Story = StoryObj<unknown>;
+
+const CodeBlock: React.FC<{ code: string; language?: string }> = ({
+  code,
+  language = "bash",
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <pre
+        className="p-4 md:p-6 bg-background text-sm leading-relaxed whitespace-pre-wrap rounded-lg border border-border"
+        tabIndex={0}
+        aria-label={`${language} code`}
+      >
+        <code>{code}</code>
+      </pre>
+
+      <div className="absolute top-3 right-3 flex items-center gap-2">
+        <CopyButton onClick={handleCopy} aria-label="Copiar código" />
+        {copied && <span className="text-xs">copiado</span>}
+      </div>
+    </div>
+  );
+};
+
+const PMSelector: React.FC<{
+  value: "npm" | "yarn" | "pnpm";
+  onChange: (v: "npm" | "yarn" | "pnpm") => void;
+  options?: ("npm" | "yarn" | "pnpm")[];
+}> = ({ value, onChange, options = ["npm", "yarn", "pnpm"] }) => {
+  return (
+    <div
+      role="tablist"
+      aria-label="package manager"
+      className="inline-flex bg-muted/10 p-1 rounded-full gap-1"
+    >
+      {options.map((pm) => {
+        const active = pm === value;
+        return (
+          <ButtonBase
+            key={pm}
+            role="tab"
+            aria-selected={active}
+            onClick={() => onChange(pm)}
+            className={`px-4 py-2 min-w-[72px] text-sm font-medium rounded-full transition-colors ${
+              active ? "bg-primary" : "text-muted/50"
+            }`}
+          >
+            {pm}
+          </ButtonBase>
+        );
+      })}
+    </div>
+  );
+};
+
+const InstalacaoContent: React.FC = () => {
+  const [pm, setPm] = useState<"npm" | "yarn" | "pnpm">("npm");
+
+  const installCommands = {
+    npm: "npm install @mlw-packages/react-components",
+    yarn: "yarn add @mlw-packages/react-components",
+    pnpm: "pnpm add @mlw-packages/react-components",
+  } as const;
+
+  return (
+    <div className="min-h-[60vh] flex flex-col gap-6 p-8">
+      <header className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <TerminalIcon size={26} className="text-primary" />
+          <div>
+            <h1 className="text-xl font-bold">Instalação</h1>
+            <p className="text-sm text-muted-foreground">
+              Instale rapidamente com npm, yarn ou pnpm.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <CardBase>
+        <CardHeaderBase>
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3">
+              <CheckCircleIcon size={18} className="text-primary" />
+              <CardTitleBase>Comandos</CardTitleBase>
+            </div>
+            <CardDescriptionBase>
+              <small className="text-xs text-muted-foreground">
+                Verifique versão com{" "}
+                <code className="bg-muted px-2 py-1 rounded">
+                  npm view &lt;package&gt; version
+                </code>
+              </small>
+            </CardDescriptionBase>
+          </div>
+        </CardHeaderBase>
+        <CardContentBase>
+          <div className="mb-4">
+            <PMSelector value={pm} onChange={setPm} />
+          </div>
+
+          <CodeBlock code={installCommands[pm]} />
+        </CardContentBase>
+      </CardBase>
+      <CardBase>
+        <CardHeaderBase>
+          <div className="flex items-center gap-3">
+            <CardTitleBase>Compatibilidade & peerDependencies</CardTitleBase>
+          </div>
+          <CardDescriptionBase>
+            <p className="text-sm text-muted-foreground">
+              Versões mínimas suportadas e dependências peer necessárias.
+            </p>
+          </CardDescriptionBase>
+        </CardHeaderBase>
+        <CardContentBase>
+          <div className="grid gap-3">
+            <div className="text-sm">
+              <p className="font-semibold">Requisitos mínimos</p>
+              <ul className="list-disc pl-5 text-sm text-muted-foreground">
+                <li>
+                  React: <code>^18.0.0</code>
+                </li>
+                <li>
+                  React DOM: <code>^18.0.0</code>
+                </li>
+                <li>
+                  Tailwind CSS: recomendado para estilos utilitários (qualquer
+                  versão estável recente)
+                </li>
+                <li>
+                  Ícones: <code>@phosphor-icons/react</code>
+                </li>
+              </ul>
+            </div>
+
+            <div className="text-sm">
+              <p className="font-semibold">
+                Instalar peer dependencies (exemplo)
+              </p>
+              <CodeBlock
+                code={`npm install react@^18 react-dom@^18 @phosphor-icons/react tailwindcss postcss autoprefixer --save`}
+                language="bash"
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                Ajuste as versões conforme seu projeto. Se usar yarn/pnpm,
+                troque o comando.
+              </p>
+            </div>
+          </div>
+        </CardContentBase>
+      </CardBase>
+    </div>
+  );
+};
+
+export const Instalacao: Story = {
+  name: "Instalação",
+  render: () => <InstalacaoContent />,
+};
+
+const DependenciasContent: React.FC = () => (
+  <div className="min-h-[60vh] flex flex-col gap-6 p-8">
+    <header className="flex items-center gap-3">
+      <CheckCircleIcon size={26} className="text-primary" />
+      <div>
+        <h1 className="text-xl font-bold">Dependências</h1>
+        <p className="text-sm text-muted-foreground">
+          Passo a passo para instalar Tailwind e ícones Phosphor.
+        </p>
+      </div>
+    </header>
+
+    <CardBase>
+      <CardHeaderBase>
+        <div className="flex items-center gap-3">
+          <CardTitleBase className="text-blue-500">
+            Tailwind CSS (instalação)
+          </CardTitleBase>
+        </div>
+        <CardDescriptionBase>
+          <p className="text-sm text-muted-foreground">
+            Se ainda não usa Tailwind, instale e inicialize:
+          </p>
+        </CardDescriptionBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <div className="grid gap-3">
+          <div className="mt-3 text-sm text-muted-foreground">
+            Terminal CMD{" "}
+          </div>
+          <CodeBlock
+            code={`npm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p`}
+            language="bash"
+          />
+
+          <div className="mt-3 text-sm text-muted-foreground">
+            index.css / global.css{" "}
+          </div>
+          <CodeBlock
+            code={`@tailwind base;\n@tailwind components;\n@tailwind utilities;`}
+            language="css"
+          />
+
+          <div className="mt-3 text-sm text-muted-foreground">Vite.config </div>
+          <CodeBlock
+            code={`module.exports = {\n  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],\n  theme: { extend: {} },\n  plugins: [],\n};`}
+            language="js"
+          />
+        </div>
+      </CardContentBase>
+    </CardBase>
+
+    <CardBase>
+      <CardHeaderBase>
+        <CardTitleBase>Notas de versão & Upgrade</CardTitleBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <div className="grid gap-3">
+          <div className="text-sm text-muted-foreground">
+            <p className="font-semibold">Ver versão publicada</p>
+            <CodeBlock
+              code={`npm view @mlw-packages/react-components version`}
+              language="bash"
+            />
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            <p className="font-semibold">Atualizar para a última versão</p>
+            <CodeBlock
+              code={`npm install @mlw-packages/react-components@latest`}
+              language="bash"
+            />
+            <p className="mt-2">
+              Se houver breaking changes, confira o changelog/releases e siga o
+              guia de migração.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Dica: teste em uma branch separada e leia as notas de release
+              antes de atualizar produção.
+            </p>
+          </div>
+        </div>
+      </CardContentBase>
+    </CardBase>
+
+    <CardBase>
+      <CardHeaderBase>
+        <div className="flex items-center gap-3">
+          <CardTitleBase className="text-emerald-500">
+            Ícones (Phosphor)
+          </CardTitleBase>
+        </div>
+        <CardDescriptionBase>
+          <p className="text-sm text-muted-foreground">
+            Instale o pacote de ícones (peer dependency recomendado):
+          </p>
+        </CardDescriptionBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <CodeBlock code={`npm install @phosphor-icons/react`} language="bash" />
+        <div className="mt-3 text-sm text-muted-foreground">
+          Importe onde necessário:
+        </div>
+        <CodeBlock
+          code={`import { CheckCircle, Warning } from '@phosphor-icons/react';\n\nfunction MyComp(){\n  return <CheckCircle size={24} />\n}`}
+          language="tsx"
+        />
+      </CardContentBase>
+    </CardBase>
+  </div>
+);
+
+export const Dependencias: Story = {
+  name: "Dependências",
+  render: () => <DependenciasContent />,
+};
+
+const ConfigContent: React.FC = () => (
+  <div className="min-h-[60vh] flex flex-col gap-6 p-8">
+    <header className="flex items-center gap-3">
+      <GearIcon size={26} className="text-primary" />
+      <div>
+        <h1 className="text-xl font-bold">Configuração</h1>
+        <p className="text-sm text-muted-foreground">
+          Como integrar o pacote no seu app.
+        </p>
+      </div>
+    </header>
+
+    <CardBase>
+      <CardHeaderBase>
+        <CardTitleBase>Importar CSS global</CardTitleBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <p className="text-sm text-muted-foreground mb-3">
+          No arquivo principal (main.tsx / App.tsx / _app.tsx):
+        </p>
+        <CodeBlock
+          code={`import '@mlw-packages/react-components/dist/index.css';`}
+          language="tsx"
+        />
+      </CardContentBase>
+    </CardBase>
+
+    <CardBase>
+      <CardHeaderBase>
+        <CardTitleBase>ThemeProvider (opcional)</CardTitleBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <CodeBlock
+          code={`import { ThemeProviderBase } from '@mlw-packages/react-components';\n\nfunction App(){\n  return (\n    <ThemeProviderBase defaultTheme="light" storageKey="app-theme">\n      {/* app */}\n    </ThemeProviderBase>\n  )\n}`}
+          language="tsx"
+        />
+      </CardContentBase>
+    </CardBase>
+
+    <CardBase>
+      <CardHeaderBase>
+        <CardTitleBase>Path alias (opcional)</CardTitleBase>
+        <CardDescriptionBase>
+          <p className="text-sm text-muted-foreground">Ex.: tsconfig + vite:</p>
+        </CardDescriptionBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <CodeBlock
+          code={`"compilerOptions": {\n    "paths": {\n      "@mlw-packages/react-components": ["./node_modules/@mlw-packages/react-components"]\n    }\n  }\n}`}
+          language="json"
+        />
+        <CodeBlock
+          code={`import { defineConfig } from 'vite';\nimport path from 'path';\n\nexport default defineConfig({\n  resolve: { alias: { '@mlw-packages/react-components': path.resolve(__dirname, './node_modules/@mlw-packages/react-components') } }\n});`}
+          language="ts"
+        />
+      </CardContentBase>
+    </CardBase>
+  </div>
+);
+
+export const Configuracao: Story = {
+  name: "Configuração",
+  render: () => <ConfigContent />,
+};
+
+const ProblemsContent: React.FC = () => {
+  const issues = [
+    {
+      problem: "CSS não está sendo aplicado",
+      fix: "Confirme import: import '@mlw-packages/react-components/dist/index.css' o Tailwind.",
+    },
+    {
+      problem: "Erro de TypeScript nos imports",
+      fix: "Ajuste paths no tsconfig.json e reinicie o TS Server (Cmd/Ctrl+Shift+P → 'TypeScript: Restart TS Server').",
+    },
+    {
+      problem: "Ícones do Phosphor não aparecem",
+      fix: "Instale @phosphor-icons/react.",
+    },
+    {
+      problem: "Tema não atualiza",
+      fix: "Verifique se a app está envolvida por <ThemeProviderBase> e se storageKey não conflita.",
+    },
+  ];
+
+  return (
+    <div className="min-h-[60vh] flex flex-col gap-6 p-8">
+      <header className="flex items-center gap-3">
+        <WarningIcon size={26} className="text-yellow-600" />
+        <div>
+          <h1 className="text-xl font-bold">Solução de Problemas</h1>
+          <p className="text-sm text-muted-foreground">
+            Problemas comuns e correções rápidas.
+          </p>
+        </div>
+      </header>
+
+      <CardBase>
+        <CardHeaderBase>
+          <CardTitleBase>Problemas comuns</CardTitleBase>
+          <CardDescriptionBase>
+            Correções rápidas para problemas frequentes
+          </CardDescriptionBase>
+        </CardHeaderBase>
+        <CardContentBase>
+          <div className="grid gap-3">
+            {issues.map((it, idx) => (
+              <CardBase key={idx} className="p-3">
+                <div>
+                  <p className="font-semibold mb-1">{it.problem}</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Solução:</strong> {it.fix}
+                  </p>
+                </div>
+              </CardBase>
+            ))}
+          </div>
+        </CardContentBase>
+      </CardBase>
+    </div>
+  );
+};
+
+export const SolucaoDeProblemas: Story = {
+  name: "Solução de Problemas",
+  render: () => <ProblemsContent />,
+};

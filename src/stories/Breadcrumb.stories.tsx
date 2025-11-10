@@ -539,6 +539,7 @@ export default function Example() {
 };
 
 export const TesteNavegacao: Story = {
+  name: "Navegação Básica",
   args: {
     variant: "simple",
   },
@@ -565,6 +566,8 @@ export const TesteNavegacao: Story = {
 };
 
 export const TesteFluxoCompleto: Story = {
+    name: "Navegação Completa",
+
   args: {
     variant: "withMenu",
   },

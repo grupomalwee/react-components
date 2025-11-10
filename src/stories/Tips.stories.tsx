@@ -5,6 +5,8 @@ import { Lightbulb, Warning, CopySimple } from "@phosphor-icons/react";
 
 const meta: Meta = {
   title: "Dicas úteis",
+    tags: ["!autodocs"],
+
   parameters: {
     layout: "centered",
     docs: {

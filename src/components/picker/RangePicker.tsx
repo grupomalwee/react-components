@@ -23,7 +23,6 @@ import {
   PopoverContentBase,
 } from "@/components/ui/overlays/PopoverBase";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { DeleteButton } from "../ui/form/SmallButtons";
 import { CalendarDotIcon } from "@phosphor-icons/react/dist/ssr";
 import ErrorMessage, { ErrorMessageProps } from "../ui/ErrorMessage";
 
@@ -206,14 +205,15 @@ export function RangePicker({
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <DeleteButton
+                    <ButtonBase
+                    
                       variant="outline"
                       onClick={handleClear}
                       disabled={!range?.from && !range?.to}
                       className="hover:bg-destructive hover:text-white"
                     >
                       Limpar
-                    </DeleteButton>
+                    </ButtonBase>
                   </motion.div>
                 </div>
                 <div style={{ display: "inline-block", width: "100%" }}>

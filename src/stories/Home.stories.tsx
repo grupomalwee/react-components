@@ -5,13 +5,9 @@ import { useEffect, useState } from "react";
 
 const meta: Meta = {
   title: "Home",
+  tags: ["!autodocs"],
   parameters: {
-    layout: "centered",
-    docs: {
-      description: {
-        component: `\n# Bem-vindo ao Malwee React Components\n\nSistema de design componetizado, prático e escalável com React + Tailwind.\n`,
-      },
-    },
+    layout: "fullscreen",
     backgrounds: {
       default: "light",
       values: [
@@ -27,7 +23,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => (
-    <main className="min-h-screen relative overflow-hidden flex items-center justify-center px-6 py-20">
+    <main className="relative overflow-hidden flex items-center justify-center px-6 py-12 min-h-screen">
       <motion.section
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -37,19 +33,18 @@ export const Default: Story = {
         <motion.img
           src="/pwa-512x512.png"
           alt="Logo Malwee"
-          className="w-36 h-36 mx-auto mb-6"
+          className="w-28 h-28 mx-auto mb-6"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.9 }}
         />
 
         <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-3">
-          Bem-vindo ao <br />
           <span className="text-primary">Malwee React Components</span>
         </h1>
 
         <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-          Um hub visual de componentes construído com React + Tailwind — leve,
+          Um hub visual de componentes construído com React + Tailwind. Leve,
           acessível e pronto para protótipos.
         </p>
 
@@ -68,9 +63,7 @@ function VersionBadge() {
   const packageName = "@mlw-packages/react-components";
   const [version, setVersion] = useState<string | null>(null);
 
-
   async function fetchLatest() {
-
     try {
       const encoded = encodeURIComponent(packageName);
       const res = await fetch(`https://registry.npmjs.org/${encoded}/latest`);
@@ -97,7 +90,7 @@ function VersionBadge() {
   return (
     <div className="mt-6 flex items-center justify-center gap-3 flex-col">
       <div className="inline-flex items-center gap-3 bg-gray-50 dark:bg-gray-800 border rounded px-3 py-2 text-sm">
-				Versão:&nbsp;
+        Versão:&nbsp;
         <a
           className="text-sm font-semibold text-primary hover:underline"
           href={`https://www.npmjs.com/package/${packageName}`}
@@ -107,7 +100,6 @@ function VersionBadge() {
           {version ?? "—"}
         </a>
       </div>
-
     </div>
   );
 }

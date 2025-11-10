@@ -28,9 +28,17 @@ const formatCompactNumber = (value: number): string => {
   } else if (absValue >= 1000000) {
     formatted = (absValue / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
   } else if (absValue >= 1000) {
-    formatted = (absValue / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    formatted = (absValue / 1000).toFixed(1).replace(/\.0$/, "") + " mil";
   } else {
-    formatted = absValue.toString();
+    try {
+      const nf = new Intl.NumberFormat("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      formatted = nf.format(absValue);
+    } catch {
+      formatted = String(absValue).replace(".", ",");
+    }
   }
 
   return isNegative ? `-${formatted}` : formatted;
@@ -98,7 +106,6 @@ export const renderPillLabel = (
       typeof vb.width === "number" &&
       typeof props.index === "number"
     ) {
-      // Estimate column center based on index and total width when other coords missing
       const approxCols = Math.max(1, props.index + 1);
       const colWidth = vb.width / approxCols;
       centerX = vb.x + colWidth * (props.index + 0.5);
@@ -108,7 +115,6 @@ export const renderPillLabel = (
       centerX = typeof props.index === "number" ? props.index * 40 + 24 : 0;
     }
 
-    // Clamp within viewBox horizontal bounds if available
     if (vb && typeof vb.x === "number" && typeof vb.width === "number") {
       const minX = vb.x + 0 + pillWidth / 22;
       const maxX = vb.x + vb.width - 2 - pillWidth / 2;
@@ -128,9 +134,9 @@ export const renderPillLabel = (
         ? cyNum
         : 0);
 
-    const rectX = centerX - pillWidth / 2;
+    const rectX = centerX - pillWidth / 3.5;
     const rectY = centerY - pillHeight - 6;
-    const textX = centerX;
+    const textX = centerX - pillWidth / 3.5 + pillWidth / 2;
     const textY = rectY + pillHeight / 2 + 3;
 
     const rectFill =
@@ -142,16 +148,13 @@ export const renderPillLabel = (
 
     const rectStroke = variant === "outline" ? `${color}CC` : undefined;
 
-    // Melhorar a lógica de cores para valores negativos
     const numValue = parseNumber(value);
     const isNegative = typeof numValue === "number" && numValue < 0;
 
     let textColor: string;
     if (isNegative) {
-      // Valores negativos sempre vermelhos, independente da variante
       textColor = "#dc2626";
     } else {
-      // Valores positivos seguem a lógica da variante
       if (variant === "filled") {
         textColor = "#ffffff";
       } else {
@@ -163,7 +166,7 @@ export const renderPillLabel = (
       <g>
         <rect
           x={rectX}
-          y={rectY}
+          y={rectY + 4}
           rx={pillHeight / 2}
           width={pillWidth}
           height={pillHeight}
@@ -173,7 +176,7 @@ export const renderPillLabel = (
         />
         <text
           x={textX}
-          y={textY - 3}
+          y={textY + 2}
           fill={textColor}
           fontSize={13}
           fontWeight={700}

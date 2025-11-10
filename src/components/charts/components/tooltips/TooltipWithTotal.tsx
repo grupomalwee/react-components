@@ -16,6 +16,7 @@ interface Props {
   periodLabel?: string;
   totalLabel?: string;
   valueFormatter?: valueFormatter;
+  categoryFormatter?: (value: string | number) => string;
 }
 
 const RechartTooltipWithTotal: React.FC<Props> = ({
@@ -26,8 +27,13 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
   periodLabel = "Período",
   totalLabel = "Total",
   valueFormatter,
+  categoryFormatter,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
+
+  const displayLabel = categoryFormatter
+    ? categoryFormatter(String(label ?? ""))
+    : label;
 
   const numeric = payload.filter(
     (p) => typeof p.value === "number" && Number.isFinite(p.value)
@@ -35,8 +41,19 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
 
   const total = numeric.reduce((sum, p) => sum + (p.value || 0), 0);
   const isTotalNegative = total < 0;
-
-  const defaultTotalFormatted = total.toLocaleString("pt-BR");
+  const defaultTotalFormatted = ((): string => {
+    try {
+      if (Math.abs(total) < 1000) {
+        return new Intl.NumberFormat("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(total);
+      }
+    } catch {
+      void 0;
+    }
+    return total.toLocaleString("pt-BR");
+  })();
   const displayTotal = valueFormatter
     ? valueFormatter({
         value: total,
@@ -61,7 +78,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
       <div className="flex items-start justify-between mb-2">
         <div className="pr-2">
           <p className="text-xs text-muted-foreground">{periodLabel}</p>
-          <p className="font-medium text-foreground truncate">{label}</p>
+          <p className="font-medium text-foreground truncate">{displayLabel}</p>
         </div>
 
         <div className="text-right ml-3">
@@ -83,7 +100,19 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
             absDenominator > 0 ? (Math.abs(value) / absDenominator) * 100 : 0;
           const baseColor = finalColors[entry.dataKey] || entry.color || "#999";
           const isNeg = value < 0;
-          const defaultFormatted = value.toLocaleString("pt-BR");
+          const defaultFormatted = ((): string => {
+            try {
+              if (Math.abs(value) < 1000) {
+                return new Intl.NumberFormat("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(value);
+              }
+            } catch {
+              void 0;
+            }
+            return value.toLocaleString("pt-BR");
+          })();
           const displayValue = valueFormatter
             ? valueFormatter({
                 value: entry.value,

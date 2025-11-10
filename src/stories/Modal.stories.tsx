@@ -12,10 +12,9 @@ import {
 } from "../components/ui/feedback/ModalBase";
 import { ButtonBase } from "../components/ui/form/ButtonBase";
 import { InputBase } from "../components/ui/form/InputBase";
-import { MapPinLineIcon, PlusIcon } from "@phosphor-icons/react";
+import { MapPinLineIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import {
   ChangeButton,
-  DeleteButton,
   EditButton,
 } from "../components/ui/form/SmallButtons";
 import {
@@ -243,7 +242,9 @@ export const Default: Story = {
         </ModalBase>
         <ModalBase>
           <ModalTriggerBase asChild>
-            <DeleteButton className="rounded-full" variant="destructive" />
+            <ButtonBase>
+              <TrashIcon size={16} />
+              </ButtonBase>
           </ModalTriggerBase>
           <ModalContentBase>
             <ModalHeaderBase>

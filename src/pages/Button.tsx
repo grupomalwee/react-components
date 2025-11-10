@@ -5,7 +5,6 @@ import {
   CheckButton,
   CloseButton,
   CopyButton,
-  DeleteButton,
   DownloadButton,
   EditButton,
   FavoriteButton,
@@ -66,11 +65,6 @@ export const ButtonPage = () => {
           <SaveButton />
           <AddButton />
           <CloseButton />
-          <DeleteButton />
-          <DeleteButton
-            destructiveTitle="retttt"
-            destructiveDescription="Tem certeza de que deseja excluir este item?"
-          />
           <DownloadButton />
           <UploadButton />
           <CopyButton />

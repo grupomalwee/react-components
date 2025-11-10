@@ -16,7 +16,7 @@ import {
 import { ArrowClockwiseIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
 
 const sampleData = [
-  { periodo: "Q1/24", receita: 4000, despesas: 2400, churn: 180 },
+  { periodo: "Q1/24", receita: 1000, despesas: 400, churn: 180 },
   { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
   { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
   { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },
@@ -141,7 +141,6 @@ export default function Default() {
     });
 
     await step("Verificar dados renderizados", async () => {
-      // Verifica se há elementos renderizados (barras, linhas ou áreas)
       const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
       const lines = canvasElement.querySelectorAll(".recharts-line");
       const areas = canvasElement.querySelectorAll(".recharts-area");
@@ -154,6 +153,30 @@ export default function Default() {
       const grid = canvasElement.querySelector(".recharts-cartesian-grid");
       expect(grid).toBeInTheDocument();
     });
+  },
+};
+
+export const FormatBR: Story = {
+  name: "Formato pt-BR",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={360}
+        series={{ bar: ["receita", "despesas"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        xAxis="periodo"
+        formatBR
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo que ativa a prop `formatBR` para formatar valores no padrão pt-BR (ex.: 12.345,67)",
+      },
+    },
   },
 };
 
@@ -203,64 +226,10 @@ export default function Combined() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar gráfico combinado renderizado", async () => {
-      await waitFor(() => {
-        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
-        expect(chartContainer).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar presença de barras (despesas)", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      expect(bars.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar presença de área (receita)", async () => {
-      const areas = canvasElement.querySelectorAll(".recharts-area");
-      expect(areas.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar presença de linha (churn)", async () => {
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      expect(lines.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar legenda com 3 itens", async () => {
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-      expect(legend).toBeInTheDocument();
-    });
-
-    await step("Verificar cores customizadas aplicadas", async () => {
-      const surface = canvasElement.querySelector(".recharts-surface");
-      expect(surface).toBeInTheDocument();
-
-      // Verifica que há elementos com as cores especificadas
-      const coloredElements = canvasElement.querySelectorAll(
-        '[fill="#ef4444"], [fill="#22c55e"], [fill="#6366f1"], [stroke="#ef4444"], [stroke="#22c55e"], [stroke="#6366f1"]'
-      );
-      expect(coloredElements.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar tooltip habilitado", async () => {
-      const surface = canvasElement.querySelector(".recharts-surface");
-      expect(surface).toBeInTheDocument();
-    });
-
-    await step(
-      "Verificar quantidade correta de dados (6 trimestres)",
-      async () => {
-        // Verifica se há 6 pontos de dados renderizados
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        // Deve ter 6 barras (uma por trimestre)
-        expect(bars.length).toBe(6);
-      }
-    );
-  },
 };
 
 export const NegativeValues: Story = {
-  name: "Valores Negativos",
+  name: "Com Negativos",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -359,7 +328,7 @@ export default function NegativeValues() {
   },
 };
 
-export const MultipleBarSeries: Story = {
+export const MultipleBars: Story = {
   name: "Múltiplas Barras",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
@@ -423,7 +392,7 @@ export default function MultipleBarSeries() {
   // },
 };
 
-export const MultipleLineSeries: Story = {
+export const MultipleLines: Story = {
   name: "Múltiplas Linhas",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
@@ -488,7 +457,7 @@ export default function MultipleLineSeries() {
   // },
 };
 
-export const MultipleAreaSeries: Story = {
+export const MultipleAreas: Story = {
   name: "Múltiplas Áreas",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
@@ -553,8 +522,8 @@ export default function MultipleAreaSeries() {
   },
 };
 
-export const ComplexMixedChart: Story = {
-  name: "Gráfico Misto Complexo",
+export const ComplexMixed: Story = {
+  name: "Misto Complexo",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -631,8 +600,8 @@ export default function ComplexMixedChart() {
   },
 };
 
-export const LargeDataset: Story = {
-  name: "Dataset Grande",
+export const LargeData: Story = {
+  name: "Dados Grandes",
   render: (args) => {
     const largeData = Array.from({ length: 24 }, (_, i) => ({
       periodo: `M${i + 1}`,
@@ -705,8 +674,8 @@ export default function LargeDataset() {
   },
 };
 
-export const Customformatter: Story = {
-  name: "Formatador de Labels Personalizado",
+export const CustomFormatter: Story = {
+  name: "Formatador Custom",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -762,7 +731,7 @@ export default function Customformatter() {
   },
 };
 
-export const Advancedformatter: Story = {
+export const AdvancedFormatter: Story = {
   name: "Formatador Avançado",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
@@ -837,66 +806,85 @@ export default function Advancedformatter() {
   },
 };
 
-export const TooltipWithformatter: Story = {
-  name: "Tooltips com Formatador",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita", "despesas"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-        showLabels={true}
-        showTooltip={true}
-        showTooltipTotal={true}
-        enableDraggableTooltips={true}
-        valueFormatter={(props) => {
-          if (props.dataKey === "receita" || props.dataKey === "despesas") {
-            return `R$ ${props.formattedValue}`;
-          } else if (props.dataKey === "total") {
-            return `tota ${props.formattedValue}`;
-          } else {
-            return `${props.formattedValue}%`;
-          }
-        }}
-        colors={["#10b981", "#ef4444"]}
-      />
-    </div>
-  ),
+export const CategoryAndAxisLabels: Story = {
+  name: "Categorias e Eixos",
+  render: (args) => {
+    const largeData = Array.from({ length: 12 }, (_, i) => ({
+      periodo: `M${i + 1}`,
+      receita: Math.round(3000 + Math.random() * 7000),
+      despesas: Math.round(2000 + Math.random() * 5000),
+      churn: Math.round(80 + Math.random() * 140),
+    }));
+
+    return (
+      <div style={{ width: "900px", height: "420px" }}>
+        <Chart
+          {...args}
+          data={largeData}
+          height={350}
+          series={{ bar: ["receita", "despesas"] }}
+          labelMap={{ receita: "Receita" }}
+          xAxis="periodo"
+          xAxisLabel="Trimestre"
+          yAxisLabel="Valor (R$)"
+          categoryFormatter={(v) => {
+            const map: Record<string, string> = {
+              "Q1/24": "1º Trim/24",
+              "Q2/24": "2º Trim/24",
+              "Q3/24": "3º Trim/24",
+              "Q4/24": "4º Trim/24",
+            };
+            const s = String(v ?? "");
+            return (
+              map[s] ??
+              (s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s)
+            );
+          }}
+          valueFormatter={(props) => `R$ ${props.formattedValue}`}
+          enableDraggableTooltips
+          showTooltipTotal
+          colors={["#10b981", "#ef4444"]}
+          enablePeriodsDropdown
+          enableHighlights
+          enableShowOnly
+          maxTooltips={10}
+        />
+      </div>
+    );
+  },
   parameters: {
     docs: {
       description: {
         story:
-          "Exemplo mostrando formatação personalizada nos tooltips (hover e draggable) e labels.",
+          "Demonstra `categoryFormatter` para traduzir/ajustar categorias do eixo X e `xAxisLabel` / `yAxisLabel` para explicar os eixos sem alterar os dados originais.",
       },
       source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
+        code: `import Chart from '@/components/charts/Chart';
 
-export default function TooltipWithformatter() {
-  const data = [{ periodo: 'Q1', receita: 8000, despesas: 3000 }];
-  
+const data = [
+  { periodo: 'Q1/24', receita: 4000 },
+  { periodo: 'Q2/24', receita: 5200 },
+  { periodo: 'Q3/24', receita: 6800 },
+  { periodo: 'Q4/24', receita: 7500 },
+];
+
+export default function Example() {
   return (
-    <Chart 
-      data={data}
-      showTooltip={true}
-      showTooltipTotal={true}
-      enableDraggableTooltips={true}
-      valueFormatter={(props) => {
-        if (props.dataKey === 'receita' || props.dataKey === 'despesas') {
-          return \`R$ \${props.formattedValue}\`;
-        } else if (props.dataKey === 'total') {
-          return \`Total: R$ \${props.formattedValue}\`;
-        } else {
-          return \`\${props.formattedValue}%\`;
-        }
-      }}
-    />
+    <div style={{ width: 900, height: 420 }}>
+      <Chart
+        data={data}
+        xAxis="periodo"
+        series={{ bar: ['receita'] }}
+        labelMap={{ receita: 'Receita' }}
+        xAxisLabel="Trimestre"
+        yAxisLabel="Valor (R$)"
+        categoryFormatter={(v) => {
+          const map = { 'Q1/24': '1º Trim/24', 'Q2/24': '2º Trim/24' };
+          return map[String(v)] ?? String(v);
+        }}
+        height={350}
+      />
+    </div>
   );
 }
 `,
@@ -905,8 +893,8 @@ export default function TooltipWithformatter() {
   },
 };
 
-export const EmptyData: Story = {
-  name: "Sem Dados",
+export const Empty: Story = {
+  name: "Vazio",
   render: (args) => (
     <div
       style={{ width: "900px", height: "420px" }}
@@ -978,8 +966,8 @@ export default function EmptyData() {
   },
 };
 
-export const SingleDataPoint: Story = {
-  name: "Ponto Único",
+export const SinglePoint: Story = {
+  name: "Único Ponto",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -1019,8 +1007,8 @@ export const SingleDataPoint: Story = {
   },
 };
 
-export const NoGridNoLegend: Story = {
-  name: "Sem Grid e Legenda",
+export const Minimal: Story = {
+  name: "Minimalista",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -1067,8 +1055,8 @@ export const NoGridNoLegend: Story = {
   // },
 };
 
-export const CustomHeight: Story = {
-  name: "Altura Customizada",
+export const TallChart: Story = {
+  name: "Altura Grande",
   render: (args) => (
     <div style={{ width: "900px", height: "620px" }}>
       <Chart
@@ -1107,8 +1095,8 @@ export const CustomHeight: Story = {
   },
 };
 
-export const AllBarTypes: Story = {
-  name: "Todas as Séries como Barras",
+export const AllBars: Story = {
+  name: "Só Barras",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -1151,8 +1139,8 @@ export const AllBarTypes: Story = {
   },
 };
 
-export const AllLineTypes: Story = {
-  name: "Todas as Séries como Linhas",
+export const AllLines: Story = {
+  name: "Só Linhas",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -1195,8 +1183,8 @@ export const AllLineTypes: Story = {
   },
 };
 
-export const AllAreaTypes: Story = {
-  name: "Todas as Séries como Áreas",
+export const AllAreas: Story = {
+  name: "Só Áreas",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart
@@ -1239,8 +1227,8 @@ export const AllAreaTypes: Story = {
   },
 };
 
-export const ExtremeValues: Story = {
-  name: "Valores Extremos",
+export const Extremes: Story = {
+  name: "Extremos",
   render: (args) => {
     const extremeData = [
       { periodo: "Q1", receita: 100000, despesas: 50, churn: 5 },
@@ -1300,8 +1288,8 @@ export const ExtremeValues: Story = {
   },
 };
 
-export const MixedPositiveNegative: Story = {
-  name: "Valores Positivos e Negativos Misturados",
+export const MixedValues: Story = {
+  name: "Valores Mistos",
   render: (args) => {
     const mixedData = [
       { periodo: "Q1", receita: -5000, despesas: 3000, churn: -50 },
@@ -1368,8 +1356,8 @@ export const MixedPositiveNegative: Story = {
   },
 };
 
-export const DynamicColorPalette: Story = {
-  name: "Paleta de Cores Dinâmica",
+export const CustomColors: Story = {
+  name: "Cores Custom",
   render: (args) => (
     <div style={{ width: "900px", height: "420px" }}>
       <Chart

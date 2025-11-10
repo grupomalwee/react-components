@@ -3,7 +3,6 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DestructiveDialog } from "../components/ui/feedback/DestructiveDialog";
 import { ButtonBase } from "../components/ui/form/ButtonBase";
-import { DeleteButton } from "../components/ui/form/SmallButtons";
 import { TrashIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DestructiveDialog> = {
@@ -118,33 +117,6 @@ export const WithChildIcon: Story = {
             Abrir
           </ButtonBase>
         </DestructiveDialog>
-      </div>
-    );
-  },
-};
-
-export const DeleteButtonTrigger: Story = {
-  render: () => {
-    const handleConfirm = () => console.log("Confirmado via DeleteButton");
-
-    return (
-      <div className="p-6">
-        <div className="flex items-center gap-4">
-          <DestructiveDialog
-            title="Excluir item"
-            description="Confirma exclusão do item?"
-            onConfirm={handleConfirm}
-            onCancel={() => console.log("Cancelado")}
-          >
-            <ButtonBase>Exemplo</ButtonBase>
-          </DestructiveDialog>
-          <DeleteButton
-            destructiveTitle={"Excluir item"}
-            destructiveDescription={"Tem certeza que deseja excluir este item?"}
-            destructiveOnConfirm={handleConfirm}
-            size="icon"
-          />
-        </div>
       </div>
     );
   },

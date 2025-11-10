@@ -15,6 +15,7 @@ interface Props {
   finalColors?: Record<string, string>;
   periodLabel?: string;
   valueFormatter?: valueFormatter;
+  categoryFormatter?: (value: string | number) => string;
 }
 
 const TooltipSimple: React.FC<Props> = ({
@@ -24,8 +25,13 @@ const TooltipSimple: React.FC<Props> = ({
   finalColors = {},
   periodLabel = "Período",
   valueFormatter,
+  categoryFormatter,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
+
+  const displayLabel = categoryFormatter
+    ? categoryFormatter(String(label ?? ""))
+    : label;
 
   return (
     <div
@@ -38,7 +44,9 @@ const TooltipSimple: React.FC<Props> = ({
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground">{periodLabel}</p>
-            <p className="font-medium text-foreground truncate">{label}</p>
+            <p className="font-medium text-foreground truncate">
+              {displayLabel}
+            </p>
           </div>
         </div>
       </div>
@@ -47,8 +55,19 @@ const TooltipSimple: React.FC<Props> = ({
         {payload.map((entry, index: number) => {
           const value = typeof entry.value === "number" ? entry.value : 0;
           const color = finalColors[entry.dataKey] || entry.color || "#999";
-
-          const defaultFormatted = value.toLocaleString("pt-BR");
+          const defaultFormatted = ((): string => {
+            try {
+              if (Math.abs(value) < 1000) {
+                return new Intl.NumberFormat("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(value);
+              }
+            } catch {
+              void 0;
+            }
+            return value.toLocaleString("pt-BR");
+          })();
           const displayValue = valueFormatter
             ? valueFormatter({
                 value: entry.value,

@@ -20,7 +20,8 @@ interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
   date: Date | undefined;
   onChange: (date: Date | undefined) => void;
-  display?: boolean;
+  displayFormat?: string;
+  hideTime?: boolean;
   hideSeconds?: boolean;
   hideHour?: boolean;
   hideMinute?: boolean;
@@ -35,7 +36,8 @@ export function DateTimePicker({
   label,
   date,
   onChange,
-  display,
+  displayFormat,
+  hideTime,
   hideSeconds,
   hideHour,
   hideMinute,
@@ -69,6 +71,7 @@ export function DateTimePicker({
   };
 
   const getTimeFormat = () => {
+    if (hideTime) return "";
     if (hideHour && hideMinute) return "";
     if (hideHour) return hideSeconds ? "mm" : "mm:ss";
     if (hideMinute) return hideSeconds ? "HH" : "HH':00'";
@@ -76,6 +79,9 @@ export function DateTimePicker({
   };
 
   const getDisplayFormat = () => {
+    if (displayFormat) {
+      return displayFormat;
+    }
     const timeFormat = getTimeFormat();
     if (!timeFormat) return "PPP";
     return `PPP - ${timeFormat}`;
@@ -102,10 +108,8 @@ export function DateTimePicker({
           >
             <span className="truncate flex-1">
               {date
-                ? display
-                  ? format(date, "dd/MM/yyyy")
-                  : format(date, getDisplayFormat(), { locale: ptBR })
-                : "Selecione uma Data"}
+                ? format(date, getDisplayFormat(), { locale: ptBR })
+                : "Selecione uma data"}
             </span>
 
             <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
@@ -131,10 +135,13 @@ export function DateTimePicker({
               initialFocus
               fromDate={fromDate}
               toDate={toDate}
-              className={cn("w-full", hideHour && hideMinute && "border-0")}
+              className={cn(
+                "w-full",
+                (hideTime || (hideHour && hideMinute)) && "border-0"
+              )}
             />
 
-            {!(hideHour && hideMinute) && (
+            {!hideTime && !(hideHour && hideMinute) && (
               <div className="flex justify-center w-full px-2">
                 <PopoverBase
                   open={timePickerOpen}

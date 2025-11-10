@@ -124,6 +124,7 @@ interface DraggableTooltipProps {
   toggleHighlight?: (key: string) => void;
   showOnlyHighlighted?: boolean;
   valueFormatter?: valueFormatter;
+  categoryFormatter?: (value: string | number) => string;
 }
 
 const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
@@ -147,6 +148,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
   toggleHighlight,
   showOnlyHighlighted,
   valueFormatter,
+  categoryFormatter,
 }) => {
   // keys currently visible inside the tooltip (respecting showOnlyHighlighted)
   const visibleKeys = useMemo(
@@ -654,7 +656,9 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                   {periodLabel}
                 </span>
                 <p className="font-bold text-lg text-foreground mt-1 truncate">
-                  {data.name}
+                  {categoryFormatter
+                    ? categoryFormatter(String(data.name))
+                    : data.name}
                 </p>
               </div>
               <div className="text-right">

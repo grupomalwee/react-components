@@ -9,7 +9,6 @@ import {
   CheckButton,
   CloseButton,
   CopyButton,
-  DeleteButton,
   DownloadButton,
   EditButton,
   FavoriteButton,
@@ -412,10 +411,26 @@ import { EditButton, SaveButton, ChangeButton, AddButton } from '@mlw-packages/r
 export default function Small() {
   return (
     <div>
-      <EditButton />
+     <EditButton />
       <SaveButton />
       <ChangeButton />
       <AddButton />
+      <CloseButton />       
+      <DownloadButton />
+      <UploadButton />
+      <CopyButton />
+      <RefreshButton />
+      <SearchButton />
+      <BackButton />
+      <SettingsButton />
+      <NotificationButton />
+      <MoreButton />
+      <CheckButton />
+      <FilterButton />
+      <LikeButton />
+      <LockButton />
+      <VisibilityButton />
+      <FavoriteButton />
     </div>
   );
 }
@@ -432,17 +447,12 @@ export default function Small() {
         padding: "32px 0",
       }}
     >
-      <div className="grid grid-cols-6 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <EditButton />
         <SaveButton />
         <ChangeButton />
         <AddButton />
-        <CloseButton />
-        <DeleteButton />
-        <DeleteButton
-          destructiveTitle="retttt"
-          destructiveDescription="Tem certeza de que deseja excluir este item?"
-        />
+        <CloseButton />       
         <DownloadButton />
         <UploadButton />
         <CopyButton />

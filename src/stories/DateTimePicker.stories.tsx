@@ -12,7 +12,7 @@ const meta: Meta<typeof DateTimePicker> = {
     docs: {
       description: {
         component:
-          "Componente para seleção de data e hora com diversas opções de configuração. Permite ocultar partes específicas do tempo e personalizar a experiência do usuário.",
+          "Componente para seleção de data e hora com diversas opções de configuração.",
       },
       source: {
         code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
@@ -29,6 +29,15 @@ const meta: Meta<typeof DateTimePicker> = {
   },
   argTypes: {
     label: { control: "text" },
+    displayFormat: {
+      control: "text",
+      description:
+        "Formato customizado usando tokens do date-fns (ex: 'dd/MM/yyyy', 'PPP HH:mm', 'yyyy-MM-dd')",
+    },
+    hideTime: {
+      control: "boolean",
+      description: "Esconde toda a seleção de horário (hora, minuto e segundo)",
+    },
     hideSeconds: { control: "boolean" },
     hideHour: { control: "boolean" },
     hideMinute: { control: "boolean" },
@@ -39,6 +48,7 @@ const meta: Meta<typeof DateTimePicker> = {
   },
   args: {
     label: "Selecione uma data",
+    hideTime: false,
     hideSeconds: false,
     hideHour: false,
     hideMinute: false,
@@ -86,9 +96,23 @@ export const TimeVariants: Story = {
     const [date4, setDate4] = useState<Date | undefined>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
+    const [date5, setDate5] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
 
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Apenas Data (hideTime)
+          </h3>
+          <DateTimePicker
+            label="Apenas data"
+            hideTime={true}
+            date={date1}
+            onChange={setDate1}
+          />
+        </div>
         <div>
           <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
             Sem Segundos
@@ -96,20 +120,20 @@ export const TimeVariants: Story = {
           <DateTimePicker
             label="Sem segundos"
             hideSeconds={true}
-            date={date1}
-            onChange={setDate1}
+            date={date2}
+            onChange={setDate2}
           />
         </div>
         <div>
           <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Apenas Data (sem hora/minuto)
+            Apenas Data (hideHour + hideMinute)
           </h3>
           <DateTimePicker
-            label="Apenas data"
+            label="Apenas data (alternativa)"
             hideHour={true}
             hideMinute={true}
-            date={date2}
-            onChange={setDate2}
+            date={date3}
+            onChange={setDate3}
           />
         </div>
         <div>
@@ -119,8 +143,8 @@ export const TimeVariants: Story = {
           <DateTimePicker
             label="Sem minutos"
             hideMinute={true}
-            date={date3}
-            onChange={setDate3}
+            date={date4}
+            onChange={setDate4}
           />
         </div>
         <div>
@@ -130,8 +154,8 @@ export const TimeVariants: Story = {
           <DateTimePicker
             label="Apenas minutos"
             hideHour={true}
-            date={date4}
-            onChange={setDate4}
+            date={date5}
+            onChange={setDate5}
           />
         </div>
       </div>
@@ -141,7 +165,7 @@ export const TimeVariants: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function TimeVariants() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  const [d4, setD4] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Sem segundos' hideSeconds date={d1} onChange={setD1} />\n      <DateTimePicker label='Apenas data' hideHour hideMinute date={d2} onChange={setD2} />\n      <DateTimePicker label='Sem minutos' hideMinute date={d3} onChange={setD3} />\n      <DateTimePicker label='Apenas minutos' hideHour date={d4} onChange={setD4} />\n    </>\n  );\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function TimeVariants() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  const [d4, setD4] = useState(new Date());\n  const [d5, setD5] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Apenas data' hideTime date={d1} onChange={setD1} />\n      <DateTimePicker label='Sem segundos' hideSeconds date={d2} onChange={setD2} />\n      <DateTimePicker label='Apenas data (alternativa)' hideHour hideMinute date={d3} onChange={setD3} />\n      <DateTimePicker label='Sem minutos' hideMinute date={d4} onChange={setD4} />\n      <DateTimePicker label='Apenas minutos' hideHour date={d5} onChange={setD5} />\n    </>\n  );\n}`,
       },
     },
   },
@@ -205,6 +229,8 @@ export const ConfigurationOptions: Story = {
 };
 
 export const WithTimePickerButton: Story = {
+  name: "Botão de Horas",
+
   render: Template,
   args: {
     label: "Data com Time Picker Button",
@@ -220,16 +246,106 @@ export const WithTimePickerButton: Story = {
 };
 
 export const DisplayOnly: Story = {
-  render: Template,
-  args: {
-    label: "Data (dd/MM/yyyy)",
-    date: new Date(2025, 9, 9, 14, 30, 0),
-    display: true,
+  name: "Formatos de Exibição",
+  render: () => {
+    const [date1, setDate1] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date2, setDate2] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date3, setDate3] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date4, setDate4] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date5, setDate5] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+    const [date6, setDate6] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: dd/MM/yyyy
+          </h3>
+          <DateTimePicker
+            label="Data BR"
+            date={date1}
+            onChange={setDate1}
+            displayFormat="dd/MM/yyyy"
+            hideTime
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: dd/MM/yyyy HH:mm
+          </h3>
+          <DateTimePicker
+            label="Data e Hora BR"
+            date={date2}
+            onChange={setDate2}
+            displayFormat="dd/MM/yyyy HH:mm"
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: yyyy-MM-dd HH:mm:ss (ISO)
+          </h3>
+          <DateTimePicker
+            label="Formato ISO"
+            date={date3}
+            onChange={setDate3}
+            displayFormat="yyyy-MM-dd HH:mm:ss"
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: PPP (Localizado)
+          </h3>
+          <DateTimePicker
+            label="Data por extenso"
+            date={date4}
+            onChange={setDate4}
+            displayFormat="PPP"
+            hideTime
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: PPPP (Completo)
+          </h3>
+          <DateTimePicker
+            label="Data completa"
+            date={date5}
+            onChange={setDate5}
+            displayFormat="PPPP"
+            hideTime
+          />
+        </div>
+        <div>
+          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            Formato: EEE, dd/MM/yyyy
+          </h3>
+          <DateTimePicker
+            label="Com dia da semana"
+            date={date6}
+            onChange={setDate6}
+            displayFormat="EEE, dd/MM/yyyy"
+            hideTime
+          />
+        </div>
+      </div>
+    );
   },
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function DisplayOnly() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return <DateTimePicker label='Data (dd/MM/yyyy)' date={date} onChange={setDate} display />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function DisplayFormats() {\n  const [date, setDate] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Data BR' displayFormat='dd/MM/yyyy' hideTime date={date} onChange={setDate} />\n      <DateTimePicker label='Data e Hora BR' displayFormat='dd/MM/yyyy HH:mm' date={date} onChange={setDate} />\n      <DateTimePicker label='Formato ISO' displayFormat='yyyy-MM-dd HH:mm:ss' date={date} onChange={setDate} />\n      <DateTimePicker label='Data por extenso' displayFormat='PPP' hideTime date={date} onChange={setDate} />\n      <DateTimePicker label='Data completa' displayFormat='PPPP' hideTime date={date} onChange={setDate} />\n      <DateTimePicker label='Com dia da semana' displayFormat='EEE, dd/MM/yyyy' hideTime date={date} onChange={setDate} />\n    </>\n  );\n}`,
       },
     },
   },
@@ -237,7 +353,7 @@ export const DisplayOnly: Story = {
 export const WithError: Story = {
   render: Template,
   args: {
-    label: "Data com Erro",
+    label: "Erro",
     date: new Date(2025, 9, 9, 14, 30, 0),
     error: "Data inválida",
   },

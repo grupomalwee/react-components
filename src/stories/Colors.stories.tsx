@@ -2,8 +2,19 @@ import { useState } from "react";
 import { CopySimple, Check } from "@phosphor-icons/react";
 
 export default {
-  title: "Colors",
-  parameters: { layout: "padded" },
+  title: "Theme/Cores",
+  
+  parameters: {
+    layout: "fullscreen",
+      tags: ["!autodocs"],
+
+    docs: {
+      description: {
+        component:
+          "Paleta de cores completa do design system com tons e variações. Clique em qualquer cor para copiar o valor HSL.",
+      },
+    },
+  },
 };
 
 const tokenGroups = [
@@ -199,195 +210,327 @@ export const Palette = () => {
   }
 
   return (
-    <div className="space-y-8 p-6">
-      {tokenGroups.map((g) => {
-        const raw = readCssVar(g.var);
-        const parsed = parseHslLike(raw);
-        const shades = makeShades(parsed, 10);
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--muted)))",
+        padding: "3rem 2rem",
+      }}
+    >
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ marginBottom: "3rem", textAlign: "center" }}>
+          <h1
+            style={{
+              fontSize: "2.5rem",
+              fontWeight: 700,
+              margin: 0,
+              marginBottom: "0.5rem",
+              background:
+                "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Paleta de Cores
+          </h1>
+          <p
+            style={{
+              color: "hsl(var(--muted-foreground))",
+              fontSize: "1rem",
+              margin: 0,
+            }}
+          >
+            Clique em qualquer cor para copiar o valor HSL
+          </p>
+        </div>
 
-        return (
-          <section key={g.name}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: 8,
-              }}
-            >
-              <h3 className="text-lg" style={{ margin: 0 }}>
-                {g.name}
-              </h3>
-              <div
+        <div className="space-y-10">
+          {tokenGroups.map((g) => {
+            const raw = readCssVar(g.var);
+            const parsed = parseHslLike(raw);
+            const shades = makeShades(parsed, 10);
+
+            return (
+              <section
+                key={g.name}
                 style={{
-                  color: "rgba(255,255,255,0.55)",
-                  fontSize: 13,
-                  fontFamily:
-                    "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+                  background: "hsl(var(--card))",
+                  borderRadius: "16px",
+                  padding: "1.5rem",
+                  border: "1px solid hsl(var(--border))",
+                  boxShadow:
+                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
                 }}
               >
-                {raw ?? "(sem valor)"}
-              </div>
-            </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 16,
+                    marginBottom: 16,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "1.25rem",
+                      fontWeight: 600,
+                      color: "hsl(var(--foreground))",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {g.name.replace(/-/g, " ")}
+                  </h3>
+                  <div
+                    style={{
+                      color: "hsl(var(--muted-foreground))",
+                      fontSize: 14,
+                      fontFamily:
+                        "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+                      background: "hsl(var(--muted))",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                      border: "1px solid hsl(var(--border))",
+                    }}
+                  >
+                    {raw ?? "(sem valor)"}
+                  </div>
+                </div>
 
-            <div style={{ padding: 1, borderRadius: 8 }}>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 12,
-                  alignItems: "flex-start",
-                  overflowX: "auto",
-                }}
-              >
-                {shades.map((sh, idx) => {
-                  const id = `${g.name}-${idx}`;
-                  const overlayVisible = hovered === id || copied === sh;
-                  const textColor = shadeTextColor(sh);
-                  return (
-                    <div
-                      key={idx}
-                      className="group"
-                      style={{
-                        width: 90,
-                        textAlign: "center",
-                        position: "relative",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleCopy(sh)}
-                      onMouseEnter={() => setHovered(id)}
-                      onMouseLeave={() => setHovered(null)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={sh ? `Copiar ${sh}` : `Sem cor`}
-                      onKeyDown={(e) => handleKeyCopy(e, sh)}
-                    >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))",
+                    gap: 16,
+                    overflowX: "auto",
+                  }}
+                >
+                  {shades.map((sh, idx) => {
+                    const id = `${g.name}-${idx}`;
+                    const overlayVisible = hovered === id || copied === sh;
+                    const textColor = shadeTextColor(sh);
+                    return (
                       <div
+                        key={idx}
+                        className="group"
                         style={{
-                          height: 120,
-                          borderRadius: 12,
-                          overflow: "hidden",
-                          background: sh ?? "transparent",
-                          border: "1px solid rgba(255,255,255,0.04)",
+                          textAlign: "center",
                           position: "relative",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          cursor: "pointer",
+                          transition: "transform 200ms ease",
+                        }}
+                        onClick={() => handleCopy(sh)}
+                        onMouseEnter={() => setHovered(id)}
+                        onMouseLeave={() => setHovered(null)}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={sh ? `Copiar ${sh}` : `Sem cor`}
+                        onKeyDown={(e) => handleKeyCopy(e, sh)}
+                        onMouseDown={(e) => {
+                          (e.currentTarget as HTMLElement).style.transform =
+                            "scale(0.95)";
+                        }}
+                        onMouseUp={(e) => {
+                          (e.currentTarget as HTMLElement).style.transform =
+                            hovered === id ? "scale(1.05)" : "scale(1)";
                         }}
                       >
                         <div
                           style={{
-                            position: "absolute",
-                            inset: 0,
+                            height: 110,
+                            borderRadius: 12,
+                            overflow: "hidden",
+                            background: sh ?? "hsl(var(--muted))",
+                            border: "2px solid hsl(var(--border))",
+                            position: "relative",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            background: overlayVisible
-                              ? "rgba(0,0,0,0.28)"
-                              : "transparent",
-                            opacity: overlayVisible ? 1 : 0,
+                            boxShadow: overlayVisible
+                              ? "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                              : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
                             transition:
-                              "opacity 180ms ease, background 180ms ease",
+                              "box-shadow 200ms ease, transform 200ms ease",
+                            transform:
+                              hovered === id ? "scale(1.05)" : "scale(1)",
                           }}
                         >
                           <div
                             style={{
+                              position: "absolute",
+                              inset: 0,
                               display: "flex",
                               alignItems: "center",
-                              gap: 8,
-                              pointerEvents: "none",
+                              justifyContent: "center",
+                              background: overlayVisible
+                                ? "rgba(0,0,0,0.5)"
+                                : "transparent",
+                              backdropFilter: overlayVisible
+                                ? "blur(4px)"
+                                : "none",
+                              opacity: overlayVisible ? 1 : 0,
+                              transition: "all 200ms ease",
                             }}
                           >
-                            {copied === sh ? (
-                              <Check
-                                size={28}
-                                weight="bold"
-                                color={textColor}
-                              />
-                            ) : (
-                              <CopySimple
-                                size={24}
-                                weight="bold"
-                                color={textColor}
-                              />
-                            )}
                             <div
                               style={{
-                                color: textColor,
-                                fontSize: 13,
-                                fontFamily:
-                                  "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: 6,
+                                pointerEvents: "none",
+                                transform: overlayVisible
+                                  ? "scale(1)"
+                                  : "scale(0.8)",
+                                transition: "transform 200ms ease",
                               }}
                             >
+                              {copied === sh ? (
+                                <>
+                                  <Check
+                                    size={32}
+                                    weight="bold"
+                                    color={textColor}
+                                  />
+                                  <span
+                                    style={{
+                                      color: textColor,
+                                      fontSize: 12,
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Copiado!
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <CopySimple
+                                    size={28}
+                                    weight="bold"
+                                    color={textColor}
+                                  />
+                                  <span
+                                    style={{
+                                      color: textColor,
+                                      fontSize: 11,
+                                      fontWeight: 500,
+                                    }}
+                                  >
+                                    Copiar
+                                  </span>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div
-                        style={{
-                          marginTop: 8,
-                          color: "rgba(255,255,255,0.78)",
-                          fontSize: 13,
-                          fontFamily:
-                            "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
-                        }}
-                      >
-                        {sh ? `step-${idx + 1}` : "—"}
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 4,
-                          color: "rgba(255,255,255,0.52)",
-                          fontSize: 12,
-                          fontFamily:
-                            "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
-                        }}
-                      >
-                        {sh ?? "—"}
-                      </div>
-
-                      {/* tooltip pequeno flutuante ao copiar */}
-                      {copied === sh && copiedAt ? (
                         <div
                           style={{
-                            position: "absolute",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            top: -34,
-                            background: "rgba(17,24,39,0.9)",
-                            color: "white",
-                            padding: "6px 10px",
-                            borderRadius: 8,
-                            fontSize: 12,
-                            boxShadow: "0 6px 18px rgba(0,0,0,0.3)",
+                            marginTop: 10,
+                            color: "hsl(var(--foreground))",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            fontFamily:
+                              "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
                           }}
                         >
-                          Copiado!
+                          {sh ? `${idx + 1}` : "—"}
                         </div>
-                      ) : null}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        );
-      })}
-      {/* região para leitor de tela */}
-      <div
-        aria-live="polite"
-        style={{
-          position: "absolute",
-          left: -9999,
-          width: 1,
-          height: 1,
-          overflow: "hidden",
-        }}
-      >
-        {copied ? `Cor copiada ${copied}` : ""}
+                        <div
+                          style={{
+                            marginTop: 4,
+                            color: "hsl(var(--muted-foreground))",
+                            fontSize: 11,
+                            fontFamily:
+                              "ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
+                            wordBreak: "break-all",
+                            lineHeight: "1.2",
+                          }}
+                        >
+                          {sh ?? "—"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        {/* Toast de feedback */}
+        {copied && copiedAt && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 32,
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "hsl(var(--primary))",
+              color: "hsl(var(--primary-foreground))",
+              padding: "12px 24px",
+              borderRadius: 12,
+              fontSize: 14,
+              fontWeight: 600,
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              animation: "slideUp 200ms ease",
+              zIndex: 9999,
+            }}
+          >
+            <Check size={20} weight="bold" />
+            <span>
+              Cor copiada:{" "}
+              <code
+                style={{
+                  background: "rgba(0,0,0,0.2)",
+                  padding: "2px 6px",
+                  borderRadius: 4,
+                  fontFamily: "ui-monospace, monospace",
+                }}
+              >
+                {copied}
+              </code>
+            </span>
+          </div>
+        )}
+
+        {/* região para leitor de tela */}
+        <div
+          aria-live="polite"
+          style={{
+            position: "absolute",
+            left: -9999,
+            width: 1,
+            height: 1,
+            overflow: "hidden",
+          }}
+        >
+          {copied ? `Cor copiada ${copied}` : ""}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes slideUp {
+          from {
+            transform: translate(-50%, 20px);
+            opacity: 0;
+          }
+          to {
+            transform: translate(-50%, 0);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-Palette.storyName = "Color palette";
+Palette.storyName = "Paleta Completa";
