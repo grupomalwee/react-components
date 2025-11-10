@@ -12,6 +12,18 @@ type ChangeItem = {
 
 const changelogData: ChangeItem[] = [
   {
+    version: "1.7.4",
+    date: "10/11/2025",
+    added: [
+      "Novos exemplos de gráficos e melhorias no guia de instalação",
+      "Refatoração dos estilos do label de gráficos",
+      "Novas props para formatação (pt-BR) em componentes de Chart",
+      "Novas props de formatação de data para DatePicker e RangePicker",
+    ],
+    notes: ["Bumped package version to 1.7.4"],
+  },
+
+  {
     version: "1.7.3",
     date: "04/11/2025",
     added: [
@@ -19,6 +31,25 @@ const changelogData: ChangeItem[] = [
     ],
     fixed: ["Corrigido erro de tipagem no LineChart"],
     notes: ["Bumped package version to 1.7.3"],
+  },
+
+  {
+    version: "1.7.2",
+    date: "31/10/2025",
+    added: ["Script de verificação de build (check-dist-build)"],
+    fixed: ["Corrigidos exports faltantes"],
+    notes: [],
+  },
+
+  {
+    version: "1.7.1",
+    date: "29/10/2025",
+    added: [],
+    fixed: [
+      "Ajustes em exports (index.ts) e seção de contato no README",
+      "Correções relacionadas à versão npm e workflow de publicação",
+    ],
+    notes: [],
   },
 ];
 
@@ -32,12 +63,26 @@ function IconBullet() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M8 12l2.2 2.2L16 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M8 12l2.2 2.2L16 9"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-function Section({ title, children, colorClass = "text-slate-800" }: { title: React.ReactNode; children?: React.ReactNode; colorClass?: string }) {
+function Section({
+  title,
+  children,
+  colorClass = "text-slate-800",
+}: {
+  title: React.ReactNode;
+  children?: React.ReactNode;
+  colorClass?: string;
+}) {
   return (
     <div className="mt-3">
       <p className={`font-semibold text-sm ${colorClass}`}>{title}</p>
@@ -58,10 +103,15 @@ function ChangelogCard({ item }: { item: ChangeItem }) {
         <header className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div>
-              <h3 id={`ch-${item.version}`} className="text-lg font-bold text-slate-900 dark:text-gray-100">
+              <h3
+                id={`ch-${item.version}`}
+                className="text-lg font-bold text-slate-900 dark:text-gray-100"
+              >
                 Release {item.version}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Resumo das alterações</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Resumo das alterações
+              </p>
             </div>
           </div>
 
@@ -77,7 +127,10 @@ function ChangelogCard({ item }: { item: ChangeItem }) {
 
         <div className="mt-4 text-sm text-slate-700 dark:text-slate-300 space-y-3">
           {item.added && item.added.length > 0 && (
-            <Section title="Adicionado" colorClass="text-emerald-700 dark:text-emerald-300">
+            <Section
+              title="Adicionado"
+              colorClass="text-emerald-700 dark:text-emerald-300"
+            >
               <ul className="space-y-2">
                 {item.added.map((a, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -92,7 +145,10 @@ function ChangelogCard({ item }: { item: ChangeItem }) {
           )}
 
           {item.fixed && item.fixed.length > 0 && (
-            <Section title="Corrigido" colorClass="text-rose-700 dark:text-rose-300">
+            <Section
+              title="Corrigido"
+              colorClass="text-rose-700 dark:text-rose-300"
+            >
               <ul className="space-y-2">
                 {item.fixed.map((f, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -107,13 +163,28 @@ function ChangelogCard({ item }: { item: ChangeItem }) {
           )}
 
           {item.notes && item.notes.length > 0 && (
-            <Section title="Notas" colorClass="text-slate-700 dark:text-slate-200">
+            <Section
+              title="Notas"
+              colorClass="text-slate-700 dark:text-slate-200"
+            >
               <ul className="space-y-2 text-slate-600 dark:text-slate-300">
                 {item.notes.map((n, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="mt-0.5 text-slate-500 dark:text-slate-300">
-                      <svg aria-hidden className="w-3 h-3" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="4" cy="4" r="3" stroke="currentColor" strokeWidth="0.5" />
+                      <svg
+                        aria-hidden
+                        className="w-3 h-3"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          cx="4"
+                          cy="4"
+                          r="3"
+                          stroke="currentColor"
+                          strokeWidth="0.5"
+                        />
                       </svg>
                     </span>
                     <span className="leading-tight">{n}</span>
@@ -142,7 +213,9 @@ export const Default: Story = {
     <main className="min-h-screen p-8 bg-gradient-to-b">
       <header className="max-w-4xl mx-auto mb-6 text-center">
         <h1 className="text-3xl font-extrabold">Changelog</h1>
-        <p className="mt-2 text-sm text-slate-500">Versões, notas de release e histórico de alterações</p>
+        <p className="mt-2 text-sm text-slate-500">
+          Versões, notas de release e histórico de alterações
+        </p>
       </header>
 
       <section className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5">
