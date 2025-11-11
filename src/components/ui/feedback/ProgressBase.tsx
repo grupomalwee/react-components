@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
-import { cn } from "../../../lib/utils";
 import LabelBase from "../form/LabelBase";
+import { cn } from "@/lib/utils";
+
 
 export type ProgressType = "bar" | "segments" | "panels" | "circles";
 
@@ -106,12 +107,10 @@ const ProgressBase = React.forwardRef<
                 <ProgressPrimitive.Indicator
                   className={cn(
                     "h-full transition-all duration-500 ease-in-out rounded-lg",
-                    // quando não usa autocolor, Indicator deve mostrar a cor primária
                     autocolor && autocolor.length >= 2
                       ? "bg-transparent"
                       : "bg-primary"
                   )}
-                  // usar width é mais previsível do que transform para representar o progresso
                   style={{ width: `${indicatorWidth}%` }}
                 />
 
@@ -149,9 +148,9 @@ const ProgressBase = React.forwardRef<
                   <div
                     aria-hidden="true"
                     className="absolute top-0 bottom-0 w-0.5 bg-black/70 transition-all duration-500 ease-in-out pointer-events-none"
-                    style={{ left: `100%` }}
+                    style={{left: `${(100 / value) * 100}%`, }}
                   >
-                    {value > 115 && (
+                    {value > 120 && (
                       <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 text-xs whitespace-nowrap font-extrabold">{`+${Math.round(
                         value - 100
                       )}%`}</div>

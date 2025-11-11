@@ -85,7 +85,7 @@ export const TimeVariants: Story = {
   name: "Variantes de Tempo",
   render: () => {
     const [date1, setDate1] = useState<Date | undefined>(
-      new Date(2025, 9, 9, 14, 30, 0)
+
     );
     const [date2, setDate2] = useState<Date | undefined>(
       new Date(2025, 9, 9, 14, 30, 0)
@@ -103,9 +103,7 @@ export const TimeVariants: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Apenas Data (hideTime)
-          </h3>
+       
           <DateTimePicker
             label="Apenas data"
             hideTime={true}
@@ -114,9 +112,7 @@ export const TimeVariants: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Sem Segundos
-          </h3>
+         
           <DateTimePicker
             label="Sem segundos"
             hideSeconds={true}
@@ -125,9 +121,7 @@ export const TimeVariants: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Apenas Data (hideHour + hideMinute)
-          </h3>
+
           <DateTimePicker
             label="Apenas data (alternativa)"
             hideHour={true}
@@ -137,9 +131,7 @@ export const TimeVariants: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Sem Minutos
-          </h3>
+
           <DateTimePicker
             label="Sem minutos"
             hideMinute={true}
@@ -148,9 +140,7 @@ export const TimeVariants: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Apenas Minutos (sem hora)
-          </h3>
+
           <DateTimePicker
             label="Apenas minutos"
             hideHour={true}
@@ -187,9 +177,7 @@ export const ConfigurationOptions: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Desabilitado
-          </h3>
+        
           <DateTimePicker
             label="Campo desabilitado"
             disabled={true}
@@ -198,9 +186,7 @@ export const ConfigurationOptions: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Com Limites de Data (próximos 30 dias)
-          </h3>
+         
           <DateTimePicker
             label="Próximos 30 dias"
             fromDate={new Date()}
@@ -210,9 +196,7 @@ export const ConfigurationOptions: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Sem Label
-          </h3>
+          
           <DateTimePicker date={date3} onChange={setDate3} />
         </div>
       </div>
@@ -239,7 +223,7 @@ export const WithTimePickerButton: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithTimePickerButton() {\n  const [date, setDate] = useState(new Date());\n  return <DateTimePicker label='Data com Time Picker Button' date={date} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
       },
     },
   },
@@ -270,9 +254,7 @@ export const DisplayOnly: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: dd/MM/yyyy
-          </h3>
+         
           <DateTimePicker
             label="Data BR"
             date={date1}
@@ -282,9 +264,7 @@ export const DisplayOnly: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: dd/MM/yyyy HH:mm
-          </h3>
+         
           <DateTimePicker
             label="Data e Hora BR"
             date={date2}
@@ -293,9 +273,7 @@ export const DisplayOnly: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: yyyy-MM-dd HH:mm:ss (ISO)
-          </h3>
+          
           <DateTimePicker
             label="Formato ISO"
             date={date3}
@@ -304,9 +282,7 @@ export const DisplayOnly: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: PPP (Localizado)
-          </h3>
+          
           <DateTimePicker
             label="Data por extenso"
             date={date4}
@@ -316,9 +292,7 @@ export const DisplayOnly: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: PPPP (Completo)
-          </h3>
+         
           <DateTimePicker
             label="Data completa"
             date={date5}
@@ -328,9 +302,7 @@ export const DisplayOnly: Story = {
           />
         </div>
         <div>
-          <h3 style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
-            Formato: EEE, dd/MM/yyyy
-          </h3>
+         
           <DateTimePicker
             label="Com dia da semana"
             date={date6}
@@ -360,7 +332,7 @@ export const WithError: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithTimePickerButton() {\n  const [date, setDate] = useState(new Date());\n  return <DateTimePicker label='Data com Time Picker Button' date={date} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
       },
     },
   },

@@ -14,7 +14,7 @@ const meta: Meta<typeof ProgressBase> = {
       description: "Tipo de visualização do progresso",
     },
     value: {
-      control: { type: "range", min: 0, max: 100, step: 10 },
+      control: { type: "range", min: 0, max: 150, step: 10 },
       description: "Valor do progresso (0-100)",
     },
     segments: {
