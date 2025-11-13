@@ -1,9 +1,17 @@
-"use client";
-import { ArrowRightIcon, ArrowsOutIcon, CheckIcon, CodeIcon, CopyIcon, DownloadIcon, FileArchiveIcon, FolderIcon, GearIcon, TerminalIcon } from "@phosphor-icons/react";
+import {
+  ArrowRightIcon,
+  ArrowsOutIcon,
+  CheckIcon,
+  CodeIcon,
+  CopyIcon,
+  DownloadIcon,
+  FileArchiveIcon,
+  FolderIcon,
+  GearIcon,
+  TerminalIcon,
+} from "@phosphor-icons/react";
 import React from "react";
-import { useTheme } from "../theme-provider";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 
 type CodeBlockProps = {
@@ -12,7 +20,8 @@ type CodeBlockProps = {
   highlightLines?: number[];
   breadcrumb?: string[];
   showStats?: boolean;
-  theme?: "dark" | "light";
+  loading?: boolean;
+  loaderWords?: string[];
 } & (
   | {
       code: string;
@@ -21,6 +30,15 @@ type CodeBlockProps = {
   | {
       code?: never;
       tabs: Array<{
+        name: string;
+        code: string;
+        language?: string;
+        highlightLines?: number[];
+      }>;
+    }
+  | {
+      code?: string;
+      tabs?: Array<{
         name: string;
         code: string;
         language?: string;
@@ -37,34 +55,54 @@ export const CodeBlock = ({
   tabs = [],
   breadcrumb = [],
   showStats = true,
-  theme, // optional override: 'dark' | 'light'
 }: CodeBlockProps) => {
+
   const [copied, setCopied] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const tabsExist = tabs.length > 0;
 
-  // Prefer theme override prop, otherwise use provider
-  const themeContext = useTheme();
-  const providerTheme = themeContext?.theme;
-  const appliedTheme = theme ?? providerTheme ?? "light";
+  const cssVars = React.useMemo(
+    () => ({
+      container: {
+        backgroundColor: "hsl(var(--card))",
+        borderColor: "hsl(var(--border))",
+      },
+      header: {
+        backgroundColor: "hsl(var(--popover))",
+        borderBottomColor: "hsl(var(--border))",
+      },
+      filename: { color: "hsl(var(--card-foreground))" },
+      mutedText: { color: "hsl(var(--muted-foreground))" },
+      icon: { color: "hsl(var(--muted-foreground))" },
+      lineNumbers: {
+        color: "hsl(var(--muted-foreground))",
+        borderRight: `1px solid hsl(var(--border))`,
+      },
+      highlightBorder: `3px solid hsl(var(--primary))`,
+    }),
+    []
+  );
 
-  // Determine dark mode: themes can be 'dark', 'dark-blue', 'system', etc.
-  const isDark = React.useMemo(() => {
-    if (typeof appliedTheme === "string") {
-      if (appliedTheme === "system") {
-        if (typeof document !== "undefined")
-          return document.documentElement.classList.contains("dark");
-        return false;
-      }
-      return appliedTheme.includes("dark");
-    }
-    return false;
-  }, [appliedTheme]);
+  const sanitizeCode = (input?: string) => {
+    if (!input) return "";
+    let out = input.replace(
+      /(^['"]use client['"];?\s*|\b'use client';|\b"use client";)/g,
+      ""
+    );
+    out = out.replace(/style=\{[\s\S]*?\}/g, "");
+    out = out.replace(/style=(["'`])(?:\\.|(?!\1)[\s\S])*?\1/g, "");
+    return out;
+  };
+
+  const getActiveRawCode = () =>
+    (tabsExist ? tabs[activeTab].code : code) || "";
+  const activeRawCode = getActiveRawCode();
+  const activeCodeSanitized = sanitizeCode(activeRawCode);
 
   const copyToClipboard = async () => {
-    const textToCopy = tabsExist ? tabs[activeTab].code : code;
+    const textToCopy = activeCodeSanitized;
     if (textToCopy) {
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
@@ -73,7 +111,7 @@ export const CodeBlock = ({
   };
 
   const downloadCode = () => {
-    const textToDownload = tabsExist ? tabs[activeTab].code : code;
+    const textToDownload = activeCodeSanitized;
     const activeFilename = tabsExist ? tabs[activeTab].name : filename;
     if (textToDownload) {
       const blob = new Blob([textToDownload], { type: "text/plain" });
@@ -88,7 +126,6 @@ export const CodeBlock = ({
     }
   };
 
-  const activeCode = tabsExist ? tabs[activeTab].code : code;
   const activeLanguage = tabsExist
     ? tabs[activeTab].language || language
     : language;
@@ -111,21 +148,22 @@ export const CodeBlock = ({
     }
   };
 
-  const getCodeStats = (code: string) => {
-    const lines = code.split("\n").length;
-    const chars = code.length;
-    const words = code.split(/\s+/).filter((word) => word.length > 0).length;
+  const getCodeStats = (source: string) => {
+    const lines = source.split("\n").length;
+    const chars = source.length;
+    const words = source.split(/\s+/).filter((word) => word.length > 0).length;
     return { lines, chars, words };
   };
 
-  const stats = showStats ? getCodeStats(activeCode || "") : null;
-
-  const containerBg = isDark ? "bg-slate-900" : "bg-white";
-  const containerBorder = isDark ? "border-slate-700" : "border-gray-200";
+  const stats = showStats ? getCodeStats(activeCodeSanitized) : null;
 
   return (
-    <div className={`relative w-full rounded-xl overflow-hidden shadow-md ${containerBg} border ${containerBorder}`}>
-      <div className={`flex items-stretch min-h-[3rem] ${isDark ? "bg-slate-800 border-b border-slate-700" : "bg-gray-50 border-b border-gray-200"}`}>
+    <div
+      className={`relative w-full rounded-xl overflow-hidden shadow-sm border no-underline-code`}
+      style={cssVars.container}
+    >
+      <style>{`.no-underline-code a { text-decoration: none !important; text-shadow: none !important; box-shadow: none !important; } .no-underline-code code a { text-decoration: none !important; }`}</style>
+      <div className={`flex items-stretch min-h-[3rem]`} style={cssVars.header}>
         <div className="flex-1 flex items-center min-w-0 px-3">
           <div className="flex gap-2 mr-3 shrink-0">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -135,13 +173,22 @@ export const CodeBlock = ({
 
           {breadcrumb.length > 0 && (
             <div className="flex items-center min-w-0">
-              <FolderIcon size="1em" className={`shrink-0 ${isDark ? "text-slate-400" : "text-gray-500"}`} />
+              <FolderIcon size="1em" style={cssVars.icon} />
               <div className="flex items-center min-w-0 ml-2">
                 {breadcrumb.map((crumb, index) => (
                   <React.Fragment key={index}>
-                    <span className={`text-xs truncate ${isDark ? "text-slate-400" : "text-gray-500"}`}>{crumb}</span>
+                    <span
+                      className="text-xs truncate"
+                      style={cssVars.mutedText}
+                    >
+                      {crumb}
+                    </span>
                     {index < breadcrumb.length - 1 && (
-                      <ArrowRightIcon size="0.75em" className={`shrink-0 mx-1 ${isDark ? "text-slate-500" : "text-gray-400"}`} />
+                      <ArrowRightIcon
+                        size="0.75em"
+                        style={cssVars.icon}
+                        className="shrink-0 mx-1"
+                      />
                     )}
                   </React.Fragment>
                 ))}
@@ -152,34 +199,41 @@ export const CodeBlock = ({
 
         <div className="flex items-center justify-end shrink-0 px-2">
           {stats && (
-            <div className={`text-xs mx-2 ${isDark ? "text-slate-400" : "text-gray-500"} truncate hidden md:block`}>
+            <div
+              className={`text-xs mx-2 truncate hidden md:block`}
+              style={cssVars.mutedText}
+            >
               {stats.lines}L • {stats.words}W
             </div>
           )}
 
           <div className="flex">
-            <button onClick={() => setIsExpanded(!isExpanded)} className={`p-2 transition-colors ${isDark ? "hover:bg-slate-700" : "hover:bg-gray-200"}`} title="Toggle fullscreen">
-              <ArrowsOutIcon size="1em" className={isDark ? "text-slate-400" : "text-gray-500"} />
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className={`p-2 transition-colors hover:bg-gray-200 dark:hover:bg-slate-700`}
+              title="Toggle fullscreen"
+            >
+              <ArrowsOutIcon size="1em" style={cssVars.icon} />
             </button>
             <button
               onClick={downloadCode}
-              className={`p-2 transition-colors ${isDark ? "hover:bg-slate-700" : "hover:bg-gray-200"}`}
+              className={`p-2 transition-colors hover:bg-gray-200 dark:hover:bg-slate-700`}
               title="Download code"
             >
-              <DownloadIcon
-                size="1em"
-                className={isDark ? "text-slate-400" : "text-gray-500"}
-              />
+              <DownloadIcon size="1em" style={cssVars.icon} />
             </button>
             <button
               onClick={copyToClipboard}
-              className={`p-2 transition-colors ${isDark ? "hover:bg-slate-700" : "hover:bg-gray-200"}`}
+              className={`p-2 transition-colors hover:bg-gray-200 dark:hover:bg-slate-700`}
               title="Copy code"
             >
               {copied ? (
-                <CheckIcon size="1em" className="text-green-400" />
+                <CheckIcon
+                  size="1em"
+                  style={{ color: "hsl(var(--primary))" }}
+                />
               ) : (
-                <CopyIcon size="1em" className={isDark ? "text-slate-400" : "text-gray-500"} />
+                <CopyIcon size="1em" style={cssVars.icon} />
               )}
             </button>
           </div>
@@ -187,20 +241,28 @@ export const CodeBlock = ({
       </div>
 
       {tabsExist && (
-        <div className={`flex border-b ${isDark ? "border-slate-700 bg-slate-800" : "border-gray-200 bg-gray-50"} overflow-x-auto`}>
+        <div
+          className={`flex border-b overflow-x-auto`}
+          style={{
+            borderColor: "hsl(var(--border))",
+            backgroundColor: "hsl(var(--popover))",
+          }}
+        >
           {tabs.map((tab, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
               className={`flex items-center gap-2 px-4 py-2 text-sm transition-all duration-200 border-b-2 shrink-0 ${
-                activeTab === index
-                  ? theme === "dark"
-                    ? "text-white border-blue-400 bg-slate-900"
-                    : "text-gray-900 border-blue-500 bg-white"
-                  : theme === "dark"
-                  ? "text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-700"
-                  : "text-gray-600 border-transparent hover:text-gray-800 hover:bg-gray-100"
+                activeTab === index ? "border-blue-500" : "border-transparent"
               }`}
+              style={
+                activeTab === index
+                  ? {
+                      backgroundColor: "hsl(var(--card))",
+                      color: "hsl(var(--card-foreground))",
+                    }
+                  : undefined
+              }
             >
               {getLanguageIcon(tab.language || language)}
               <span className="truncate max-w-[10rem]">{tab.name}</span>
@@ -209,21 +271,19 @@ export const CodeBlock = ({
         </div>
       )}
 
-
       {!tabsExist && filename && (
         <div
-          className={`flex items-center px-3 py-2 border-b ${
-            theme === "dark"
-              ? "border-slate-700 bg-slate-800"
-              : "border-gray-200 bg-gray-50"
-          }`}
+          className="flex items-center px-3 py-2 border-b"
+          style={{
+            borderColor: "hsl(var(--border))",
+            backgroundColor: "hsl(var(--popover))",
+          }}
         >
           <div className="flex items-center gap-2 min-w-0">
             {getLanguageIcon(language)}
             <span
-              className={`text-sm font-medium truncate ${
-                theme === "dark" ? "text-slate-200" : "text-gray-700"
-              }`}
+              className="text-sm font-medium truncate"
+              style={cssVars.filename}
             >
               {filename}
             </span>
@@ -238,53 +298,48 @@ export const CodeBlock = ({
       >
         <SyntaxHighlighter
           language={activeLanguage}
-          style={theme === "dark" ? atomDark : undefined}
           customStyle={{
             margin: 0,
             padding: "1rem",
-            background: "transparent",
             fontSize: "0.875rem",
             lineHeight: "1.5",
+            backgroundColor: "hsl(var(--card))",
           }}
           wrapLines={true}
           showLineNumbers={true}
           lineNumberStyle={{
+            ...(cssVars.lineNumbers as React.CSSProperties),
             minWidth: "3em",
             paddingRight: "1em",
-            color: theme === "dark" ? "#64748b" : "#9ca3af",
-            borderRight: `1px solid ${
-              theme === "dark" ? "#334155" : "#e5e7eb"
-            }`,
             marginRight: "1em",
           }}
           lineProps={(lineNumber: number) => ({
             style: {
               backgroundColor: activeHighlightLines.includes(lineNumber)
-                ? theme === "dark"
-                  ? "rgba(59, 130, 246, 0.1)"
-                  : "rgba(59, 130, 246, 0.05)"
+                ? "hsl(var(--highlight))"
                 : "transparent",
               display: "block",
               width: "100%",
               borderLeft: activeHighlightLines.includes(lineNumber)
-                ? "3px solid #3b82f6"
-                : "3px solid transparent",
+                ? cssVars.highlightBorder
+                : "none",
               paddingLeft: "0.5rem",
             },
           })}
           PreTag="div"
         >
-          {String(activeCode)}
+          {String(activeCodeSanitized)}
         </SyntaxHighlighter>
       </div>
 
       {showStats && stats && (
         <div
-          className={`px-3 py-2 border-t text-xs ${
-            theme === "dark"
-              ? "border-slate-700 bg-slate-800 text-slate-400"
-              : "border-gray-200 bg-gray-50 text-gray-500"
-          } flex items-center justify-between min-h-[2.5rem]`}
+          className="px-3 py-2 border-t text-xs flex items-center justify-between min-h-[2.5rem]"
+          style={{
+            borderTopColor: "hsl(var(--border))",
+            backgroundColor: "hsl(var(--popover))",
+            color: "hsl(var(--muted-foreground))",
+          }}
         >
           <div className="flex items-center gap-3 min-w-0">
             <span className="truncate">{activeLanguage.toUpperCase()}</span>
@@ -296,7 +351,7 @@ export const CodeBlock = ({
             </span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            <GearIcon size="0.75em" />
+            <GearIcon size="0.75em" style={cssVars.icon} />
             <span>UTF-8</span>
           </div>
         </div>

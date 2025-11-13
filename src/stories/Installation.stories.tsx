@@ -1,7 +1,7 @@
 import "../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CodeBlock } from "@/components/ui/CodeBlock";
+import { CodeBlock as OriginalCodeBlock } from "@/components/ui/CodeBlock";
 import {
   CardBase,
   CardHeaderBase,
@@ -15,7 +15,19 @@ import {
   WarningIcon,
   GearIcon,
 } from "@phosphor-icons/react";
-// removed ButtonBase — using CodeBlock tabs instead of a custom selector
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CodeBlock = (props: any) => {
+  const { fakeDuration = 700, ...rest } = props;
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), fakeDuration);
+    return () => clearTimeout(t);
+  }, [fakeDuration]);
+
+  return <OriginalCodeBlock {...rest} loading={isLoading} />;
+};
 
 const meta: Meta = {
   title: "Instalação",
@@ -33,7 +45,6 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<unknown>;
 
-// Use the tabs feature of `CodeBlock` to show npm / yarn / pnpm options.
 
 const InstalacaoContent: React.FC = () => {
   return (
@@ -50,49 +61,29 @@ const InstalacaoContent: React.FC = () => {
         </div>
       </header>
 
-      <CardBase>
-        <CardHeaderBase>
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <CheckCircleIcon size={18} className="text-primary" />
-              <CardTitleBase>Comandos</CardTitleBase>
-            </div>
-            <CardDescriptionBase>
-              <small className="text-xs text-muted-foreground">
-                Verifique versão com{" "}
-                <code className="bg-muted px-2 py-1 rounded">
-                  npm view &lt;package&gt; version
-                </code>
-              </small>
-            </CardDescriptionBase>
-          </div>
-        </CardHeaderBase>
-        <CardContentBase>
-          <div className="mb-4" />
+      <CodeBlock
+        language="bash"
+        filename="install.sh"
+        tabs={[
+          {
+            name: "npm",
+            code: "npm install @mlw-packages/react-components",
+            language: "bash",
+          },
+          {
+            name: "yarn",
+            code: "yarn add @mlw-packages/react-components",
+            language: "bash",
+          },
+          {
+            name: "pnpm",
+            code: "pnpm add @mlw-packages/react-components",
+            language: "bash",
+          },
+        ]}
+        loading={false}
+      />
 
-          <CodeBlock
-            language="bash"
-            filename="install.sh"
-            tabs={[
-              {
-                name: "npm",
-                code: "npm install @mlw-packages/react-components",
-                language: "bash",
-              },
-              {
-                name: "yarn",
-                code: "yarn add @mlw-packages/react-components",
-                language: "bash",
-              },
-              {
-                name: "pnpm",
-                code: "pnpm add @mlw-packages/react-components",
-                language: "bash",
-              },
-            ]}
-          />
-        </CardContentBase>
-      </CardBase>
       <CardBase>
         <CardHeaderBase>
           <div className="flex items-center gap-3">
@@ -131,8 +122,9 @@ const InstalacaoContent: React.FC = () => {
               </p>
               <CodeBlock
                 language="bash"
-                filename="peer-deps.sh"
+                filename="peer-deps"
                 code={`npm install react@^18 react-dom@^18 @phosphor-icons/react tailwindcss postcss autoprefixer --save`}
+                loading={false}
               />
               <p className="mt-2 text-xs text-muted-foreground">
                 Ajuste as versões conforme seu projeto. Se usar yarn/pnpm,
@@ -166,9 +158,7 @@ const DependenciasContent: React.FC = () => (
     <CardBase>
       <CardHeaderBase>
         <div className="flex items-center gap-3">
-          <CardTitleBase className="text-blue-500">
-            Tailwind CSS (instalação)
-          </CardTitleBase>
+          <CardTitleBase className="text-blue-500">Tailwind CSS</CardTitleBase>
         </div>
         <CardDescriptionBase>
           <p className="text-sm text-muted-foreground">
@@ -178,65 +168,26 @@ const DependenciasContent: React.FC = () => (
       </CardHeaderBase>
       <CardContentBase>
         <div className="grid gap-3">
-          <div className="mt-3 text-sm text-muted-foreground">
-            Terminal CMD{" "}
-          </div>
           <CodeBlock
             language="bash"
             filename="tailwind"
             code={`npm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p`}
+            loading={false}
           />
 
-          <div className="mt-3 text-sm text-muted-foreground">
-            index.css / global.css{" "}
-          </div>
           <CodeBlock
             language="css"
             filename="global.css"
             code={`@tailwind base;\n@tailwind components;\n@tailwind utilities;`}
+            loading={false}
           />
 
-          <div className="mt-3 text-sm text-muted-foreground">Vite.config </div>
           <CodeBlock
             language="js"
             filename="tailwind.config.js"
             code={`module.exports = {\n  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],\n  theme: { extend: {} },\n  plugins: [],\n};`}
+            loading={false}
           />
-        </div>
-      </CardContentBase>
-    </CardBase>
-
-    <CardBase>
-      <CardHeaderBase>
-        <CardTitleBase>Notas de versão & Upgrade</CardTitleBase>
-      </CardHeaderBase>
-      <CardContentBase>
-        <div className="grid gap-3">
-          <div className="text-sm text-muted-foreground">
-            <p className="font-semibold">Ver versão publicada</p>
-            <CodeBlock
-              language="bash"
-              filename="check-version.sh"
-              code={`npm view @mlw-packages/react-components version`}
-            />
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            <p className="font-semibold">Atualizar para a última versão</p>
-            <CodeBlock
-              language="bash"
-              filename="update.sh"
-              code={`npm install @mlw-packages/react-components@latest`}
-            />
-            <p className="mt-2">
-              Se houver breaking changes, confira o changelog/releases e siga o
-              guia de migração.
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Dica: teste em uma branch separada e leia as notas de release
-              antes de atualizar produção.
-            </p>
-          </div>
         </div>
       </CardContentBase>
     </CardBase>
@@ -259,6 +210,7 @@ const DependenciasContent: React.FC = () => (
           language="bash"
           filename="install-icons.sh"
           code={`npm install @phosphor-icons/react`}
+          loading={false}
         />
         <div className="mt-3 text-sm text-muted-foreground">
           Importe onde necessário:
@@ -267,7 +219,39 @@ const DependenciasContent: React.FC = () => (
           language="tsx"
           filename="MyComp.tsx"
           code={`import { CheckCircle, Warning } from '@phosphor-icons/react';\n\nfunction MyComp(){\n  return <CheckCircle size={24} />\n}`}
+          loading={false}
         />
+      </CardContentBase>
+    </CardBase>
+    <CardBase>
+      <CardHeaderBase>
+        <CardTitleBase>Notas de versão & Upgrade</CardTitleBase>
+      </CardHeaderBase>
+      <CardContentBase>
+        <div className="grid gap-3">
+          <div className="text-sm text-muted-foreground">
+            <p className="font-semibold">Ver versão publicada</p>
+            <CodeBlock
+              language="bash"
+              filename="check-version"
+              code={`npm view @mlw-packages/react-components version`}
+              loading={false}
+            />
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            <p className="font-semibold">Atualizar para a última versão</p>
+            <CodeBlock
+              language="bash"
+              filename="update"
+              code={`npm install @mlw-packages/react-components@latest`}
+              loading={false}
+            />
+            <p className="mt-2">
+              Se houver breaking changes, confira o changelog/releases.
+            </p>
+          </div>
+        </div>
       </CardContentBase>
     </CardBase>
   </div>
@@ -295,13 +279,11 @@ const ConfigContent: React.FC = () => (
         <CardTitleBase>Importar CSS global</CardTitleBase>
       </CardHeaderBase>
       <CardContentBase>
-        <p className="text-sm text-muted-foreground mb-3">
-          No arquivo principal (main.tsx / App.tsx / _app.tsx):
-        </p>
         <CodeBlock
           language="tsx"
-          filename="main.tsx"
+          filename="main.tsx  / app.tsx"
           code={`import '@mlw-packages/react-components/dist/index.css';`}
+          loading={false}
         />
       </CardContentBase>
     </CardBase>
@@ -315,6 +297,7 @@ const ConfigContent: React.FC = () => (
           language="tsx"
           filename="App.tsx"
           code={`import { ThemeProviderBase } from '@mlw-packages/react-components';\n\nfunction App(){\n  return (\n    <ThemeProviderBase defaultTheme="light" storageKey="app-theme">\n      {/* app */}\n    </ThemeProviderBase>\n  )\n}`}
+          loading={false}
         />
       </CardContentBase>
     </CardBase>
@@ -322,20 +305,19 @@ const ConfigContent: React.FC = () => (
     <CardBase>
       <CardHeaderBase>
         <CardTitleBase>Path alias (opcional)</CardTitleBase>
-        <CardDescriptionBase>
-          <p className="text-sm text-muted-foreground">Ex.: tsconfig + vite:</p>
-        </CardDescriptionBase>
       </CardHeaderBase>
-      <CardContentBase>
+      <CardContentBase className="flex flex-col gap-4">
         <CodeBlock
           language="json"
           filename="tsconfig.json"
           code={`"compilerOptions": {\n    "paths": {\n      "@mlw-packages/react-components": ["./node_modules/@mlw-packages/react-components"]\n    }\n  }\n}`}
+          loading={false}
         />
         <CodeBlock
           language="ts"
           filename="vite.config.ts"
           code={`import { defineConfig } from 'vite';\nimport path from 'path';\n\nexport default defineConfig({\n  resolve: { alias: { '@mlw-packages/react-components': path.resolve(__dirname, './node_modules/@mlw-packages/react-components') } }\n});`}
+          loading={false}
         />
       </CardContentBase>
     </CardBase>
@@ -389,7 +371,7 @@ const ProblemsContent: React.FC = () => {
         <CardContentBase>
           <div className="grid gap-3">
             {issues.map((it, idx) => (
-              <CardBase key={idx} className="p-3">
+              <CardBase key={idx} className="p-3 ">
                 <div>
                   <p className="font-semibold mb-1">{it.problem}</p>
                   <p className="text-sm text-muted-foreground">

@@ -17,8 +17,8 @@ const meta: Meta<typeof ModeToggleBase> = {
     backgrounds: {
       default: "light",
       values: [
-        { name: "light", value: "#f6f6f6" },
-        { name: "dark", value: "#222" },
+        { name: "light", value: "hsl(0 0% 100%)" },
+        { name: "dark", value: "hsl(231 15% 19%)" },
       ],
     },
     layout: "centered",
@@ -67,110 +67,6 @@ export default function Example() {
   return (
     <ThemeProviderBase>
       <ModeToggleBase themes={["light", "dark", "system"]} />
-    </ThemeProviderBase>
-  );
-}`,
-      },
-    },
-  },
-};
-
-export const AllThemes: Story = {
-  name: "Todos os Temas",
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 0",
-      }}
-    >
-      <ThemeProviderBase>
-        <ModeToggleBase
-          themes={[
-            "light",
-            "dark",
-            "system",
-            "light-purple",
-            "dark-purple",
-            "light-blue",
-            "dark-blue",
-            "light-green",
-            "dark-green",
-          ]}
-        />
-      </ThemeProviderBase>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Toggle com todas as variações de temas disponíveis, incluindo versões customizadas com cores purple, blue e green.",
-      },
-      source: {
-        code: `import React from 'react';
-import { ThemeProviderBase, ModeToggleBase } from '@mlw-packages/react-components';
-
-export default function Example() {
-  return (
-    <ThemeProviderBase>
-      <ModeToggleBase
-        themes={[
-          "light",
-          "dark",
-          "system",
-          "light-purple",
-          "dark-purple",
-          "light-blue",
-          "dark-blue",
-          "light-green",
-          "dark-green",
-        ]}
-      />
-    </ThemeProviderBase>
-  );
-}`,
-      },
-    },
-  },
-};
-
-export const ColorVariants: Story = {
-  name: "Variantes de Cores",
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 0",
-      }}
-    >
-      <ThemeProviderBase>
-        <ModeToggleBase
-          themes={["light-purple", "dark-purple", "light-blue", "dark-green"]}
-        />
-      </ThemeProviderBase>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Toggle com diferentes variantes de cores personalizadas (purple, blue, green).",
-      },
-      source: {
-        code: `import React from 'react';
-import { ThemeProviderBase, ModeToggleBase } from '@mlw-packages/react-components';
-
-export default function Example() {
-  return (
-    <ThemeProviderBase>
-      <ModeToggleBase
-        themes={["light-purple", "dark-purple", "light-blue", "dark-green"]}
-      />
     </ThemeProviderBase>
   );
 }`,

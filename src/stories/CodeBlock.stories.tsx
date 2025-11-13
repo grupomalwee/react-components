@@ -39,7 +39,6 @@ const meta: Meta<typeof CodeBlock> = {
     backgrounds: { default: "light" },
   },
   argTypes: {
-    theme: { control: "select", options: ["dark", "light"] },
     showStats: { control: "boolean" },
     language: { control: "text" },
     filename: { control: "text" },
@@ -48,7 +47,6 @@ const meta: Meta<typeof CodeBlock> = {
     language: "tsx",
     filename: "Example.tsx",
     showStats: true,
-    theme: "dark",
   },
 };
 
@@ -60,7 +58,6 @@ export const Default: Story = {
     code: exampleTsx,
     language: "tsx",
     filename: "Hello.tsx",
-    theme: "dark",
     showStats: true,
   },
   parameters: {
@@ -83,7 +80,7 @@ export const WithTabsIncludingTSX: Story = {
     <CodeBlock
       language="tsx"
       filename="Hello.tsx"
-      theme="dark"
+      
       showStats={true}
       tabs={[
         { name: "Hello.tsx", code: exampleTsx, language: "tsx" },
@@ -105,7 +102,6 @@ export const HighlightLines: Story = {
   args: {
     language: "javascript",
     filename: "sum.js",
-    theme: "dark",
     showStats: true,
     code: exampleJs,
     highlightLines: [2],
@@ -124,7 +120,6 @@ export const LightTheme: Story = {
     language: "tsx",
     filename: "Example.tsx",
     code: exampleTsx,
-    theme: "light",
     showStats: true,
   },
   parameters: {
@@ -141,7 +136,6 @@ export const LargeSnippet: Story = {
     language: "text",
     filename: "big.log",
     code: exampleLarge,
-    theme: "dark",
     showStats: true,
   },
   parameters: {
@@ -159,7 +153,7 @@ export const InteractivePlay: Story = {
     <CodeBlock
       language="tsx"
       filename="Hello.tsx"
-      theme="dark"
+      
       showStats={true}
       tabs={[
         { name: "Hello.tsx", code: exampleTsx, language: "tsx" },

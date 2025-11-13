@@ -20,7 +20,6 @@ import {
   UploadButton,
   VisibilityButton,
 } from "@/components/ui/form/SmallButtons";
-import { MagicWandIcon } from "@phosphor-icons/react/dist/ssr";
 
 export const ButtonPage = () => {
   return (
@@ -36,14 +35,7 @@ export const ButtonPage = () => {
           <ButtonBase variant="outline">Outline</ButtonBase>
           <ButtonBase variant="secondary">Secondary</ButtonBase>
         </div>
-        <div className="flex flex-col gap-4">
-          <ButtonBase >Default</ButtonBase>
-          <ButtonBase leftIcon={<MagicWandIcon />}>Default</ButtonBase>
-          <ButtonBase leftIcon={<MagicWandIcon />}>Default</ButtonBase>
-          <ButtonBase leftIcon={<MagicWandIcon />}>Default</ButtonBase>
-          <ButtonBase leftIcon={<MagicWandIcon />}>Default</ButtonBase>
-
-        </div>
+        <div className="flex flex-col gap-4"></div>
 
         <h2 className="font-bold text-2xl mt-6">Button Groups</h2>
         <div className="flex-wrap">

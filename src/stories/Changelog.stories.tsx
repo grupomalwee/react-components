@@ -12,6 +12,22 @@ type ChangeItem = {
 
 const changelogData: ChangeItem[] = [
   {
+    version: "1.7.5",
+    date: "13/11/2025",
+    added: [
+      "Suporte à formatação de datas (locale pt-BR) no RangePicker e melhorias de formatação no DatePicker/DateTimePicker",
+      "Permite abrir o DateTimePicker no mês dos limites (fromDate/toDate)",
+      "Propriedade 'children' no ButtonBase; suporte a estado de loading e melhor posicionamento de ícones",
+      "Novo componente CodeBlock para exibir trechos de código com realce de sintaxe e abas",
+      "Aprimoramentos nas classes e estrutura do Combobox e ajustes em FilterItem para comportamento consistente",
+    ],
+    fixed: [
+      "Ajustes de estilos no DateTimePicker e RangePicker",
+      "Aprimoramentos em ProgressBase e correções no layout do Calendar",
+      "Removida a propriedade 'disabled' de Combobox e ComboboxBase (ajuste de API)",
+    ],
+  },
+  {
     version: "1.7.4",
     date: "10/11/2025",
     added: [
@@ -20,7 +36,6 @@ const changelogData: ChangeItem[] = [
       "Novas props para formatação (pt-BR) em componentes de Chart",
       "Novas props de formatação de data para DatePicker e RangePicker",
     ],
-    notes: ["Bumped package version to 1.7.4"],
   },
 
   {

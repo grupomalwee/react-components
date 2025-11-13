@@ -53,3 +53,4 @@ export * from "./picker/TimePicker"
 export * from "./picker/TimePickerInput"
 export * from "./picker/utils"
 export * from "./ui/navigation/ContextMenuBase";
+export * from "./ui/CodeBlock"
