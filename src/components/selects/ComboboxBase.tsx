@@ -42,7 +42,6 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
   checkIsSelected: (value: T) => boolean;
-  disabled?: boolean;
   keepOpen?: boolean;
   closeAll?: ReactNode;
   searchPlaceholder?: string;
@@ -55,7 +54,6 @@ export function ComboboxBase<T extends string>({
   handleSelection,
   checkIsSelected,
   keepOpen = false,
-  disabled = false,
   closeAll,
   searchPlaceholder,
   error,
@@ -78,7 +76,6 @@ export function ComboboxBase<T extends string>({
             size="select"
             role="combobox"
             aria-expanded={open}
-            disabled={disabled}
             className={cn(
               "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
               error && "border-red-500"
@@ -107,7 +104,6 @@ export function ComboboxBase<T extends string>({
           >
             <CommandInputBase
               tabIndex={-1}
-              disabled={disabled}
               placeholder={searchPlaceholder ?? "Busque uma opção..."}
               data-testid={testIds.search ?? "combobox-search"}
             />

@@ -24,7 +24,6 @@ export interface ComboboxProps<T extends string> extends ErrorMessageProps {
   items: ComboboxItem<T>[];
   selected: ComboboxItem<T>["value"] | null;
   onChange: (value: ComboboxItem<T>["value"] | null) => void;
-  disabled?: boolean;
   className?: string;
   placeholder?: string;
   searchPlaceholder?: string;
@@ -37,7 +36,6 @@ export function Combobox<T extends string>({
   items,
   selected,
   onChange,
-  disabled,
   className,
   placeholder,
   searchPlaceholder,
@@ -80,7 +78,6 @@ export function Combobox<T extends string>({
         renderSelected={renderSelected}
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
-        disabled={disabled}
         searchPlaceholder={searchPlaceholder}
         error={error}
         testIds={testIds}
