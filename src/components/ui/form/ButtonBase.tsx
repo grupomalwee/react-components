@@ -46,8 +46,6 @@ export interface ButtonProps
   asChild?: boolean;
   testid?: string;
   isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
 }
 
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -59,43 +57,31 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       testid = `button-${variant ?? "default"}`,
       isLoading = false,
+      children,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
-
     const mergedDisabled = Boolean(props.disabled) || isLoading;
+
+    const isActivelyLoading = isLoading && !props.disabled;
 
     return (
       <Comp
         className={cn(
-          "relative",
           buttonVariantsBase({ variant, size, className }),
-          props.leftIcon ? "pl-10" : undefined,
-          props.rightIcon ? "pr-10" : undefined
+          "relative"
         )}
         ref={ref}
         data-testid={testid ?? `button-${variant ?? "default"}`}
-        aria-busy={isLoading || undefined}
+        aria-busy={isActivelyLoading || undefined}
         disabled={mergedDisabled}
         {...props}
       >
-        {props.leftIcon && (
-          <span className="absolute left-3 inset-y-0 flex items-center justify-center pointer-events-none [&>svg]:size-1">
-            {props.leftIcon}
-          </span>
-        )}
+          {children}
 
-        <span className={cn("flex items-center justify-center gap-2", isLoading && "blur-lg")}>{props.children}</span>
-
-        {props.rightIcon && (
-          <span className="absolute right-3 inset-y-0 flex items-center justify-center pointer-events-none [&>svg]:size-1">
-            {props.rightIcon}
-          </span>
-        )}
-
-        {isLoading && (
+        {isActivelyLoading && (
           <span className="absolute inset-0 flex items-center justify-center pointer-events-none rounded-md">
             <span className="absolute inset-0 rounded-md backdrop-blur overflow-hidden" />
             <CircleNotchIcon
@@ -110,7 +96,6 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 ButtonBase.displayName = "Button";
 
-// Group de botões
 interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   orientation?: "horizontal" | "vertical";

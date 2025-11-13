@@ -248,7 +248,6 @@ function FilterItem<T extends Record<string, unknown>>({
             });
 
           }}
-          className="w-24"
         />
         {filter.id !== null && (
           <Combobox
