@@ -822,9 +822,8 @@ const Chart: React.FC<ChartProps> = ({
                   ? {
                       value: yAxisLabel,
                       angle: -90,
-                      // Render the label to the left (outside) of the chart area
-                      // to avoid overlapping the Y values / bars.
-                      position: "left",
+                      
+                      position: "leftTop",
                       style: {
                         fontSize: 12,
                         fill: "hsl(var(--muted-foreground))",
