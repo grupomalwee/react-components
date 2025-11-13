@@ -1,7 +1,7 @@
 import "../style/global.css";
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CopyButton } from "@/components/ui/form/SmallButtons";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 import {
   CardBase,
   CardHeaderBase,
@@ -15,7 +15,7 @@ import {
   WarningIcon,
   GearIcon,
 } from "@phosphor-icons/react";
-import { ButtonBase } from "@/components/ui/form/ButtonBase";
+// removed ButtonBase — using CodeBlock tabs instead of a custom selector
 
 const meta: Meta = {
   title: "Instalação",
@@ -33,80 +33,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<unknown>;
 
-const CodeBlock: React.FC<{ code: string; language?: string }> = ({
-  code,
-  language = "bash",
-}) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
-    } catch {
-      setCopied(false);
-    }
-  };
-
-  return (
-    <div className="relative">
-      <pre
-        className="p-4 md:p-6 bg-background text-sm leading-relaxed whitespace-pre-wrap rounded-lg border border-border"
-        tabIndex={0}
-        aria-label={`${language} code`}
-      >
-        <code>{code}</code>
-      </pre>
-
-      <div className="absolute top-3 right-3 flex items-center gap-2">
-        <CopyButton onClick={handleCopy} aria-label="Copiar código" />
-        {copied && <span className="text-xs">copiado</span>}
-      </div>
-    </div>
-  );
-};
-
-const PMSelector: React.FC<{
-  value: "npm" | "yarn" | "pnpm";
-  onChange: (v: "npm" | "yarn" | "pnpm") => void;
-  options?: ("npm" | "yarn" | "pnpm")[];
-}> = ({ value, onChange, options = ["npm", "yarn", "pnpm"] }) => {
-  return (
-    <div
-      role="tablist"
-      aria-label="package manager"
-      className="inline-flex bg-muted/10 p-1 rounded-full gap-1"
-    >
-      {options.map((pm) => {
-        const active = pm === value;
-        return (
-          <ButtonBase
-            key={pm}
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(pm)}
-            className={`px-4 py-2 min-w-[72px] text-sm font-medium rounded-full transition-colors ${
-              active ? "bg-primary" : "text-muted/50"
-            }`}
-          >
-            {pm}
-          </ButtonBase>
-        );
-      })}
-    </div>
-  );
-};
+// Use the tabs feature of `CodeBlock` to show npm / yarn / pnpm options.
 
 const InstalacaoContent: React.FC = () => {
-  const [pm, setPm] = useState<"npm" | "yarn" | "pnpm">("npm");
-
-  const installCommands = {
-    npm: "npm install @mlw-packages/react-components",
-    yarn: "yarn add @mlw-packages/react-components",
-    pnpm: "pnpm add @mlw-packages/react-components",
-  } as const;
-
   return (
     <div className="min-h-[60vh] flex flex-col gap-6 p-8">
       <header className="flex items-center justify-between">
@@ -139,11 +68,29 @@ const InstalacaoContent: React.FC = () => {
           </div>
         </CardHeaderBase>
         <CardContentBase>
-          <div className="mb-4">
-            <PMSelector value={pm} onChange={setPm} />
-          </div>
+          <div className="mb-4" />
 
-          <CodeBlock code={installCommands[pm]} />
+          <CodeBlock
+            language="bash"
+            filename="install.sh"
+            tabs={[
+              {
+                name: "npm",
+                code: "npm install @mlw-packages/react-components",
+                language: "bash",
+              },
+              {
+                name: "yarn",
+                code: "yarn add @mlw-packages/react-components",
+                language: "bash",
+              },
+              {
+                name: "pnpm",
+                code: "pnpm add @mlw-packages/react-components",
+                language: "bash",
+              },
+            ]}
+          />
         </CardContentBase>
       </CardBase>
       <CardBase>
@@ -183,8 +130,9 @@ const InstalacaoContent: React.FC = () => {
                 Instalar peer dependencies (exemplo)
               </p>
               <CodeBlock
-                code={`npm install react@^18 react-dom@^18 @phosphor-icons/react tailwindcss postcss autoprefixer --save`}
                 language="bash"
+                filename="peer-deps.sh"
+                code={`npm install react@^18 react-dom@^18 @phosphor-icons/react tailwindcss postcss autoprefixer --save`}
               />
               <p className="mt-2 text-xs text-muted-foreground">
                 Ajuste as versões conforme seu projeto. Se usar yarn/pnpm,
@@ -234,22 +182,25 @@ const DependenciasContent: React.FC = () => (
             Terminal CMD{" "}
           </div>
           <CodeBlock
-            code={`npm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p`}
             language="bash"
+            filename="tailwind"
+            code={`npm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p`}
           />
 
           <div className="mt-3 text-sm text-muted-foreground">
             index.css / global.css{" "}
           </div>
           <CodeBlock
-            code={`@tailwind base;\n@tailwind components;\n@tailwind utilities;`}
             language="css"
+            filename="global.css"
+            code={`@tailwind base;\n@tailwind components;\n@tailwind utilities;`}
           />
 
           <div className="mt-3 text-sm text-muted-foreground">Vite.config </div>
           <CodeBlock
-            code={`module.exports = {\n  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],\n  theme: { extend: {} },\n  plugins: [],\n};`}
             language="js"
+            filename="tailwind.config.js"
+            code={`module.exports = {\n  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],\n  theme: { extend: {} },\n  plugins: [],\n};`}
           />
         </div>
       </CardContentBase>
@@ -264,16 +215,18 @@ const DependenciasContent: React.FC = () => (
           <div className="text-sm text-muted-foreground">
             <p className="font-semibold">Ver versão publicada</p>
             <CodeBlock
-              code={`npm view @mlw-packages/react-components version`}
               language="bash"
+              filename="check-version.sh"
+              code={`npm view @mlw-packages/react-components version`}
             />
           </div>
 
           <div className="text-sm text-muted-foreground">
             <p className="font-semibold">Atualizar para a última versão</p>
             <CodeBlock
-              code={`npm install @mlw-packages/react-components@latest`}
               language="bash"
+              filename="update.sh"
+              code={`npm install @mlw-packages/react-components@latest`}
             />
             <p className="mt-2">
               Se houver breaking changes, confira o changelog/releases e siga o
@@ -302,13 +255,18 @@ const DependenciasContent: React.FC = () => (
         </CardDescriptionBase>
       </CardHeaderBase>
       <CardContentBase>
-        <CodeBlock code={`npm install @phosphor-icons/react`} language="bash" />
+        <CodeBlock
+          language="bash"
+          filename="install-icons.sh"
+          code={`npm install @phosphor-icons/react`}
+        />
         <div className="mt-3 text-sm text-muted-foreground">
           Importe onde necessário:
         </div>
         <CodeBlock
-          code={`import { CheckCircle, Warning } from '@phosphor-icons/react';\n\nfunction MyComp(){\n  return <CheckCircle size={24} />\n}`}
           language="tsx"
+          filename="MyComp.tsx"
+          code={`import { CheckCircle, Warning } from '@phosphor-icons/react';\n\nfunction MyComp(){\n  return <CheckCircle size={24} />\n}`}
         />
       </CardContentBase>
     </CardBase>
@@ -341,8 +299,9 @@ const ConfigContent: React.FC = () => (
           No arquivo principal (main.tsx / App.tsx / _app.tsx):
         </p>
         <CodeBlock
-          code={`import '@mlw-packages/react-components/dist/index.css';`}
           language="tsx"
+          filename="main.tsx"
+          code={`import '@mlw-packages/react-components/dist/index.css';`}
         />
       </CardContentBase>
     </CardBase>
@@ -353,8 +312,9 @@ const ConfigContent: React.FC = () => (
       </CardHeaderBase>
       <CardContentBase>
         <CodeBlock
-          code={`import { ThemeProviderBase } from '@mlw-packages/react-components';\n\nfunction App(){\n  return (\n    <ThemeProviderBase defaultTheme="light" storageKey="app-theme">\n      {/* app */}\n    </ThemeProviderBase>\n  )\n}`}
           language="tsx"
+          filename="App.tsx"
+          code={`import { ThemeProviderBase } from '@mlw-packages/react-components';\n\nfunction App(){\n  return (\n    <ThemeProviderBase defaultTheme="light" storageKey="app-theme">\n      {/* app */}\n    </ThemeProviderBase>\n  )\n}`}
         />
       </CardContentBase>
     </CardBase>
@@ -368,12 +328,14 @@ const ConfigContent: React.FC = () => (
       </CardHeaderBase>
       <CardContentBase>
         <CodeBlock
-          code={`"compilerOptions": {\n    "paths": {\n      "@mlw-packages/react-components": ["./node_modules/@mlw-packages/react-components"]\n    }\n  }\n}`}
           language="json"
+          filename="tsconfig.json"
+          code={`"compilerOptions": {\n    "paths": {\n      "@mlw-packages/react-components": ["./node_modules/@mlw-packages/react-components"]\n    }\n  }\n}`}
         />
         <CodeBlock
-          code={`import { defineConfig } from 'vite';\nimport path from 'path';\n\nexport default defineConfig({\n  resolve: { alias: { '@mlw-packages/react-components': path.resolve(__dirname, './node_modules/@mlw-packages/react-components') } }\n});`}
           language="ts"
+          filename="vite.config.ts"
+          code={`import { defineConfig } from 'vite';\nimport path from 'path';\n\nexport default defineConfig({\n  resolve: { alias: { '@mlw-packages/react-components': path.resolve(__dirname, './node_modules/@mlw-packages/react-components') } }\n});`}
         />
       </CardContentBase>
     </CardBase>

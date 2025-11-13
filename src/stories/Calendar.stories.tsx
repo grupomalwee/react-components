@@ -69,6 +69,7 @@ export default function SingleDate() {
           selected={date}
           onSelect={setDate}
           data-testid="calendar-single"
+          className="p-3"
         />
       </div>
     );

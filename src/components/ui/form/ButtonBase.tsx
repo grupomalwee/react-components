@@ -4,6 +4,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../../lib/utils";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 
 const buttonVariantsBase = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-95",
@@ -44,6 +45,9 @@ export interface ButtonProps
     VariantProps<typeof buttonVariantsBase> {
   asChild?: boolean;
   testid?: string;
+  isLoading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,19 +58,53 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       asChild = false,
       testid = `button-${variant ?? "default"}`,
+      isLoading = false,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
 
+    const mergedDisabled = Boolean(props.disabled) || isLoading;
+
     return (
       <Comp
-        className={cn(buttonVariantsBase({ variant, size, className }))}
+        className={cn(
+          "relative",
+          buttonVariantsBase({ variant, size, className }),
+          props.leftIcon ? "pl-10" : undefined,
+          props.rightIcon ? "pr-10" : undefined
+        )}
         ref={ref}
         data-testid={testid ?? `button-${variant ?? "default"}`}
+        aria-busy={isLoading || undefined}
+        disabled={mergedDisabled}
         {...props}
-      />
+      >
+        {props.leftIcon && (
+          <span className="absolute left-3 inset-y-0 flex items-center justify-center pointer-events-none [&>svg]:size-1">
+            {props.leftIcon}
+          </span>
+        )}
+
+        <span className={cn("flex items-center justify-center gap-2", isLoading && "blur-lg")}>{props.children}</span>
+
+        {props.rightIcon && (
+          <span className="absolute right-3 inset-y-0 flex items-center justify-center pointer-events-none [&>svg]:size-1">
+            {props.rightIcon}
+          </span>
+        )}
+
+        {isLoading && (
+          <span className="absolute inset-0 flex items-center justify-center pointer-events-none rounded-md">
+            <span className="absolute inset-0 rounded-md backdrop-blur overflow-hidden" />
+            <CircleNotchIcon
+              weight="bold"
+              className="relative animate-spin h-4 w-4 text-current"
+            />
+          </span>
+        )}
+      </Comp>
     );
   }
 );
