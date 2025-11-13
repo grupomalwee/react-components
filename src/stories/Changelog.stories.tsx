@@ -25,6 +25,7 @@ const changelogData: ChangeItem[] = [
       "Ajustes de estilos no DateTimePicker e RangePicker",
       "Aprimoramentos em ProgressBase e correções no layout do Calendar",
       "Removida a propriedade 'disabled' de Combobox e ComboboxBase (ajuste de API)",
+      "Ajuste da posição do rótulo do eixo Y para 'leftTop' no componente Chart",
     ],
   },
   {
