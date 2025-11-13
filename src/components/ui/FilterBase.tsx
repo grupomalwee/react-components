@@ -238,6 +238,7 @@ function FilterItem<T extends Record<string, unknown>>({
         <Combobox
           items={dimensionItems}
           selected={filter.id ? String(filter.id) : null}
+          
           onChange={(value) => {
             onFilterChange({
               id: value ? (value as keyof T) : null,
@@ -245,7 +246,9 @@ function FilterItem<T extends Record<string, unknown>>({
               valueType,
               value: null,
             });
+
           }}
+          className="w-24"
         />
         {filter.id !== null && (
           <Combobox
