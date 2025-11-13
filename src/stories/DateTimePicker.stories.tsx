@@ -365,3 +365,48 @@ export const WithError: Story = {
     },
   },
 };
+
+export const OpenOnRangeBounds: Story = {
+  name: "Abrir no mês dos limites (fromDate / toDate)",
+  render: () => {
+    const [d, setD] = useState<Date | undefined>(undefined);
+
+    const from = new Date(2026, 1, 12);
+    const to = new Date(2026, 1, 24);
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div>
+          <DateTimePicker
+            label="Período: 24/02 → 06/03"
+            date={d}
+            onChange={setD}
+            fromDate={from}
+            toDate={to}
+            hideTime
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `// Exemplo: DateTimePicker com limites de 24/02/2026 a 06/03/2026
+import React, { useState } from 'react';
+import { DateTimePicker } from '@mlw-packages/react-components';
+
+export default function OpenOnRangeBounds() {
+  const [d, setD] = useState<Date | undefined>(undefined);
+  const from = new Date(2026, 1, 24);
+  const to = new Date(2026, 2, 6);
+
+  return (
+    <DateTimePicker label='Período: 24/02 → 06/03' date={d} onChange={setD} fromDate={from} toDate={to} />
+  );
+}
+`,
+      },
+    },
+  },
+};

@@ -133,6 +133,7 @@ export function DateTimePicker({
               selected={internalDate}
               onSelect={(d) => handleSelect(d)}
               initialFocus
+              defaultMonth={fromDate ?? toDate ?? internalDate}
               fromDate={fromDate}
               toDate={toDate}
               className={cn(
