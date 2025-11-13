@@ -344,7 +344,7 @@ export const OpenOnRangeBounds: Story = {
     const [d, setD] = useState<Date | undefined>(undefined);
 
     const from = new Date(2026, 1, 12);
-    const to = new Date(2026, 1, 24);
+    const to = new Date(2026, 2, 24);
 
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

@@ -6,6 +6,11 @@ import {
   DateRange,
   SelectRangeEventHandler,
 } from "react-day-picker";
+import ptBR from "date-fns/locale/pt-BR";
+import { format } from "date-fns";
+import type { Locale } from "date-fns";
+const dateFnsLocale = ((ptBR as unknown as { default?: Locale })?.default ??
+  (ptBR as unknown as Locale)) as Locale;
 import {
   CaretLeftIcon,
   CaretRightIcon,
@@ -79,7 +84,9 @@ export function RangePicker({
               animate={controls}
             >
               {range?.from && range?.to
-                ? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
+                ? `${format(range.from, "P", {
+                    locale: dateFnsLocale,
+                  })} - ${format(range.to, "P", { locale: dateFnsLocale })}`
                 : label}
             </motion.span>
             <motion.span
@@ -120,54 +127,58 @@ export function RangePicker({
                     mode="range"
                     selected={range}
                     onSelect={handleSelect}
+                    locale={dateFnsLocale}
                     showOutsideDays
                     fromDate={minDate}
                     toDate={maxDate}
                     className="min-w-0 flex flex-col"
                     classNames={{
-                      months:
-                        "flex items-center flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0 flex-1",
-                      month: "space-y-2 min-w-0 flex-1 flex flex-col",
+                      months: "flex flex-col sm:flex-row gap-3 sm:gap-4 w-full",
+                      month: "flex-1 min-w-0",
+
                       caption:
-                        "flex justify-center pt-1 relative items-center h-[10%] min-h-[2rem] mb-2",
+                        "flex items-center justify-between gap-2 pr-1 min-h-[2.25rem] mb-2",
                       caption_label:
-                        "text-[clamp(0.875rem,2.5vw,1.25rem)] font-semibold truncate px-10 tracking-tight",
-                      nav: "space-x-1 flex items-center",
+                        "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left",
+
+                      nav: "flex items-center gap-2",
+
                       nav_button: cn(
                         buttonVariantsBase({ variant: "outline" }),
-                        "h-8 w-8 bg-background p-0 opacity-60 hover:opacity-100 hover:bg-muted flex-shrink-0 touch-manipulation transition-all duration-200 ease-out hover:scale-105 active:scale-95",
-                        "[@media(min-width:400px)]:h-9 [@media(min-width:400px)]:w-9"
+                        "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95"
                       ),
-                      nav_button_previous: "absolute left-0",
-                      nav_button_next: "absolute right-0",
+                      nav_button_previous: "",
+                      nav_button_next: "",
+
                       table:
-                        "w-full border-collapse min-w-0 flex-1 flex flex-col",
-                      head_row: "flex w-full gap-1 mb-1",
+                        "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",
+
+                      head_row: "grid grid-cols-7 gap-1 mb-1",
                       head_cell:
-                        "text-muted-foreground rounded-md flex-1 min-w-0 font-semibold text-[clamp(0.625rem,1.5vw,0.75rem)] text-center pb-1 uppercase tracking-wider",
-                      row: "flex w-full flex-1 gap-1",
+                        "text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider",
+
+                      row: "grid grid-cols-7 gap-1",
+
                       cell: cn(
-                        "flex-1 min-w-0 aspect-square text-center  relative",
+                        "min-w-0 h-9 p-0 relative flex items-center justify-center",
                         "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
                         "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
                         "[&:has([aria-selected].day-outside)]:bg-muted/50",
-                        "[&:has([aria-selected])]:bg-muted",
-                        "first:[&:has([aria-selected])]:rounded-l-lg",
-                        "last:[&:has([aria-selected])]:rounded-r-lg",
-                        "focus-within:relative focus-within:z-20"
+                        "[&:has([aria-selected])]:bg-muted"
                       ),
+
                       day: cn(
                         buttonVariantsBase({ variant: "ghost" }),
-                        "w-full h-full min-w-9",
-                        "aria-selected:opacity-100 hover:bg-muted flex items-center justify-center p-1",
-                        "transition-all duration-200 ease-out !scale-100 aria-selected:!scale-100 hover:!scale-100 active:!scale-100"
+                        "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
+                        "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95"
                       ),
+
                       day_selected:
-                        "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white !scale-100 p-1 !border-0 !outline-none",
+                        "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white",
                       day_today:
-                        "bg-muted text-foreground font-bold ring-2 ring-primary/50 ring-inset p-1 !border-0 !outline-none",
+                        "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset",
                       day_outside:
-                        "day-outside text-muted-foreground/40 opacity-40 aria-selected:bg-muted/50 aria-selected:text-foreground",
+                        "text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
                       day_disabled:
                         "text-muted-foreground/30 opacity-40 cursor-not-allowed",
                       day_range_middle:
@@ -206,7 +217,6 @@ export function RangePicker({
                     whileTap={{ scale: 0.95 }}
                   >
                     <ButtonBase
-                    
                       variant="outline"
                       onClick={handleClear}
                       disabled={!range?.from && !range?.to}
