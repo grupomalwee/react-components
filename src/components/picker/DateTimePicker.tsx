@@ -98,15 +98,24 @@ export function DateTimePicker({
       {label && <LabelBase>{label}</LabelBase>}
 
       <PopoverBase open={open} onOpenChange={setOpen}>
-        <PopoverTriggerBase disabled={disabled} asChild>
+        <PopoverTriggerBase
+          disabled={disabled}
+          asChild
+          className={cn(error && "border-red-500")}
+        >
           <ButtonBase
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left min-w-0 overflow-hidden",
-              !date && "text-muted-foreground/"
+              "w-full justify-start text-left min-w-0 overflow-hidden ",
+              !date && "text-muted-foreground"
             )}
           >
-            <span className="truncate flex-1">
+            <span
+              className={cn(
+                "truncate flex-1",
+                !date && "text-muted-foreground"
+              )}
+            >
               {date
                 ? format(date, getDisplayFormat(), { locale: ptBR })
                 : "Selecione uma data"}

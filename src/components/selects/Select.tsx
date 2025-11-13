@@ -19,6 +19,7 @@ export interface SelectItem<T extends string> {
 interface DefaultSelectProps extends ErrorMessageProps {
   placeholder: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 interface SelectTestIds {
@@ -60,6 +61,7 @@ export function Select<T extends string>({
   onChange,
   error,
   testIds = {},
+  disabled,
 }: SelectProps<T>) {
   return (
     <div data-testid={testIds.root ?? "select-root"}>
@@ -73,6 +75,7 @@ export function Select<T extends string>({
             error && "border-red-500"
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
+          disabled={disabled}
         >
           <SelectValueBase
             placeholder={placeholder}

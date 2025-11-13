@@ -43,6 +43,7 @@ export interface SelectProps<T extends string> extends ErrorMessageProps {
   items: SelectItem<T>[];
   selected: SelectItem<T>["value"] | null;
   onChange: (value: SelectItem<T>["value"] | null) => void;
+  disabled?: boolean;
   className?: string;
   placeholder?: string;
   label?: string;
@@ -54,6 +55,7 @@ export function Select<T extends string>({
   items,
   selected,
   onChange,
+  disabled,
   className,
   placeholder,
   label,
@@ -107,6 +109,7 @@ export function Select<T extends string>({
               size="select"
               role="combobox"
               aria-expanded={open}
+              disabled={disabled}
               className={cn(
                 "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
                 error && "border-red-500"

@@ -32,6 +32,7 @@ export function MultiCombobox<T extends string>({
   selected,
   onChange,
   className,
+  disabled,
   placeholder,
   searchPlaceholder,
   label,
@@ -68,6 +69,7 @@ export function MultiCombobox<T extends string>({
             e.stopPropagation();
             onChange([]);
           }}
+          disabled={disabled}
           className="text-xs  hover:bg-red-50 hover:text-red-500 transition-colors rounded-md mr-2"
         >
           <XIcon />
@@ -149,6 +151,7 @@ export function MultiCombobox<T extends string>({
         checkIsSelected={checkIsSelected}
         keepOpen={keepOpen}
         closeAll={closeAll}
+        disabled={disabled}
         searchPlaceholder={searchPlaceholder}
         error={error}
       />

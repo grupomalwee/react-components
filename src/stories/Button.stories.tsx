@@ -1,4 +1,5 @@
 import "../style/global.css";
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import { ButtonBase, ButtonGroupBase } from "../components/ui/form/ButtonBase";
@@ -24,6 +25,7 @@ import {
   UploadButton,
   VisibilityButton,
 } from "@/components/ui/form/SmallButtons";
+import { MagnifyingGlassIcon, MapPinLineIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof ButtonBase> = {
   title: "forms/Button",
@@ -80,6 +82,7 @@ export default function Example() {
       options: ["default", "sm", "lg", "icon"],
     },
     disabled: { control: "boolean" },
+    isLoading: { control: "boolean" },
     children: { control: "text" },
   },
   args: {
@@ -87,11 +90,13 @@ export default function Example() {
     variant: "default",
     size: "default",
     disabled: false,
+    isLoading: false,
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof ButtonBase>;
+type AnyStory = StoryObj<typeof ButtonBase>;
 
 export const Default: Story = {
   parameters: {
@@ -282,6 +287,102 @@ export default function Sizes() {
   },
 };
 
+export const WithIcons = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  render: (args: any) => {
+    const iconFor = (key: string) =>
+      key === "map" ? (
+        <MapPinLineIcon size={16} />
+      ) : key === "search" ? (
+        <MagnifyingGlassIcon size={16} />
+      ) : null;
+
+    const children = args.children ?? "Buscar";
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <ButtonBase
+          {...args}
+          leftIcon={iconFor(args.left)}
+          rightIcon={iconFor(args.right)}
+          data-testid="btn-icons"
+          
+        >
+          {children}
+        </ButtonBase>
+      </div>
+    );
+  },
+  argTypes: {
+    left: {
+      control: { type: "select" },
+      options: ["none", "map", "search"],
+    },
+    right: {
+      control: { type: "select" },
+      options: ["none", "map", "search"],
+    },
+    children: { control: "text" },
+  },
+  args: {
+    left: "none",
+    right: "search",
+    children: "Buscar",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+import { MapPinLineIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
+
+export default function WithIcons() {
+  return (
+    <div>
+      <ButtonBase leftIcon={<MapPinLineIcon size={16} />} rightIcon={<MagnifyingGlassIcon size={16} />}>
+        Buscar
+      </ButtonBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  play: async ({ canvasElement, step }: any) => {
+    const canvas = within(canvasElement);
+
+    await step(
+      "Verificar botão com ícones e alinhamento do texto",
+      async () => {
+        const btn = canvas.getByTestId("btn-icons");
+        expect(btn).toBeInTheDocument();
+
+        const childrenSpan = Array.from(btn.querySelectorAll("span")).find(
+          (s) => getComputedStyle(s as Element).position !== "absolute"
+        );
+        expect(childrenSpan).toBeDefined();
+
+        const btnRect = btn.getBoundingClientRect();
+        const textRect = (childrenSpan as Element).getBoundingClientRect();
+        const btnCenter = btnRect.left + btnRect.width / 2;
+        const textCenter = textRect.left + textRect.width / 2;
+        // tolerância pequena para diferenças sub-pixel/inteiros
+        expect(Math.abs(btnCenter - textCenter)).toBeLessThan(4);
+      }
+    );
+  },
+} as unknown as AnyStory;
+
 export const Disabled: Story = {
   parameters: {
     docs: {
@@ -320,6 +421,70 @@ export default function Disabled() {
       const button = canvas.getByRole("button");
       expect(button).toBeDisabled();
     });
+  },
+};
+
+export const Loading: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Loading() {
+  return <ButtonBase isLoading>Enviando...</ButtonBase>;
+}
+`,
+      },
+    },
+  },
+  args: {
+    isLoading: false,
+    children: "Enviar",
+  },
+  render: (args) => {
+    const LoadingButton = () => {
+      const [loading, setLoading] = useState(false);
+      return (
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "32px 0",
+          }}
+        >
+          <ButtonBase
+            {...args}
+            data-testid="btn-loading"
+            isLoading={loading}
+            onClick={() => setLoading(true)}
+          >
+            {args.children ?? "Enviar"}
+          </ButtonBase>
+        </div>
+      );
+    };
+
+    return <LoadingButton />;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step(
+      "Clicar no botão para ativar loading e checar estado",
+      async () => {
+        const btn = canvas.getByTestId("btn-loading");
+        expect(btn).toBeInTheDocument();
+        await userEvent.click(btn);
+        // após o clique o botão deve entrar em loading
+        expect(btn).toHaveAttribute("aria-busy", "true");
+        expect(btn).toBeDisabled();
+        const svg = btn.querySelector("svg");
+        expect(svg).not.toBeNull();
+      }
+    );
   },
 };
 
@@ -452,7 +617,7 @@ export default function Small() {
         <SaveButton />
         <ChangeButton />
         <AddButton />
-        <CloseButton />       
+        <CloseButton />
         <DownloadButton />
         <UploadButton />
         <CopyButton />
