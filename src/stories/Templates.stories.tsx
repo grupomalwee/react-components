@@ -199,8 +199,10 @@ export default function DashboardPage() {
             </ButtonBase>
             <div className="relative">
               <ButtonBase variant="ghost" size="sm" className="relative">
-                <BellIcon />
-                <BadgeBase status="destructive" />
+                <span className="relative inline-flex items-center">
+                  <BellIcon />
+                  <BadgeBase status="destructive" />
+                </span>
               </ButtonBase>
             </div>
               <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -606,8 +608,10 @@ export default function DashboardPage() {
               </ButtonBase>
               <div className="relative">
                 <ButtonBase variant="ghost" size="sm" className="relative">
-                  <BellIcon />
-                  <BadgeBase status="destructive" />
+                  <span className="relative inline-flex items-center">
+                    <BellIcon />
+                    <BadgeBase status="destructive" />
+                  </span>
                 </ButtonBase>
               </div>
               <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
