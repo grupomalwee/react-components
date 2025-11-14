@@ -8,12 +8,6 @@ import {
   CardTitleBase,
 } from "@/components/ui/data/CardBase";
 import { BadgeBase } from "@/components/ui/data/BadgeBase";
-import {
-  TooltipBase,
-  TooltipContentBase,
-  TooltipTriggerBase,
-  TooltipProviderBase,
-} from "@/components/ui/feedback/TooltipBase";
 import Chart from "@/components/charts/Chart";
 import {
   BellIcon,
@@ -209,16 +203,9 @@ export default function DashboardPage() {
                 <BadgeBase status="destructive" />
               </ButtonBase>
             </div>
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-              <TooltipProviderBase>
-                <TooltipBase>
-                  <TooltipTriggerBase>
-                    <UserIcon size={16} className="text-primary" />
-                  </TooltipTriggerBase>
-                  <TooltipContentBase>Gabriel Glatz</TooltipContentBase>
-                </TooltipBase>
-              </TooltipProviderBase>
-            </div>
+              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                <UserIcon size={16} className="text-primary" />
+              </div>
           </div>
         </div>
       </header>
@@ -423,16 +410,12 @@ export default function DashboardPage() {
                 <ButtonBase className="w-full justify-start" variant="ghost">
                   <PackageIcon size={16} className="mr-2" />
                   View All Orders
-                </ButtonBase>
-                <ButtonBase className="w-full justify-start" variant="ghost">
-                  <UsersIcon size={16} className="mr-2" />
-                  Customer Management
-                </ButtonBase>
-                <ButtonBase className="w-full justify-start" variant="ghost">
-                  <TrendUpIcon size={16} className="mr-2" />
-                  Analytics Report
-                </ButtonBase>
-              </CardContentBase>
+                ButtonBase,
+                CardBase,
+                CardHeaderBase,
+                CardContentBase,
+                CardTitleBase,
+                BadgeBase,
             </CardBase>
 
             <CardBase>
@@ -628,14 +611,7 @@ export default function DashboardPage() {
                 </ButtonBase>
               </div>
               <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <TooltipProviderBase>
-                  <TooltipBase>
-                    <TooltipTriggerBase>
-                      <UserIcon size={16} className="text-primary" />
-                    </TooltipTriggerBase>
-                    <TooltipContentBase>Gabriel Glatz</TooltipContentBase>
-                  </TooltipBase>
-                </TooltipProviderBase>
+                <UserIcon size={16} className="text-primary" />
               </div>
             </div>
           </div>

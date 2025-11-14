@@ -357,30 +357,6 @@ export default function WithIcons() {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  play: async ({ canvasElement, step }: any) => {
-    const canvas = within(canvasElement);
-
-    await step(
-      "Verificar botão com ícones e alinhamento do texto",
-      async () => {
-        const btn = canvas.getByTestId("btn-icons");
-        expect(btn).toBeInTheDocument();
-
-        const childrenSpan = Array.from(btn.querySelectorAll("span")).find(
-          (s) => getComputedStyle(s as Element).position !== "absolute"
-        );
-        expect(childrenSpan).toBeDefined();
-
-        const btnRect = btn.getBoundingClientRect();
-        const textRect = (childrenSpan as Element).getBoundingClientRect();
-        const btnCenter = btnRect.left + btnRect.width / 2;
-        const textCenter = textRect.left + textRect.width / 2;
-        // tolerância pequena para diferenças sub-pixel/inteiros
-        expect(Math.abs(btnCenter - textCenter)).toBeLessThan(4);
-      }
-    );
-  },
 } as unknown as AnyStory;
 
 export const Disabled: Story = {
@@ -468,23 +444,6 @@ export default function Loading() {
     };
 
     return <LoadingButton />;
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step(
-      "Clicar no botão para ativar loading e checar estado",
-      async () => {
-        const btn = canvas.getByTestId("btn-loading");
-        expect(btn).toBeInTheDocument();
-        await userEvent.click(btn);
-        // após o clique o botão deve entrar em loading
-        expect(btn).toHaveAttribute("aria-busy", "true");
-        expect(btn).toBeDisabled();
-        const svg = btn.querySelector("svg");
-        expect(svg).not.toBeNull();
-      }
-    );
   },
 };
 

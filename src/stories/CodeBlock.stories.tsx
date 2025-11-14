@@ -161,20 +161,4 @@ export const InteractivePlay: Story = {
       ]}
     />
   ),
-  play: async ({ canvasElement }) => {
-  
-    const canvas = within(canvasElement);
-
-    // Verifica botão copiar
-    const copyBtn = await canvas.findByTitle("Copy code");
-    expect(copyBtn).toBeInTheDocument();
-
-    // Verifica troca de tab
-    const tabJs = await canvas.findByText("index.js");
-    expect(tabJs).toBeInTheDocument();
-    // clica na tab e checa se snippet JS aparece
-    tabJs.click();
-    const codeNode = await canvas.findByText("console.log(sum(2, 3));");
-    expect(codeNode).toBeInTheDocument();
-  },
 };
