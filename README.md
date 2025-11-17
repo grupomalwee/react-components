@@ -337,7 +337,17 @@ Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/
 
 ## Changelog & Releases
 
-- Versionamento semântico (SemVer). Releases automatizadas via CI (GitHub Actions + OIDC publishing quando aplicável).
+O histórico detalhado de alterações e notas de release está disponível em `CHANGELOG.md` (seguimos o formato "Keep a Changelog" e SemVer).
+
+Resumo do último release (destacado):
+
+### v1.0.0 — 2025-11-14
+
+- Lançamento inicial da biblioteca com os principais componentes e stories (Button, Card, Input, Modal, Table, Tooltip, Popover, Select, DatePicker, etc.).
+- Documentação inicial adicionada no `README.md`.
+- Configuração do Storybook e pipeline de build (Vite, tsup).
+
+Para o histórico completo e notas de versões anteriores, consulte `CHANGELOG.md` no repositório.
 
 ---
 
