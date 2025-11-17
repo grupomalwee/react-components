@@ -323,35 +323,13 @@ Se ainda não renderizar, confirme se o bundler transpila pacotes ESM/TSX corret
 
 ---
 
-## Contribuição
-
-Siga o fluxo padrão:
-
-1. Fork → branch com `feature/<descrição>` → PR para `main`.
-2. Inclua descrição clara, screenshots quando necessário e testes básicos.
-3. Use `pnpm`/`npm` consistentemente conforme `.github/workflows`.
-
-Sugestão de PR template: mudança, razão, passos para testar, checklist (lint/test/build).
-
----
-
-## Changelog & Releases
-
-O histórico detalhado de alterações e notas de release está disponível em `CHANGELOG.md` (seguimos o formato "Keep a Changelog" e SemVer).
-
-Resumo do último release (destacado):
-
-### v1.0.0 — 2025-11-14
-
-- Lançamento inicial da biblioteca com os principais componentes e stories (Button, Card, Input, Modal, Table, Tooltip, Popover, Select, DatePicker, etc.).
-- Documentação inicial adicionada no `README.md`.
-- Configuração do Storybook e pipeline de build (Vite, tsup).
-
-Para o histórico completo e notas de versões anteriores, consulte `CHANGELOG.md` no repositório.
-
----
-
 ## Contato
+
+---
+
+## Changelog
+
+- **Changelog (arquivo):** o changelog completo está em [`CHANGELOG.md`](./CHANGELOG.md).
 
 - Mantido por: **Grupo Malwee**
 
