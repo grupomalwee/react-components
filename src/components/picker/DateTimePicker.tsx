@@ -23,8 +23,6 @@ interface DateTimePickerProps extends ErrorMessageProps {
   displayFormat?: string;
   hideTime?: boolean;
   hideSeconds?: boolean;
-  hideHour?: boolean;
-  hideMinute?: boolean;
   fromDate?: Date;
   toDate?: Date;
   disabled?: boolean;
@@ -39,8 +37,6 @@ export function DateTimePicker({
   displayFormat,
   hideTime,
   hideSeconds,
-  hideHour,
-  hideMinute,
   fromDate,
   toDate,
   disabled,
@@ -72,9 +68,6 @@ export function DateTimePicker({
 
   const getTimeFormat = () => {
     if (hideTime) return "";
-    if (hideHour && hideMinute) return "";
-    if (hideHour) return hideSeconds ? "mm" : "mm:ss";
-    if (hideMinute) return hideSeconds ? "HH" : "HH':00'";
     return hideSeconds ? "HH:mm" : "HH:mm:ss";
   };
 
@@ -147,11 +140,11 @@ export function DateTimePicker({
               toDate={toDate}
               className={cn(
                 "w-full",
-                (hideTime || (hideHour && hideMinute)) && "border-0"
+                (hideTime) && "border-0"
               )}
             />
 
-            {!hideTime && !(hideHour && hideMinute) && (
+            {!hideTime && (
               <div className="flex justify-center w-full px-2">
                 <PopoverBase
                   open={timePickerOpen}

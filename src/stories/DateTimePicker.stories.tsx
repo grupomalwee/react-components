@@ -39,8 +39,6 @@ const meta: Meta<typeof DateTimePicker> = {
       description: "Esconde toda a seleção de horário (hora, minuto e segundo)",
     },
     hideSeconds: { control: "boolean" },
-    hideHour: { control: "boolean" },
-    hideMinute: { control: "boolean" },
     disabled: { control: "boolean" },
     className: { control: "text" },
     fromDate: { control: "date" },
@@ -50,8 +48,6 @@ const meta: Meta<typeof DateTimePicker> = {
     label: "Selecione uma data",
     hideTime: false,
     hideSeconds: false,
-    hideHour: false,
-    hideMinute: false,
     disabled: false,
     className: "",
   },
@@ -90,16 +86,6 @@ export const TimeVariants: Story = {
     const [date2, setDate2] = useState<Date | undefined>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
-    const [date3, setDate3] = useState<Date | undefined>(
-      new Date(2025, 9, 9, 14, 30, 0)
-    );
-    const [date4, setDate4] = useState<Date | undefined>(
-      new Date(2025, 9, 9, 14, 30, 0)
-    );
-    const [date5, setDate5] = useState<Date | undefined>(
-      new Date(2025, 9, 9, 14, 30, 0)
-    );
-
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
@@ -119,35 +105,7 @@ export const TimeVariants: Story = {
             date={date2}
             onChange={setDate2}
           />
-        </div>
-        <div>
-
-          <DateTimePicker
-            label="Apenas data (alternativa)"
-            hideHour={true}
-            hideMinute={true}
-            date={date3}
-            onChange={setDate3}
-          />
-        </div>
-        <div>
-
-          <DateTimePicker
-            label="Sem minutos"
-            hideMinute={true}
-            date={date4}
-            onChange={setDate4}
-          />
-        </div>
-        <div>
-
-          <DateTimePicker
-            label="Apenas minutos"
-            hideHour={true}
-            date={date5}
-            onChange={setDate5}
-          />
-        </div>
+        </div>     
       </div>
     );
   },
