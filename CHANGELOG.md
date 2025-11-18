@@ -13,6 +13,7 @@
 
 ## Índice
 
+- [Unreleased — 2025-11-18](#unreleased---2025-11-18)
 - [1.7.5 — 2025-11-13](#175---2025-11-13)
 - [1.7.4 — 2025-11-10](#174---2025-11-10)
 - [1.7.3 — 2025-11-04](#173---2025-11-04)
@@ -21,7 +22,27 @@
 
 ---
 
+## 1.7.6 — 2025-11-18
 
+### Added
+
+- Componentes `BadgeBase` e `StatusIndicator` com propriedades customizáveis.
+- Novo componente `CodeBlock` para exibir trechos de código (adição de `react-syntax-highlighter`).
+- Exemplos e ajustes nos charts e guias de uso.
+
+### Changed
+
+- Refatorações em vários componentes: atualização de estilos do `BadgeBase`; remoção das props `hideHour`/`hideMinute` do `DateTimePicker`; simplificações em `Tooltip` e limpeza de arquivos de configuração (Docker/workflows).
+
+### Fixed
+
+- Correções na estrutura do `DashboardPage` para melhor alinhamento de ícones.
+- Ajuste da posição do rótulo do eixo Y no `Chart` (`leftTop`).
+- Correções de layout e estilos em `DateTimePicker`, `RangePicker`, `ProgressBase` e `Calendar`.
+
+### Docs
+
+- Atualizações nas seções de contribuição e changelog do `README` e inclusão/atualização de exemplos.
 
 ## 1.7.5 — 2025-11-13
 
