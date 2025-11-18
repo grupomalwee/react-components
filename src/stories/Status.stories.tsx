@@ -12,7 +12,7 @@ const centerStyle: React.CSSProperties = {
 };
 
 const meta: Meta<typeof StatusIndicator> = {
-  title: "Data/Status Indicator",
+  title: "data/Status Indicator",
   component: StatusIndicator,
   tags: ["autodocs"],
   decorators: [

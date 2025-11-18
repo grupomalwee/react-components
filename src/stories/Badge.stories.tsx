@@ -3,13 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BadgeBase } from "../components/ui/data/BadgeBase";
 
 type BadgeStoryProps = {
-  text?: string;
+  children?: string;
   size?: "sm" | "md" | "lg";
   color?: "green" | "gray" | "red" | "yellow" | "blue" | "purple";
 };
 
 const BadgeStory = ({
-  text = "Badge",
+  children = "Badge",
   size = "md",
   color,
 }: BadgeStoryProps) => {
@@ -23,7 +23,7 @@ const BadgeStory = ({
       }}
     >
       <BadgeBase size={size} color={color} data-testid="badge">
-        {text}
+        {children}
       </BadgeBase>
     </div>
   );
@@ -59,7 +59,7 @@ export default function Example() {
     layout: "centered",
   },
   argTypes: {
-    text: {
+    children: {
       control: "text",
       description: "Texto exibido no badge",
     },
