@@ -25,8 +25,6 @@ export default function DatePickerPage() {
           date={date}
           onChange={setDate}
           hideSeconds
-          hideHour
-          hideMinute
         />
       </div>
       <div>
