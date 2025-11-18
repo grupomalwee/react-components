@@ -88,7 +88,7 @@ export function CalendarBase({
                 row: "grid grid-cols-7 gap-1",
 
                 cell: cn(
-                  "min-w-0 h-9 sm:h-10 md:h-11 p-0 relative flex items-center justify-center",
+                  "min-w-0 h-9 sm:h-10 md:h-10 p-0 relative flex items-center justify-center",
                   "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
                   "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
                   "[&:has([aria-selected].day-outside)]:bg-muted/50",

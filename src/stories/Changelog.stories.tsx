@@ -2,9 +2,11 @@ import "../style/global.css";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { BadgeBase, ColorType } from "@/components/ui/data/BadgeBase";
 
 type ChangeItem = {
   version: string;
+  author?: string;
   date?: string;
   added?: string[];
   fixed?: string[];
@@ -14,94 +16,93 @@ type ChangeItem = {
 
 type TagType = "added" | "changed" | "fixed" | "notes";
 
-function getTagStyles(type: TagType) {
-  switch (type) {
-    case "added":
-      return { tag: "bg-emerald-600 text-white", border: "border-emerald-600" };
-    case "changed":
-      return { tag: "bg-indigo-600 text-white", border: "border-indigo-600" };
-    case "fixed":
-      return { tag: "bg-rose-600 text-white", border: "border-rose-600" };
-    case "notes":
-      return { tag: "bg-slate-600 text-white", border: "border-slate-400" };
-    default:
-      return { tag: "bg-slate-200 text-slate-800", border: "border-slate-200" };
-  }
-}
-
 const changelogData: ChangeItem[] = [
   {
     version: "1.7.6",
+    author: "Gabriel Glatz",
     date: "2025-11-18",
     added: [
-      "BadgeBase: propriedades personalizáveis para maior flexibilidade",
-      "StatusIndicator: opções de configuração ampliadas",
-      "CodeBlock: suporte a realce de sintaxe multi-linguagem",
-      "Charts: novos exemplos demonstrativos",
+      "BadgeBase:  propriedades configuráveis para permitir ajustes de aparência e comportamento s.",
+      "StatusIndicator: adicionamos novas opções de configuração para personalizar estados e cores dos indicadores.",
+      "CodeBlock: implementamos suporte a múltiplas linguagens no realce de sintaxe, com detecção mais robusta.",
+      "Charts: incluímos novos exemplos práticos para facilitar a integração em dashboards.",
     ],
     changed: [
-      "BadgeBase: refatoração de estilos para maior consistência",
-      "DateTimePicker: remoção de hideHour/hideMinute (API simplificada)",
-      "Tooltip: lógica simplificada e otimizações de uso",
-      "Configs: limpeza de Docker e workflows de CI",
+      "BadgeBase: refatoramos os estilos para garantir consistência visual entre temas e tamanhos.",
+      "DateTimePicker: simplificamos a API removendo as props `hideHour` e `hideMinute`, reduzindo a complexidade de uso.",
+      "Tooltip: simplificamos a lógica e aplicamos otimizações para reduzir re-renders e melhorar performance.",
+      "Configurações: limpamos itens relacionados a Docker e workflows de CI para simplificar o repositório.",
     ],
     fixed: [
-      "DashboardPage: alinhamento de ícones corrigido",
-      "Chart: posição do rótulo do eixo Y (leftTop) corrigida",
-      "Pickers: ajustes de layout e correções visuais",
-      "ProgressBase/Calendar: pequenos consertos de apresentação",
+      "DashboardPage: corrigimos o alinhamento dos ícones em diferentes resoluções.",
+      "Chart: ajustamos a posição do rótulo do eixo Y quando usado o modo `leftTop`.",
+      "Pickers: aplicados pequenos ajustes de layout para evitar sobreposição de elementos.",
+      "ProgressBase/Calendar: correções visuais que normalizam a apresentação entre temas.",
     ],
     notes: [
-      "Docs: atualizações no README e no changelog",
-      "Exemplos: conteúdo revisado e expandido",
+      "Documentação: atualizamos o README e o changelog com instruções e exemplos mais claros.",
+      "Exemplos: revisamos e ampliamos os exemplos para cobrir mais casos de uso.",
     ],
   },
   {
     version: "1.7.5",
+    author: "Gabriel Glatz",
     date: "2025-11-13",
     added: [
-      "RangePicker: suporte a formatação pt-BR",
-      "DateTimePicker: abre no mês de borda (melhora navegação)",
-      "ButtonBase: melhor suporte a children e estado de loading",
-      "CodeBlock: abas e realce aprimorados",
-      "Combobox: melhorias na estrutura e acessibilidade",
+      "RangePicker: adicionamos suporte à formatação em pt-BR para exibir intervalos no formato local.",
+      "DateTimePicker: agora abre no mês de borda, melhorando a navegação entre meses adjacentes.",
+      "ButtonBase: aprimoramos o suporte a `children` e o estado de loading para comportamentos previsíveis.",
+      "CodeBlock: introduzimos abas e melhorias no realce de sintaxe para múltiplos blocos.",
+      "Combobox: reorganizamos a estrutura para melhorar acessibilidade e integração com formulários.",
     ],
     fixed: [
-      "Pickers: ajustes finos de estilo",
-      "ProgressBase: correções de layout",
-      "Combobox API: remoção da prop deprecated 'disabled'",
-      "Chart: correção do rótulo do eixo Y (leftTop)",
+      "Pickers: ajustes finos de estilo que corrigem alinhamentos e espaçamentos.",
+      "ProgressBase: correções no layout para evitar que barras fiquem desalinhadas.",
+      "Combobox: removida a prop obsoleta `disabled` e atualizada a API para o novo comportamento.",
+      "Chart: corrigimos o posicionamento do rótulo do eixo Y em algumas configurações.",
     ],
   },
   {
     version: "1.7.4",
+    author: "Gabriel Glatz",
     date: "2025-11-10",
     added: [
-      "Charts: exemplos adicionais para referência",
-      "Charts: refatoração do estilo de labels",
-      "Chart: novas props de formatação (pt-BR)",
-      "Pickers: props para formatação de data",
+      "Charts: adicionamos exemplos adicionais para demonstrar casos de uso comuns.",
+      "Charts: refatoramos o estilo das labels para melhorar legibilidade em diferentes tamanhos.",
+      "Chart: incluímos novas props de formatação voltadas para pt-BR.",
+      "Pickers: adicionadas props para personalizar a formatação de datas.",
     ],
   },
   {
     version: "1.7.3",
+    author: "Gabriel Glatz",
     date: "2025-11-04",
-    added: ["Charts: formatadores de valores customizáveis"],
-    fixed: ["LineChart: correção de erro de tipos"],
-    notes: ["Publicação do pacote na versão 1.7.3"],
+    added: [
+      "Charts: disponibilizamos formatadores de valores customizáveis para adaptar labels e tooltips aos requisitos do projeto.",
+    ],
+    fixed: [
+      "LineChart: corrigimos um erro de tipagem que causava warnings em builds estritos.",
+    ],
+    notes: ["Publicação: pacote publicado na versão 1.7.3."],
   },
   {
     version: "1.7.2",
+    author: "Gabriel Glatz",
     date: "2025-10-31",
-    added: ["Build: novo script de verificação `scripts/check-dist-build.js`"],
-    fixed: ["Exports: correções em index/export para compatibilidade"],
+    added: [
+      "Build: incluímos um script de verificação (`scripts/check-dist-build.js`) para validar o build de distribuição antes do publish.",
+    ],
+    fixed: [
+      "Exports: corrigimos pontos na exportação de módulos para garantir compatibilidade entre bundlers.",
+    ],
   },
   {
     version: "1.7.1",
+    author: "Gabriel Glatz",
     date: "2025-10-29",
     fixed: [
-      "Exports: ajustes em `index.ts` para corrigir exportações",
-      "CI: ajustes no workflow de versionamento e publish",
+      "Exports: ajustamos `index.ts` para corrigir exportações incorretas e evitar imports quebrados.",
+      "CI: melhoramos o workflow de versionamento e publicação para reduzir falhas automáticas.",
     ],
   },
 ];
@@ -117,7 +118,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => {
-    const MOTION = { duration: 0.28 };
+    const MOTION = { duration: 0.08 };
 
     const containerVariants = {
       hidden: {},
@@ -138,10 +139,19 @@ export const Default: Story = {
       exit: { opacity: 0 },
     };
 
+    function parseDateLocal(dateStr?: string) {
+      if (!dateStr) return new Date();
+      const parts = dateStr.split("-").map((p) => parseInt(p, 10));
+      if (parts.length < 3 || parts.some(Number.isNaN))
+        return new Date(dateStr);
+      const [y, m, d] = parts;
+      return new Date(y, m - 1, d);
+    }
+
     function groupByMonthYear(items: ChangeItem[]) {
       const groups: Record<string, ChangeItem[]> = {};
       items.forEach((it) => {
-        const date = it.date ? new Date(it.date) : new Date();
+        const date = it.date ? parseDateLocal(it.date) : new Date();
         const key = new Intl.DateTimeFormat("en-US", {
           month: "long",
           year: "numeric",
@@ -208,9 +218,9 @@ export const Default: Story = {
               </motion.p>
             </div>
 
-            <motion.div className="flex items-center gap-3">
+            <motion.div className="flex items-center ">
               <motion.button
-                className={`px-4 py-1.5 text-sm rounded-full transition-shadow shadow-sm flex items-center gap-2 border  ${
+                className={`px-4 py-1.5 text-sm rounded-l-lg transition-shadow shadow-sm flex items-center border  ${
                   activeFilters.length === 0
                     ? "bg-slate-900 text-white border-transparent shadow-md"
                     : "bg-white/60 dark:bg-slate-800/60"
@@ -223,7 +233,7 @@ export const Default: Story = {
               </motion.button>
 
               <motion.button
-                className={`px-4 py-1.5 text-sm rounded-full transition-shadow shadow-sm flex items-center gap-2 border  ${
+                className={`px-4 py-1.5 text-sm  transition-shadow shadow-sm flex items-center border  ${
                   activeFilters.includes("added")
                     ? "bg-emerald-600 text-white border-transparent shadow-md"
                     : "bg-white/60 dark:bg-slate-800/60"
@@ -236,7 +246,7 @@ export const Default: Story = {
               </motion.button>
 
               <motion.button
-                className={`px-4 py-1.5 text-sm rounded-full transition-shadow shadow-sm flex items-center gap-2 border ${
+                className={`px-4 py-1.5 text-sm  transition-shadow shadow-sm flex items-center border ${
                   activeFilters.includes("changed")
                     ? "bg-indigo-600 text-white border-transparent shadow-md"
                     : "bg-white/60 dark:bg-slate-800/60"
@@ -249,7 +259,7 @@ export const Default: Story = {
               </motion.button>
 
               <motion.button
-                className={`px-4 py-1.5 text-sm rounded-full transition-shadow shadow-sm flex items-center gap-2 border  ${
+                className={`px-4 py-1.5 text-sm rounded-r-lg transition-shadow shadow-sm flex items-center  border  ${
                   activeFilters.includes("fixed")
                     ? "bg-rose-600 text-white border-transparent shadow-md"
                     : "bg-white/60 dark:bg-slate-800/60"
@@ -264,7 +274,7 @@ export const Default: Story = {
           </div>
         </header>
 
-        <section className="max-w-7xl space-y-8">
+        <section className="max-w-7xl space-y-12">
           <AnimatePresence>
             {Object.entries(groups).length === 0 && (
               <motion.div
@@ -279,7 +289,7 @@ export const Default: Story = {
             {Object.entries(groups).map(([month, items]) => (
               <motion.div key={month} variants={itemVariants} layout>
                 <motion.h2
-                  className="text-4xl font-bold mb-2"
+                  className="text-3xl font-bold mb-2"
                   variants={itemVariants}
                 >
                   {month}
@@ -288,7 +298,7 @@ export const Default: Story = {
                 <motion.div className="space-y-4" variants={itemVariants}>
                   <div className="h-0.5 w-full bg-muted-foreground" />
                   {items.map((it) => {
-                    const date = it.date ? new Date(it.date) : new Date();
+                    const date = it.date ? parseDateLocal(it.date) : new Date();
                     const day = new Intl.DateTimeFormat("en-US", {
                       day: "2-digit",
                     }).format(date);
@@ -322,22 +332,13 @@ export const Default: Story = {
                     const primary = visibleItems[0] || "Release";
                     const details = visibleItems.slice(1);
 
-                    const tags: { label: string; className: string }[] = [];
+                    const tags: { label: string; color: string }[] = [];
                     if (visibleAdded.length)
-                      tags.push({
-                        label: "NEW",
-                        className: getTagStyles("added").tag,
-                      });
+                      tags.push({ label: "NEW", color: "green" });
                     if (visibleChanged.length)
-                      tags.push({
-                        label: "IMPROVEMENT",
-                        className: getTagStyles("changed").tag,
-                      });
+                      tags.push({ label: "IMPROVEMENT", color: "purple" });
                     if (visibleFixed.length)
-                      tags.push({
-                        label: "FIX",
-                        className: getTagStyles("fixed").tag,
-                      });
+                      tags.push({ label: "FIX", color: "red" });
 
                     return (
                       <motion.article
@@ -358,31 +359,14 @@ export const Default: Story = {
 
                           <div>
                             {(() => {
-                              const primaryType: TagType | undefined = it.added
-                                ? "added"
-                                : it.changed
-                                ? "changed"
-                                : it.fixed
-                                ? "fixed"
-                                : it.notes
-                                ? "notes"
-                                : undefined;
-                              const borderClass = primaryType
-                                ? getTagStyles(primaryType).border
-                                : "border-slate-200";
-
                               return (
-                                <div
-                                  className={`flex items-center gap-3 border-l-4 ${borderClass} pl-3`}
-                                >
+                                <div className="flex items-center gap-3 border-l-4 pl-3">
                                   <h3 className="text-lg font-semibold flex items-center gap-3">
                                     <span className="text-2xl">
                                       {it.version}
                                     </span>
                                     <span>-</span>
-                                    <span className="text-2xl font-medium text-slate-800 dark:text-white">
-                                      {primary}
-                                    </span>
+                                    <span className="text-xl ">{primary}</span>
                                   </h3>
                                 </div>
                               );
@@ -390,12 +374,16 @@ export const Default: Story = {
 
                             {details.length > 0 && (
                               <motion.ul
-                                className="mt-3 list-disc list-inside text-sm text-slate-600 dark:text-slate-400"
+                                className="mt-5 list-disc list-inside text-sm text-slate-600 dark:text-slate-400"
                                 initial="hidden"
                                 animate="visible"
                               >
                                 {details.map((sub, idx) => (
-                                  <motion.li key={idx} variants={itemVariants}>
+                                  <motion.li
+                                    key={idx}
+                                    variants={itemVariants}
+                                    className="py-0.5"
+                                  >
                                     {sub}
                                   </motion.li>
                                 ))}
@@ -404,18 +392,19 @@ export const Default: Story = {
                           </div>
                         </div>
 
-                        <div className="inline-flex items-center gap-2">
-                          {tags.map((t, idx) => (
-                            <motion.span
-                              key={idx}
-                              title={t.label}
-                              role="status"
-                              aria-label={t.label}
-                              className={`text-xs px-2 py-0.5 font-semibold rounded-full flex items-center gap-2 ${t.className} ring-1 ring-slate-100/30 shadow-sm `}
-                            >
-                              <span>{t.label}</span>
-                            </motion.span>
-                          ))}
+                        <div className="flex flex-col items-end gap-2 mt-1">
+                          <div className="inline-flex items-center gap-2">
+                            {tags.map((t, idx) => (
+                              <BadgeBase key={idx} color={t.color as ColorType}>
+                                <span>{t.label}</span>
+                              </BadgeBase>
+                            ))}
+                          </div>
+                          {it.author && (
+                            <div className="text-xs text-slate-500">
+                              by {it.author}
+                            </div>
+                          )}
                         </div>
                       </motion.article>
                     );

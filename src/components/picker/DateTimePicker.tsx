@@ -20,7 +20,7 @@ interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
   date: Date | undefined;
   onChange: (date: Date | undefined) => void;
-  displayFormat?: string;
+  displayFormat?: boolean;
   hideTime?: boolean;
   hideSeconds?: boolean;
   fromDate?: Date;
@@ -72,12 +72,15 @@ export function DateTimePicker({
   };
 
   const getDisplayFormat = () => {
-    if (displayFormat) {
-      return displayFormat;
-    }
     const timeFormat = getTimeFormat();
-    if (!timeFormat) return "PPP";
-    return `PPP - ${timeFormat}`;
+
+    if (displayFormat === true) {
+      if (!timeFormat) return "dd/MM/yyyy";
+      return `dd/MM/yyyy ${timeFormat}`;
+    }
+
+    if (!timeFormat) return "dd MMMM yyyy";
+    return `dd MMMM yyyy ${timeFormat}`;
   };
 
   useEffect(() => {
@@ -138,10 +141,7 @@ export function DateTimePicker({
               defaultMonth={fromDate ?? toDate ?? internalDate}
               fromDate={fromDate}
               toDate={toDate}
-              className={cn(
-                "w-full",
-                (hideTime) && "border-0"
-              )}
+              className={cn("w-full", hideTime && "border-0")}
             />
 
             {!hideTime && (

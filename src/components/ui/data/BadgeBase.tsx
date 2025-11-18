@@ -20,7 +20,7 @@ const badgeVariants = cva(
   }
 );
 
-type ColorType = "green" | "gray" | "red" | "yellow" | "blue" | "purple";
+export type ColorType = "green" | "gray" | "red" | "yellow" | "blue" | "purple";
 
 interface BadgeBaseProps
   extends React.ComponentProps<"span">,
