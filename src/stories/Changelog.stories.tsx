@@ -29,12 +29,12 @@ const changelogData: ChangeItem[] = [
     ],
     changed: [
       "BadgeBase: refatoramos os estilos para garantir consistência visual entre temas e tamanhos.",
-      "DateTimePicker: simplificamos a API removendo as props `hideHour` e `hideMinute`, reduzindo a complexidade de uso.",
+      "DateTimePicker: Removemos as props `hideHour` e `hideMinute`. E atualizamos a prop `displayFormat`.",
       "Tooltip: simplificamos a lógica e aplicamos otimizações para reduzir re-renders e melhorar performance.",
       "Configurações: limpamos itens relacionados a Docker e workflows de CI para simplificar o repositório.",
+      "NPM: Trocamos de packages manager npm para pnpm para melhorar a performance e gerenciamento de dependências.",
     ],
     fixed: [
-      "DashboardPage: corrigimos o alinhamento dos ícones em diferentes resoluções.",
       "Chart: ajustamos a posição do rótulo do eixo Y quando usado o modo `leftTop`.",
       "Pickers: aplicados pequenos ajustes de layout para evitar sobreposição de elementos.",
       "ProgressBase/Calendar: correções visuais que normalizam a apresentação entre temas.",
