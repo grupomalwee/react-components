@@ -12,7 +12,7 @@ on:
           - minor
           - major
       publish:
-        description: "Publicar no npm? (y/N)"
+        description: "Publicar no pnpm? (y/N)"
         required: false
         type: choice
         options:
@@ -32,19 +32,19 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci
 
       - name: Run Lint
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Run Tests
-        run: npm test
+        run: pnpm test
 
       - name: Build CSS (Tailwind)
-        run: npm run build-css
+        run: pnpm run build-css
 
       - name: Build JS (Tsup)
-        run: npm run build
+        run: pnpm run build
 
   release:
     environment: prd
@@ -70,10 +70,10 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci
 
       - name: Build package
-        run: npm run build
+        run: pnpm run build
 
       - name: Publish to npm (OIDC)
         if: ${{ github.event.inputs.publish == 'y' }}
