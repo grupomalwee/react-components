@@ -31,6 +31,10 @@ jobs:
 
         with:
           node-version: "20"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Install dependencies
         run: pnpm ci
 
@@ -68,6 +72,10 @@ jobs:
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install dependencies
         run: pnpm ci
