@@ -3,7 +3,7 @@ import {
   AvatarFallbackBase,
   AvatarImageBase,
 } from "@/components/ui/data/AvatarBase";
-import { BadgeBase } from "@/components/ui/data/BadgeBase";
+import { Badge } from "@/components/ui/data/Badge";
 
 export const AvatarPage = () => {
   return (
@@ -82,7 +82,7 @@ export const AvatarPage = () => {
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="success" aria-label="Online" title="Online" />
+              <Badge status="success" aria-label="Online" title="Online" />
             </div>
             <span className="text-sm text-muted-foreground">
               Badge (Online)
@@ -95,7 +95,7 @@ export const AvatarPage = () => {
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase
+              <Badge
                 status="desactivated"
                 aria-label="Offline"
                 title="Offline"
@@ -112,7 +112,7 @@ export const AvatarPage = () => {
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="destructive" aria-label="Busy" title="Busy" />
+              <Badge status="destructive" aria-label="Busy" title="Busy" />
             </div>
             <span className="text-sm text-muted-foreground">Badge (Busy)</span>
           </div>
@@ -123,7 +123,7 @@ export const AvatarPage = () => {
                 <AvatarImageBase src="https://github.com/grupomalwee.png" />
                 <AvatarFallbackBase>BD</AvatarFallbackBase>
               </AvatarBase>
-              <BadgeBase status="away" aria-label="Away" title="Away" />
+              <Badge status="away" aria-label="Away" title="Away" />
             </div>
             <span className="text-sm text-muted-foreground">Badge (Away)</span>
           </div>

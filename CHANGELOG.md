@@ -26,13 +26,13 @@
 
 ### Added
 
-- Componentes `BadgeBase` e `StatusIndicator` com propriedades customizáveis.
+- Componentes `Badge` e `StatusIndicator` com propriedades customizáveis.
 - Novo componente `CodeBlock` para exibir trechos de código (adição de `react-syntax-highlighter`).
 - Exemplos e ajustes nos charts e guias de uso.
 
 ### Changed
 
-- Refatorações em vários componentes: atualização de estilos do `BadgeBase`; remoção das props `hideHour`/`hideMinute` do `DateTimePicker`; simplificações em `Tooltip` e limpeza de arquivos de configuração (Docker/workflows).
+- Refatorações em vários componentes: atualização de estilos do `Badge`; remoção das props `hideHour`/`hideMinute` do `DateTimePicker`; simplificações em `Tooltip` e limpeza de arquivos de configuração (Docker/workflows).
 
 ### Fixed
 

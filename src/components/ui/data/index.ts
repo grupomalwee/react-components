@@ -1,5 +1,5 @@
 export * from "./AvatarBase";
-export * from "./BadgeBase";
+export * from "./Badge";
 export * from "./CalendarBase";
 export * from "./CardBase";
 

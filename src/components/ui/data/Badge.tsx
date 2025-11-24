@@ -32,7 +32,7 @@ interface BadgeBaseProps
   status?: string;
 }
 
-function BadgeBase({
+function Badge({
   className,
   color,
   size = "md",
@@ -71,4 +71,4 @@ function BadgeBase({
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export { BadgeBase, badgeVariants };
+export { Badge, badgeVariants };

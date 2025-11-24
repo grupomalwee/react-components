@@ -84,9 +84,7 @@ export function DateTimePicker({
   };
 
   useEffect(() => {
-    if (date) {
-      setInternalDate(date);
-    }
+    setInternalDate(date);
   }, [date, open]);
 
   return (
@@ -136,9 +134,9 @@ export function DateTimePicker({
               mode="single"
               locale={ptBR}
               selected={internalDate}
-              onSelect={(d) => handleSelect(d)}
+              onSelect={(d) => handleSelect(d ?? undefined)}
               initialFocus
-              defaultMonth={fromDate ?? toDate ?? internalDate}
+              defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
               fromDate={fromDate}
               toDate={toDate}
               className={cn("w-full", hideTime && "border-0")}
@@ -189,7 +187,7 @@ export function DateTimePicker({
                         Alterar Horário
                       </h4>
                       <TimePicker
-                        setDate={handleTimeChange}
+                        setDate={(d) => handleTimeChange(d ?? undefined)}
                         date={internalDate}
                         hideSeconds={hideSeconds}
                       />

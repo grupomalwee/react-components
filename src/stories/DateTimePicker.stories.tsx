@@ -59,7 +59,7 @@ type Story = StoryObj<typeof DateTimePicker>;
 const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {
-  const [date, setDate] = useState<Date | undefined>(args.date);
+  const [date, setDate] = useState<Date | undefined>(args.date ?? undefined);
   return <DateTimePicker {...args} date={date} onChange={setDate} />;
 };
 
@@ -80,16 +80,13 @@ export const Default: Story = {
 export const TimeVariants: Story = {
   name: "Variantes de Tempo",
   render: () => {
-    const [date1, setDate1] = useState<Date | undefined>(
-
-    );
+    const [date1, setDate1] = useState<Date | undefined>();
     const [date2, setDate2] = useState<Date | undefined>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-       
           <DateTimePicker
             label="Apenas data"
             hideTime={true}
@@ -98,14 +95,13 @@ export const TimeVariants: Story = {
           />
         </div>
         <div>
-         
           <DateTimePicker
             label="Sem segundos"
             hideSeconds={true}
             date={date2}
             onChange={setDate2}
           />
-        </div>     
+        </div>
       </div>
     );
   },
@@ -135,7 +131,6 @@ export const ConfigurationOptions: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-        
           <DateTimePicker
             label="Campo desabilitado"
             disabled={true}
@@ -144,7 +139,6 @@ export const ConfigurationOptions: Story = {
           />
         </div>
         <div>
-         
           <DateTimePicker
             label="Próximos 30 dias"
             fromDate={new Date()}
@@ -154,7 +148,6 @@ export const ConfigurationOptions: Story = {
           />
         </div>
         <div>
-          
           <DateTimePicker date={date3} onChange={setDate3} />
         </div>
       </div>

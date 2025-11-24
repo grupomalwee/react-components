@@ -12,11 +12,7 @@ import {
 } from "../components/ui/feedback/ModalBase";
 import { ButtonBase } from "../components/ui/form/ButtonBase";
 import { InputBase } from "../components/ui/form/InputBase";
-import { MapPinLineIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
-import {
-  ChangeButton,
-  EditButton,
-} from "../components/ui/form/SmallButtons";
+import { MapPinLineIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   SelectBase,
   SelectTriggerBase,
@@ -29,7 +25,7 @@ import {
 import { TextAreaBase } from "../components/ui/form/TextAreaBase";
 import LabelBase from "../components/ui/form/LabelBase";
 
-const meta: Meta<typeof ModalBase> = {
+const meta: Meta<unknown> = {
   title: "feedback/Modal",
   component: ModalBase,
   tags: ["autodocs"],
@@ -52,11 +48,22 @@ const meta: Meta<typeof ModalBase> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ModalBase>;
+type ModalArgs = {
+  insertLabel?: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  namePlaceholder?: string;
+  locationPlaceholder?: string;
+  otherPlaceholder?: string;
+  cancelLabel?: React.ReactNode;
+  confirmLabel?: React.ReactNode;
+};
+type Story = StoryObj<Record<string, unknown>>;
 
 export const Default: Story = {
-  render: () => {
-    const [open, setOpen] = React.useState(false);
+  render: (args?: Story["args"]) => {
+    const [selectOpen, setSelectOpen] = React.useState(false);
+    const a = (args ?? meta.args) as ModalArgs;
 
     return (
       <div
@@ -72,34 +79,37 @@ export const Default: Story = {
           <ModalTriggerBase asChild>
             <ButtonBase>
               <PlusIcon size={16} />
-              Insert
+              {a.insertLabel}
             </ButtonBase>
           </ModalTriggerBase>
           <ModalContentBase>
             <ModalHeaderBase>
-              <ModalTitleBase>Editar item</ModalTitleBase>
-              <ModalDescriptionBase>
-                Use este modal para editar informações do item. Abaixo há campos
-                de exemplo (nome, localização e outro campo) — adapte conforme
-                necessário.
-              </ModalDescriptionBase>
+              <ModalTitleBase>{a.title}</ModalTitleBase>
+              <ModalDescriptionBase>{a.description}</ModalDescriptionBase>
             </ModalHeaderBase>
 
             <div className="py-4 space-y-3">
-              <InputBase type="text" placeholder="Nome" label="Nome" />
+              <InputBase
+                type="text"
+                placeholder={a.namePlaceholder}
+                label="Nome"
+              />
 
               <InputBase
                 type="text"
-                placeholder="Localização"
+                placeholder={a.locationPlaceholder}
                 label="Local"
                 leftIcon={<MapPinLineIcon size={16} />}
               />
               <SelectBase
-                open={open}
-                onOpenChange={setOpen}
+                open={selectOpen}
+                onOpenChange={setSelectOpen}
                 data-testid="select-base"
               >
-                <SelectTriggerBase open={open} data-testid="select-trigger">
+                <SelectTriggerBase
+                  open={selectOpen}
+                  data-testid="select-trigger"
+                >
                   <SelectValueBase
                     placeholder="Select a fruit"
                     data-testid="select-value"
@@ -128,143 +138,14 @@ export const Default: Story = {
                   </SelectGroupBase>
                 </SelectContentBase>
               </SelectBase>
+
               <LabelBase>Outro campo</LabelBase>
-              <TextAreaBase placeholder="Outro campo" />
+              <TextAreaBase placeholder={a.otherPlaceholder} />
             </div>
 
             <ModalFooterBase>
-              <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Confirmar</ButtonBase>
-            </ModalFooterBase>
-          </ModalContentBase>
-        </ModalBase>
-        <ModalBase>
-          <ModalTriggerBase asChild>
-            <EditButton className="rounded-full" />
-          </ModalTriggerBase>
-          <ModalContentBase>
-            <ModalHeaderBase>
-              <ModalTitleBase>Editar item</ModalTitleBase>
-              <ModalDescriptionBase>
-                Formulário para editar os dados do item selecionado. Altere os
-                campos necessários e confirme para salvar as mudanças.
-              </ModalDescriptionBase>
-            </ModalHeaderBase>
-
-            <div className="py-4 space-y-3">
-              <InputBase type="text" placeholder="Nome atual" label="Nome" />
-
-              <InputBase
-                type="text"
-                placeholder="Localização atual"
-                label="Local"
-                leftIcon={<MapPinLineIcon size={16} />}
-              />
-              <SelectBase
-                open={open}
-                onOpenChange={setOpen}
-                data-testid="select-base-edit"
-              >
-                <SelectTriggerBase open={open} data-testid="select-trigger">
-                  <SelectValueBase
-                    placeholder="Selecione uma categoria"
-                    data-testid="select-value"
-                  />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase data-testid="select-group">
-                    <SelectLabelBase data-testid="select-label">
-                      Categoria
-                    </SelectLabelBase>
-                    <SelectItemBase value="cat1" data-testid="select-item">
-                      Categoria 1
-                    </SelectItemBase>
-                    <SelectItemBase value="cat2" data-testid="select-item">
-                      Categoria 2
-                    </SelectItemBase>
-                    <SelectItemBase value="cat3" data-testid="select-item">
-                      Categoria 3
-                    </SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-              <LabelBase>Observações</LabelBase>
-              <TextAreaBase placeholder="Observações sobre o item" />
-            </div>
-
-            <ModalFooterBase>
-              <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Salvar</ButtonBase>
-            </ModalFooterBase>
-          </ModalContentBase>
-        </ModalBase>
-        <ModalBase>
-          <ModalTriggerBase asChild>
-            <ChangeButton className="rounded-full" variant="secondary" />
-          </ModalTriggerBase>
-          <ModalContentBase>
-            <ModalHeaderBase>
-              <ModalTitleBase>Alterar status</ModalTitleBase>
-              <ModalDescriptionBase>
-                Use este modal para alterar propriedades ou status do item.
-                Exemplos: mudar prioridade, categoria ou visibilidade.
-              </ModalDescriptionBase>
-            </ModalHeaderBase>
-
-            <div className="py-4 space-y-3">
-              <LabelBase>Nova categoria</LabelBase>
-              <SelectBase
-                open={open}
-                onOpenChange={setOpen}
-                data-testid="select-base-change"
-              >
-                <SelectTriggerBase open={open} data-testid="select-trigger">
-                  <SelectValueBase placeholder="Selecione" />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase>
-                    <SelectItemBase value="low">Baixa</SelectItemBase>
-                    <SelectItemBase value="medium">Média</SelectItemBase>
-                    <SelectItemBase value="high">Alta</SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
-
-              <LabelBase>Comentários rápidos</LabelBase>
-              <TextAreaBase placeholder="Observação curta" />
-            </div>
-
-            <ModalFooterBase>
-              <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase>Aplicar</ButtonBase>
-            </ModalFooterBase>
-          </ModalContentBase>
-        </ModalBase>
-        <ModalBase>
-          <ModalTriggerBase asChild>
-            <ButtonBase>
-              <TrashIcon size={16} />
-              </ButtonBase>
-          </ModalTriggerBase>
-          <ModalContentBase>
-            <ModalHeaderBase>
-              <ModalTitleBase>Excluir item</ModalTitleBase>
-              <ModalDescriptionBase>
-                A exclusão é permanente. Confirme abaixo se deseja remover o
-                item selecionado.
-              </ModalDescriptionBase>
-            </ModalHeaderBase>
-
-            <div className="py-4 space-y-3">
-              <p>
-                Tem certeza que deseja excluir este item? Esta ação não pode ser
-                desfeita.
-              </p>
-            </div>
-
-            <ModalFooterBase>
-              <ButtonBase variant="outline">Cancelar</ButtonBase>
-              <ButtonBase variant="destructive">Excluir</ButtonBase>
+              <ButtonBase variant="outline">{a.cancelLabel}</ButtonBase>
+              <ButtonBase>{a.confirmLabel}</ButtonBase>
             </ModalFooterBase>
           </ModalContentBase>
         </ModalBase>
@@ -342,4 +223,31 @@ export const Default = () => (
 );`,
     },
   },
+};
+
+meta.args = {
+  insertLabel: "Insert",
+  title: "Editar item",
+  description: "Use este modal para editar informações do item.",
+  namePlaceholder: "Nome",
+  locationPlaceholder: "Localização",
+  otherPlaceholder: "Outro campo",
+  cancelLabel: "Cancelar",
+  confirmLabel: "Confirmar",
+};
+
+meta.decorators = [
+  (Story) => (
+    <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
+      <Story />
+    </div>
+  ),
+];
+
+meta.argTypes = {
+  insertLabel: { control: "text" },
+  title: { control: "text" },
+  description: { control: "text" },
+  namePlaceholder: { control: "text" },
+  locationPlaceholder: { control: "text" },
 };

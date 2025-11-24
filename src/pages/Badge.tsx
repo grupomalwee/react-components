@@ -1,4 +1,4 @@
-import { BadgeBase } from "@/components/ui/data/BadgeBase";
+import { Badge } from "@/components/ui/data/Badge";
 import {
   CheckIcon,
   StarIcon,
@@ -14,10 +14,10 @@ export function BadgePage() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Variantes</h2>
         <div className="flex flex-wrap gap-4">
-          <BadgeBase>Default</BadgeBase>
-          <BadgeBase>Secondary</BadgeBase>
-          <BadgeBase>Destructive</BadgeBase>
-          <BadgeBase>Outline</BadgeBase>
+          <Badge>Default</Badge>
+          <Badge>Secondary</Badge>
+          <Badge>Destructive</Badge>
+          <Badge>Outline</Badge>
         </div>
       </div>
 
@@ -25,22 +25,22 @@ export function BadgePage() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Badges com Ícones</h2>
         <div className="flex flex-wrap gap-4">
-          <BadgeBase className="flex items-center gap-1">
+          <Badge className="flex items-center gap-1">
             <CheckIcon className="w-4 h-4" aria-hidden="true" />
             Verified
-          </BadgeBase>
-          <BadgeBase className="flex items-center gap-1">
+          </Badge>
+          <Badge className="flex items-center gap-1">
             <StarIcon className="w-4 h-4" aria-hidden="true" />
             Featured
-          </BadgeBase>
-          <BadgeBase className="flex items-center gap-1">
+          </Badge>
+          <Badge className="flex items-center gap-1">
             <BellIcon className="w-4 h-4" aria-hidden="true" />
             Alert
-          </BadgeBase>
-          <BadgeBase className="flex items-center gap-1">
+          </Badge>
+          <Badge className="flex items-center gap-1">
             <HeartIcon className="w-4 h-4" aria-hidden="true" />
             Liked
-          </BadgeBase>
+          </Badge>
         </div>
       </div>
 
@@ -50,13 +50,13 @@ export function BadgePage() {
         <div className="flex flex-wrap gap-4">
           {[1, 8, 99, 999, "20+", "NEW"].map((count, i) => {
             return (
-              <BadgeBase
+              <Badge
                 key={i}
                 className="h-6 min-w-[1.5rem] rounded-full px-2 font-mono tabular-nums flex items-center justify-center"
                 aria-label={`Badge com valor ${count}`}
               >
                 {count}
-              </BadgeBase>
+              </Badge>
             );
           })}
         </div>
@@ -71,31 +71,31 @@ export function BadgePage() {
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase />
+            <Badge />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase  />
+            <Badge />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase />
+            <Badge />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase/>
+            <Badge />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase className="bg-red-500" />
+            <Badge className="bg-red-500" />
           </div>
         </div>
       </div>
@@ -109,31 +109,31 @@ export function BadgePage() {
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase className="bg-pink-500" />
+            <Badge className="bg-pink-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase  className="bg-purple-500" />
+            <Badge className="bg-purple-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase  className="bg-blue-500" />
+            <Badge className="bg-blue-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase  className="bg-red-500" />
+            <Badge className="bg-red-500" />
           </div>
           <div className="relative">
             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <ShieldIcon className="w-6 h-6" />
             </div>
-            <BadgeBase className="bg-pink-500" />
+            <Badge className="bg-pink-500" />
           </div>
         </div>
       </div>
@@ -142,31 +142,31 @@ export function BadgePage() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Badge como Link (asChild)</h2>
         <div className="flex flex-wrap gap-4">
-          <BadgeBase asChild>
+          <Badge asChild>
             <a href="#" className="cursor-pointer">
               Clicável Default
             </a>
-          </BadgeBase>
-          <BadgeBase asChild>
+          </Badge>
+          <Badge asChild>
             <a href="#" className="cursor-pointer">
               Clicável Secondary
             </a>
-          </BadgeBase>
-          <BadgeBase asChild>
+          </Badge>
+          <Badge asChild>
             <a href="#" className="cursor-pointer">
               Clicável Outline
             </a>
-          </BadgeBase>
+          </Badge>
         </div>
       </div>
 
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Tamanhos Customizados</h2>
         <div className="flex flex-wrap items-center gap-4">
-          <BadgeBase className="text-xs px-1 py-0">Pequeno</BadgeBase>
-          <BadgeBase>Padrão</BadgeBase>
-          <BadgeBase className="text-sm px-3 py-1">Médio</BadgeBase>
-          <BadgeBase className="text-base px-4 py-2">Grande</BadgeBase>
+          <Badge className="text-xs px-1 py-0">Pequeno</Badge>
+          <Badge>Padrão</Badge>
+          <Badge className="text-sm px-3 py-1">Médio</Badge>
+          <Badge className="text-base px-4 py-2">Grande</Badge>
         </div>
       </div>
 
@@ -175,18 +175,18 @@ export function BadgePage() {
           Cores Customizadas (via className)
         </h2>
         <div className="flex flex-wrap gap-4">
-          <BadgeBase className="bg-purple-500 text-white border-transparent hover:bg-purple-600">
+          <Badge className="bg-purple-500 text-white border-transparent hover:bg-purple-600">
             Roxo
-          </BadgeBase>
-          <BadgeBase className="bg-pink-500 text-white border-transparent hover:bg-pink-600">
+          </Badge>
+          <Badge className="bg-pink-500 text-white border-transparent hover:bg-pink-600">
             Rosa
-          </BadgeBase>
-          <BadgeBase className="bg-indigo-500 text-white border-transparent hover:bg-indigo-600">
+          </Badge>
+          <Badge className="bg-indigo-500 text-white border-transparent hover:bg-indigo-600">
             Indigo
-          </BadgeBase>
-          <BadgeBase className="bg-orange-500 text-white border-transparent hover:bg-orange-600">
+          </Badge>
+          <Badge className="bg-orange-500 text-white border-transparent hover:bg-orange-600">
             Laranja
-          </BadgeBase>
+          </Badge>
         </div>
       </div>
 
@@ -194,7 +194,7 @@ export function BadgePage() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Estilos Inline</h2>
         <div className="flex flex-wrap gap-4">
-          <BadgeBase
+          <Badge
             style={{
               backgroundColor: "#10b981",
               color: "white",
@@ -203,8 +203,8 @@ export function BadgePage() {
             className="border-transparent"
           >
             Verde Customizado
-          </BadgeBase>
-          <BadgeBase
+          </Badge>
+          <Badge
             style={{
               background: "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
               color: "white",
@@ -212,7 +212,7 @@ export function BadgePage() {
             }}
           >
             Gradiente
-          </BadgeBase>
+          </Badge>
         </div>
       </div>
 
@@ -224,33 +224,31 @@ export function BadgePage() {
           <div className="border rounded-lg p-4 space-y-2">
             <div className="flex items-center gap-2 mb-2">
               <h3 className="font-semibold">Produto Premium</h3>
-              <BadgeBase className="flex items-center gap-1">
+              <Badge className="flex items-center gap-1">
                 <StarIcon className="w-3 h-3" />
                 Premium
-              </BadgeBase>
-              <BadgeBase>-50%</BadgeBase>
+              </Badge>
+              <Badge>-50%</Badge>
             </div>
             <div className="flex gap-2">
-              <BadgeBase>Frete Grátis</BadgeBase>
-              <BadgeBase>Estoque Limitado</BadgeBase>
+              <Badge>Frete Grátis</Badge>
+              <Badge>Estoque Limitado</Badge>
             </div>
           </div>
 
           <div className="border rounded-lg p-4 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">Central de Notificações</h3>
-              <BadgeBase  className="rounded-full px-2">
-                3
-              </BadgeBase>
+              <Badge className="rounded-full px-2">3</Badge>
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <span>Nova mensagem</span>
-                <BadgeBase className="text-xs">Novo</BadgeBase>
+                <Badge className="text-xs">Novo</Badge>
               </div>
               <div className="flex items-center gap-2">
                 <span>Atualização disponível</span>
-                <BadgeBase className="text-xs">Info</BadgeBase>
+                <Badge className="text-xs">Info</Badge>
               </div>
             </div>
           </div>
@@ -264,7 +262,7 @@ export function BadgePage() {
         <div className="bg-gray-800 text-white p-4 rounded-md mb-4">
           <h3 className="font-medium mb-2">Como importar:</h3>
           <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto">
-            <code>{`import { BadgeBase } from "@/components/ui/BadgeBase";
+            <code>{`import { Badge } from "@/components/ui/Badge";
 import { Check } from "@phosphor-icons/react";`}</code>
           </pre>
         </div>
@@ -273,27 +271,27 @@ import { Check } from "@phosphor-icons/react";`}</code>
           <h3 className="font-medium mb-2">Exemplos de uso:</h3>
           <pre className="bg-gray-900 p-3 rounded-sm overflow-x-auto text-sm">
             <code>{`// Badge básico
-<BadgeBase>Badge</BadgeBase>
+<Badge>Badge</Badge>
 
 // Badge com variante
-<BadgeBase variant="secondary">Secondary</BadgeBase>
+<Badge variant="secondary">Secondary</Badge>
 
 // Badge com ícone
-<BadgeBase variant="default">
+<Badge variant="default">
   <Check className="w-4 h-4" />
   Verificado
-</BadgeBase>
+</Badge>
 
 // Badge de status
-<BadgeBase status="online" />
+<Badge status="online" />
 
 // Badge como link
-<BadgeBase asChild variant="outline">
+<Badge asChild variant="outline">
   <a href="/link">Clicável</a>
-</BadgeBase>
+</Badge>
 
 // Badge com cor customizada
-<BadgeBase status="custom" statusColor="#8b5cf6" />`}</code>
+<Badge status="custom" statusColor="#8b5cf6" />`}</code>
           </pre>
         </div>
       </div>

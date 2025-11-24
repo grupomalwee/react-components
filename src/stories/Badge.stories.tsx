@@ -1,6 +1,6 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BadgeBase } from "../components/ui/data/BadgeBase";
+import { Badge } from "../components/ui/data/Badge";
 
 type BadgeStoryProps = {
   children?: string;
@@ -22,9 +22,9 @@ const BadgeStory = ({
         padding: "32px 0",
       }}
     >
-      <BadgeBase size={size} color={color} data-testid="badge">
+      <Badge size={size} color={color} data-testid="badge">
         {children}
-      </BadgeBase>
+      </Badge>
     </div>
   );
 };
@@ -41,10 +41,10 @@ const meta: Meta<typeof BadgeStory> = {
       },
       source: {
         code: `import React from 'react';
-import { BadgeBase } from '@mlw-packages/react-components';
+import { Badge } from '@mlw-packages/react-components';
 
 export default function Example() {
-  return <BadgeBase size="md">Badge</BadgeBase>;
+  return <Badge size="md">Badge</Badge>;
 }
 `,
       },
@@ -85,10 +85,10 @@ export const Default: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { BadgeBase } from '@mlw-packages/react-components';
+import { Badge } from '@mlw-packages/react-components';
 
 export default function Default() {
-  return <BadgeBase size="md">Badge</BadgeBase>;
+  return <Badge size="md">Badge</Badge>;
 }
 `,
       },
@@ -108,15 +108,15 @@ export const Variants: Story = {
         flexWrap: "wrap",
       }}
     >
-      <BadgeBase data-testid="badge-size-sm" size="sm">
+      <Badge data-testid="badge-size-sm" size="sm">
         sm
-      </BadgeBase>
-      <BadgeBase data-testid="badge-size-md" size="md">
+      </Badge>
+      <Badge data-testid="badge-size-md" size="md">
         md
-      </BadgeBase>
-      <BadgeBase data-testid="badge-size-lg" size="lg">
+      </Badge>
+      <Badge data-testid="badge-size-lg" size="lg">
         lg
-      </BadgeBase>
+      </Badge>
 
       <div
         style={{
@@ -128,24 +128,24 @@ export const Variants: Story = {
           marginTop: 12,
         }}
       >
-        <BadgeBase data-testid="badge-color-green" color="green">
+        <Badge data-testid="badge-color-green" color="green">
           Green
-        </BadgeBase>
-        <BadgeBase data-testid="badge-color-gray" color="gray">
+        </Badge>
+        <Badge data-testid="badge-color-gray" color="gray">
           Gray
-        </BadgeBase>
-        <BadgeBase data-testid="badge-color-red" color="red">
+        </Badge>
+        <Badge data-testid="badge-color-red" color="red">
           Red
-        </BadgeBase>
-        <BadgeBase data-testid="badge-color-yellow" color="yellow">
+        </Badge>
+        <Badge data-testid="badge-color-yellow" color="yellow">
           Yellow
-        </BadgeBase>
-        <BadgeBase data-testid="badge-color-blue" color="blue">
+        </Badge>
+        <Badge data-testid="badge-color-blue" color="blue">
           Blue
-        </BadgeBase>
-        <BadgeBase data-testid="badge-color-blue" color="purple">
+        </Badge>
+        <Badge data-testid="badge-color-blue" color="purple">
           Purple
-        </BadgeBase>
+        </Badge>
       </div>
     </div>
   ),
@@ -153,20 +153,20 @@ export const Variants: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { BadgeBase } from '@mlw-packages/react-components';
+import { Badge } from '@mlw-packages/react-components';
 
 export default function Variants() {
   return (
     <div>
-      <BadgeBase size="md">Default</BadgeBase>
-      <BadgeBase size="sm">Small</BadgeBase>
+      <Badge size="md">Default</Badge>
+      <Badge size="sm">Small</Badge>
       //
-      <BadgeBase color="green">Green</BadgeBase>
-      <BadgeBase color="gray">Green</BadgeBase>
-      <BadgeBase color="red">Green</BadgeBase>
-      <BadgeBase color="yellow">Green</BadgeBase>
-      <BadgeBase color="blue">Green</BadgeBase>
-      <BadgeBase color="purple">Green</BadgeBase>
+      <Badge color="green">Green</Badge>
+      <Badge color="gray">Green</Badge>
+      <Badge color="red">Green</Badge>
+      <Badge color="yellow">Green</Badge>
+      <Badge color="blue">Green</Badge>
+      <Badge color="purple">Green</Badge>
     </div>
   );
 }

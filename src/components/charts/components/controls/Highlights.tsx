@@ -1,6 +1,6 @@
 import React from "react";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionProps } from "framer-motion";
 import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
@@ -70,69 +70,86 @@ const Highlights: React.FC<Props> = ({
               animate="visible"
               exit="exit"
               key={`pill-${k}`}
-            >
-              <ButtonBase
-                asChild={true}
-                variant={"ghost"}
-                onClick={() => toggleHighlight(k)}
-                title={isHighlighted ? `Desativar ${label}` : `Ativar ${label}`}
-                className={pillClasses}
-                style={{ minWidth: showFullLabel ? undefined : 36 }}
-                aria-pressed={isHighlighted}
-              >
-                <motion.button
-                  whileHover={{ scale: isHighlighted ? 1.04 : 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  animate={isHighlighted ? { scale: 1.02 } : { scale: 1 }}
-                  className="flex items-center gap-2 min-w-0 pr-2"
-                >
-                  <motion.span
-                    className={cn("w-3 h-3 rounded-sm flex-shrink-0 border")}
-                    style={{
-                      backgroundColor: color,
-                      borderColor: isHighlighted ? color : "transparent",
-                      boxShadow: isHighlighted
-                        ? `0 6px 20px ${color}33`
-                        : undefined,
-                    }}
-                    layout
-                    initial={{ scale: 0.8, opacity: 0.9 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-
-                  {showFullLabel ? (
-                    <motion.span className="truncate max-w-[10rem] pr-2" layout>
-                      {label}
-                    </motion.span>
-                  ) : showShortLabel ? (
-                    <motion.span
-                      className="truncate max-w-[6rem] text-xs pr-2"
-                      layout
-                    >
-                      {label}
-                    </motion.span>
-                  ) : null}
-
-                  <motion.span
-                    aria-hidden
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    animate={
-                      isHighlighted
-                        ? { opacity: 1, scale: 1 }
-                        : { opacity: 0, scale: 0.6 }
-                    }
-                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                    className={cn(
-                      "pointer-events-none absolute right-2  -translate-y-1/2 text-xs text-foreground flex items-center justify-center",
-                      isHighlighted ? "" : "opacity-0 pointer-events-none"
-                    )}
-                    style={{ width: 18, height: 18 }}
+            >              
+              {(() => {
+                const MotionButtonBase = motion(
+                  ButtonBase as unknown as React.ComponentType<
+                    React.ComponentProps<typeof ButtonBase> & MotionProps
                   >
-                    <CheckIcon />
-                  </motion.span>
-                </motion.button>
-              </ButtonBase>
+                );
+                return (
+                  <MotionButtonBase
+                    variant={"ghost"}
+                    onClick={() => toggleHighlight(k)}
+                    title={
+                      isHighlighted ? `Desativar ${label}` : `Ativar ${label}`
+                    }
+                    className={pillClasses}
+                    style={{ minWidth: showFullLabel ? undefined : 36 }}
+                    aria-pressed={isHighlighted}
+                    whileHover={{ scale: isHighlighted ? 1.04 : 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    animate={isHighlighted ? { scale: 1.02 } : { scale: 1 }}
+                  >
+                    <motion.span
+                      className={cn("w-3 h-3 rounded-sm flex-shrink-0 border")}
+                      style={{
+                        backgroundColor: color,
+                        borderColor: isHighlighted ? color : "transparent",
+                        boxShadow: isHighlighted
+                          ? `0 6px 20px ${color}33`
+                          : undefined,
+                      }}
+                      layout
+                      initial={{ scale: 0.8, opacity: 0.9 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+
+                    {showFullLabel ? (
+                      <motion.span
+                        className="truncate max-w-[10rem] pr-2"
+                        layout
+                      >
+                        {label}
+                      </motion.span>
+                    ) : showShortLabel ? (
+                      <motion.span
+                        className="truncate max-w-[6rem] text-xs pr-2"
+                        layout
+                      >
+                        {label}
+                      </motion.span>
+                    ) : null}
+
+                    <motion.span
+                      aria-hidden
+                      initial={{ opacity: 0, scale: 0.6 }}
+                      animate={
+                        isHighlighted
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0, scale: 0.6 }
+                      }
+                      transition={{
+                        type: "spring",
+                        stiffness: 450,
+                        damping: 28,
+                      }}
+                      className={cn(
+                        "pointer-events-none absolute right-2  -translate-y-1/2 text-xs text-foreground flex items-center justify-center",
+                        isHighlighted ? "" : "opacity-0 pointer-events-none"
+                      )}
+                      style={{ width: 18, height: 18 }}
+                    >
+                      <CheckIcon />
+                    </motion.span>
+                  </MotionButtonBase>
+                );
+              })()}
             </motion.div>
           );
         })}

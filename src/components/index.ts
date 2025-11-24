@@ -7,7 +7,7 @@ export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
 export * from "./charts";
 export * from "./ui/data/AvatarBase";
-export * from "./ui/data/BadgeBase";
+export * from "./ui/data/Badge";
 export * from "./ui/data/CalendarBase";
 export * from "./ui/data/CardBase";
 export * from "./ui/data/FileUploader";
@@ -54,4 +54,4 @@ export * from "./picker/TimePickerInput";
 export * from "./picker/utils";
 export * from "./ui/navigation/ContextMenuBase";
 export * from "./ui/CodeBlock";
-export * from "./ui/data/StatusIndicator"
+export * from "./ui/data/StatusIndicator";

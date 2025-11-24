@@ -2,7 +2,7 @@ import "../style/global.css";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BadgeBase, ColorType } from "@/components/ui/data/BadgeBase";
+import { Badge, ColorType } from "@/components/ui/data/Badge";
 
 type ChangeItem = {
   version: string;
@@ -22,13 +22,13 @@ const changelogData: ChangeItem[] = [
     author: "Gabriel Glatz",
     date: "2025-11-18",
     added: [
-      "BadgeBase:  propriedades configuráveis para permitir ajustes de aparência e comportamento s.",
+      "Badge:  propriedades configuráveis para permitir ajustes de aparência e comportamento s.",
       "StatusIndicator: adicionamos novas opções de configuração para personalizar estados e cores dos indicadores.",
       "CodeBlock: implementamos suporte a múltiplas linguagens no realce de sintaxe, com detecção mais robusta.",
       "Charts: incluímos novos exemplos práticos para facilitar a integração em dashboards.",
     ],
     changed: [
-      "BadgeBase: refatoramos os estilos para garantir consistência visual entre temas e tamanhos.",
+      "Badge: refatoramos os estilos para garantir consistência visual entre temas e tamanhos.",
       "DateTimePicker: Removemos as props `hideHour` e `hideMinute`. E atualizamos a prop `displayFormat`.",
       "Tooltip: simplificamos a lógica e aplicamos otimizações para reduzir re-renders e melhorar performance.",
       "Configurações: limpamos itens relacionados a Docker e workflows de CI para simplificar o repositório.",
@@ -395,9 +395,9 @@ export const Default: Story = {
                         <div className="flex flex-col items-end gap-2 mt-1">
                           <div className="inline-flex items-center gap-2">
                             {tags.map((t, idx) => (
-                              <BadgeBase key={idx} color={t.color as ColorType}>
+                              <Badge key={idx} color={t.color as ColorType}>
                                 <span>{t.label}</span>
-                              </BadgeBase>
+                              </Badge>
                             ))}
                           </div>
                           {it.author && (
