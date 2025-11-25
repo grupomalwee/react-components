@@ -76,11 +76,11 @@ export function DateTimePicker({
 
     if (displayFormat === true) {
       if (!timeFormat) return "dd/MM/yyyy";
-      return `dd/MM/yyyy ${timeFormat}`;
+      return `dd/MM/yyyy - ${timeFormat}`;
     }
 
     if (!timeFormat) return "dd MMMM yyyy";
-    return `dd MMMM yyyy ${timeFormat}`;
+    return `dd MMMM yyyy - ${timeFormat}`;
   };
 
   useEffect(() => {

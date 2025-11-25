@@ -5,7 +5,7 @@ import {
   CarouselContentBase,
   CarouselItemBase,
   CarouselNextBase,
-  CarouselPrevious,
+  CarouselPreviousBase,
 } from "@/components/ui/layout/CarouselBase";
 import { CardBase, CardContentBase } from "@/components/ui/data/CardBase";
 
@@ -33,7 +33,7 @@ export function CarouselPage() {
                 </CarouselItemBase>
               ))}
             </CarouselContentBase>
-            <CarouselPrevious />
+            <CarouselPreviousBase />
             <CarouselNextBase />
           </CarouselBase>
         </section>
@@ -59,7 +59,7 @@ export function CarouselPage() {
                 </CarouselItemBase>
               ))}
             </CarouselContentBase>
-            <CarouselPrevious />
+            <CarouselPreviousBase />
             <CarouselNextBase />
           </CarouselBase>
         </section>
@@ -88,7 +88,7 @@ export function CarouselPage() {
                 </CarouselItemBase>
               ))}
             </CarouselContentBase>
-            <CarouselPrevious />
+            <CarouselPreviousBase />
             <CarouselNextBase />
           </CarouselBase>
         </section>

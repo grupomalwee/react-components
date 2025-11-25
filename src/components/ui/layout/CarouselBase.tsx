@@ -6,7 +6,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react";
 
 import { cn } from "@/lib/utils";
-import { ButtonBase } from "../form/ButtonBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -177,26 +177,28 @@ function CarouselItemBase({
   );
 }
 
-function CarouselPrevious({
+function CarouselPreviousBase({
   className,
   variant = "outline",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof ButtonBase>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const { orientation, scrollPrev, canScrollPrev, } = useCarousel();
+  const btnRef = React.useRef<HTMLButtonElement | null>(null);
 
   return (
     <ButtonBase
       data-slot="carousel-previous"
       variant={variant}
       size={size}
+      ref={btnRef}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8 rounded-l-3xl px-6",
         orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "top-2 right-1"
+          : "bottom-64 left-1/3 rotate-90",
         className
-      )}
+      )}      
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
@@ -214,17 +216,19 @@ function CarouselNextBase({
   ...props
 }: React.ComponentProps<typeof ButtonBase>) {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
-
+  const btnRef = React.useRef<HTMLButtonElement | null>(null);
+  
   return (
     <ButtonBase
       data-slot="carousel-next"
       variant={variant}
       size={size}
+      ref={btnRef}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8 rounded-r-3xl px-6",
         orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "top-2"
+          : "left-14 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollNext}
@@ -242,6 +246,6 @@ export {
   CarouselBase,
   CarouselContentBase,
   CarouselItemBase,
-  CarouselPrevious,
+  CarouselPreviousBase,
   CarouselNextBase,
 };

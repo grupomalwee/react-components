@@ -18,11 +18,34 @@ type TagType = "added" | "changed" | "fixed" | "notes";
 
 const changelogData: ChangeItem[] = [
   {
+    version: "1.7.7",
+    author: "Gabriel Glatz",
+    date: "2025-11-00",
+    added: [
+      "Adicionado Novo Dashboard no stories de Templates.",
+      "Adicionada funcionalidade HoverCard nas stories de Status.",
+      "Criação de Agents para melhor documentação do Projeto.",
+      "Setup de Controls (Storybook) para componentes de Select(Combobox, MultiCombobox e Select Simple).",
+      "Props de Animations para o Tabs.",
+    ],
+    changed: [
+      "Refatoração do uso do Badge nas stories e ajustes nas stories do DateTimePicker para comportamento padrão de data.",
+      "CI: migração para pnpm v9, uso de --frozen-lockfile e padronização do setup de pnpm em workflows.",
+      "Alterado o nome de BadgeBase para Badge em todas as suas ocorencias.",
+      "Novos exemplos de Modal StoryBook.",
+    ],
+    fixed: [
+      "Chart: ajustado erro de tipagem que causava warnings em builds estritos no Componente Filho Highlight.",
+      "Picker: alterado tipagem não coerente no DateTimePicker.",
+      "Carousel: fixado os botões de navegação para melhor posicionamento e estilo.",
+    ],
+  },
+  {
     version: "1.7.6",
     author: "Gabriel Glatz",
     date: "2025-11-18",
     added: [
-      "Badge:  propriedades configuráveis para permitir ajustes de aparência e comportamento s.",
+      "Badge: propriedades configuráveis para permitir ajustes de aparência e comportamento s.",
       "StatusIndicator: adicionamos novas opções de configuração para personalizar estados e cores dos indicadores.",
       "CodeBlock: implementamos suporte a múltiplas linguagens no realce de sintaxe, com detecção mais robusta.",
       "Charts: incluímos novos exemplos práticos para facilitar a integração em dashboards.",
@@ -214,7 +237,7 @@ export const Default: Story = {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.06 }}
               >
-                Versões, notas de release e histórico de alterações
+                Versões, notas de lançamento e histórico de alterações
               </motion.p>
             </div>
 
@@ -329,7 +352,7 @@ export const Default: Story = {
                       ...visibleFixed,
                     ];
 
-                    const primary = visibleItems[0] || "Release";
+                    const primary = visibleItems[0] || "Lançamento";
                     const details = visibleItems.slice(1);
 
                     const tags: { label: string; color: string }[] = [];

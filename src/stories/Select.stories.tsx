@@ -11,41 +11,37 @@ import {
 } from "../components/ui/SelectBase";
 import * as React from "react";
 
+type SelectStoryArgs = {
+  open?: boolean;
+  disabled?: boolean;
+  error?: string;
+  value?: string;
+  width?: string;
+  placeholder?: string;
+  onOpenChange?: (v: boolean) => void;
+  onValueChange?: (v: string) => void;
+};
+
 const meta: Meta<typeof SelectBase> = {
   title: "selects/Select",
   component: SelectBase,
   tags: ["autodocs"],
+  args: {
+    open: false,
+    disabled: false,
+    value: "",      
+  },
+  argTypes: {
+    open: { control: { type: "boolean" } },   
+    disabled: { control: { type: "boolean" } },
+    value: { control: { type: "text" } },
+    onOpenChange: { action: "onOpenChange" },
+    onValueChange: { action: "onValueChange" },
+  },
   parameters: {
     docs: {
       description: {
         component: "Select para seleção de opções, listas e agrupamentos.",
-      },
-      source: {
-        code: `import React from 'react';
-import { SelectBase, SelectTriggerBase, SelectContentBase, SelectItemBase, SelectValueBase, SelectGroupBase, SelectLabelBase } from '@mlw-packages/react-components';
-
-export default function Example() {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200, padding: 32 }}>
-      <SelectBase>
-        <SelectTriggerBase className="w-[180px]">
-          <SelectValueBase placeholder="Select a fruit" />
-        </SelectTriggerBase>
-        <SelectContentBase>
-          <SelectGroupBase>
-            <SelectLabelBase>Fruits</SelectLabelBase>
-            <SelectItemBase value="apple">Apple</SelectItemBase>
-            <SelectItemBase value="banana">Banana</SelectItemBase>
-            <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-            <SelectItemBase value="grapes">Grapes</SelectItemBase>
-            <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-          </SelectGroupBase>
-        </SelectContentBase>
-      </SelectBase>
-    </div>
-  );
-}
-`,
       },
     },
     backgrounds: {
@@ -63,8 +59,14 @@ export default meta;
 type Story = StoryObj<typeof SelectBase>;
 
 export const Default: Story = {
-  render: () => {
-    const [open, setOpen] = React.useState(false);
+  render: (args: SelectStoryArgs) => {
+    const [open, setOpen] = React.useState<boolean>(!!args.open);
+    const [value, setValue] = React.useState<string>(args.value || "");
+    React.useEffect(() => setOpen(!!args.open), [args.open]);
+    React.useEffect(() => setValue(args.value || ""), [args.value]);
+
+    const widthClass = `w-[${args.width || "180px"}]`;
+
     return (
       <div
         style={{
@@ -75,9 +77,27 @@ export const Default: Story = {
           padding: "32px 0",
         }}
       >
-        <SelectBase open={open} onOpenChange={setOpen}>
-          <SelectTriggerBase open={open} className="w-[180px]">
-            <SelectValueBase placeholder="Select a fruit" />
+        <SelectBase
+          open={open}
+          onOpenChange={(v) => {
+            setOpen(v);
+            args.onOpenChange?.(v);
+          }}
+          value={value}
+          onValueChange={(v) => {
+            setValue(v);
+            args.onValueChange?.(v);
+          }}
+        >
+          <SelectTriggerBase
+            open={open}
+            className={widthClass}
+            disabled={args.disabled}
+            error={args.error}
+          >
+            <SelectValueBase
+              placeholder={args.placeholder || "Select a fruit"}
+            />
           </SelectTriggerBase>
           <SelectContentBase>
             <SelectGroupBase>
@@ -96,8 +116,11 @@ export const Default: Story = {
 };
 
 export const WithError: Story = {
-  render: () => {
-    const [open, setOpen] = React.useState(false);
+  render: (args: SelectStoryArgs) => {
+    const [open, setOpen] = React.useState<boolean>(!!args.open);
+    React.useEffect(() => setOpen(!!args.open), [args.open]);
+    const widthClass = `w-[${args.width || "180px"}]`;
+
     return (
       <div
         style={{
@@ -108,11 +131,23 @@ export const WithError: Story = {
           padding: "32px 0",
         }}
       >
-        <SelectBase open={open} onOpenChange={setOpen} >
-          <SelectTriggerBase open={open} className="w-[180px]"  error="Você deve selecionar uma opção" >
-            <SelectValueBase placeholder="Select a fruit" />
+        <SelectBase
+          open={open}
+          onOpenChange={(v) => {
+            setOpen(v);
+            args.onOpenChange?.(v);
+          }}
+        >
+          <SelectTriggerBase
+            open={open}
+            className={widthClass}
+            error={args.error || "Você deve selecionar uma opção"}
+          >
+            <SelectValueBase
+              placeholder={args.placeholder || "Select a fruit"}
+            />
           </SelectTriggerBase>
-          <SelectContentBase >
+          <SelectContentBase>
             <SelectGroupBase>
               <SelectLabelBase>Fruits</SelectLabelBase>
               <SelectItemBase value="apple">Apple</SelectItemBase>
@@ -122,7 +157,7 @@ export const WithError: Story = {
               <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
             </SelectGroupBase>
           </SelectContentBase>
-        </SelectBase >
+        </SelectBase>
       </div>
     );
   },

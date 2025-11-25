@@ -5,14 +5,30 @@ import {
   CarouselContentBase,
   CarouselItemBase,
   CarouselNextBase,
-  CarouselPrevious,
+  CarouselPreviousBase,
 } from "../components/ui/layout/CarouselBase";
 import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 const meta: Meta<typeof CarouselBase> = {
-  title: "layout/Carousel",
+  title: "Layout/Carousel",
   component: CarouselBase,
   tags: ["autodocs"],
+  args: {
+    orientation: "horizontal",
+    opts: { align: "center" },
+    className: "w-full max-w-xs",
+    items: 5,
+  } as unknown as Record<string, unknown>,
+  argTypes: {
+    orientation: {
+      control: { type: "inline-radio" },
+      options: ["horizontal", "vertical"],
+    },
+    opts: { control: { type: "object" } },
+    className: { control: { type: "text" } },
+    items: { control: { type: "number", min: 1, max: 12, step: 1 } },
+    onChange: { action: "onChange" },
+  } as unknown as Record<string, unknown>,
   parameters: {
     docs: {
       description: {
@@ -21,8 +37,8 @@ const meta: Meta<typeof CarouselBase> = {
       },
       source: {
         code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPrevious, CarouselNextBase } from '@mlw-packages/react-components';
-import { CardBase, CardContentBase } from '@mlw-packages/react-components';
+import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
+import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 export default function Example() {
   return (
@@ -34,7 +50,7 @@ export default function Example() {
           </CardBase>
         </CarouselItemBase>
       </CarouselContentBase>
-      <CarouselPrevious />
+      <CarouselPreviousBase />
       <CarouselNextBase />
     </CarouselBase>
   );
@@ -61,8 +77,8 @@ export const Horizontal: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPrevious, CarouselNextBase } from '@mlw-packages/react-components';
-import { CardBase, CardContentBase } from '@mlw-packages/react-components';
+import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
+import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 export default function Horizontal() {
   return (
@@ -76,7 +92,7 @@ export default function Horizontal() {
           </CarouselItemBase>
         ))}
       </CarouselContentBase>
-      <CarouselPrevious />
+      <CarouselPreviousBase />
       <CarouselNextBase />
     </CarouselBase>
   );
@@ -85,36 +101,49 @@ export default function Horizontal() {
       },
     },
   },
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 0",
-      }}
-    >
-      <CarouselBase className="w-full max-w-xs">
-        <CarouselContentBase>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <CarouselItemBase key={index}>
-              <CardBase>
-                <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                  <img
-                    src="/pwa-512x512.png"
-                    alt={`Imagem ${index + 1}`}
-                    className="rounded-xl object-cover w-40 h-40"
-                  />
-                </CardContentBase>
-              </CardBase>
-            </CarouselItemBase>
-          ))}
-        </CarouselContentBase>
-        <CarouselPrevious />
-        <CarouselNextBase />
-      </CarouselBase>
-    </div>
-  ),
+  args: {
+    className: "w-full max-w-xs",
+    orientation: "horizontal",
+    opts: { align: "center" },
+    items: 5,
+  } as unknown as Record<string, unknown>,
+  render: (args) => {
+    const a = args as unknown as Record<string, unknown>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <CarouselBase
+          orientation={a.orientation as "horizontal" | "vertical"}
+          opts={a.opts as unknown as Record<string, unknown>}
+          className={a.className as string}
+        >
+          <CarouselContentBase>
+            {Array.from({ length: a.items as number }).map((_, index) => (
+              <CarouselItemBase key={index}>
+                <CardBase>
+                  <CardContentBase className="flex aspect-square items-center justify-center p-6">
+                    <img
+                      src="/pwa-512x512.png"
+                      alt={`Imagem ${index + 1}`}
+                      className="rounded-xl object-cover w-40 h-40"
+                    />
+                  </CardContentBase>
+                </CardBase>
+              </CarouselItemBase>
+            ))}
+          </CarouselContentBase>
+          <CarouselPreviousBase />
+          <CarouselNextBase />
+        </CarouselBase>
+      </div>
+    );
+  },
 };
 
 export const Responsivo: Story = {
@@ -122,8 +151,8 @@ export const Responsivo: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPrevious, CarouselNextBase } from '@mlw-packages/react-components';
-import { CardBase, CardContentBase } from '@mlw-packages/react-components';
+import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
+import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 export default function Responsivo() {
   return (
@@ -137,7 +166,7 @@ export default function Responsivo() {
           </CarouselItemBase>
         ))}
       </CarouselContentBase>
-      <CarouselPrevious />
+      <CarouselPreviousBase />
       <CarouselNextBase />
     </CarouselBase>
   );
@@ -146,36 +175,49 @@ export default function Responsivo() {
       },
     },
   },
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 0",
-      }}
-    >
-      <CarouselBase opts={{ align: "start" }} className="w-full max-w-sm">
-        <CarouselContentBase>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <CarouselItemBase key={index} className="md:basis-1/2 lg:basis-1/3">
-              <CardBase>
-                <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                  <img
-                    src="/pwa-512x512.png"
-                    alt={`Imagem ${index + 1}`}
-                    className="rounded-xl object-cover"
-                  />
-                </CardContentBase>
-              </CardBase>
-            </CarouselItemBase>
-          ))}
-        </CarouselContentBase>
-        <CarouselPrevious />
-        <CarouselNextBase />
-      </CarouselBase>
-    </div>
-  ),
+  args: {
+    className: "w-full max-w-sm",
+    orientation: "horizontal",
+    opts: { align: "start" },
+    items: 5,
+  } as unknown as Record<string, unknown>,
+  render: (args) => {
+    const a = args as unknown as Record<string, unknown>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <CarouselBase
+          orientation={a.orientation as "horizontal" | "vertical"}
+          opts={a.opts as unknown as Record<string, unknown>}
+          className={a.className as string}
+        >
+          <CarouselContentBase>
+            {Array.from({ length: a.items as number }).map((_, index) => (
+              <CarouselItemBase key={index}>
+                <div className="p-1">
+                  <CardBase>
+                    <CardContentBase className="flex aspect-square items-center justify-center p-6">
+                      <span className="text-4xl font-semibold">
+                        {index + 1}
+                      </span>
+                    </CardContentBase>
+                  </CardBase>
+                </div>
+              </CarouselItemBase>
+            ))}
+          </CarouselContentBase>
+          <CarouselPreviousBase/>
+          <CarouselNextBase />
+        </CarouselBase>
+      </div>
+    );
+  },
 };
 
 export const Vertical: Story = {
@@ -183,8 +225,8 @@ export const Vertical: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPrevious, CarouselNextBase } from '@mlw-packages/react-components';
-import { CardBase, CardContentBase } from '@mlw-packages/react-components';
+import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
+import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 export default function Vertical() {
   return (
@@ -198,7 +240,7 @@ export default function Vertical() {
           </CarouselItemBase>
         ))}
       </CarouselContentBase>
-      <CarouselPrevious />
+      <CarouselPreviousBase />
       <CarouselNextBase />
     </CarouselBase>
   );
@@ -207,38 +249,47 @@ export default function Vertical() {
       },
     },
   },
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 0",
-      }}
-    >
-      <CarouselBase
-        opts={{ align: "start" }}
-        orientation="vertical"
-        className="w-full max-w-xs mt-20"
+  args: {
+    className: "w-full max-w-xs mt-20",
+    orientation: "vertical",
+    opts: { align: "start" },
+    items: 5,
+  } as unknown as Record<string, unknown>,
+  render: (args) => {
+    const a = args as unknown as Record<string, unknown>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
       >
-        <CarouselContentBase className="-mt-1 h-[220px]">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <CarouselItemBase key={index} className="pt-1 md:basis-1/2">
-              <CardBase>
-                <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                  <img
-                    src="/pwa-512x512.png"
-                    alt={`Imagem ${index + 1}`}
-                    className="rounded-xl object-cover w-40 h-40"
-                  />
-                </CardContentBase>
-              </CardBase>
-            </CarouselItemBase>
-          ))}
-        </CarouselContentBase>
-        <CarouselPrevious />
-        <CarouselNextBase />
-      </CarouselBase>
-    </div>
-  ),
+        <CarouselBase
+          orientation={a.orientation as "horizontal" | "vertical"}
+          opts={a.opts as unknown as Record<string, unknown>}
+          className={a.className as string}
+        >
+          <CarouselContentBase className="-mt-1 h-[220px]">
+            {Array.from({ length: a.items as number }).map((_, index) => (
+              <CarouselItemBase key={index} className="pt-1 md:basis-1/2">
+                <CardBase>
+                  <CardContentBase className="flex aspect-square items-center justify-center p-6">
+                    <img
+                      src="/pwa-512x512.png"
+                      alt={`Imagem ${index + 1}`}
+                      className="rounded-xl object-cover w-40 h-40"
+                    />
+                  </CardContentBase>
+                </CardBase>
+              </CarouselItemBase>
+            ))}
+          </CarouselContentBase>
+          <CarouselPreviousBase />
+          <CarouselNextBase />
+        </CarouselBase>
+      </div>
+    );
+  },
 };

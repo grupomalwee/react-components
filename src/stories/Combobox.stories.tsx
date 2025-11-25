@@ -8,6 +8,21 @@ const meta: Meta<typeof Combobox> = {
   title: "selects/Combobox",
   component: Combobox,
   tags: ["autodocs"],
+  args: {
+    selected: "",
+    label: "",
+    placeholder: "",
+    searchPlaceholder: "",
+    error: "",
+  } as unknown as Record<string, unknown>,
+  argTypes: {
+    selected: { control: { type: "text" } },
+    label: { control: { type: "text" } },
+    placeholder: { control: { type: "text" } },
+    searchPlaceholder: { control: { type: "text" } },
+    error: { control: { type: "text" } },
+    onChange: { action: "onChange" },
+  },
   parameters: {
     docs: {
       description: {
@@ -45,14 +60,21 @@ type Story = StoryObj<typeof Combobox>;
 
 export const Default: Story = {
   name: "Padrão",
-  render: () => {
+  render: (args) => {
     const items = [
       { label: "JavaScript", value: "js" },
       { label: "TypeScript", value: "ts" },
       { label: "Python", value: "py" },
       { label: "Java", value: "java" },
     ];
-    const [selected, setSelected] = React.useState<string>(items[0].value);
+    const [selected, setSelected] = React.useState<string>(
+      (args.selected as string) || items[0].value
+    );
+    const label = args.label || "Linguagem de Programação";
+    const placeholder = args.placeholder || undefined;
+    // `Combobox` currently doesn't accept a `disabled` prop in its typing,
+    // so we avoid passing it directly. Keep local variable only if needed in future.
+
     return (
       <div
         style={{
@@ -68,8 +90,10 @@ export const Default: Story = {
             selected={selected}
             onChange={(value) => {
               if (value !== null) setSelected(value);
+              args.onChange?.(value);
             }}
-            label="Linguagem de Programação"
+            label={label}
+            placeholder={placeholder}
           />
         </div>
       </div>
@@ -123,13 +147,17 @@ export default function Padrão() {
 
 export const Empty: Story = {
   name: "Vazio (Sem Seleção)",
-  render: () => {
+  render: (args) => {
     const items = [
       { label: "JavaScript", value: "js" },
       { label: "TypeScript", value: "ts" },
       { label: "Python", value: "py" },
     ];
-    const [selected, setSelected] = React.useState<string | null>(null);
+    const [selected, setSelected] = React.useState<string | null>(
+      (args.selected as string) || null
+    );
+    const placeholder = args.placeholder || "Escolha uma linguagem...";
+
     return (
       <div
         style={{
@@ -143,8 +171,11 @@ export const Empty: Story = {
           <Combobox
             items={items}
             selected={selected}
-            onChange={setSelected}
-            placeholder="Escolha uma linguagem..."
+            onChange={(v) => {
+              setSelected(v);
+              args.onChange?.(v);
+            }}
+            placeholder={placeholder}
           />
         </div>
       </div>

@@ -8,6 +8,25 @@ const meta: Meta<typeof MultiCombobox> = {
   title: "selects/MultiCombobox",
   component: MultiCombobox,
   tags: ["autodocs"],
+  args: {
+    items: undefined,
+    selected: [],
+    placeholder: "",
+    error: "",
+  } as unknown as Record<string, unknown>,
+  argTypes: {
+    items: {
+      control: { type: "object" },
+      description: "Array de itens {value,label}",
+    },
+    selected: {
+      control: { type: "object" },
+      description: "Array de valores selecionados",
+    },
+    placeholder: { control: { type: "text" } },
+    error: { control: { type: "text" } },
+    onChange: { action: "onChange" },
+  } as unknown as Record<string, unknown>,
   parameters: {
     docs: {
       description: {
@@ -310,10 +329,9 @@ export const LargeList: Story = {
       label: `Item ${i + 1}`,
       value: `item-${i + 1}`,
     }));
-    const [selected, setSelected] = React.useState<string[]>([
-      "item-1",
-      "item-2",
-    ]);
+    const initialSelected: string[] = [items[0].value];
+    const [selected, setSelected] = React.useState<string[]>(initialSelected);
+
     return (
       <div
         style={{

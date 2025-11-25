@@ -8,6 +8,35 @@ const meta: Meta<typeof InputBase> = {
   title: "forms/Input",
   component: InputBase,
   tags: ["autodocs"],
+  args: {
+    type: "text",
+    label: "",
+    placeholder: "",
+    disabled: false,
+    error: "",
+    leftIcon: false,
+    rightIcon: false,
+  },
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["text", "email", "password", "file", "number"],
+    },
+    label: { control: { type: "text" } },
+    placeholder: { control: { type: "text" } },
+    disabled: { control: { type: "boolean" } },
+    error: { control: { type: "text" } },
+    leftIcon: {
+      control: { type: "boolean" },
+      description: "Mostrar ícone à esquerda (apenas visual)",
+    },
+    rightIcon: {
+      control: { type: "boolean" },
+      description: "Mostrar ícone à direita (apenas visual)",
+    },
+    onChange: { action: "change" },
+    onFocus: { action: "focus" },
+  },
   parameters: {
     docs: {
       description: {
@@ -20,16 +49,21 @@ import { MapPinLineIcon } from '@phosphor-icons/react';
 
 function Example() {
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ width: 400, display: 'flex', flexDirection: 'column', gap: 12 }}>
       <InputBase id='email' label='E-mail' placeholder='seu@email.com' />
-      <InputBase id='picture' type='file' label='Picture' />
+
       <div style={{ display: 'flex', gap: 8 }}>
-        <InputBase type='email' placeholder='Email' />
-        <ButtonBase type='submit'>Subscribe</ButtonBase>
+        <InputBase type='email' placeholder='seu@email.com' />
+        <ButtonBase type='submit'>Inscrever</ButtonBase>
       </div>
-      <InputBase disabled type='email' placeholder='Email' />
-      <InputBase type='text' placeholder='Localização' label='Local' leftIcon={<MapPinLineIcon size={16} />} />
-      <InputBase type='text' placeholder='Localização' label='Local' rightIcon={<MapPinLineIcon size={16} />} />
+
+      <InputBase id='picture' type='file' label='Imagem' />
+
+      <InputBase disabled type='text' label='Nome' placeholder='Nome completo' />
+
+      <InputBase type='text' label='Local' placeholder='Localização' leftIcon={<MapPinLineIcon size={16} />} />
+
+      <InputBase type='text' label='Local (icone à direita)' placeholder='Localização' rightIcon={<MapPinLineIcon size={16} />} />
     </div>
   );
 }
@@ -65,32 +99,63 @@ export const Default: Story = {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <InputBase id="picture" type="file" label="Picture" />
-        </div>
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <InputBase type="email" placeholder="Email" />
-          <ButtonBase type="submit">Subscribe</ButtonBase>
-        </div>
-        <div>
-          <InputBase disabled type="email" placeholder="Email" />
-        </div>
-        <div>
-          <InputBase
-            type="text"
-            placeholder="Localização"
-            label="Local"
-            leftIcon={<MapPinLineIcon size={16} />}
-          />
-        </div>
-        <div>
-          <InputBase
-            type="text"
-            placeholder="Localização"
-            label="Local"
-            rightIcon={<MapPinLineIcon size={16} />}
-          />
-        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const WithButton: Story = {
+  render: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+      <div className="flex w-full max-w-sm items-center space-x-2">
+        <InputBase type="email" placeholder="seu@email.com" />
+        <ButtonBase type="submit">Inscrever</ButtonBase>
+      </div>
+    </div>
+  ),
+};
+
+export const FileInput: Story = {
+  render: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+      <div className="grid w-full max-w-sm items-center gap-1.5">
+        <InputBase id="picture" type="file" label="Imagem" />
+      </div>
+    </div>
+  ),
+};
+
+export const WithIcon: Story = {
+  render: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+      <div className="flex flex-col gap-4 w-full max-w-sm">
+        <InputBase
+          type="text"
+          label="Local"
+          placeholder="Localização"
+          leftIcon={<MapPinLineIcon size={16} />}
+        />
+        <InputBase
+          type="text"
+          label="Local (direita)"
+          placeholder="Localização"
+          rightIcon={<MapPinLineIcon size={16} />}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const Disabled: Story = {
+  render: () => (
+    <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+      <div className="grid w-full max-w-sm items-center gap-1.5">
+        <InputBase
+          disabled
+          type="text"
+          label="Nome"
+          placeholder="Nome completo"
+        />
       </div>
     </div>
   ),

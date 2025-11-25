@@ -1,15 +1,37 @@
 import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  ComboboxBase,
-  ComboboxItem,
-} from "../components/selects/ComboboxBase";
+import { ComboboxBase, ComboboxItem } from "../components/selects/ComboboxBase";
 import React from "react";
+
+type ComboboxBaseStoryArgs = {
+  items?: Array<{ value: string; label: string }>;
+  selected?: string | null;
+  error?: string;
+  handleSelection?: (v: string) => void;
+};
 
 const meta: Meta<typeof ComboboxBase> = {
   title: "selects/ComboboxBase",
   component: ComboboxBase,
   tags: ["autodocs"],
+  args: {
+    items: [
+      { value: "Item A", label: "Item A" },
+      { value: "Item B", label: "Item B" },
+      { value: "Item C", label: "Item C" },
+    ],
+    selected: "",
+    error: "",
+  } as unknown as Record<string, unknown>,
+  argTypes: {
+    items: {
+      control: { type: "object" },
+      description: "Array de itens {value,label}",
+    },
+    selected: { control: { type: "text" } },
+    error: { control: { type: "text" } },
+    handleSelection: { action: "handleSelection" },
+  } as unknown as Record<string, unknown>,
   parameters: {
     docs: {
       description: {
@@ -17,25 +39,25 @@ const meta: Meta<typeof ComboboxBase> = {
       },
       source: {
         code: `import React from 'react';
-import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
+    import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
 
-export default function Example() {
-  const items: ComboboxItem<string>[] = [
-    { value: 'Item A', label: 'Item A' },
-    { value: 'Item B', label: 'Item B' },
-    { value: 'Item C', label: 'Item C' },
-  ];
+    export default function Example() {
+      const items: ComboboxItem<string>[] = [
+        { value: 'Item A', label: 'Item A' },
+        { value: 'Item B', label: 'Item B' },
+        { value: 'Item C', label: 'Item C' },
+      ];
 
-  return (
-    <ComboboxBase
-      items={items}
-      renderSelected={<span>{items[0].label}</span>}
-      handleSelection={(v) => console.log(v)}
-      checkIsSelected={(v) => items[0].value === v}
-    />
-  );
-}
-`,
+      return (
+        <ComboboxBase
+          items={items}
+          renderSelected={<span>{items[0].label}</span>}
+          handleSelection={(v) => console.log(v)}
+          checkIsSelected={(v) => items[0].value === v}
+        />
+      );
+    }
+    `,
       },
     },
     backgrounds: {
@@ -57,39 +79,39 @@ export const Default: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
+    import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
 
-export default function Default() {
-  const items: ComboboxItem<string>[] = [
-    { value: 'Item A', label: 'Item A' },
-    { value: 'Item B', label: 'Item B' },
-    { value: 'Item C', label: 'Item C' },
-  ];
-  const [selected, setSelected] = React.useState<string | null>(items[0].value);
+    export default function Default() {
+      const items: ComboboxItem<string>[] = [
+        { value: 'Item A', label: 'Item A' },
+        { value: 'Item B', label: 'Item B' },
+        { value: 'Item C', label: 'Item C' },
+      ];
+      const [selected, setSelected] = React.useState<string | null>(items[0].value);
 
-  return (
-    <div style={{ width: 320 }}>
-      <ComboboxBase
-        items={items}
-        renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
-        handleSelection={value => setSelected(value)}
-        checkIsSelected={value => selected === value}
-      />
-    </div>
-  );
-}
-`,
+      return (
+        <div style={{ width: 320 }}>
+          <ComboboxBase
+            items={items}
+            renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
+            handleSelection={value => setSelected(value)}
+            checkIsSelected={value => selected === value}
+          />
+        </div>
+      );
+    }
+    `,
       },
     },
   },
-  render: () => {
-    const items: ComboboxItem<string>[] = [
+  render: (args: ComboboxBaseStoryArgs) => {
+    const items: ComboboxItem<string>[] = args.items || [
       { value: "Item A", label: "Item A" },
       { value: "Item B", label: "Item B" },
       { value: "Item C", label: "Item C" },
     ];
     const [selected, setSelected] = React.useState<string | null>(
-      items[0].value
+      (args.selected as string) || items[0].value
     );
 
     return (
@@ -107,53 +129,58 @@ export default function Default() {
             renderSelected={
               <span>{items.find((i) => i.value === selected)?.label}</span>
             }
-            handleSelection={(value) => setSelected(value)}
+            handleSelection={(value) => {
+              setSelected(value);
+              args.handleSelection?.(value);
+            }}
             checkIsSelected={(value) => selected === value}
+            error={(args.error as string) || undefined}
           />
         </div>
       </div>
     );
   },
 };
+
 export const WithError: Story = {
   parameters: {
     docs: {
       source: {
         code: `import React from 'react';
-import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
+    import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
 
-export default function Default() {
-  const items: ComboboxItem<string>[] = [
-    { value: 'Item A', label: 'Item A' },
-    { value: 'Item B', label: 'Item B' },
-    { value: 'Item C', label: 'Item C' },
-  ];
-  const [selected, setSelected] = React.useState<string | null>(items[0].value);
+    export default function Default() {
+      const items: ComboboxItem<string>[] = [
+        { value: 'Item A', label: 'Item A' },
+        { value: 'Item B', label: 'Item B' },
+        { value: 'Item C', label: 'Item C' },
+      ];
+      const [selected, setSelected] = React.useState<string | null>(items[0].value);
 
-  return (
-    <div style={{ width: 320 }}>
-      <ComboboxBase
-        items={items}
-        renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
-        handleSelection={value => setSelected(value)}
-        checkIsSelected={value => selected === value}
-        error="Você deve selecionar uma opção"
-      />
-    </div>
-  );
-}
-`,
+      return (
+        <div style={{ width: 320 }}>
+          <ComboboxBase
+            items={items}
+            renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
+            handleSelection={value => setSelected(value)}
+            checkIsSelected={value => selected === value}
+            error="Você deve selecionar uma opção"
+          />
+        </div>
+      );
+    }
+    `,
       },
     },
   },
-  render: () => {
-    const items: ComboboxItem<string>[] = [
+  render: (args: ComboboxBaseStoryArgs) => {
+    const items: ComboboxItem<string>[] = args.items || [
       { value: "Item A", label: "Item A" },
       { value: "Item B", label: "Item B" },
       { value: "Item C", label: "Item C" },
     ];
     const [selected, setSelected] = React.useState<string | null>(
-      items[0].value
+      (args.selected as string) || items[0].value
     );
 
     return (
@@ -171,9 +198,12 @@ export default function Default() {
             renderSelected={
               <span>{items.find((i) => i.value === selected)?.label}</span>
             }
-            handleSelection={(value) => setSelected(value)}
+            handleSelection={(value) => {
+              setSelected(value);
+              args.handleSelection?.(value);
+            }}
             checkIsSelected={(value) => selected === value}
-            error="Você deve selecionar uma opção"
+            error={(args.error as string) || "Você deve selecionar uma opção"}
           />
         </div>
       </div>
