@@ -9,4 +9,4 @@ export * from "./SliderBase";
 export * from "./SwitchBase";
 export * from "./TextAreaBase";
 export * from "./SmallButtons";
-export * from "./DebounceInput";
+export * from "./DebouncedInput";

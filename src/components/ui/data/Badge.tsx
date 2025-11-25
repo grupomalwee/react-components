@@ -26,9 +26,8 @@ interface BadgeBaseProps
   extends React.ComponentProps<"span">,
     VariantProps<typeof badgeVariants> {
   asChild?: boolean;
-  color?: ColorType;
+  color?: ColorType | string;
   size?: "sm" | "md" | "lg";
-  /** status: usado em alguns lugares para indicar um badge-posicionado (ex: Avatar). Valor livre/legacy */
   status?: string;
 }
 
@@ -45,7 +44,7 @@ function Badge({
 
   const customStyle = style;
 
-  const colorClasses: Record<ColorType, string> = {
+  const colorClasses: Record<string, string> = {
     green: "bg-green-50 text-green-500 border-green-200",
     gray: "bg-gray-50 text-gray-500 border-gray-200",
     red: "bg-red-50 text-red-500 border-red-200",
