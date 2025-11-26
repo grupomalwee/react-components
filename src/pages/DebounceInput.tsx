@@ -1,4 +1,4 @@
-import DebouncedInput from "@/components/ui/form/DebounceInput";
+import DebouncedInput from "@/components/ui/form/DebouncedInput";
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 

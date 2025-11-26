@@ -59,7 +59,7 @@ const CollapsibleContentBase = React.forwardRef<
       data-slot="collapsible-content"
       {...props}
     >
-      <div className="pb-3 pt-1">{children}</div>
+      <div>{children}</div>
     </CollapsiblePrimitive.CollapsibleContent>
   )
 })
