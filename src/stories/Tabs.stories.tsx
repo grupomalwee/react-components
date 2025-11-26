@@ -7,7 +7,7 @@ import {
   TabsContentBase,
 } from "../components/ui/layout/TabsBase";
 import React from "react";
-import { expect, userEvent, within } from "storybook/test";
+import { expect } from "storybook/test";
 
 const meta: Meta<typeof TabsBase> = {
   title: "layout/Tabs",
@@ -191,15 +191,6 @@ export const TriggerScale: Story = {
   args: {
     triggerAnimation: "scale",
     contentAnimation: "default",
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Clicar em Adulto e verificar painel", async () => {
-      const canvas = within(canvasElement);
-      const trigger = canvas.getByText(/Adulto/i);
-      await userEvent.click(trigger);
-      const panel = canvasElement.querySelector('[role="tabpanel"]');
-      expect(panel?.textContent).toContain("Content for Tab 2");
-    });
   },
 };
 

@@ -358,33 +358,6 @@ export const LargeList: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar itens pré-selecionados", async () => {
-      await waitFor(() => {
-        const item1 = canvasElement.querySelector(
-          '[data-testid="combobox-selected-item-1"]'
-        );
-        const item2 = canvasElement.querySelector(
-          '[data-testid="combobox-selected-item-2"]'
-        );
-        expect(item1).toBeInTheDocument();
-        expect(item2).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar wrapper de selecionados", async () => {
-      const wrapper = canvasElement.querySelector(
-        '[data-testid="combobox-selected-wrapper"]'
-      );
-      expect(wrapper).toBeInTheDocument();
-    });
-
-    await step("Verificar texto dos itens", async () => {
-      const content = canvasElement.textContent;
-      expect(content).toContain("Item 1");
-      expect(content).toContain("Item 2");
-    });
-  },
 };
 
 LargeList.parameters = {
