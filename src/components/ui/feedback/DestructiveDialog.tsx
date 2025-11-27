@@ -22,6 +22,7 @@ interface DestructiveDialogProps {
   onCancel?: () => void;
   children?: React.ReactNode;
   triggerContent?: React.ReactNode;
+  className?: string;
 }
 
 export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
@@ -31,6 +32,7 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
   onCancel,
   children,
   triggerContent,
+  className
 }) => {
   const triggerEl = React.isValidElement(children) ? (
     <AlertDialogTriggerBase asChild>{children}</AlertDialogTriggerBase>
@@ -47,7 +49,7 @@ export const DestructiveDialog: React.FC<DestructiveDialogProps> = ({
       {triggerEl}
 
       <AlertDialogContentBase
-        className={cn("border border-destructive bg-background")}
+        className={cn("border border-destructive bg-background", className)}
       >
         <div className="flex items-start gap-4">
           <div className="flex items-center justify-center w-10 h-10 rounded-full ring-1 ring-destructive/30">
