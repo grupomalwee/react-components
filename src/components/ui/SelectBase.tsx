@@ -22,11 +22,11 @@ const SelectTriggerBase = React.forwardRef<
       open?: boolean;
     }
 >(({ className, children, open, error, ...props }, ref) => (
-  <div className={cn("w-full", error && "mb-0") }>
+  <div className={cn("w-full", error && "mb-0")}>
     <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
         error
           ? "border-destructive focus:ring-1 focus:ring-destructive"
           : "border-input focus:ring-1 focus:ring-ring",
@@ -160,16 +160,16 @@ const SelectItemBase = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors",
+      "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5  hover:bg-accent text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:text-primary data-[disabled=true]:opacity-50",
       className
     )}
     {...props}
     asChild
   >
     <motion.div
-      whileHover={{ x: 4 }}
+      whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.1 }}
     >
       <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>

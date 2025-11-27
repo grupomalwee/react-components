@@ -1,90 +1,88 @@
-import "../style/global.css";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { Select } from "@/components/selects/NewSelect";
 
 const meta: Meta<typeof Select> = {
-  title: "selects/Select Simple",
+  title: "Selects/Select",
   component: Select,
   tags: ["autodocs"],
   parameters: {
-    docs: {
-      description: {
-        component: "Select simples.",
-      },
-    },
-    backgrounds: {
-      default: "light",
-      values: [
-        { name: "light", value: "#f6f6f6" },
-        { name: "dark", value: "#222" },
-      ],
-    },
     layout: "centered",
   },
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Select>;
 
+const simpleItems = [
+  { label: "Option A", value: "a" },
+  { label: "Option B", value: "b" },
+  { label: "Option C", value: "c" },
+];
+
+const groupedItems = {
+  "Group One": [
+    { label: "G1 - One", value: "g1-1" },
+    { label: "G1 - Two", value: "g1-2" },
+  ],
+  "Group Two": [
+    { label: "G2 - One", value: "g2-1" },
+    { label: "G2 - Two", value: "g2-2" },
+  ],
+};
+
 export const Default: Story = {
-  name: "Padrão",
-  render: () => {
-    const items = [
-      { label: "Opção A", value: "a" },
-      { label: "Opção B", value: "b" },
-      { label: "Opção C", value: "c" },
-    ];
-    const [selected, setSelected] = React.useState<string | null>(null);
-    return (
-      <div style={{ padding: "32px 0" }}>
-        <div className="flex flex-col items-center justify-center p-10">
-          <Select
-            label="Escolha uma opção"
-            items={items}
-            selected={selected}
-            onChange={setSelected}
-            placeholder="Selecione..."
-          />
-        </div>
-      </div>
-    );
-  },
-  parameters: {
-    docs: {
-      description: { story: "Select básico sem busca." },
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select an option",
+    testIds: {
+      root: "select-root",
+      base: "select-base",
+      trigger: "select-trigger",
+      value: "select-value",
+      scrollarea: "select-scrollarea",
+      content: "select-content",
+      group: "select-group",
+      label: "select-label",
+      item: (v: string) => `select-item-${v}`,
     },
   },
+};
 
+export const WithPlaceholder: Story = {
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Escolha...",
+  },
+};
+
+export const Grouped: Story = {
+  args: {
+    groupItems: groupedItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select grouped",
+    testIds: {
+      trigger: "select-trigger",
+      value: "select-value",
+      item: (v: string) => `select-item-${v}`,
+    },
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    disabled: true,
+  },
 };
 
 export const WithError: Story = {
-  name: "Com erro",
-  render: () => {
-    const items = [
-      { label: "Opção A", value: "a" },
-      { label: "Opção B", value: "b" },
-    ];
-    const [selected, setSelected] = React.useState<string | null>(null);
-    return (
-      <div style={{ padding: "32px 0" }}>
-        <div className="flex flex-col items-center justify-center p-10">
-          <Select
-            label="Escolha uma opção"
-            items={items}
-            selected={selected}
-            onChange={setSelected}
-            placeholder="Selecione..."
-            error="Você deve selecionar uma opção"
-          />
-        </div>
-      </div>
-    );
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    error: "This field is required",
   },
-  parameters: {
-    docs: {
-      description: { story: "Select mostrando mensagem de erro." },
-    },
-  },
-
 };

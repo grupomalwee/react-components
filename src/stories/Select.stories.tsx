@@ -23,7 +23,7 @@ type SelectStoryArgs = {
 };
 
 const meta: Meta<typeof SelectBase> = {
-  title: "selects/Select",
+  title: "selects/SelectBase",
   component: SelectBase,
   tags: ["autodocs"],
   args: {

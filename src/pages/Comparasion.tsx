@@ -7,6 +7,7 @@ import { Combobox } from "@/components/selects/Combobox";
 import { MultiCombobox } from "@/components/selects/MultiCombobox";
 import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import React from "react";
+import { Select } from "@/components/selects/NewSelect";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -47,6 +48,17 @@ function ComparisonRowGrid({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
+      <Select
+        items={[
+          { label: "Opção 1", value: "1" },
+          { label: "Opção 2", value: "2" },
+          { label: "Opção 3", value: "3" },
+
+        ]}
+        selected={null}
+        onChange={() => {}}
+        placeholder="Selecione uma opção"
+        />
       <ButtonBase>Comparar</ButtonBase>
 
       <DateTimePicker date={date} onChange={setDate} hideSeconds />
