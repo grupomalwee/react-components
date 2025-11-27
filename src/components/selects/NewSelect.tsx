@@ -34,6 +34,8 @@ interface DefaultSelectProps extends ErrorMessageProps {
   placeholder?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  className?: string;
+
 }
 
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
@@ -66,6 +68,7 @@ export function Select<T extends string>({
   selected,
   label,
   labelClassname,
+  className
 }: NewSelectProps<T> & {
   selected?: T | null;
   label?: string;
@@ -87,7 +90,8 @@ export function Select<T extends string>({
         <SelectTriggerBase
           className={cn(
             "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 ",
-            error && "border-red-500"
+            error && "border-red-500",
+            className
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
           disabled={disabled}
