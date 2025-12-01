@@ -125,7 +125,7 @@ export function AvatarSelect<T extends string>({
         <SelectTriggerBase
           id={id}
           className={cn(
-            "ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_[data-square]]:shrink-0",
+            " [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_[data-square]]:shrink-0",
             error && "border-red-500",
             className
           )}
