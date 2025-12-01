@@ -4,7 +4,7 @@ import { SlideBase } from "../components/ui/form/SliderBase";
 import { useState } from "react";
 import { SunIcon, LadderIcon } from "@phosphor-icons/react";
 
-const meta: Meta<typeof SliderBase> = {
+const meta: Meta<typeof SlideBase> = {
   title: "forms/Slider",
   component: SlideBase,
   tags: ["autodocs"],
