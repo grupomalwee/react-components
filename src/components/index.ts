@@ -5,6 +5,7 @@ export * from "./theme-provider";
 export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
+export * from "./selects/AvatarSelect";
 export * from "./charts";
 export * from "./ui/data/AvatarBase";
 export * from "./ui/data/Badge";
@@ -55,4 +56,4 @@ export * from "./ui/navigation/ContextMenuBase";
 export * from "./ui/CodeBlock";
 export * from "./ui/data/StatusIndicator";
 export * from "./ui/form/DebouncedInput";
-export * from "./event-calendar"
+export * from "./event-calendar";

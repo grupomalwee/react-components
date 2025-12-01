@@ -3,6 +3,9 @@ import type { Meta } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { CalendarBase, CalendarPopover } from "../components/picker/calendar";
 import { useState } from "react";
+import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { ScrollAreaBase } from "../components/ui/layout/ScrollareaBase";
+import { format } from "date-fns";
 
 const meta: Meta<typeof CalendarBase> = {
   title: "forms/Calendar",
@@ -491,5 +494,243 @@ export default function WithPopover() {
       );
       expect(closeButton).toBeInTheDocument();
     });
+  },
+};
+
+export const AppointmentPicker = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { CalendarBase, ButtonBase, ScrollAreaBase } from '@mlw-packages/react-components';
+import { format } from 'date-fns';
+
+export default function AppointmentPicker() {
+  const today = new Date();
+  const [date, setDate] = useState<Date>(today);
+  const [time, setTime] = useState<string | null>(null);
+
+  const timeSlots = [
+    { available: false, time: "09:00" },
+    { available: false, time: "09:30" },
+    { available: true, time: "10:00" },
+    { available: true, time: "10:30" },
+    { available: true, time: "11:00" },
+    { available: true, time: "11:30" },
+    { available: false, time: "12:00" },
+    { available: true, time: "12:30" },
+    { available: true, time: "13:00" },
+    { available: true, time: "13:30" },
+    { available: true, time: "14:00" },
+    { available: false, time: "14:30" },
+    { available: false, time: "15:00" },
+    { available: true, time: "15:30" },
+    { available: true, time: "16:00" },
+    { available: true, time: "16:30" },
+    { available: true, time: "17:00" },
+    { available: true, time: "17:30" },
+  ];
+
+  return (
+    <div className="rounded-md border">
+      <div className="flex max-sm:flex-col">
+        <CalendarBase
+          className="p-2 sm:pe-5"
+          disabled={[{ before: today }]}
+          mode="single"
+          onSelect={(newDate) => {
+            if (newDate) {
+              setDate(newDate);
+              setTime(null);
+            }
+          }}
+          selected={date}
+        />
+        <div className="relative w-full max-sm:h-48 sm:w-40">
+          <div className="absolute inset-0 py-4 max-sm:border-t">
+            <ScrollAreaBase className="h-full sm:border-s">
+              <div className="space-y-3">
+                <div className="flex h-5 shrink-0 items-center px-5">
+                  <p className="font-medium text-sm">
+                    {format(date, "EEEE, d")}
+                  </p>
+                </div>
+                <div className="grid gap-1.5 px-5 max-sm:grid-cols-2">
+                  {timeSlots.map(({ time: timeSlot, available }) => (
+                    <ButtonBase
+                      className="w-full"
+                      disabled={!available}
+                      key={timeSlot}
+                      onClick={() => setTime(timeSlot)}
+                      size="sm"
+                      variant={time === timeSlot ? "default" : "outline"}
+                    >
+                      {timeSlot}
+                    </ButtonBase>
+                  ))}
+                </div>
+              </div>
+            </ScrollAreaBase>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const today = new Date();
+    const [date, setDate] = useState<Date>(today);
+    const [time, setTime] = useState<string | null>(null);
+
+    const timeSlots = [
+      { available: false, time: "09:00" },
+      { available: false, time: "09:30" },
+      { available: true, time: "10:00" },
+      { available: true, time: "10:30" },
+      { available: true, time: "11:00" },
+      { available: true, time: "11:30" },
+      { available: false, time: "12:00" },
+      { available: true, time: "12:30" },
+      { available: true, time: "13:00" },
+      { available: true, time: "13:30" },
+      { available: true, time: "14:00" },
+      { available: false, time: "14:30" },
+      { available: false, time: "15:00" },
+      { available: true, time: "15:30" },
+      { available: true, time: "16:00" },
+      { available: true, time: "16:30" },
+      { available: true, time: "17:00" },
+      { available: true, time: "17:30" },
+    ];
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+     
+        <div className="rounded-md border" data-testid="appointment-picker">
+          <div className="flex max-sm:flex-col">
+            <CalendarBase
+              className="p-2 sm:pe-5"
+              disabled={[{ before: today }]}
+              mode="single"
+              onSelect={(newDate) => {
+                if (newDate) {
+                  setDate(newDate);
+                  setTime(null);
+                }
+              }}
+              selected={date}
+              data-testid="appointment-calendar"
+            />
+            <div className="relative w-full max-sm:h-48 sm:w-40">
+              <div className="absolute inset-0 py-4 max-sm:border-t">
+                <ScrollAreaBase className="h-full sm:border-s">
+                  <div className="space-y-3">
+                    <div className="flex h-5 shrink-0 items-center px-5">
+                      <p
+                        className="font-medium text-sm"
+                        data-testid="selected-date"
+                      >
+                        {format(date, "EEEE, d")}
+                      </p>
+                    </div>
+                    <div
+                      className="grid gap-1.5 px-5 max-sm:grid-cols-2"
+                      data-testid="time-slots"
+                    >
+                      {timeSlots.map(({ time: timeSlot, available }) => (
+                        <ButtonBase
+                          className="w-full"
+                          disabled={!available}
+                          key={timeSlot}
+                          onClick={() => setTime(timeSlot)}
+                          size="sm"
+                          variant={time === timeSlot ? "default" : "outline"}
+                          data-testid={`time-slot-${timeSlot}`}
+                        >
+                          {timeSlot}
+                        </ButtonBase>
+                      ))}
+                    </div>
+                  </div>
+                </ScrollAreaBase>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement;
+    step: (name: string, fn: () => Promise<void>) => Promise<void>;
+  }) => {
+    await step("Verificar appointment picker renderizado", async () => {
+      await waitFor(() => {
+        const picker = canvasElement.querySelector(
+          '[data-testid="appointment-picker"]'
+        );
+        expect(picker).toBeInTheDocument();
+      });
+    });
+
+    await step(
+      "Verificar calendário e slots de horário presentes",
+      async () => {
+        const calendar = canvasElement.querySelector(
+          '[data-testid="appointment-calendar"]'
+        );
+        expect(calendar).toBeInTheDocument();
+
+        const timeSlots = canvasElement.querySelector(
+          '[data-testid="time-slots"]'
+        );
+        expect(timeSlots).toBeInTheDocument();
+      }
+    );
+
+    await step("Verificar data selecionada exibida", async () => {
+      const selectedDate = canvasElement.querySelector(
+        '[data-testid="selected-date"]'
+      );
+      expect(selectedDate).toBeInTheDocument();
+      expect(selectedDate?.textContent).toBeTruthy();
+    });
+
+    await step("Testar seleção de horário disponível", async () => {
+      const availableSlot = canvasElement.querySelector(
+        '[data-testid="time-slot-10:00"]'
+      ) as HTMLButtonElement;
+
+      if (availableSlot && !availableSlot.disabled) {
+        await userEvent.click(availableSlot);
+        await waitFor(() => {
+          expect(availableSlot).toBeInTheDocument();
+        });
+      }
+    });
+
+    await step(
+      "Verificar horários indisponíveis estão desabilitados",
+      async () => {
+        const disabledSlot = canvasElement.querySelector(
+          '[data-testid="time-slot-09:00"]'
+        ) as HTMLButtonElement;
+        expect(disabledSlot).toBeDisabled();
+      }
+    );
   },
 };
