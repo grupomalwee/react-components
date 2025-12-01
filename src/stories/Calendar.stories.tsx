@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ButtonBase } from "../components/ui/form/ButtonBase";
 import { ScrollAreaBase } from "../components/ui/layout/ScrollareaBase";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const meta: Meta<typeof CalendarBase> = {
   title: "forms/Calendar",
@@ -616,11 +617,10 @@ export default function AppointmentPicker() {
           padding: "32px 0",
         }}
       >
-     
         <div className="rounded-md border" data-testid="appointment-picker">
           <div className="flex max-sm:flex-col">
             <CalendarBase
-              className="p-2 sm:pe-5"
+              className="p-3 sm:pe-5 border-none"
               disabled={[{ before: today }]}
               mode="single"
               onSelect={(newDate) => {
@@ -638,10 +638,10 @@ export default function AppointmentPicker() {
                   <div className="space-y-3">
                     <div className="flex h-5 shrink-0 items-center px-5">
                       <p
-                        className="font-medium text-sm"
+                        className="font-medium text-sm capitalize"
                         data-testid="selected-date"
                       >
-                        {format(date, "EEEE, d")}
+                        {format(date, "EEEE, d", { locale: ptBR })}
                       </p>
                     </div>
                     <div
