@@ -122,14 +122,14 @@ export function DateTimePicker({
         <ErrorMessage error={error} />
 
         <PopoverContentBase
-          className="w-full p-0"
+          className="w-full p-0 border-none shadow-none"
           align="center"
           sideOffset={4}
           side="bottom"
           avoidCollisions={true}
           collisionPadding={8}
         >
-          <div className="flex flex-col space-y-2 sm:space-y-3 p-2 sm:p-3 md:p-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="flex flex-col max-h-[calc(100vh-4rem)] overflow-y-auto border-none rounded-md">
             <CalendarBase
               mode="single"
               locale={ptBR}
@@ -143,7 +143,7 @@ export function DateTimePicker({
             />
 
             {!hideTime && (
-              <div className="flex justify-center w-full px-2">
+              <div className="flex justify-center w-full ">
                 <PopoverBase
                   open={timePickerOpen}
                   onOpenChange={setTimePickerOpen}
@@ -153,14 +153,12 @@ export function DateTimePicker({
                       variant="outline"
                       size="default"
                       className={cn(
-                        "flex items-center justify-center gap-1.5 sm:gap-2",
-                        "px-2 sm:px-3 py-1.5 sm:py-2",
-                        "text-sm sm:text-base font-semibold w-full max-w-xs",
-                        "border-2 border-primary/20 rounded-lg",
-                        "bg-background hover:bg-primary/10 hover:border-primary/30",
+                        "flex items-center justify-center rounded-none border-none",               
+                        "text-sm sm:text-base font-semibold w-full",                       
+                        "bg-background hover:bg-accent",
                         "transition-all duration-200",
                         "shadow-sm hover:shadow-md active:scale-[0.98]",
-                        "min-h-[36px] sm:min-h-[40px]"
+                        
                       )}
                     >
                       <ClockIcon className="text-primary flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
@@ -175,7 +173,7 @@ export function DateTimePicker({
                   </PopoverTriggerBase>
 
                   <PopoverContentBase
-                    className="w-[calc(100vw-2rem)] max-w-sm p-3 sm:p-3 rounded-md"
+                    className="w-auto max-w-sm rounded-md"
                     align="center"
                     side="top"
                     sideOffset={8}

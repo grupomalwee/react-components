@@ -46,7 +46,7 @@ export function CalendarBase({
   return (
     <div
       className={cn(
-        "rounded-md border bg-background p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col",
+        "rounded-md border bg-background p-3 overflow-hidden flex flex-col",
         className
       )}
     >
@@ -167,13 +167,12 @@ export const CalendarPopover = ({
           </button>
         </div>
 
-        <div className="p-3">
+        <div className="">
           <CalendarBase
             mode="single"
             selected={selected}
             onSelect={(date) => {
               onSelect?.(date as Date | undefined);
-              // fecha o popover ao selecionar uma data (melhora UX em mobile)
               setOpen(false);
             }}
           />
