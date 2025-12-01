@@ -13,7 +13,8 @@
 
 ## Índice
 
-- [1.7.7 — 2025-11-25](#177---2025-11-25)
+- [1.7.8 — 2025-12-01](#178---2025-12-01)
+- [1.7.7 — 2025-11-26](#177---2025-11-26)
 - [1.7.6 — 2025-11-18](#176---2025-11-18)
 - [1.7.5 — 2025-11-13](#175---2025-11-13)
 - [1.7.4 — 2025-11-10](#174---2025-11-10)
@@ -23,7 +24,27 @@
 
 ---
 
-## 1.7.7 — 2025-11-25
+## 1.7.8 — 2025-12-01
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- AvatarSelect: novo componente para seleção de usuários com avatar.
+- Event Calendar: implementados componentes e views de calendário de eventos com hooks personalizados.
+- Calendar: adicionada documentação melhorada e exemplos interativos nas stories.
+- Select: adicionada prop `className` para maior flexibilidade de estilização.
+- DestructiveDialog: adicionada prop `className` para customização de estilos.
+
+### Changed
+
+- Calendar: melhorias no layout e estilização do componente e DateTimePicker.
+- Select: refatoração da estrutura das stories para melhor usabilidade.
+- Stories: atualizados títulos para maior consistência.
+
+---
+
+## 1.7.7 — 2025-11-26
 
 **Author:** Gabriel Glatz
 
