@@ -1,3 +1,4 @@
+import "../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { DayPickerProvider } from "react-day-picker";
 import { ThemeProviderBase } from "@/components/theme-provider";
@@ -158,7 +159,49 @@ const meta: Meta<typeof EventCalendar> = {
     ),
   ],
   parameters: {
+    docs: {
+      description: {
+        component:
+          "Calendário de eventos com múltiplas visualizações (mês, semana, dia, agenda). Permite adicionar, editar e deletar eventos.",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
     layout: "fullscreen",
+    backgrounds: {
+      default: "light",
+      values: [
+        { name: "light", value: "#f6f6f6" },
+        { name: "dark", value: "#222" },
+      ],
+    },
   },
   argTypes: {
     initialView: {
@@ -202,6 +245,40 @@ function Wrapper(props: { initialView?: CalendarView } = {}) {
 }
 
 export const Playground: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function Playground() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      initialView="month"
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: (args) => <Wrapper initialView={args.initialView} />,
   args: {
     initialView: "month",
@@ -209,26 +286,187 @@ export const Playground: Story = {
 };
 
 export const MonthViewExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function MonthViewExample() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => <Wrapper />,
   name: "Mês",
 };
 
 export const WeekViewExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function WeekViewExample() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      initialView="week"
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => <Wrapper initialView="week" />,
   name: "Semana",
 };
 
 export const DayViewExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function DayViewExample() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      initialView="day"
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => <Wrapper initialView="day" />,
   name: "Dia",
 };
 
 export const AgendaViewExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function AgendaViewExample() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const handleEventAdd = (event: CalendarEvent) =>
+    setEvents((s) => [...s, event]);
+
+  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+    setEvents((s) =>
+      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+    );
+
+  const handleEventDelete = (eventId: string) =>
+    setEvents((s) => s.filter((ev) => ev.id !== eventId));
+
+  return (
+    <EventCalendar
+      events={events}
+      initialView="agenda"
+      onEventAdd={handleEventAdd}
+      onEventDelete={handleEventDelete}
+      onEventUpdate={handleEventUpdate}
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => <Wrapper initialView="agenda" />,
   name: "Agenda",
 };
 
 export const ManyEvents: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { addDays, setHours, setMinutes } from 'date-fns';
+
+export default function ManyEvents() {
+  // create many events to stress layout
+  const many = Array.from({ length: 40 }).map((_, i) => {
+    const start = addDays(new Date(), i % 7);
+    return {
+      id: String(100 + i),
+      title: \`Evento \${i + 1}\`,
+      start: setMinutes(setHours(start, 9 + (i % 8)), 0),
+      end: setMinutes(setHours(start, 10 + (i % 8)), 0),
+      color: ["sky", "amber", "emerald", "violet", "rose", "orange"][i % 6],
+    } as CalendarEvent;
+  });
+
+  return <EventCalendar events={many} initialView="week" />;
+}
+`,
+      },
+    },
+  },
   render: () => {
     // create many events to stress layout
     const many = Array.from({ length: 40 }).map((_, i) => {

@@ -29,10 +29,10 @@ const meta: Meta<typeof SelectBase> = {
   args: {
     open: false,
     disabled: false,
-    value: "",      
+    value: "",
   },
   argTypes: {
-    open: { control: { type: "boolean" } },   
+    open: { control: { type: "boolean" } },
     disabled: { control: { type: "boolean" } },
     value: { control: { type: "text" } },
     onOpenChange: { action: "onOpenChange" },
@@ -41,7 +41,41 @@ const meta: Meta<typeof SelectBase> = {
   parameters: {
     docs: {
       description: {
-        component: "Select para seleção de opções, listas e agrupamentos.",
+        component:
+          "Select para seleção de opções, listas e agrupamentos. Componente base altamente personalizável.",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import {
+  SelectBase,
+  SelectTriggerBase,
+  SelectContentBase,
+  SelectItemBase,
+  SelectValueBase,
+  SelectGroupBase,
+  SelectLabelBase,
+} from '@mlw-packages/react-components';
+
+export default function Example() {
+  const [value, setValue] = useState<string>("");
+
+  return (
+    <SelectBase value={value} onValueChange={setValue}>
+      <SelectTriggerBase className="w-[180px]">
+        <SelectValueBase placeholder="Select a fruit" />
+      </SelectTriggerBase>
+      <SelectContentBase>
+        <SelectGroupBase>
+          <SelectLabelBase>Fruits</SelectLabelBase>
+          <SelectItemBase value="apple">Apple</SelectItemBase>
+          <SelectItemBase value="banana">Banana</SelectItemBase>
+          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
+        </SelectGroupBase>
+      </SelectContentBase>
+    </SelectBase>
+  );
+}
+`,
       },
     },
     backgrounds: {
@@ -59,6 +93,45 @@ export default meta;
 type Story = StoryObj<typeof SelectBase>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import {
+  SelectBase,
+  SelectTriggerBase,
+  SelectContentBase,
+  SelectItemBase,
+  SelectValueBase,
+  SelectGroupBase,
+  SelectLabelBase,
+} from '@mlw-packages/react-components';
+
+export default function Default() {
+  const [value, setValue] = useState<string>("");
+
+  return (
+    <SelectBase value={value} onValueChange={setValue}>
+      <SelectTriggerBase className="w-[180px]">
+        <SelectValueBase placeholder="Select a fruit" />
+      </SelectTriggerBase>
+      <SelectContentBase>
+        <SelectGroupBase>
+          <SelectLabelBase>Fruits</SelectLabelBase>
+          <SelectItemBase value="apple">Apple</SelectItemBase>
+          <SelectItemBase value="banana">Banana</SelectItemBase>
+          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
+          <SelectItemBase value="grapes">Grapes</SelectItemBase>
+          <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
+        </SelectGroupBase>
+      </SelectContentBase>
+    </SelectBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args: SelectStoryArgs) => {
     const [open, setOpen] = React.useState<boolean>(!!args.open);
     const [value, setValue] = React.useState<string>(args.value || "");
@@ -116,6 +189,46 @@ export const Default: Story = {
 };
 
 export const WithError: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import {
+  SelectBase,
+  SelectTriggerBase,
+  SelectContentBase,
+  SelectItemBase,
+  SelectValueBase,
+  SelectGroupBase,
+  SelectLabelBase,
+} from '@mlw-packages/react-components';
+
+export default function WithError() {
+  return (
+    <SelectBase>
+      <SelectTriggerBase
+        className="w-[180px]"
+        error="Você deve selecionar uma opção"
+      >
+        <SelectValueBase placeholder="Select a fruit" />
+      </SelectTriggerBase>
+      <SelectContentBase>
+        <SelectGroupBase>
+          <SelectLabelBase>Fruits</SelectLabelBase>
+          <SelectItemBase value="apple">Apple</SelectItemBase>
+          <SelectItemBase value="banana">Banana</SelectItemBase>
+          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
+          <SelectItemBase value="grapes">Grapes</SelectItemBase>
+          <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
+        </SelectGroupBase>
+      </SelectContentBase>
+    </SelectBase>
+  );
+}
+`,
+      },
+    },
+  },
   render: (args: SelectStoryArgs) => {
     const [open, setOpen] = React.useState<boolean>(!!args.open);
     React.useEffect(() => setOpen(!!args.open), [args.open]);

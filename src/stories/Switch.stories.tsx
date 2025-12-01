@@ -2,11 +2,7 @@ import "../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SwitchBase } from "../components/ui/form/SwitchBase";
 import { useState } from "react";
-import {
-  SunIcon,
-  MoonIcon,
-
-} from "@phosphor-icons/react";
+import { SunIcon, MoonIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof SwitchBase> = {
   title: "forms/Switch",
@@ -84,13 +80,15 @@ export const Basico: Story = {
     },
   },
   render: () => (
-    <div  style={{
+    <div
+      style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         padding: "32px 32px",
-        gap: 12
-      }}>
+        gap: 12,
+      }}
+    >
       <span className="text-sm">Switch Básico</span>
       <SwitchBase />
     </div>
@@ -104,18 +102,37 @@ export const DarkMode: Story = {
       description: {
         story: "Switch com ícones para alternar entre claro e escuro.",
       },
+      source: {
+        code: `import React, { useState } from 'react';
+import { SwitchBase } from '@mlw-packages/react-components';
+import { SunIcon, MoonIcon } from '@phosphor-icons/react';
+
+export default function DarkMode() {
+  const [darkMode, setDarkMode] = useState(false);
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <SunIcon size={20} />
+      <SwitchBase checked={darkMode} onCheckedChange={setDarkMode} />
+      <MoonIcon size={20} />
+    </div>
+  );
+}
+`,
+      },
     },
   },
   render: () => {
     const [darkMode, setDarkMode] = useState(false);
     return (
-      <div  style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "32px 32px",
-        gap: 12,
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 32px",
+          gap: 12,
+        }}
+      >
         <SunIcon size={20} />
         <SwitchBase checked={darkMode} onCheckedChange={setDarkMode} />
         <MoonIcon size={20} />
@@ -123,4 +140,3 @@ export const DarkMode: Story = {
     );
   },
 };
-
