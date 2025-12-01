@@ -1,7 +1,8 @@
 "use client";
 
 export { AgendaView } from "./AgendaView";
-export { CalendarDndProvider, useCalendarDnd } from "./CalendarDND";
+export { CalendarDndProvider } from "./CalendarDND";
+export { useCalendarDnd } from "./hooks";
 export * from "./constants";
 export { DayView } from "./DayView";
 export { DraggableEvent } from "./DraggablaEvent";

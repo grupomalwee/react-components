@@ -14,53 +14,10 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { addMinutes, differenceInMinutes } from "date-fns";
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, useId, useRef, useState } from "react";
 
-import {
-  type CalendarEvent,
-  EventItem,
-} from '@/components/event-calendar';
-
-// Define the context type
-type CalendarDndContextType = {
-  activeEvent: CalendarEvent | null;
-  activeId: UniqueIdentifier | null;
-  activeView: "month" | "week" | "day" | null;
-  currentTime: Date | null;
-  eventHeight: number | null;
-  isMultiDay: boolean;
-  multiDayWidth: number | null;
-  dragHandlePosition: {
-    x?: number;
-    y?: number;
-    data?: {
-      isFirstDay?: boolean;
-      isLastDay?: boolean;
-    };
-  } | null;
-};
-
-// Create the context
-const CalendarDndContext = createContext<CalendarDndContextType>({
-  activeEvent: null,
-  activeId: null,
-  activeView: null,
-  currentTime: null,
-  dragHandlePosition: null,
-  eventHeight: null,
-  isMultiDay: false,
-  multiDayWidth: null,
-});
-
-// Hook to use the context
-export const useCalendarDnd = () => useContext(CalendarDndContext);
+import { type CalendarEvent, EventItem } from "@/components/event-calendar";
+import { CalendarDndContext } from "./hooks";
 
 // Props for the provider
 interface CalendarDndProviderProps {
@@ -75,7 +32,7 @@ export function CalendarDndProvider({
   const [activeEvent, setActiveEvent] = useState<CalendarEvent | null>(null);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [activeView, setActiveView] = useState<"month" | "week" | "day" | null>(
-    null,
+    null
   );
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [eventHeight, setEventHeight] = useState<number | null>(null);
@@ -113,7 +70,7 @@ export function CalendarDndProvider({
       activationConstraint: {
         distance: 5,
       },
-    }),
+    })
   );
 
   // Generate a stable ID for the DndContext
@@ -208,7 +165,7 @@ export function CalendarDndProvider({
             currentTime.getHours(),
             currentTime.getMinutes(),
             currentTime.getSeconds(),
-            currentTime.getMilliseconds(),
+            currentTime.getMilliseconds()
           );
         }
 
@@ -285,7 +242,7 @@ export function CalendarDndProvider({
           currentTime.getHours(),
           currentTime.getMinutes(),
           currentTime.getSeconds(),
-          currentTime.getMilliseconds(),
+          currentTime.getMilliseconds()
         );
       }
 
