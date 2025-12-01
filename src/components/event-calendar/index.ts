@@ -2,22 +2,22 @@
 
 // Component exports
 
-export { AgendaView } from "./agenda-view";
-export { CalendarDndProvider, useCalendarDnd } from "./calendar-dnd-context";
+export { AgendaView } from "./AgendaView";
+export { CalendarDndProvider, useCalendarDnd } from "./CalendarDND";
 // Constants and utility exports
 export * from "./constants";
-export { DayView } from "./day-view";
-export { DraggableEvent } from "./draggable-event";
-export { DroppableCell } from "./droppable-cell";
-export { EventCalendar } from "./event-calendar";
-export { EventDialog } from "./event-dialog";
-export { EventItem } from "./event-item";
-export { EventsPopup } from "./events-popup";
+export { DayView } from "./DayView";
+export { DraggableEvent } from "./DraggablaEvent";
+export { DroppableCell } from "./DroppableCell";
+export { EventCalendar } from "./EventCalendar";
+export { EventDialog } from "./EventDialog";
+export { EventItem } from "./EventItem";
+export { EventsPopup } from "./EventsPopUp";
 // Hook exports
 export * from "./hooks/use-current-time-indicator";
 export * from "./hooks/use-event-visibility";
-export { MonthView } from "./month-view";
+export { MonthView } from "./MonthView";
 // Type exports
 export type { CalendarEvent, CalendarView, EventColor } from "./types";
 export * from "./utils";
-export { WeekView } from "./week-view";
+export { WeekView } from "./WeekView";
