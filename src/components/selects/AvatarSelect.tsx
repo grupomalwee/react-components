@@ -97,14 +97,16 @@ export function AvatarSelect<T extends string>({
 }) {
   const id = useId();
 
-  const renderItem = (item: AvatarSelectItem<T>) => (
-    <>
-      {item.avatar && (
-        <Square className={item.avatarClassName}>{item.avatar}</Square>
-      )}
-      <span className="truncate">{item.label}</span>
-    </>
-  );
+  const renderItem = (item: AvatarSelectItem<T>) => {
+    const avatarContent = item.avatar ?? item.label.charAt(0).toUpperCase();
+
+    return (
+      <>
+        <Square className={item.avatarClassName}>{avatarContent}</Square>
+        <span className="truncate">{item.label}</span>
+      </>
+    );
+  };
 
   return (
     <div data-testid={testIds.root ?? "avatar-select-root"}>

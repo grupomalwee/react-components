@@ -16,21 +16,18 @@ type Story = StoryObj<typeof AvatarSelect>;
 
 const userItems = [
   {
-    label: "Frank Morris",
+    label: "Gabriel Glatz",
     value: "1",
-    avatar: "F",
     avatarClassName: "bg-indigo-400/20 text-indigo-500",
   },
   {
-    label: "Xavier Guerra",
+    label: "Eduardo Ronchi",
     value: "2",
-    avatar: "X",
     avatarClassName: "bg-purple-400/20 text-purple-500",
   },
   {
     label: "Anne Kelley",
     value: "3",
-    avatar: "A",
     avatarClassName: "bg-rose-400/20 text-rose-500",
   },
 ];
@@ -38,21 +35,18 @@ const userItems = [
 const groupedUsers = {
   "Impersonate user": [
     {
-      label: "Frank Morris",
+      label: "",
       value: "1",
-      avatar: "F",
       avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Xavier Guerra",
       value: "2",
-      avatar: "X",
       avatarClassName: "bg-purple-400/20 text-purple-500",
     },
     {
       label: "Anne Kelley",
       value: "3",
-      avatar: "A",
       avatarClassName: "bg-rose-400/20 text-rose-500",
     },
   ],
@@ -60,13 +54,11 @@ const groupedUsers = {
     {
       label: "John Doe",
       value: "4",
-      avatar: "J",
       avatarClassName: "bg-blue-400/20 text-blue-500",
     },
     {
       label: "Sarah Smith",
       value: "5",
-      avatar: "S",
       avatarClassName: "bg-green-400/20 text-green-500",
     },
   ],
