@@ -10,7 +10,7 @@ import {
 import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
 
 const meta: Meta<typeof CarouselBase> = {
-  title: "Layout/Carousel",
+  title: "layout/Carousel",
   component: CarouselBase,
   tags: ["autodocs"],
   args: {
@@ -212,7 +212,7 @@ export default function Responsivo() {
               </CarouselItemBase>
             ))}
           </CarouselContentBase>
-          <CarouselPreviousBase/>
+          <CarouselPreviousBase />
           <CarouselNextBase />
         </CarouselBase>
       </div>

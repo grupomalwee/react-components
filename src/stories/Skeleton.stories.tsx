@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SkeletonBase } from "../components/ui/feedback/SkeletonBase";
 
 const meta: Meta<typeof SkeletonBase> = {
-  title: "diversos/Skeleton",
+  title: "feedback/Skeleton",
   component: SkeletonBase,
   tags: ["autodocs"],
   parameters: {

@@ -5,7 +5,7 @@ import { CalendarBase, CalendarPopover } from "../components/picker/calendar";
 import { useState } from "react";
 
 const meta: Meta<typeof CalendarBase> = {
-  title: "forms/Calendar",
+  title: "data/Calendar",
   component: CalendarBase,
   tags: ["autodocs"],
   parameters: {

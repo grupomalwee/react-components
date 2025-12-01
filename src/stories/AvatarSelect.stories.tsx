@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AvatarSelect } from "@/components/selects/AvatarSelect";
 
 const meta: Meta<typeof AvatarSelect> = {
-  title: "Selects/AvatarSelect",
+  title: "selects/AvatarSelect",
   component: AvatarSelect,
   tags: ["autodocs"],
   parameters: {
@@ -238,4 +238,3 @@ export const WithoutAvatars: Story = {
     placeholder: "Select option",
   },
 };
-

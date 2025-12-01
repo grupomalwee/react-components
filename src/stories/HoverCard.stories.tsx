@@ -13,7 +13,7 @@ import {
 } from "../components/ui/data/AvatarBase";
 
 const meta: Meta<typeof HoverCardBase> = {
-  title: "overlays/Hover Card",
+  title: "forms/Hover Card",
   component: HoverCardBase,
   tags: ["autodocs"],
   parameters: {

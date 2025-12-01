@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react-vite";
 import { Select } from "@/components/selects/NewSelect";
 
 const meta: Meta<typeof Select> = {
-  title: "Selects/Select",
+  title: "selects/Select",
   component: Select,
   tags: ["autodocs"],
   parameters: {

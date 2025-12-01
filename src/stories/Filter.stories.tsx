@@ -10,7 +10,7 @@ import { TooltipProviderBase } from "../components/ui/feedback/TooltipBase";
 import "../global.css";
 
 export default {
-  title: "diversos/FilterDialog",
+  title: "data/Filter Dialog",
   component: FilterDialog,
   tags: ["autodocs"],
   parameters: {

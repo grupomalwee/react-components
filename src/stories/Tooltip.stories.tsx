@@ -8,7 +8,7 @@ import {
 } from "../components/ui/feedback/TooltipBase";
 
 const meta: Meta<typeof TooltipBase> = {
-  title: "overlays/Tooltip",
+  title: "feedback/Tooltip",
   component: TooltipBase,
   tags: ["autodocs"],
   parameters: {

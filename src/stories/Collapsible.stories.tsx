@@ -11,7 +11,7 @@ import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { expect, userEvent, within, waitFor } from "storybook/test";
 
 const meta: Meta<typeof CollapsibleBase> = {
-  title: "forms/Collapsible",
+  title: "layout/Collapsible",
   component: CollapsibleBase,
   tags: ["autodocs"],
   parameters: {

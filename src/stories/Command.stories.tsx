@@ -11,7 +11,7 @@ import {
 } from "../components/ui/navigation/CommandBase";
 
 const meta: Meta<typeof CommandBase> = {
-  title: "diversos/Command",
+  title: "navigation/Command",
   component: CommandBase,
   tags: ["autodocs"],
   parameters: {

@@ -5,7 +5,7 @@ import { LoadingBase } from "@/components/ui/feedback/LoadingBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const meta: Meta<typeof LoadingBase> = {
-  title: "forms/Loading",
+  title: "feedback/Loading",
   component: LoadingBase,
   tags: ["autodocs"],
   parameters: {

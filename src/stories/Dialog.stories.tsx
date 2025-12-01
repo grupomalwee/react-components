@@ -17,7 +17,7 @@ import { CheckboxBase } from "../components/ui/form/CheckBoxBase";
 import { CopyIcon, TrashIcon, WarningIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DialogBase> = {
-  title: "overlays/Dialog",
+  title: "feedback/Dialog",
   component: DialogBase,
   tags: ["autodocs"],
   parameters: {

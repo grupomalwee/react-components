@@ -134,7 +134,7 @@ const sampleEvents: CalendarEvent[] = [
 ];
 
 const meta: Meta<typeof EventCalendar> = {
-  title: "forms/Event Calendar",
+  title: "data/Event Calendar",
   component: EventCalendar,
   tags: ["autodocs"],
   decorators: [

@@ -6,10 +6,27 @@ export type ChangeItem = {
   fixed?: string[];
   changed?: string[];
   notes?: string[];
-  shortTitle?: string; // manual short summary for the release
+  shortTitle?: string;
 };
 
 export const changelogData: ChangeItem[] = [
+  {
+    version: "1.7.8",
+    author: "Gabriel Glatz",
+    date: "2025-12-01",
+    shortTitle: "Event Calendar e AvatarSelect",
+    added: [
+      "AvatarSelect: novo componente para seleção de usuários com avatar.",
+      "Event Calendar: implementados componentes e views de calendário de eventos com hooks personalizados.",
+      "Calendar: adicionada documentação melhorada e exemplos interativos nas stories.",
+      "Select: adicionada prop `className` para maior flexibilidade de estilização.",
+      "DestructiveDialog: adicionada prop `className` para customização de estilos.",
+    ],
+    changed: [
+      "Calendar: melhorias no layout e estilização do componente e DateTimePicker.",
+      "Select: refatoração da estrutura das stories para melhor usabilidade.",
+    ],
+  },
   {
     version: "1.7.7",
     author: "Gabriel Glatz",

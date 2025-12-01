@@ -87,7 +87,6 @@ export const ExcluirConta: Story = {
         padding: "32px 0",
       }}
     >
-      {/* Estrutura basica do AlertDialog */}
       <AlertDialogBase>
         <AlertDialogTriggerBase>Excluir Conta</AlertDialogTriggerBase>
         <AlertDialogContentBase>
