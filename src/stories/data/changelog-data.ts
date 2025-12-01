@@ -25,7 +25,9 @@ export const changelogData: ChangeItem[] = [
     changed: [
       "Calendar: melhorias no layout e estilização do componente e DateTimePicker.",
       "Select: refatoração da estrutura das stories para melhor usabilidade.",
+      "Stories: atualizados títulos para maior consistência.",
     ],
+   
   },
   {
     version: "1.7.7",
