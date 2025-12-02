@@ -7,7 +7,7 @@ import {
 } from "@/components/filter/services/types";
 import { MemoryRouter } from "react-router-dom";
 import { TooltipProviderBase } from "@/components/ui/feedback/TooltipBase";
-import "../global.css";
+import "../../global.css";
 
 export default {
   title: "data/Filter Dialog",
