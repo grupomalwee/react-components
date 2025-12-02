@@ -7,7 +7,8 @@ import { Combobox } from "@/components/selects/Combobox";
 import { MultiCombobox } from "@/components/selects/MultiCombobox";
 import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import React from "react";
-import { Select } from "@/components/selects/NewSelect";
+import { Select } from "@/components/selects/Select";
+import { AvatarSelect } from "@/components/selects/AvatarSelect";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -53,13 +54,44 @@ function ComparisonRowGrid({
           { label: "Opção 1", value: "1" },
           { label: "Opção 2", value: "2" },
           { label: "Opção 3", value: "3" },
-
         ]}
         selected={null}
         onChange={() => {}}
         placeholder="Selecione uma opção"
-        />
+      />
       <ButtonBase>Comparar</ButtonBase>
+      <AvatarSelect
+        items={[
+          {
+            avatarClassName: "bg-indigo-400/20 text-indigo-500",
+            label: "Gabriel Glatz",
+            value: "1",
+          },
+          {
+            avatarClassName: "bg-purple-400/20 text-purple-500",
+            label: "Eduardo Ronchi",
+            value: "2",
+          },
+          {
+            avatarClassName: "bg-rose-400/20 text-rose-500",
+            label: "Anne Kelley",
+            value: "3",
+          },
+          {
+            avatarClassName: "bg-amber-400/20 text-amber-500",
+            label: "Michael Chen",
+            value: "4",
+          },
+          {
+            avatarClassName: "bg-emerald-400/20 text-emerald-500",
+            label: "Sofia Martinez",
+            value: "5",
+          },
+        ]}
+        onChange={function nG() {}}
+        placeholder="Select user"
+        selected="1"
+      />
 
       <DateTimePicker date={date} onChange={setDate} hideSeconds />
     </section>

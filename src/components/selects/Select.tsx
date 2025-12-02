@@ -1,3 +1,5 @@
+"use client";
+
 import {
   SelectBase,
   SelectContentBase,
@@ -16,12 +18,6 @@ export interface SelectItem<T extends string> {
   value: T;
 }
 
-interface DefaultSelectProps extends ErrorMessageProps {
-  placeholder: string;
-  onChange: (value: string) => void;
-  disabled?: boolean;
-}
-
 interface SelectTestIds {
   root?: string;
   base?: string;
@@ -32,7 +28,14 @@ interface SelectTestIds {
   group?: string;
   label?: string;
   item?: (value: string) => string;
-  error?: string;
+}
+
+interface DefaultSelectProps extends ErrorMessageProps {
+  placeholder?: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  className?: string;
+
 }
 
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
@@ -50,7 +53,7 @@ interface SelectPropsWithGroupItems<T extends string>
   testIds?: SelectTestIds;
 }
 
-type SelectProps<T extends string> =
+type NewSelectProps<T extends string> =
   | SelectPropsWithItems<T>
   | SelectPropsWithGroupItems<T>;
 
@@ -62,17 +65,33 @@ export function Select<T extends string>({
   error,
   testIds = {},
   disabled,
-}: SelectProps<T>) {
+  selected,
+  label,
+  labelClassname,
+  className
+}: NewSelectProps<T> & {
+  selected?: T | null;
+  label?: string;
+  labelClassname?: string;
+}) {
   return (
     <div data-testid={testIds.root ?? "select-root"}>
+      {label ? (
+        <label className={cn("mb-1 block text-sm font-medium", labelClassname)}>
+          {label}
+        </label>
+      ) : null}
+
       <SelectBase
-        onValueChange={onChange}
+        value={selected ?? undefined}
+        onValueChange={(v: string) => onChange(v)}
         data-testid={testIds.base ?? "select-base"}
       >
         <SelectTriggerBase
           className={cn(
-            "flex h-9 w-full content-start text-lg shadow-md",
-            error && "border-red-500"
+            "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 ",
+            error && "border-red-500",
+            className
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
           disabled={disabled}
@@ -102,7 +121,7 @@ export function Select<T extends string>({
                         key={item.value}
                         value={item.value}
                         data-testid={
-                          testIds.item?.(item.value) ??
+                          testIds.item?.(String(item.value)) ??
                           `select-item-${item.value}`
                         }
                       >
@@ -114,12 +133,13 @@ export function Select<T extends string>({
               </>
             ) : (
               <SelectGroupBase data-testid={testIds.group ?? "select-group"}>
-                {items.map((item) => (
+                {items!.map((item) => (
                   <SelectItemBase
                     key={item.value}
                     value={item.value}
                     data-testid={
-                      testIds.item?.(item.value) ?? `select-item-${item.value}`
+                      testIds.item?.(String(item.value)) ??
+                      `select-item-${item.value}`
                     }
                   >
                     {item.label}

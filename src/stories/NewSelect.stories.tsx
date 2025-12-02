@@ -1,6 +1,6 @@
 import "../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { Select } from "@/components/selects/NewSelect";
+import { Select } from "@/components/selects/Select";
 
 const meta: Meta<typeof Select> = {
   title: "selects/Select",
