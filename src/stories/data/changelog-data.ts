@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.9",
+    author: "Gabriel Glatz",
+    date: "2025-12-02",
+    shortTitle: "Stories e Select",
+    fixed: [
+      "Select: refatoração da estrutura das stories para melhor usabilidade.",
+      "Select: arrumado import de Select no propio componente.",
+      "Stories: estruturação de arquivos e pastas.",
+    ],
+   
+  },
+  {
     version: "1.7.8",
     author: "Gabriel Glatz",
     date: "2025-12-01",

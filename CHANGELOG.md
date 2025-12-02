@@ -24,6 +24,18 @@
 
 ---
 
+## 1.7.9 — 2025-12-02
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+  - Select: refatoração da estrutura das stories para melhor usabilidade.
+  - Select: arrumado import de Select no propio componente.
+  - Stories: estruturação de arquivos e pastas.
+
+---
+
 ## 1.7.8 — 2025-12-01
 
 **Author:** Gabriel Glatz
