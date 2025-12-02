@@ -1,12 +1,12 @@
 import { useState } from "react";
-import FilterDialog from "../components/ui/FilterBase";
+import FilterDialog from "@/components/ui/FilterBase";
 import {
   AvailableFilter,
   FilterConditions,
   SelectItem,
-} from "../components/filter/services/types";
+} from "@/components/filter/services/types";
 import { MemoryRouter } from "react-router-dom";
-import { TooltipProviderBase } from "../components/ui/feedback/TooltipBase";
+import { TooltipProviderBase } from "@/components/ui/feedback/TooltipBase";
 import "../global.css";
 
 export default {

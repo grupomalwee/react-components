@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TextAreaBase } from "../components/ui/form/TextAreaBase";
+import { TextAreaBase } from "@/components/ui/form/TextAreaBase";
 
 const meta: Meta<typeof TextAreaBase> = {
   title: "forms/Text Area",

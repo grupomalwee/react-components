@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { InputBase } from "../components/ui/form/InputBase";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { MapPinLineIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof InputBase> = {

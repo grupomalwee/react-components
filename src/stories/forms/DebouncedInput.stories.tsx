@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DebouncedInput from "../components/ui/form/DebouncedInput";
+import DebouncedInput from "@/components/ui/form/DebouncedInput";
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 

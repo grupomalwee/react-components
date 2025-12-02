@@ -14,7 +14,7 @@ import {
   ContextMenuSubBase,
   ContextMenuSubContentBase,
   ContextMenuSubTriggerBase,
-} from "../components/ui/navigation/ContextMenuBase";
+} from "@/components/ui/navigation/ContextMenuBase";
 
 const meta: Meta<typeof ContextMenuBase> = {
   title: "navigation/Context Menu",

@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge } from "../components/ui/data/Badge";
+import { Badge } from "../../components/ui/data/Badge";
 
 type BadgeStoryProps = {
   children?: string;

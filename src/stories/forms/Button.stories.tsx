@@ -2,7 +2,7 @@ import "../../style/global.css";
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { ButtonBase, ButtonGroupBase } from "../components/ui/form/ButtonBase";
+import { ButtonBase, ButtonGroupBase } from "@/components/ui/form/ButtonBase";
 import {
   AddButton,
   BackButton,

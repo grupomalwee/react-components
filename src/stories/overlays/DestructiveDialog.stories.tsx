@@ -1,8 +1,8 @@
 import "../../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DestructiveDialog } from "../components/ui/feedback/DestructiveDialog";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
+import { DestructiveDialog } from "@/components/ui/feedback/DestructiveDialog";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { TrashIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DestructiveDialog> = {

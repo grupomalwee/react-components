@@ -9,7 +9,7 @@ import {
   TableRowBase,
   TableCellBase,
   TableCaptionBase,
-} from "../components/ui/layout/TableBase";
+} from "../../components/ui/layout/TableBase";
 
 const meta: Meta<typeof TableBase> = {
   title: "data/Table",

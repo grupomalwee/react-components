@@ -5,7 +5,7 @@ import {
   TooltipTriggerBase,
   TooltipContentBase,
   TooltipProviderBase,
-} from "../components/ui/feedback/TooltipBase";
+} from "@/components/ui/feedback/TooltipBase";
 
 const meta: Meta<typeof TooltipBase> = {
   title: "feedback/Tooltip",

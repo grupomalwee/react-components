@@ -10,7 +10,7 @@ import {
   AlertDialogHeaderBase,
   AlertDialogTitleBase,
   AlertDialogTriggerBase,
-} from "../components/ui/feedback/AlertDialogBase";
+} from "@/components/ui/feedback/AlertDialogBase";
 import {
   CheckCircleIcon,
   WarningCircleIcon,

@@ -5,7 +5,7 @@ import {
   TabsListBase,
   TabsTriggerBase,
   TabsContentBase,
-} from "../components/ui/layout/TabsBase";
+} from "@/components/ui/layout/TabsBase";
 import React from "react";
 import { expect } from "storybook/test";
 

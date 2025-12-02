@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DateTimePicker } from "../components/picker/DateTimePicker";
+import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import { useState } from "react";
 
 const meta: Meta<typeof DateTimePicker> = {

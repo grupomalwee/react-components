@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   FileUploader,
   FileWithPreview,
-} from "../components/ui/data/FileUploader";
+} from "@/components/ui/data/FileUploader";
 import { useState } from "react";
 
 const meta: Meta<typeof FileUploader> = {

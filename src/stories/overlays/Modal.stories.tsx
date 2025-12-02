@@ -9,9 +9,9 @@ import {
   ModalFooterBase,
   ModalTitleBase,
   ModalDescriptionBase,
-} from "../components/ui/feedback/ModalBase";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
-import { InputBase } from "../components/ui/form/InputBase";
+} from "@/components/ui/feedback/ModalBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
 import { MapPinLineIcon, PlusIcon } from "@phosphor-icons/react";
 import {
   SelectBase,
@@ -21,9 +21,9 @@ import {
   SelectGroupBase,
   SelectLabelBase,
   SelectItemBase,
-} from "../components/ui/SelectBase";
-import { TextAreaBase } from "../components/ui/form/TextAreaBase";
-import LabelBase from "../components/ui/form/LabelBase";
+} from "@/components/ui/SelectBase";
+import { TextAreaBase } from "@/components/ui/form/TextAreaBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 
 const meta: Meta<unknown> = {
   title: "feedback/Modal",

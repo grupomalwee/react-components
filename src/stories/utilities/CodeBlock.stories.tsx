@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { CodeBlock } from "../components/ui/CodeBlock";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 const exampleTsx = `import React from 'react';
 

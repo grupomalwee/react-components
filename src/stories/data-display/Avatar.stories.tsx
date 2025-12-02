@@ -1,11 +1,8 @@
+import { AvatarBase, AvatarFallbackBase, AvatarImageBase } from "@/components/ui/data/AvatarBase";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within, waitFor } from "storybook/test";
-import {
-  AvatarBase,
-  AvatarImageBase,
-  AvatarFallbackBase,
-} from "../components/ui/data/AvatarBase";
+
 
 interface AvatarStoryProps {
   src: string;

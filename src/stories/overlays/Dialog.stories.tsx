@@ -9,11 +9,11 @@ import {
   DialogTriggerBase,
   DialogFooterBase,
   DialogCloseBase,
-} from "../components/ui/feedback/DialogBase";
-import { InputBase } from "../components/ui/form/InputBase";
-import LabelBase from "../components/ui/form/LabelBase";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
-import { CheckboxBase } from "../components/ui/form/CheckBoxBase";
+} from "@/components/ui/feedback/DialogBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { CheckboxBase } from "@/components/ui/form/CheckBoxBase";
 import { CopyIcon, TrashIcon, WarningIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DialogBase> = {

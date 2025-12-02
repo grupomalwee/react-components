@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
-import { Toaster, toast } from "../components/ui/feedback/SonnerBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { Toaster, toast } from "@/components/ui/feedback/SonnerBase";
 
 const meta: Meta<typeof Toaster> = {
   title: "feedback/Sonner",

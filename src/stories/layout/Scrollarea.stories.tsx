@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ScrollAreaBase,
   ScrollBarBase,
-} from "../components/ui/layout/ScrollareaBase";
+} from "@/components/ui/layout/ScrollareaBase";
 
 const meta: Meta<typeof ScrollAreaBase> = {
   title: "layout/Scrollarea",

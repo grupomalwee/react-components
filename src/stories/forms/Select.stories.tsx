@@ -8,7 +8,7 @@ import {
   SelectValueBase,
   SelectGroupBase,
   SelectLabelBase,
-} from "../components/ui/SelectBase";
+} from "@/components/ui/SelectBase";
 import * as React from "react";
 
 type SelectStoryArgs = {

@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SwitchBase } from "../components/ui/form/SwitchBase";
+import { SwitchBase } from "@/components/ui/form/SwitchBase";
 import { useState } from "react";
 import { SunIcon, MoonIcon } from "@phosphor-icons/react";
 

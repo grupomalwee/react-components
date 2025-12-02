@@ -6,7 +6,7 @@ import {
   CardDescriptionBase,
   CardHeaderBase,
   CardTitleBase,
-} from "../components/ui/data/CardBase";
+} from "@/components/ui/data/CardBase";
 
 const meta: Meta<typeof CardBase> = {
   title: "data/Card",

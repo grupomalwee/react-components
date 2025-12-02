@@ -4,10 +4,10 @@ import {
   PopoverBase,
   PopoverTriggerBase,
   PopoverContentBase,
-} from "../components/ui/overlays/PopoverBase";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
-import { InputBase } from "../components/ui/form/InputBase";
-import LabelBase from "../components/ui/form/LabelBase";
+} from "@/components/ui/overlays/PopoverBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { InputBase } from "@/components/ui/form/InputBase";
+import LabelBase from "@/components/ui/form/LabelBase";
 
 const meta: Meta<typeof PopoverBase> = {
   title: "overlays/Popover",

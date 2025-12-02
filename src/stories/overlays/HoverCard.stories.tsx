@@ -4,13 +4,13 @@ import {
   HoverCardBase,
   HoverCardContentBase,
   HoverCardTriggerBase,
-} from "../components/ui/form/HoverCardBase";
-import { ButtonBase } from "../components/ui/form/ButtonBase";
+} from "@/components/ui/form/HoverCardBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   AvatarBase,
   AvatarImageBase,
   AvatarFallbackBase,
-} from "../components/ui/data/AvatarBase";
+} from "@/components/ui/data/AvatarBase";
 
 const meta: Meta<typeof HoverCardBase> = {
   title: "forms/Hover Card",

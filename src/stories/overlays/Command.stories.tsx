@@ -8,7 +8,7 @@ import {
   CommandItemBase,
   CommandListBase,
   CommandSeparatorBase,
-} from "../components/ui/navigation/CommandBase";
+} from "@/components/ui/navigation/CommandBase";
 
 const meta: Meta<typeof CommandBase> = {
   title: "navigation/Command",

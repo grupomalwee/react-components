@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SkeletonBase } from "../components/ui/feedback/SkeletonBase";
+import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
 
 const meta: Meta<typeof SkeletonBase> = {
   title: "feedback/Skeleton",

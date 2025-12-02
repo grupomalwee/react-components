@@ -9,13 +9,13 @@ import {
   BreadcrumbListBase,
   BreadcrumbPageBase,
   BreadcrumbSeparatorBase,
-} from "../components/ui/navigation/BreadcrumbBase";
+} from "@/components/ui/navigation/BreadcrumbBase";
 import {
   DropDownMenuBase,
   DropDownMenuContentBase,
   DropDownMenuItemBase,
   DropDownMenuTriggerBase,
-} from "../components/ui/navigation/DropDownMenuBase";
+} from "@/components/ui/navigation/DropDownMenuBase";
 
 interface BreadcrumbStoryProps {
   variant?: "simple" | "withMenu" | "withIcons";

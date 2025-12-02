@@ -6,8 +6,8 @@ import {
   CarouselItemBase,
   CarouselNextBase,
   CarouselPreviousBase,
-} from "../components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
+} from "@/components/ui/layout/CarouselBase";
+import { CardBase, CardContentBase } from "@/components/ui/data/CardBase";
 
 const meta: Meta<typeof CarouselBase> = {
   title: "layout/Carousel",

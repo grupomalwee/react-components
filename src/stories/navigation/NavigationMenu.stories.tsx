@@ -8,7 +8,7 @@ import {
   NavigationMenuTriggerBase,
   NavigationMenuLinkBase,
   NavigationMenuIndicatorBase,
-} from "../components/ui/navigation/NavigationMenuBase";
+} from "@/components/ui/navigation/NavigationMenuBase";
 
 const meta: Meta<typeof NavigationMenuBase> = {
   title: "navigation/Navigation Menu",
