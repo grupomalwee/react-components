@@ -80,3 +80,5 @@ export default function DebouncedInput({
     />
   );
 }
+
+export { DebouncedInput };
