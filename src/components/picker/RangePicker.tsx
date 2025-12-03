@@ -68,7 +68,7 @@ export function RangePicker({
 
   return (
     <PopoverBase open={open} onOpenChange={setOpen}>
-      <PopoverTriggerBase asChild>
+      <PopoverTriggerBase asChild className={cn(error && "border-red-500")}>
         <motion.div
           whileTap={{ scale: 0.97 }}
           whileHover={{ scale: open ? 1.03 : 1.01 }}
@@ -76,10 +76,16 @@ export function RangePicker({
         >
           <ButtonBase
             variant="outline"
-            className="flex  gap-2 transition-all duration-200 min-w-[250px] text-left justify-between items-center"
+            className={cn(
+              "w-full justify-start text-left min-w-0 overflow-hidden",
+              !range && "text-muted-foreground"
+            )}
           >
             <motion.span
-              className="text-sm font-medium"
+              className={cn(
+                "truncate flex-1",
+                !range && "text-muted-foreground"
+              )}
               transition={{ duration: 0.2 }}
               animate={controls}
             >
@@ -95,7 +101,7 @@ export function RangePicker({
               }
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
             >
-              <CalendarBlankIcon className="w-4 h-4 transition-transform group-hover:scale-110" />
+              <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
             </motion.span>
           </ButtonBase>
         </motion.div>
