@@ -11,7 +11,7 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
-    version: "1.8.0",
+    version: "1.7.10",
     author: "Gabriel Glatz",
     date: "2025-12-03",
     shortTitle: "RangePicker, Checkbox e Calendar",
