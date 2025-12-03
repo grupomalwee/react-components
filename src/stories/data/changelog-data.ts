@@ -11,6 +11,23 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.0",
+    author: "Gabriel Glatz",
+    date: "2025-12-03",
+    shortTitle: "RangePicker, Checkbox e Calendar",
+    added: [
+      "Checkbox: suporte a estado indeterminado e atualização da documentação.",
+      "DebouncedInput: exportação do componente no módulo de formulários.",
+      "Event Calendar: suporte a localização e melhoria na formatação de tempo.",
+    ],
+    fixed: [
+      "Filter: correção no import de estilos globais nas stories.",
+      "RangePicker: ajuste na exibição do placeholder quando nenhum intervalo é selecionado.",
+      "AvatarSelect: correção na esquematização de cores padrão a aplicação e nova prop.",
+
+    ],
+  },
+  {
     version: "1.7.9",
     author: "Gabriel Glatz",
     date: "2025-12-02",
@@ -20,7 +37,6 @@ export const changelogData: ChangeItem[] = [
       "Select: arrumado import de Select no propio componente.",
       "Stories: estruturação de arquivos e pastas.",
     ],
-   
   },
   {
     version: "1.7.8",
@@ -39,7 +55,6 @@ export const changelogData: ChangeItem[] = [
       "Select: refatoração da estrutura das stories para melhor usabilidade.",
       "Stories: atualizados títulos para maior consistência.",
     ],
-   
   },
   {
     version: "1.7.7",
