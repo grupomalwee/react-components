@@ -12,7 +12,7 @@ const meta: Meta<typeof CheckboxBase> = {
     docs: {
       description: {
         component:
-          "Checkbox para seleção única ou múltipla, com grupo, desabilitado e label.",
+          "Checkbox para seleção única ou múltipla, com grupo, desabilitado, indeterminado, marcado, controlado, obrigatório e label.",
       },
       source: {
         code: `import React from 'react';
@@ -396,6 +396,69 @@ export default function Desabilitado() {
         expect(checkbox).toBeDisabled();
         expect(checkbox).not.toBeChecked();
       });
+    });
+  },
+};
+
+export const Indeterminado: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CheckboxBase } from '@mlw-packages/react-components';
+import LabelBase from '@mlw-packages/react-components';
+
+export default function Indeterminado() {
+  return (
+    <div>
+      <CheckboxBase id="indeterminate" checked="indeterminate" />
+      <LabelBase htmlFor="indeterminate">Indeterminado</LabelBase>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <div className="flex items-center space-x-2">
+        <CheckboxBase
+          id="indeterminate"
+          checked="indeterminate"
+          data-testid="checkbox-indeterminate"
+        />
+        <LabelBase htmlFor="indeterminate" data-testid="label-indeterminate">
+          Indeterminado
+        </LabelBase>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("Verificar checkbox indeterminado renderizado", async () => {
+      const checkbox = canvas.getByTestId("checkbox-indeterminate");
+      expect(checkbox).toBeInTheDocument();
+    });
+
+    await step("Verificar estado indeterminado", async () => {
+      const checkbox = canvas.getByTestId("checkbox-indeterminate");
+      expect(checkbox).toHaveAttribute("data-state", "indeterminate");
+      expect(checkbox).toHaveAttribute("aria-checked", "mixed");
+    });
+
+    await step("Verificar label presente", async () => {
+      const label = canvas.getByTestId("label-indeterminate");
+      expect(label).toBeInTheDocument();
+      expect(label).toHaveTextContent("Indeterminado");
     });
   },
 };

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { CheckIcon } from "@phosphor-icons/react";
+import { CheckIcon, MinusIcon } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 import { cn } from "../../../lib/utils";
@@ -20,7 +20,7 @@ const CheckboxBase = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "peer h-4 w-4 shrink-0 rounded-md border border-primary shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-colors",
+      "peer h-4 w-4 shrink-0 rounded-md border border-primary shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground transition-colors",
       className
     )}
     data-testid={dataTestId}
@@ -32,9 +32,16 @@ const CheckboxBase = React.forwardRef<
         animate={{ scale: 1, opacity: 1, rotate: 0 }}
         exit={{ scale: 0, opacity: 0, rotate: 90 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className="flex items-center justify-center text-current"
+        className="flex items-center justify-center text-current group"
       >
-        <CheckIcon className="h-4 w-4" weight="bold" />
+        <CheckIcon
+          className="h-4 w-4 hidden group-data-[state=checked]:block"
+          weight="bold"
+        />
+        <MinusIcon
+          className="h-4 w-4 hidden group-data-[state=indeterminate]:block"
+          weight="bold"
+        />
       </motion.div>
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
