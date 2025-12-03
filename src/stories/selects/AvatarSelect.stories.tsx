@@ -24,12 +24,10 @@ export default function Example() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -72,6 +70,10 @@ export default function Example() {
       control: "text",
       description: "Label for the select",
     },
+    colors: {
+      control: "object",
+      description: "Array of color classes to cycle through for avatars",
+    },
   },
 };
 
@@ -83,27 +85,22 @@ const userItems = [
   {
     label: "Gabriel Glatz",
     value: "1",
-    avatarClassName: "bg-indigo-400/20 text-indigo-500",
   },
   {
     label: "Eduardo Ronchi",
     value: "2",
-    avatarClassName: "bg-purple-400/20 text-purple-500",
   },
   {
     label: "Anne Kelley",
     value: "3",
-    avatarClassName: "bg-rose-400/20 text-rose-500",
   },
   {
     label: "Michael Chen",
     value: "4",
-    avatarClassName: "bg-amber-400/20 text-amber-500",
   },
   {
     label: "Sofia Martinez",
     value: "5",
-    avatarClassName: "bg-emerald-400/20 text-emerald-500",
   },
 ];
 
@@ -112,41 +109,34 @@ const groupedUsers = {
     {
       label: "Xavier Guerra",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Maria Silva",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
     {
       label: "Anne Kelley",
       value: "3",
-      avatarClassName: "bg-rose-400/20 text-rose-500",
     },
   ],
   Administrators: [
     {
       label: "John Doe",
       value: "4",
-      avatarClassName: "bg-blue-400/20 text-blue-500",
     },
     {
       label: "Sarah Smith",
       value: "5",
-      avatarClassName: "bg-green-400/20 text-green-500",
     },
   ],
   "Regular Users": [
     {
       label: "Tom Brown",
       value: "6",
-      avatarClassName: "bg-orange-400/20 text-orange-500",
     },
     {
       label: "Lisa Wong",
       value: "7",
-      avatarClassName: "bg-teal-400/20 text-teal-500",
     },
   ],
 };
@@ -165,17 +155,14 @@ export default function Interactive() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
     {
       label: "Anne Kelley",
       value: "3",
-      avatarClassName: "bg-rose-400/20 text-rose-500",
     },
   ];
 
@@ -224,12 +211,10 @@ export default function Default() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -266,12 +251,10 @@ export default function WithLabel() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -308,12 +291,10 @@ export default function WithPlaceholder() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -351,19 +332,16 @@ export default function Grouped() {
       {
         label: "Xavier Guerra",
         value: "1",
-        avatarClassName: "bg-indigo-400/20 text-indigo-500",
       },
       {
         label: "Maria Silva",
         value: "2",
-        avatarClassName: "bg-purple-400/20 text-purple-500",
       },
     ],
     Administrators: [
       {
         label: "John Doe",
         value: "4",
-        avatarClassName: "bg-blue-400/20 text-blue-500",
       },
     ],
   };
@@ -419,12 +397,10 @@ export default function Disabled() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -463,12 +439,10 @@ export default function DisabledWithoutSelection() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -505,12 +479,10 @@ export default function WithError() {
     {
       label: "Gabriel Glatz",
       value: "1",
-      avatarClassName: "bg-indigo-400/20 text-indigo-500",
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
-      avatarClassName: "bg-purple-400/20 text-purple-500",
     },
   ];
 
@@ -604,14 +576,61 @@ export default function WithCustomAvatar() {
   },
 };
 
-export const WithoutAvatars: Story = {
+export const WithCustomColors: Story = {
   parameters: {
     docs: {
       source: {
         code: `import React from 'react';
 import { AvatarSelect } from '@mlw-packages/react-components';
 
-export default function WithoutAvatars() {
+export default function WithCustomColors() {
+  return (
+    <AvatarSelect
+      items={[
+        { label: "Option A", value: "a" },
+        { label: "Option B", value: "b" },
+        { label: "Option C", value: "c" },
+      ]}
+      colors={[
+        "bg-red-100 text-red-700",
+        "bg-yellow-100 text-yellow-700",
+        "bg-orange-100 text-orange-700"
+      ]}
+      onChange={(v) => console.log("changed", v)}
+      placeholder="Select option"
+      label="Custom Colors Palette"
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    items: [
+      { label: "Option A", value: "a" },
+      { label: "Option B", value: "b" },
+      { label: "Option C", value: "c" },
+    ],
+    colors: [
+      "bg-red-100 text-red-700",
+      "bg-yellow-100 text-yellow-700",
+      "bg-orange-100 text-orange-700",
+    ],
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select option",
+    label: "Custom Colors Palette",
+  },
+};
+
+export const AutoGeneratedColors: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarSelect } from '@mlw-packages/react-components';
+
+export default function AutoGeneratedColors() {
   return (
     <AvatarSelect
       items={[
@@ -621,6 +640,7 @@ export default function WithoutAvatars() {
       ]}
       onChange={(v) => console.log("changed", v)}
       placeholder="Select option"
+      label="Auto Generated Colors"
     />
   );
 }
@@ -636,5 +656,6 @@ export default function WithoutAvatars() {
     ],
     onChange: (v: string) => console.log("changed", v),
     placeholder: "Select option",
+    label: "Auto Generated Colors",
   },
 };

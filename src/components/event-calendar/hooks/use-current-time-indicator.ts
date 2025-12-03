@@ -1,16 +1,14 @@
 "use client";
 
 import { endOfWeek, isSameDay, isWithinInterval, startOfWeek } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 
-import {
-  EndHour,
-  StartHour,
-} from '@/components/event-calendar/constants';
+import { EndHour, StartHour } from "@/components/event-calendar/constants";
 
 export function useCurrentTimeIndicator(
   currentDate: Date,
-  view: "day" | "week",
+  view: "day" | "week"
 ) {
   const [currentTimePosition, setCurrentTimePosition] = useState<number>(0);
   const [currentTimeVisible, setCurrentTimeVisible] = useState<boolean>(false);
@@ -35,8 +33,8 @@ export function useCurrentTimeIndicator(
       if (view === "day") {
         isCurrentTimeVisible = isSameDay(now, currentDate);
       } else if (view === "week") {
-        const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 0 });
-        const endOfWeekDate = endOfWeek(currentDate, { weekStartsOn: 0 });
+        const startOfWeekDate = startOfWeek(currentDate, { locale: ptBR });
+        const endOfWeekDate = endOfWeek(currentDate, { locale: ptBR });
         isCurrentTimeVisible = isWithinInterval(now, {
           end: endOfWeekDate,
           start: startOfWeekDate,

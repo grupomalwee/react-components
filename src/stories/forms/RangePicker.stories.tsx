@@ -66,3 +66,13 @@ export const WithError: Story = {
     error: "Intervalo inválido",
   },
 };
+
+export const MinMax: Story = {
+  render: Template,
+  args: {
+    label: "Período Personalizado",
+    value: { from: new Date(2025, 11, 5), to: new Date(2025, 11, 10) },
+    minDate: new Date(2025, 11, 1),
+    maxDate: new Date(2025, 11, 31),
+  },
+};

@@ -189,7 +189,7 @@ export function MonthView({
                                 <div aria-hidden={true} className="invisible">
                                   {!event.allDay && (
                                     <span>
-                                      {format(new Date(event.start), "h:mm")}{" "}
+                                      {format(new Date(event.start), "HH:mm")}{" "}
                                     </span>
                                   )}
                                   {event.title}

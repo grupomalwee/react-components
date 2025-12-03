@@ -2,7 +2,7 @@
 
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { differenceInMinutes, format, getMinutes, isPast } from "date-fns";
+import { differenceInMinutes, format, isPast } from "date-fns";
 import { useMemo } from "react";
 
 import {
@@ -13,11 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 
 // Using date-fns format with custom formatting:
-// 'h' - hours (1-12)
-// 'a' - am/pm
-// ':mm' - minutes with leading zero (only if the token 'mm' is present)
+// 'HH' - hours (00-23)
+// ':mm' - minutes with leading zero
 const formatTimeWithOptionalMinutes = (date: Date) => {
-  return format(date, getMinutes(date) === 0 ? "ha" : "h:mma").toLowerCase();
+  return format(date, "HH:mm");
 };
 
 interface EventWrapperProps {

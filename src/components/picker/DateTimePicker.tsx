@@ -88,7 +88,7 @@ export function DateTimePicker({
   }, [date, open]);
 
   return (
-    <div className={cn("space-y-2 w-full sm:w-auto", className)}>
+    <div className={cn("w-full sm:w-auto", className)}>
       {label && <LabelBase>{label}</LabelBase>}
 
       <PopoverBase open={open} onOpenChange={setOpen}>

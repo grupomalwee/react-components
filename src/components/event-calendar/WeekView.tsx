@@ -317,7 +317,7 @@ export function WeekView({
             >
               {index > 0 && (
                 <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
-                  {format(hour, "h a")}
+                  {format(hour, "HH:mm")}
                 </span>
               )}
             </div>

@@ -47,9 +47,9 @@ export function AgendaView({
       {!hasEvents ? (
         <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
           <CalendarIcon className="mb-2 text-muted-foreground/50" size={32} />
-          <h3 className="font-medium text-lg">No events found</h3>
+          <h3 className="font-medium text-lg">Nenhum evento encontrado</h3>
           <p className="text-muted-foreground">
-            There are no events scheduled for this time period.
+            Não há eventos agendados para este período.
           </p>
         </div>
       ) : (

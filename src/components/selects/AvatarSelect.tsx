@@ -1,18 +1,38 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
+import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import {
-  SelectBase,
-  SelectContentBase,
-  SelectGroupBase,
-  SelectItemBase,
-  SelectLabelBase,
-  SelectTriggerBase,
-  SelectValueBase,
-} from "@/components/ui/SelectBase";
-import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
+  PopoverBase,
+  PopoverContentBase,
+  PopoverTriggerBase,
+} from "@/components/ui/overlays/PopoverBase";
+import {
+  CommandBase,
+  CommandEmptyBase,
+  CommandGroupBase,
+  CommandInputBase,
+  CommandItemBase,
+  CommandListBase,
+} from "@/components/ui/navigation/CommandBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
 import { cn } from "@/lib/utils";
+
+const DEFAULT_COLORS = [
+  "bg-purple-100 text-purple-700",
+  "bg-green-100 text-green-700",
+  "bg-blue-100 text-blue-700",
+];
+
+const getColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = value.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+};
 
 const Square = ({
   className,
@@ -57,6 +77,7 @@ interface DefaultSelectProps extends ErrorMessageProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   className?: string;
+  colors?: string[];
 }
 
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
@@ -90,19 +111,26 @@ export function AvatarSelect<T extends string>({
   label,
   labelClassname,
   className,
+  colors,
 }: AvatarSelectProps<T> & {
   selected?: T | null;
   label?: string;
   labelClassname?: string;
 }) {
+  const [open, setOpen] = useState(false);
   const id = useId();
+
+  const allItems =
+    items || (groupItems ? Object.values(groupItems).flat() : []);
+  const selectedItem = allItems.find((item) => item.value === selected);
 
   const renderItem = (item: AvatarSelectItem<T>) => {
     const avatarContent = item.avatar ?? item.label.charAt(0).toUpperCase();
+    const colorClass = item.avatarClassName ?? getColor(item.value, colors);
 
     return (
       <>
-        <Square className={item.avatarClassName}>{avatarContent}</Square>
+        <Square className={colorClass}>{avatarContent}</Square>
         <span className="truncate">{item.label}</span>
       </>
     );
@@ -119,83 +147,99 @@ export function AvatarSelect<T extends string>({
         </label>
       ) : null}
 
-      <SelectBase
-        value={selected ?? undefined}
-        onValueChange={(v: string) => onChange(v)}
-        data-testid={testIds.base ?? "avatar-select-base"}
-      >
-        <SelectTriggerBase
-          id={id}
-          className={cn(
-            " [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_[data-square]]:shrink-0",
-            error && "border-red-500",
-            className
-          )}
-          data-testid={testIds.trigger ?? "avatar-select-trigger"}
-          disabled={disabled}
-        >
-          <SelectValueBase
-            placeholder={placeholder}
-            data-testid={testIds.value ?? "avatar-select-value"}
-          />
-        </SelectTriggerBase>
-
-        <ScrollAreaBase
-          data-testid={testIds.scrollarea ?? "avatar-select-scrollarea"}
-        >
-          <SelectContentBase
-            className="[&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8"
-            data-testid={testIds.content ?? "avatar-select-content"}
+      <PopoverBase open={open} onOpenChange={setOpen}>
+        <PopoverTriggerBase asChild>
+          <ButtonBase
+            id={id}
+            variant="select"
+            role="combobox"
+            aria-expanded={open}
+            className={cn(
+              "w-full justify-between px-3 font-normal",
+              error && "border-red-500",
+              className
+            )}
+            disabled={disabled}
+            data-testid={testIds.trigger ?? "avatar-select-trigger"}
           >
-            {groupItems ? (
-              <>
-                {Object.keys(groupItems).map((key) => (
-                  <SelectGroupBase
-                    key={key}
-                    data-testid={testIds.group ?? "avatar-select-group"}
-                  >
-                    <SelectLabelBase
-                      className="ps-2"
-                      data-testid={testIds.label ?? "avatar-select-label"}
-                    >
-                      {key}
-                    </SelectLabelBase>
+            {selectedItem ? (
+              <span className="flex items-center gap-2 truncate">
+                {renderItem(selectedItem)}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">{placeholder}</span>
+            )}
+            <CaretDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </ButtonBase>
+        </PopoverTriggerBase>
+        <PopoverContentBase
+          className="w-[--radix-popover-trigger-width] p-0"
+          align="start"
+          data-testid={testIds.content ?? "avatar-select-content"}
+        >
+          <CommandBase>
+            <CommandInputBase placeholder="Search..." />
+            <CommandListBase>
+              <CommandEmptyBase>No results found.</CommandEmptyBase>
+              {groupItems ? (
+                Object.keys(groupItems).map((key) => (
+                  <CommandGroupBase key={key} heading={key}>
                     {groupItems[key].map((item) => (
-                      <SelectItemBase
+                      <CommandItemBase
                         key={item.value}
-                        value={item.value}
+                        value={item.label}
+                        onSelect={() => {
+                          onChange(item.value);
+                          setOpen(false);
+                        }}
                         data-testid={
                           testIds.item?.(String(item.value)) ??
                           `avatar-select-item-${item.value}`
                         }
                       >
                         {renderItem(item)}
-                      </SelectItemBase>
+                        <CheckIcon
+                          className={cn(
+                            "ml-auto h-4 w-4",
+                            selected === item.value
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                      </CommandItemBase>
                     ))}
-                  </SelectGroupBase>
-                ))}
-              </>
-            ) : (
-              <SelectGroupBase
-                data-testid={testIds.group ?? "avatar-select-group"}
-              >
-                {items!.map((item) => (
-                  <SelectItemBase
-                    key={item.value}
-                    value={item.value}
-                    data-testid={
-                      testIds.item?.(String(item.value)) ??
-                      `avatar-select-item-${item.value}`
-                    }
-                  >
-                    {renderItem(item)}
-                  </SelectItemBase>
-                ))}
-              </SelectGroupBase>
-            )}
-          </SelectContentBase>
-        </ScrollAreaBase>
-      </SelectBase>
+                  </CommandGroupBase>
+                ))
+              ) : (
+                <CommandGroupBase>
+                  {items!.map((item) => (
+                    <CommandItemBase
+                      key={item.value}
+                      value={item.label}
+                      onSelect={() => {
+                        onChange(item.value);
+                        setOpen(false);
+                      }}
+                      data-testid={
+                        testIds.item?.(String(item.value)) ??
+                        `avatar-select-item-${item.value}`
+                      }
+                    >
+                      {renderItem(item)}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          selected === item.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItemBase>
+                  ))}
+                </CommandGroupBase>
+              )}
+            </CommandListBase>
+          </CommandBase>
+        </PopoverContentBase>
+      </PopoverBase>
 
       <ErrorMessage error={error} />
     </div>

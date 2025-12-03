@@ -22,12 +22,9 @@ import {
   isMultiDayEvent,
   useCurrentTimeIndicator,
   WeekCellsHeight,
-} from '@/components/event-calendar';
-import {
-  EndHour,
-  StartHour,
-} from '@/components/event-calendar/constants';
-import { cn } from '@/lib/utils';
+} from "@/components/event-calendar";
+import { EndHour, StartHour } from "@/components/event-calendar/constants";
+import { cn } from "@/lib/utils";
 
 interface DayViewProps {
   currentDate: Date;
@@ -71,7 +68,7 @@ export function DayView({
         );
       })
       .sort(
-        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
       );
   }, [currentDate, events]);
 
@@ -149,8 +146,8 @@ export function DayView({
           const overlaps = col.some((c) =>
             areIntervalsOverlapping(
               { end: adjustedEnd, start: adjustedStart },
-              { end: new Date(c.event.end), start: new Date(c.event.start) },
-            ),
+              { end: new Date(c.event.end), start: new Date(c.event.start) }
+            )
           );
 
           if (!overlaps) {
@@ -191,7 +188,7 @@ export function DayView({
   const showAllDaySection = allDayEvents.length > 0;
   const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(
     currentDate,
-    "day",
+    "day"
   );
 
   return (
@@ -239,7 +236,7 @@ export function DayView({
             >
               {index > 0 && (
                 <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
-                  {format(hour, "h a")}
+                  {format(hour, "HH:mm")}
                 </span>
               )}
             </div>
@@ -306,7 +303,7 @@ export function DayView({
                         quarter === 2 &&
                           "top-[calc(var(--week-cells-height)/4*2)]",
                         quarter === 3 &&
-                          "top-[calc(var(--week-cells-height)/4*3)]",
+                          "top-[calc(var(--week-cells-height)/4*3)]"
                       )}
                       date={currentDate}
                       id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}

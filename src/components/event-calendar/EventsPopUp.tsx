@@ -109,7 +109,7 @@ export function EventsPopup({
           })()}
         </h3>
         <button
-          aria-label="Close"
+          aria-label="Fechar"
           className="rounded-full p-1 hover:bg-muted"
           onClick={onClose}
           type="button"
@@ -120,7 +120,9 @@ export function EventsPopup({
 
       <div className="space-y-2 p-3">
         {events.length === 0 ? (
-          <div className="py-2 text-muted-foreground text-sm">No events</div>
+          <div className="py-2 text-muted-foreground text-sm">
+            Nenhum evento
+          </div>
         ) : (
           events.map((event) => {
             const eventStart = new Date(event.start);
