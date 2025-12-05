@@ -93,7 +93,7 @@ import DocsTests from "@/pages/Docs-tests";
 import { BarChartPage } from "@/pages/BarChart";
 import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
-import ChartPage from "@/pages/Chart";
+// import ChartPage from "@/pages/Chart";
 import DatePickerPage from "@/pages/DatePicker";
 import { FileUploaderPage } from "@/pages/FileUploader";
 import { DebounceInputPage } from "@/pages/DebounceInput";
@@ -102,7 +102,7 @@ import RangePickerPage from "@/pages/RangePicker";
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },
-  { title: "Chart", url: "/chart", icon: HouseIcon },
+  // { title: "Chart", url: "/chart", icon: HouseIcon },
   { title: "File", url: "/file", icon: HouseIcon },
   { title: "range", url: "/range", icon: HouseIcon },
   { title: "Modal", url: "/modal", icon: HouseIcon },
@@ -193,7 +193,7 @@ export function AppSidebar() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/chart" element={<ChartPage />} />
+          {/* <Route path="/chart" element={<ChartPage />} /> */}
           <Route path="/file" element={<FileUploaderPage />} />
           <Route path="/range" element={<RangePickerPage />} />
           <Route path="/modal" element={<ModalBasePage />} />
