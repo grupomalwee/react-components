@@ -56,6 +56,9 @@ export function CalendarBase({
             key={month.toISOString()}
             className="w-full h-full flex flex-col"
           >
+             <div className="flex items-center justify-end mb-2 -mt-1">
+         
+        </div>
             <DayPicker
               showOutsideDays={showOutsideDays}
               month={month}
@@ -113,6 +116,10 @@ export function CalendarBase({
                   "aria-selected:bg-muted aria-selected:text-foreground",
                 day_hidden: "invisible",
 
+                button:
+                  "p-0 m-0  border-0 outline-none focus:ring-0",
+                
+
                 ...classNames,
               }}
               components={{
@@ -124,6 +131,7 @@ export function CalendarBase({
           </div>
         </AnimatePresence>
       </div>
+      
     </div>
   );
 }

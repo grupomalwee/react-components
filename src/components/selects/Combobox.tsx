@@ -71,7 +71,7 @@ export function Combobox<T extends string>({
   );
 
   return (
-    <div className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}>
+    <div className={cn("flex flex-col w-full min-w-[150px]", className)}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
 
       <ComboboxBase

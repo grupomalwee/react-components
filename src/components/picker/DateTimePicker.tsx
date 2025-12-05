@@ -100,7 +100,7 @@ export function DateTimePicker({
           <ButtonBase
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left min-w-0 overflow-hidden ",
+              "w-full justify-start text-left min-w-0 overflow-hidden no-active-animation",
               !date && "text-muted-foreground"
             )}
           >
@@ -143,7 +143,7 @@ export function DateTimePicker({
             />
 
             {!hideTime && (
-              <div className="flex justify-center w-full ">
+              <div className="flex justify-center w-full border-b border-r border-l">
                 <PopoverBase
                   open={timePickerOpen}
                   onOpenChange={setTimePickerOpen}
@@ -153,12 +153,11 @@ export function DateTimePicker({
                       variant="outline"
                       size="default"
                       className={cn(
-                        "flex items-center justify-center rounded-none border-none",               
-                        "text-sm sm:text-base font-semibold w-full",                       
+                        "flex items-center justify-center rounded-none border-none",
+                        "text-sm sm:text-base font-semibold w-full",
                         "bg-background hover:bg-accent",
                         "transition-all duration-200",
-                        "shadow-sm hover:shadow-md active:scale-[0.98]",
-                        
+                        "shadow-sm hover:shadow-md no-active-animation"
                       )}
                     >
                       <ClockIcon className="text-primary flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
@@ -193,7 +192,7 @@ export function DateTimePicker({
                         size="sm"
                         variant="destructive"
                         onClick={() => setTimePickerOpen(false)}
-                        className="w-full text-xs sm:text-sm min-h-[36px] sm:min-h-[40px]"
+                        className="w-full text-xs sm:text-sm min-h-[36px] sm:min-h-[40px] no-active-animation"
                       >
                         Fechar
                       </ButtonBase>
@@ -202,6 +201,13 @@ export function DateTimePicker({
                 </PopoverBase>
               </div>
             )}
+            <ButtonBase
+              variant={"destructive"}
+              className="rounded-t-none no-active-animation"
+              onClick={() => setOpen(false)}
+            >
+              Fechar
+            </ButtonBase>
           </div>
         </PopoverContentBase>
       </PopoverBase>

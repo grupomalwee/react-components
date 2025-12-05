@@ -7,7 +7,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
   if (!error) return null;
 
   return (
-    <p className="text-sm text-destructive mt-1">
+    <p className="text-sm text-destructive">
       {error}
     </p>
   );

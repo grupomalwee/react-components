@@ -30,22 +30,24 @@ interface SelectTestIds {
   item?: (value: string) => string;
 }
 
-interface DefaultSelectProps extends ErrorMessageProps {
+interface DefaultSelectProps<T extends string> extends ErrorMessageProps {
+  selected: T | null;
+  onChange: (value: T) => void;
   placeholder?: string;
-  onChange: (value: string) => void;
   disabled?: boolean;
   className?: string;
-
+  label?: string;
+  labelClassname?: string;
 }
 
-interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
+interface SelectPropsWithItems<T extends string> extends DefaultSelectProps<T> {
   items: SelectItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
 }
 
 interface SelectPropsWithGroupItems<T extends string>
-  extends DefaultSelectProps {
+  extends DefaultSelectProps<T> {
   items?: never;
   groupItems: {
     [key: string]: SelectItem<T>[];
@@ -68,23 +70,19 @@ export function Select<T extends string>({
   selected,
   label,
   labelClassname,
-  className
-}: NewSelectProps<T> & {
-  selected?: T | null;
-  label?: string;
-  labelClassname?: string;
-}) {
+  className,
+}: NewSelectProps<T>) {
   return (
     <div data-testid={testIds.root ?? "select-root"}>
       {label ? (
-        <label className={cn("mb-1 block text-sm font-medium", labelClassname)}>
+        <label className={cn("block text-sm font-medium", labelClassname)}>
           {label}
         </label>
       ) : null}
 
       <SelectBase
         value={selected ?? undefined}
-        onValueChange={(v: string) => onChange(v)}
+        onValueChange={(v: T) => onChange(v)}
         data-testid={testIds.base ?? "select-base"}
       >
         <SelectTriggerBase

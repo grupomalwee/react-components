@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.11",
+    author: "Gabriel Glatz",
+    date: "2025-12-05",
+    shortTitle: "Select, Label e DateTimePicker",
+    fixed: [
+      "DateTimePicker: corrigido a falta de um botão de fechar.",
+      "Select: ajustes no Generics.",
+      "Select: ajustado espacamento desnecessario entre Label e Componente.",
+
+    ],
+  },
+  {
     version: "1.7.10",
     author: "Gabriel Glatz",
     date: "2025-12-03",

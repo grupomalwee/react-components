@@ -87,11 +87,8 @@ interface ChartProps {
   showLabels?: boolean;
   labelMap?: Record<string, string>;
   valueFormatter?: valueFormatter;
-  /** Formata valores categóricos (ex.: "BANANA" -> "Banana") apenas para exibição */
   categoryFormatter?: (value: string | number) => string;
-  /** Label a ser exibido abaixo do eixo X */
   xAxisLabel?: string;
-  /** Label a ser exibido ao lado do eixo Y */
   yAxisLabel?: string;
   xAxis?: XAxisConfig | string;
   enableHighlights?: boolean;
@@ -100,7 +97,6 @@ interface ChartProps {
   enableDraggableTooltips?: boolean;
   showTooltipTotal?: boolean;
   maxTooltips?: number;
-  /** Quando true, formata valores numéricos no formato pt-BR (ex: 00.000,00) */
   formatBR?: boolean;
 }
 
@@ -322,12 +318,10 @@ const Chart: React.FC<ChartProps> = ({
     const lineCount = series?.line?.length ?? 0;
     const areaCount = series?.area?.length ?? 0;
 
-    // Base width calculation with better scaling
     const basePerPoint = 60;
     const perBarExtra = barCount > 0 ? Math.max(0, barCount - 1) * 8 : 0;
     const perOtherExtra = (lineCount + areaCount) * 4;
 
-    // Size factor based on data magnitude
     let sizeFactor = 1;
     if (niceMax > 100_000) sizeFactor = 1.1;
     if (niceMax > 1_000_000) sizeFactor = 1.2;
@@ -337,11 +331,9 @@ const Chart: React.FC<ChartProps> = ({
       (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
     );
 
-    // More conservative margins
     const marginExtra = 120;
     const calculated = points * perPoint + marginExtra;
 
-    // Improved bounds
     const minWidth = 300;
     const maxWidth = 1800;
 
@@ -470,10 +462,8 @@ const Chart: React.FC<ChartProps> = ({
       maximumFractionDigits: 2,
     });
 
-    // If user provided a custom formatter
     if (valueFormatter) {
-      // If formatBR is requested, wrap the user's formatter so that
-      // `formattedValue` received by the user's formatter is the pt-BR formatted string.
+
       if (formatBR) {
         const wrapped: valueFormatter = (props) => {
           const { value, formattedValue } = props as {

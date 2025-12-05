@@ -50,6 +50,7 @@ const meta: Meta<typeof DateTimePicker> = {
     hideSeconds: false,
     disabled: false,
     className: "",
+    
   },
 };
 
@@ -60,7 +61,7 @@ const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {
   const [date, setDate] = useState<Date | undefined>(args.date ?? undefined);
-  return <DateTimePicker {...args} date={date} onChange={setDate} />;
+  return <DateTimePicker {...args} date={date} onChange={setDate}  />;
 };
 
 export const Default: Story = {
