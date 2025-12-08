@@ -45,6 +45,7 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   keepOpen?: boolean;
   closeAll?: ReactNode;
   searchPlaceholder?: string;
+  empty?: ReactNode;
   testIds?: ComboboxTestIds;
 }
 
@@ -56,6 +57,7 @@ export function ComboboxBase<T extends string>({
   keepOpen = false,
   closeAll,
   searchPlaceholder,
+  empty = "Nenhum dado encontrado",
   error,
   testIds = {},
 }: ComboboxBaseProps<T>) {
@@ -109,7 +111,7 @@ export function ComboboxBase<T extends string>({
             />
             <CommandListBase data-testid={testIds.list ?? "combobox-list"}>
               <CommandEmptyBase data-testid={testIds.empty ?? "combobox-empty"}>
-                Nenhum dado encontrado
+                {empty}
               </CommandEmptyBase>
               <CommandGroupBase data-testid={testIds.group ?? "combobox-group"}>
                 {items.map((item) => {

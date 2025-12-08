@@ -27,10 +27,10 @@ export interface ComboboxProps<T extends string> extends ErrorMessageProps {
   className?: string;
   placeholder?: string;
   searchPlaceholder?: string;
+  emptyMessage?: React.ReactNode;
   label?: string;
   labelClassname?: string;
   testIds?: ComboboxTestIds;
-  
 }
 
 export function Combobox<T extends string>({
@@ -40,6 +40,7 @@ export function Combobox<T extends string>({
   className,
   placeholder,
   searchPlaceholder,
+  emptyMessage,
   label,
   labelClassname,
   testIds,
@@ -80,6 +81,7 @@ export function Combobox<T extends string>({
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
         searchPlaceholder={searchPlaceholder}
+        empty={emptyMessage}
         error={error}
         testIds={testIds}
       />
