@@ -100,7 +100,7 @@ export function DateTimePicker({
           <ButtonBase
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left min-w-0 overflow-hidden no-active-animation",
+              "w-full justify-start text-left min-w-0 overflow-hidden",
               !date && "text-muted-foreground"
             )}
           >

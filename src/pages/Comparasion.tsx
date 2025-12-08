@@ -29,72 +29,93 @@ function ComparisonRowGrid({
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
-      <Combobox
-        items={cargos}
-        selected={selected}
-        onChange={setSelected}
-        placeholder="Escolha uma opção"
-        searchPlaceholder="Buscar cargo..."
-      />
-      <MultiCombobox
-        items={cargos}
-        selected={selectedMulti}
-        onChange={setSelectedMulti}
-        placeholder="Escolha os cargos"
-        searchPlaceholder="Buscar cargo..."
-      />
-      <InputBase
-        placeholder="Digite algo..."
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <Select
-        items={[
-          { label: "Opção 1", value: "1" },
-          { label: "Opção 2", value: "2" },
-          { label: "Opção 3", value: "3" },
-        ]}
-        selected={null}
-        onChange={() => {}}
-        placeholder="Selecione uma opção"
-      />
-      <ButtonBase>Comparar</ButtonBase>
-      <AvatarSelect
-        items={[
-          {
-            avatarClassName: "bg-indigo-400/20 text-indigo-500",
-            label: "Gabriel Glatz",
-            value: "1",
-          },
-          {
-            avatarClassName: "bg-purple-400/20 text-purple-500",
-            label: "Eduardo Ronchi",
-            value: "2",
-          },
-          {
-            avatarClassName: "bg-rose-400/20 text-rose-500",
-            label: "Anne Kelley",
-            value: "3",
-          },
-          {
-            avatarClassName: "bg-amber-400/20 text-amber-500",
-            label: "Michael Chen",
-            value: "4",
-          },
-          {
-            avatarClassName: "bg-emerald-400/20 text-emerald-500",
-            label: "Sofia Martinez",
-            value: "5",
-          },
-        ]}
-        onChange={function nG() {}}
-        placeholder="Select user"
-        selected="1"
-      />
+    <div>
+      <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
+        <Combobox
+          items={cargos}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Escolha uma opção"
+          searchPlaceholder="Buscar cargo..."
+        />
+        <MultiCombobox
+          items={cargos}
+          selected={selectedMulti}
+          onChange={setSelectedMulti}
+          placeholder="Escolha os cargos"
+          searchPlaceholder="Buscar cargo..."
+        />
+        <InputBase
+          placeholder="Digite algo..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <Select
+          items={[
+            { label: "Opção 1", value: "1" },
+            { label: "Opção 2", value: "2" },
+            { label: "Opção 3", value: "3" },
+          ]}
+          selected={null}
+          onChange={() => {}}
+          placeholder="Selecione uma opção"
+        />
+        <ButtonBase>Comparar</ButtonBase>
+        <AvatarSelect
+          items={[
+            {
+              avatarClassName: "bg-indigo-400/20 text-indigo-500",
+              label: "Gabriel Glatz",
+              value: "1",
+            },
+            {
+              avatarClassName: "bg-purple-400/20 text-purple-500",
+              label: "Eduardo Ronchi",
+              value: "2",
+            },
+            {
+              avatarClassName: "bg-rose-400/20 text-rose-500",
+              label: "Anne Kelley",
+              value: "3",
+            },
+            {
+              avatarClassName: "bg-amber-400/20 text-amber-500",
+              label: "Michael Chen",
+              value: "4",
+            },
+            {
+              avatarClassName: "bg-emerald-400/20 text-emerald-500",
+              label: "Sofia Martinez",
+              value: "5",
+            },
+          ]}
+          onChange={function nG() {}}
+          placeholder="Select user"
+          selected="1"
+        />
 
-      <DateTimePicker date={date} onChange={setDate} hideSeconds />
-    </section>
+        <DateTimePicker date={date} onChange={setDate} hideSeconds />
+      </section>
+      <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
+        <DateTimePicker
+          date={date}
+          onChange={setDate}
+          hideSeconds
+          label="eeeeeeeeeeeeee"
+        />
+        <Select
+          items={[
+            { label: "Opção 1", value: "1" },
+            { label: "Opção 2", value: "2" },
+            { label: "Opção 3", value: "3" },
+          ]}
+          selected={null}
+          onChange={() => {}}
+          label="eeeeeeeeeeee"
+          placeholder="Selecione uma opção"
+        />
+      </section>
+    </div>
   );
 }
 

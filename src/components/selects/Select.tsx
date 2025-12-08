@@ -12,6 +12,7 @@ import {
 import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
 import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
 import { cn } from "@/lib/utils";
+import LabelBase from "../ui/form/LabelBase";
 
 export interface SelectItem<T extends string> {
   label: string;
@@ -74,11 +75,7 @@ export function Select<T extends string>({
 }: NewSelectProps<T>) {
   return (
     <div data-testid={testIds.root ?? "select-root"}>
-      {label ? (
-        <label className={cn("block text-sm font-medium", labelClassname)}>
-          {label}
-        </label>
-      ) : null}
+      {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
 
       <SelectBase
         value={selected ?? undefined}
