@@ -55,6 +55,61 @@ export default function Example() {
   },
 };
 
+export const EmptyWithProp: Story = {
+  name: "Vazio com `empty`",
+  render: () => {
+    const items: { label: string; value: string }[] = [];
+    const [selected, setSelected] = React.useState<string | null>(null);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-10">
+          <Combobox
+            items={items}
+            selected={selected}
+            onChange={(v) => {
+              setSelected(v);
+            }}
+            label="Lista vazia"
+            placeholder="Nenhuma seleção..."
+            empty="Sem opções disponíveis"
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+export default function EmptyWithProp() {
+  const items = [];
+  const [selected, setSelected] = React.useState(null);
+  return (
+    <Combobox
+      items={items}
+      selected={selected}
+      onChange={setSelected}
+      label="Lista vazia"
+      placeholder="Nenhuma seleção..."
+      empty={<div>Sem opções disponíveis</div>}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+};
+
 export default meta;
 type Story = StoryObj<typeof Combobox>;
 

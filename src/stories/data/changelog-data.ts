@@ -11,15 +11,27 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.12",
+    author: "Gabriel Glatz",
+    date: "2025-12-08",
+    shortTitle: "Combobox e DateTimePicker",
+    added: [
+      "Combobox:Nova props Empty para customizar a mensagem quando não houver itens.",
+      "Selects: Adicionado melhor navegação via teclado para acessibilidade.",
+     
+    ],
+    fixed: ["DateTimePicker: corrigido a animacao de fechar."],
+  },
+  {
     version: "1.7.11",
     author: "Gabriel Glatz",
     date: "2025-12-05",
     shortTitle: "Select, Label e DateTimePicker",
+
     fixed: [
       "DateTimePicker: corrigido a falta de um botão de fechar.",
       "Select: ajustes no Generics.",
       "Select: ajustado espacamento desnecessario entre Label e Componente.",
-
     ],
   },
   {
@@ -36,7 +48,6 @@ export const changelogData: ChangeItem[] = [
       "Filter: correção no import de estilos globais nas stories.",
       "RangePicker: ajuste na exibição do placeholder quando nenhum intervalo é selecionado.",
       "AvatarSelect: correção na esquematização de cores padrão a aplicação e nova prop.",
-
     ],
   },
   {
