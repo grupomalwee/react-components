@@ -51,7 +51,7 @@ jobs:
         run: pnpm run build
 
   release:
-    environment: prd
+    environment: prd2
     needs: validate
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.version_type != '' }}
