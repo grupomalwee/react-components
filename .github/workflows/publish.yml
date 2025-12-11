@@ -18,6 +18,10 @@ on:
         options:
           - y
           - N
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -51,7 +55,7 @@ jobs:
         run: pnpm run build
 
   release:
-    environment: prd2
+    environment: prd
     needs: validate
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.version_type != '' }}
@@ -82,9 +86,11 @@ jobs:
 
       - name: Build package
         run: pnpm run build
+      - name: Ensure npm >= 11.5.1
+        if: ${{ github.event.inputs.publish == 'y' }}
+        run: |
+          npm install -g npm@latest
 
       - name: Publish to npm (OIDC)
         if: ${{ github.event.inputs.publish == 'y' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_API_TOKEN }}
-        run: npm publish --no-git-checks
+        run: npm publish
