@@ -11,6 +11,20 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.13",
+    author: "Gabriel Glatz",
+    date: "2025-12-11",
+    shortTitle: "Checkbox ",
+    added: [
+      "CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.",
+      "Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.",
+    ],
+    fixed: [
+      "Checkbox: corrigido erro de nao mostras icons de Check e Minus.",
+      "Chromatic: ajusta versão outdated do Chromatic."
+    ],
+  },
+  {
     version: "1.7.12",
     author: "Gabriel Glatz",
     date: "2025-12-08",
