@@ -5,7 +5,7 @@ export * from "./theme-provider";
 export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
-export * from "./selects/AvatarSelect";
+export * from "./selects/AvatarCombobox";
 export * from "./charts";
 export * from "./ui/data/AvatarBase";
 export * from "./ui/data/Badge";

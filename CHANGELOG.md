@@ -13,14 +13,97 @@
 
 ## Índice
 
-- [1.7.8 — 2025-12-01](#178---2025-12-01)
-- [1.7.7 — 2025-11-26](#177---2025-11-26)
-- [1.7.6 — 2025-11-18](#176---2025-11-18)
-- [1.7.5 — 2025-11-13](#175---2025-11-13)
-- [1.7.4 — 2025-11-10](#174---2025-11-10)
-- [1.7.3 — 2025-11-04](#173---2025-11-04)
-- [1.7.2 — 2025-10-31](#172---2025-10-31)
-- [1.7.1 — 2025-10-29](#171---2025-10-29)
+- [1.7.14 — 2025-12-11](#171714---2025-12-11)
+- [1.7.13 — 2025-12-11](#171713---2025-12-11)
+- [1.7.12 — 2025-12-08](#171712---2025-12-08)
+- [1.7.11 — 2025-12-05](#171711---2025-12-05)
+- [1.7.10 — 2025-12-03](#171710---2025-12-03)
+- [1.7.9 — 2025-12-02](#17179---2025-12-02)
+- [1.7.8 — 2025-12-01](#17178---2025-12-01)
+- [1.7.7 — 2025-11-26](#17177---2025-11-26)
+- [1.7.6 — 2025-11-18](#17176---2025-11-18)
+- [1.7.5 — 2025-11-13](#17175---2025-11-13)
+- [1.7.4 — 2025-11-10](#17174---2025-11-10)
+- [1.7.3 — 2025-11-04](#17173---2025-11-04)
+- [1.7.2 — 2025-10-31](#17172---2025-10-31)
+- [1.7.1 — 2025-10-29](#17171---2025-10-29)
+
+
+
+## 1.7.14 — 2025-12-11
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.
+- Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.
+
+### Fixed
+
+- Checkbox: corrigido erro de nao mostras icons de Check e Minus.
+- Chromatic: ajusta versão outdated do Chromatic.
+
+---
+
+## 1.7.13 — 2025-12-11
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.
+- Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.
+
+### Fixed
+
+- Checkbox: corrigido erro de nao mostras icons de Check e Minus.
+- Chromatic: ajusta versão outdated do Chromatic.
+
+---
+
+## 1.7.12 — 2025-12-08
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- Combobox: Nova props `Empty` para customizar a mensagem quando não houver itens.
+- Selects: Adicionado melhor navegação via teclado para acessibilidade.
+
+### Fixed
+
+- DateTimePicker: corrigido a animacao de fechar.
+
+---
+
+## 1.7.11 — 2025-12-05
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- DateTimePicker: corrigido a falta de um botão de fechar.
+- Select: ajustes no Generics.
+- Select: ajustado espacamento desnecessario entre Label e Componente.
+
+---
+
+## 1.7.10 — 2025-12-03
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- Checkbox: suporte a estado indeterminado e atualização da documentação.
+- DebouncedInput: exportação do componente no módulo de formulários.
+- Event Calendar: suporte a localização e melhoria na formatação de tempo.
+
+### Fixed
+
+- Filter: correção no import de estilos globais nas stories.
+- RangePicker: ajuste na exibição do placeholder quando nenhum intervalo é selecionado.
+- AvatarCombobox: correção na esquematização de cores padrão a aplicação e nova prop.
 
 ---
 
@@ -30,9 +113,9 @@
 
 ### Fixed
 
-  - Select: refatoração da estrutura das stories para melhor usabilidade.
-  - Select: arrumado import de Select no propio componente.
-  - Stories: estruturação de arquivos e pastas.
+- Select: refatoração da estrutura das stories para melhor usabilidade.
+- Select: arrumado import de Select no propio componente.
+- Stories: estruturação de arquivos e pastas.
 
 ---
 
@@ -42,7 +125,7 @@
 
 ### Added
 
-- AvatarSelect: novo componente para seleção de usuários com avatar.
+- AvatarCombobox: novo componente para seleção de usuários com avatar.
 - Event Calendar: implementados componentes e views de calendário de eventos com hooks personalizados.
 - Calendar: adicionada documentação melhorada e exemplos interativos nas stories.
 - Select: adicionada prop `className` para maior flexibilidade de estilização.

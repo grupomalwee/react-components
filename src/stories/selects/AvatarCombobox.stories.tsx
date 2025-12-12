@@ -1,11 +1,11 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { AvatarSelect } from "@/components/selects/AvatarSelect";
+import { AvatarCombobox } from "@/components/selects/AvatarCombobox";
 
-const meta: Meta<typeof AvatarSelect> = {
-  title: "selects/AvatarSelect",
-  component: AvatarSelect,
+const meta: Meta<typeof AvatarCombobox> = {
+  title: "selects/AvatarCombobox",
+  component: AvatarCombobox,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -15,7 +15,7 @@ const meta: Meta<typeof AvatarSelect> = {
       },
       source: {
         code: `import React, { useState } from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function Example() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export default function Example() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={users}
       selected={selected}
       onChange={setSelected}
@@ -79,7 +79,7 @@ export default function Example() {
 
 export default meta;
 
-type Story = StoryObj<typeof AvatarSelect>;
+type Story = StoryObj<typeof AvatarCombobox>;
 
 const userItems = [
   {
@@ -146,7 +146,7 @@ export const Interactive: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function Interactive() {
   const [selected, setSelected] = useState<string | null>("1");
@@ -168,7 +168,7 @@ export default function Interactive() {
 
   return (
     <div className="w-[300px] space-y-4">
-      <AvatarSelect
+      <AvatarCombobox
         items={userItems}
         selected={selected}
         onChange={setSelected}
@@ -187,7 +187,7 @@ export default function Interactive() {
 
     return (
       <div className="w-[300px] space-y-4">
-        <AvatarSelect
+        <AvatarCombobox
           items={userItems}
           selected={selected}
           onChange={setSelected}
@@ -204,7 +204,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function Default() {
   const userItems = [
@@ -219,7 +219,7 @@ export default function Default() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="Select user"
@@ -244,7 +244,7 @@ export const WithLabel: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function WithLabel() {
   const userItems = [
@@ -259,7 +259,7 @@ export default function WithLabel() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="Select user"
@@ -284,7 +284,7 @@ export const WithPlaceholder: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function WithPlaceholder() {
   const userItems = [
@@ -299,7 +299,7 @@ export default function WithPlaceholder() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="Choose a user..."
@@ -322,7 +322,7 @@ export const Grouped: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function Grouped() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -348,7 +348,7 @@ export default function Grouped() {
 
   return (
     <div className="w-[300px] space-y-4">
-      <AvatarSelect
+      <AvatarCombobox
         groupItems={groupedUsers}
         selected={selected}
         onChange={setSelected}
@@ -370,7 +370,7 @@ export default function Grouped() {
 
     return (
       <div className="w-[300px] space-y-4">
-        <AvatarSelect
+        <AvatarCombobox
           groupItems={groupedUsers}
           selected={selected}
           onChange={setSelected}
@@ -390,7 +390,7 @@ export const Disabled: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function Disabled() {
   const userItems = [
@@ -405,7 +405,7 @@ export default function Disabled() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="Select user"
@@ -432,7 +432,7 @@ export const DisabledWithoutSelection: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function DisabledWithoutSelection() {
   const userItems = [
@@ -447,7 +447,7 @@ export default function DisabledWithoutSelection() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="This field is disabled"
@@ -472,7 +472,7 @@ export const WithError: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function WithError() {
   const userItems = [
@@ -487,7 +487,7 @@ export default function WithError() {
   ];
 
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={userItems}
       onChange={(v) => console.log("changed", v)}
       placeholder="Select user"
@@ -514,11 +514,11 @@ export const WithCustomAvatar: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function WithCustomAvatar() {
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={[
         {
           label: "Premium User",
@@ -581,11 +581,11 @@ export const WithCustomColors: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function WithCustomColors() {
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={[
         { label: "Option A", value: "a" },
         { label: "Option B", value: "b" },
@@ -628,11 +628,11 @@ export const AutoGeneratedColors: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { AvatarSelect } from '@mlw-packages/react-components';
+import { AvatarCombobox } from '@mlw-packages/react-components';
 
 export default function AutoGeneratedColors() {
   return (
-    <AvatarSelect
+    <AvatarCombobox
       items={[
         { label: "Option A", value: "a" },
         { label: "Option B", value: "b" },
@@ -657,5 +657,69 @@ export default function AutoGeneratedColors() {
     onChange: (v: string) => console.log("changed", v),
     placeholder: "Select option",
     label: "Auto Generated Colors",
+  },
+};
+
+export const Cities: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { AvatarCombobox } from '@mlw-packages/react-components';
+
+export default function CitiesExample() {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const cityItems = [
+    { label: 'Florianópolis, SC', value: 'florianopolis-sc', avatar: 'SC', avatarClassName: 'bg-blue-100 text-blue-700' },
+    { label: 'Joinville, SC', value: 'joinville-sc', avatar: 'SC', avatarClassName: 'bg-green-100 text-green-700' },
+    { label: 'Blumenau, SC', value: 'blumenau-sc', avatar: 'SC', avatarClassName: 'bg-purple-100 text-purple-700' },
+    { label: 'São Paulo, SP', value: 'sao-paulo-sp', avatar: 'SP', avatarClassName: 'bg-gray-100 text-gray-800' },
+    { label: 'Rio de Janeiro, RJ', value: 'rio-de-janeiro-rj', avatar: 'RJ', avatarClassName: 'bg-red-100 text-red-700' },
+    { label: 'Belo Horizonte, MG', value: 'belo-horizonte-mg', avatar: 'MG', avatarClassName: 'bg-amber-100 text-amber-700' },
+    { label: 'Porto Alegre, RS', value: 'porto-alegre-rs', avatar: 'RS', avatarClassName: 'bg-indigo-100 text-indigo-700' },
+    { label: 'Curitiba, PR', value: 'curitiba-pr', avatar: 'PR', avatarClassName: 'bg-green-100 text-green-800' },
+    { label: 'Salvador, BA', value: 'salvador-ba', avatar: 'BA', avatarClassName: 'bg-orange-100 text-orange-700' },
+    { label: 'Brasília, DF', value: 'brasilia-df', avatar: 'DF', avatarClassName: 'bg-yellow-100 text-yellow-800' },
+    { label: 'Manaus, AM', value: 'manaus-am', avatar: 'AM', avatarClassName: 'bg-teal-100 text-teal-700' },
+    { label: 'Fortaleza, CE', value: 'fortaleza-ce', avatar: 'CE', avatarClassName: 'bg-pink-100 text-pink-700' },
+    { label: 'Recife, PE', value: 'recife-pe', avatar: 'PE', avatarClassName: 'bg-violet-100 text-violet-700' },
+  ];
+
+  return (
+    <div className="w-[300px]">
+      <AvatarCombobox
+        items={cityItems}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Selecione uma cidade"
+        label="Cidades (UF)"
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    items: [
+      { label: "Florianópolis, SC", value: "florianopolis-sc", avatar: "SC", avatarClassName: "bg-blue-100 text-blue-700" },
+      { label: "Joinville, SC", value: "joinville-sc", avatar: "SC", avatarClassName: "bg-green-100 text-green-700" },
+      { label: "Blumenau, SC", value: "blumenau-sc", avatar: "SC", avatarClassName: "bg-purple-100 text-purple-700" },
+      { label: "São Paulo, SP", value: "sao-paulo-sp", avatar: "SP", avatarClassName: "bg-gray-100 text-gray-800" },
+      { label: "Rio de Janeiro, RJ", value: "rio-de-janeiro-rj", avatar: "RJ", avatarClassName: "bg-red-100 text-red-700" },
+      { label: "Belo Horizonte, MG", value: "belo-horizonte-mg", avatar: "MG", avatarClassName: "bg-amber-100 text-amber-700" },
+      { label: "Porto Alegre, RS", value: "porto-alegre-rs", avatar: "RS", avatarClassName: "bg-indigo-100 text-indigo-700" },
+      { label: "Curitiba, PR", value: "curitiba-pr", avatar: "PR", avatarClassName: "bg-green-100 text-green-800" },
+      { label: "Salvador, BA", value: "salvador-ba", avatar: "BA", avatarClassName: "bg-orange-100 text-orange-700" },
+      { label: "Brasília, DF", value: "brasilia-df", avatar: "DF", avatarClassName: "bg-yellow-100 text-yellow-800" },
+      { label: "Manaus, AM", value: "manaus-am", avatar: "AM", avatarClassName: "bg-teal-100 text-teal-700" },
+      { label: "Fortaleza, CE", value: "fortaleza-ce", avatar: "CE", avatarClassName: "bg-pink-100 text-pink-700" },
+      { label: "Recife, PE", value: "recife-pe", avatar: "PE", avatarClassName: "bg-violet-100 text-violet-700" },
+    ],
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Selecione uma cidade",
+    label: "Cidades (UF)",
   },
 };

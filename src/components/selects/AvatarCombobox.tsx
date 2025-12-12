@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, ReactNode } from "react";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import {
   PopoverBase,
@@ -44,7 +44,7 @@ const Square = ({
   <span
     aria-hidden="true"
     className={cn(
-      "flex size-5 items-center justify-center rounded bg-muted font-medium text-muted-foreground text-xs",
+      "flex h-6 w-6 flex-shrink-0 items-center justify-center rounded bg-muted font-medium text-muted-foreground leading-none overflow-hidden",
       className
     )}
     data-square
@@ -53,10 +53,10 @@ const Square = ({
   </span>
 );
 
-export interface AvatarSelectItem<T extends string> {
+export interface AvatarComboboxItem<T extends string> {
   label: string;
   value: T;
-  avatar?: string;
+  avatar?: ReactNode;
   avatarClassName?: string;
 }
 
@@ -81,7 +81,7 @@ interface DefaultSelectProps extends ErrorMessageProps {
 }
 
 interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
-  items: AvatarSelectItem<T>[];
+  items: AvatarComboboxItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
 }
@@ -90,16 +90,16 @@ interface SelectPropsWithGroupItems<T extends string>
   extends DefaultSelectProps {
   items?: never;
   groupItems: {
-    [key: string]: AvatarSelectItem<T>[];
+    [key: string]: AvatarComboboxItem<T>[];
   };
   testIds?: SelectTestIds;
 }
 
-type AvatarSelectProps<T extends string> =
+type AvatarComboboxProps<T extends string> =
   | SelectPropsWithItems<T>
   | SelectPropsWithGroupItems<T>;
 
-export function AvatarSelect<T extends string>({
+export function AvatarCombobox<T extends string>({
   items,
   groupItems,
   placeholder,
@@ -112,7 +112,7 @@ export function AvatarSelect<T extends string>({
   labelClassname,
   className,
   colors,
-}: AvatarSelectProps<T> & {
+}: AvatarComboboxProps<T> & {
   selected?: T | null;
   label?: string;
   labelClassname?: string;
@@ -124,7 +124,7 @@ export function AvatarSelect<T extends string>({
     items || (groupItems ? Object.values(groupItems).flat() : []);
   const selectedItem = allItems.find((item) => item.value === selected);
 
-  const renderItem = (item: AvatarSelectItem<T>) => {
+  const renderItem = (item: AvatarComboboxItem<T>) => {
     const avatarContent = item.avatar ?? item.label.charAt(0).toUpperCase();
     const colorClass = item.avatarClassName ?? getColor(item.value, colors);
 

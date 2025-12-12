@@ -8,7 +8,7 @@ import { MultiCombobox } from "@/components/selects/MultiCombobox";
 import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import React from "react";
 import { Select } from "@/components/selects/Select";
-import { AvatarSelect } from "@/components/selects/AvatarSelect";
+import { AvatarCombobox } from "@/components/selects/AvatarCombobox";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -61,7 +61,7 @@ function ComparisonRowGrid({
           placeholder="Selecione uma opção"
         />
         <ButtonBase>Comparar</ButtonBase>
-        <AvatarSelect
+        <AvatarCombobox
           items={[
             {
               avatarClassName: "bg-indigo-400/20 text-indigo-500",

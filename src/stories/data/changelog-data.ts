@@ -11,6 +11,20 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.14",
+    author: "Gabriel Glatz",
+    date: "2025-12-11",
+    shortTitle: "AvatarCombobox",
+    added: [
+      "CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.",
+      "Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.",
+    ],
+    fixed: [
+      "Checkbox: corrigido erro de nao mostras icons de Check e Minus.",
+      "Chromatic: ajusta versão outdated do Chromatic.",
+    ],
+  },
+  {
     version: "1.7.13",
     author: "Gabriel Glatz",
     date: "2025-12-11",
@@ -21,7 +35,7 @@ export const changelogData: ChangeItem[] = [
     ],
     fixed: [
       "Checkbox: corrigido erro de nao mostras icons de Check e Minus.",
-      "Chromatic: ajusta versão outdated do Chromatic."
+      "Chromatic: ajusta versão outdated do Chromatic.",
     ],
   },
   {
@@ -32,7 +46,6 @@ export const changelogData: ChangeItem[] = [
     added: [
       "Combobox:Nova props Empty para customizar a mensagem quando não houver itens.",
       "Selects: Adicionado melhor navegação via teclado para acessibilidade.",
-     
     ],
     fixed: ["DateTimePicker: corrigido a animacao de fechar."],
   },
@@ -61,7 +74,7 @@ export const changelogData: ChangeItem[] = [
     fixed: [
       "Filter: correção no import de estilos globais nas stories.",
       "RangePicker: ajuste na exibição do placeholder quando nenhum intervalo é selecionado.",
-      "AvatarSelect: correção na esquematização de cores padrão a aplicação e nova prop.",
+      "AvatarCombobox: correção na esquematização de cores padrão a aplicação e nova prop.",
     ],
   },
   {
@@ -79,9 +92,9 @@ export const changelogData: ChangeItem[] = [
     version: "1.7.8",
     author: "Gabriel Glatz",
     date: "2025-12-01",
-    shortTitle: "Event Calendar e AvatarSelect",
+    shortTitle: "Event Calendar e AvatarCombobox",
     added: [
-      "AvatarSelect: novo componente para seleção de usuários com avatar.",
+      "AvatarCombobox: novo componente para seleção de usuários com avatar.",
       "Event Calendar: implementados componentes e views de calendário de eventos com hooks personalizados.",
       "Calendar: adicionada documentação melhorada e exemplos interativos nas stories.",
       "Select: adicionada prop `className` para maior flexibilidade de estilização.",
