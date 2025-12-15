@@ -13,7 +13,7 @@
 
 ## Índice
 
-- [1.7.14 — 2025-12-11](#171714---2025-12-11)
+- [1.7.14 — 2025-12-15](#171714---2025-12-15)
 - [1.7.13 — 2025-12-11](#171713---2025-12-11)
 - [1.7.12 — 2025-12-08](#171712---2025-12-08)
 - [1.7.11 — 2025-12-05](#171711---2025-12-05)
@@ -28,21 +28,18 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
-
-
-## 1.7.14 — 2025-12-11
+## 1.7.14 — 2025-12-15
 
 **Author:** Gabriel Glatz
 
 ### Added
 
-- CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.
-- Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.
+- Selects: adicionado prop disabled and empty.
+- Chart: adicionado suporte a Dois eixos.
 
 ### Fixed
 
-- Checkbox: corrigido erro de nao mostras icons de Check e Minus.
-- Chromatic: ajusta versão outdated do Chromatic.
+- Chart: corrigido label negativo, title width, periodLabel and LabelPosition.
 
 ---
 

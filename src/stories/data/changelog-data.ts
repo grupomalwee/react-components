@@ -13,15 +13,14 @@ export const changelogData: ChangeItem[] = [
   {
     version: "1.7.14",
     author: "Gabriel Glatz",
-    date: "2025-12-11",
-    shortTitle: "AvatarCombobox",
+    date: "2025-12-15",
+    shortTitle: "Chart",
     added: [
-      "CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.",
-      "Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.",
+      "Selects: adicionado prop disabled and empty.",
+      "Chart: adicionado suporte a Dois eixos.",
     ],
     fixed: [
-      "Checkbox: corrigido erro de nao mostras icons de Check e Minus.",
-      "Chromatic: ajusta versão outdated do Chromatic.",
+      "Chart: corrigido label negativo, title width, periodLabel and LabelPosition.",
     ],
   },
   {
