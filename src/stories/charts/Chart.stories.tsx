@@ -128,20 +128,48 @@ export const Biaxial: Story = {
           "Exemplo de gráfico biaxial com eixo Y à esquerda e à direita (series mapeadas via `yAxisMap`).",
       },
       source: {
-        code: `import Chart from '@/components/charts/Chart';
+        code: `import React from 'react';
+import Chart from '@/components/charts/Chart';
 
-const data = ${JSON.stringify(biaxData, null, 2)};
+// Exemplo completo de dados para um gráfico biaxial
+const data = [
+  { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
+  { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
+  { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
+  { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
+  { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
+  { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
+  { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
+];
 
-export default function Biaxial() {
+export default function BiaxialExample() {
   return (
     <div style={{ width: 900, height: 420 }}>
       <Chart
         data={data}
         xAxis="name"
+        // Mapear séries: 'pv' como barra (eixo esquerdo) e 'uv' como linha (eixo direito)
         series={{ bar: ['pv'], line: ['uv'] }}
+        // Rótulos amigáveis para as séries
+        labelMap={{ pv: 'PV (Left)', uv: 'UV (Right)' }}
+        // Mapear chaves para eixos (left / right)
         yAxisMap={{ pv: 'left', uv: 'right' }}
-        yAxes={{ left: { label: 'PV' }, right: { label: 'UV' } }}
+        // Configurações visuais dos eixos
+        yAxes={{
+          left: { label: 'PV', stroke: '#8884d8', width: 56 },
+          right: { label: 'UV', stroke: '#82ca9d', width: 56 },
+        }}
+        // Paleta de cores (ordem: pv, uv)
+        colors={["#8884d8", "#82ca9d"]}
         height={360}
+        // Formatação pt-BR para os valores e uso de valueFormatter customizado
+        formatBR
+        valueFormatter={(props) => {
+          // props.formattedValue já é formatado pelo Chart quando formatBR está ativo
+          return String(props.formattedValue ?? props.value ?? '');
+        }}
+        // Texto mostrado no cabeçalho dos tooltips
+        periodLabel="Período Selecionado"
       />
     </div>
   );
