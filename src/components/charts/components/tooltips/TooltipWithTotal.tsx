@@ -17,6 +17,8 @@ interface Props {
   totalLabel?: string;
   valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
+  yAxisMap?: Record<string, "left" | "right">;
+  isBiaxial?: boolean;
 }
 
 const RechartTooltipWithTotal: React.FC<Props> = ({
@@ -28,6 +30,8 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
   totalLabel = "Total",
   valueFormatter,
   categoryFormatter,
+  yAxisMap,
+  isBiaxial = false,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -63,10 +67,20 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
       })
     : defaultTotalFormatted;
 
+  // If biaxial, compute denominators per axis (left/right), otherwise single denominator
   const absDenominator = numeric.reduce(
     (sum, p) => sum + Math.abs(typeof p.value === "number" ? p.value : 0),
     0
   );
+
+  const axisDenominators: Record<string, number> = {};
+  if (isBiaxial && yAxisMap) {
+    for (const p of numeric) {
+      const axis = (yAxisMap[p.dataKey] as "left" | "right") || "left";
+      axisDenominators[axis] =
+        (axisDenominators[axis] || 0) + Math.abs(p.value || 0);
+    }
+  }
 
   return (
     <div
@@ -145,7 +159,19 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                     {displayValue}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
+                    {isBiaxial && yAxisMap
+                      ? (() => {
+                          const axis =
+                            (yAxisMap[entry.dataKey] as "left" | "right") ||
+                            "left";
+                          const denom = axisDenominators[axis] || 0;
+                          const p =
+                            denom > 0 ? (Math.abs(value) / denom) * 100 : 0;
+                          return denom > 0 ? `${p.toFixed(1)}%` : "-";
+                        })()
+                      : absDenominator > 0
+                      ? `${pct.toFixed(1)}%`
+                      : "-"}
                   </span>
                 </div>
               </div>

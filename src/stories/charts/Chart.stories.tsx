@@ -76,11 +76,79 @@ export default function Example() {
     xAxis: { control: "text" },
     data: { control: "object" },
     colors: { control: "object" },
+    periodLabel: {
+      control: "text",
+      description: "Texto exibido no cabeçalho dos tooltips",
+    },
     showLegend: { control: "boolean" },
     showGrid: { control: "boolean" },
   },
   args: {
     data: sampleData,
+    periodLabel: "Período Selecionado",
+  },
+};
+
+const biaxData = [
+  { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
+  { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
+  { name: "Page C", uv: 2000, pv: 9800, amt: 2290 },
+  { name: "Page D", uv: 2780, pv: 3908, amt: 2000 },
+  { name: "Page E", uv: 1890, pv: 4800, amt: 2181 },
+  { name: "Page F", uv: 2390, pv: 3800, amt: 2500 },
+  { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
+];
+
+export const Biaxial: Story = {
+  name: "Biaxial (Eixo Duplo)",
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        data={biaxData}
+        xAxis="name"
+        height={360}
+        series={{ bar: ["pv"], line: ["uv"] }}
+        labelMap={{ pv: "PV", uv: "UV" }}
+        yAxisMap={{ pv: "left", uv: "right" }}
+        yAxes={{
+          left: { label: "AERee", stroke: "#8884d8", width: 48 },
+          right: { label: "AERee", stroke: "#82ca9d", width: 48 },
+        }}
+        colors={["#8884d8", "#82ca9d"]}
+        formatBR
+        valueFormatter={(props) => props.formattedValue}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo de gráfico biaxial com eixo Y à esquerda e à direita (series mapeadas via `yAxisMap`).",
+      },
+      source: {
+        code: `import Chart from '@/components/charts/Chart';
+
+const data = ${JSON.stringify(biaxData, null, 2)};
+
+export default function Biaxial() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart
+        data={data}
+        xAxis="name"
+        series={{ bar: ['pv'], line: ['uv'] }}
+        yAxisMap={{ pv: 'left', uv: 'right' }}
+        yAxes={{ left: { label: 'PV' }, right: { label: 'UV' } }}
+        height={360}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
   },
 };
 
@@ -1428,7 +1496,6 @@ export const Playground: Story = {
             gap: 16,
           }}
         >
-          {/* Top row - Data controls */}
           <div
             style={{
               display: "flex",

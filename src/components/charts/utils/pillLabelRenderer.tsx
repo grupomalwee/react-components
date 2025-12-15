@@ -94,10 +94,13 @@ export const renderPillLabel = (
     const cxNum = parseNumber(props.cx as number | string | undefined);
 
     let centerX: number;
+    let usedBarCenter = false;
     if (typeof px === "number" && typeof pWidth === "number") {
       centerX = px + pWidth / 2;
+      usedBarCenter = true;
     } else if (typeof xNum === "number" && typeof pWidth === "number") {
       centerX = xNum + pWidth / 2;
+      usedBarCenter = true;
     } else if (typeof cxNum === "number") {
       centerX = cxNum;
     } else if (
@@ -115,9 +118,14 @@ export const renderPillLabel = (
       centerX = typeof props.index === "number" ? props.index * 40 + 24 : 0;
     }
 
-    if (vb && typeof vb.x === "number" && typeof vb.width === "number") {
-      const minX = vb.x + 0 + pillWidth / 22;
-      const maxX = vb.x + vb.width - 2 - pillWidth / 2;
+    if (
+      !usedBarCenter &&
+      vb &&
+      typeof vb.x === "number" &&
+      typeof vb.width === "number"
+    ) {
+      const minX = vb.x + pillWidth / 2;
+      const maxX = vb.x + vb.width - pillWidth / 2;
       centerX = Math.max(minX, Math.min(maxX, centerX));
     }
 
@@ -134,9 +142,9 @@ export const renderPillLabel = (
         ? cyNum
         : 0);
 
-    const rectX = centerX - pillWidth / 3.5;
+    const rectX = centerX - pillWidth / 2;
     const rectY = centerY - pillHeight - 6;
-    const textX = centerX - pillWidth / 3.5 + pillWidth / 2;
+    const textX = centerX;
     const textY = rectY + pillHeight / 2 + 3;
 
     const rectFill =
@@ -148,18 +156,11 @@ export const renderPillLabel = (
 
     const rectStroke = variant === "outline" ? `${color}CC` : undefined;
 
-    const numValue = parseNumber(value);
-    const isNegative = typeof numValue === "number" && numValue < 0;
-
     let textColor: string;
-    if (isNegative) {
-      textColor = "#dc2626";
+    if (variant === "filled") {
+      textColor = "#ffffff";
     } else {
-      if (variant === "filled") {
-        textColor = "#ffffff";
-      } else {
-        textColor = "#374151";
-      }
+      textColor = "#374151";
     }
 
     return (

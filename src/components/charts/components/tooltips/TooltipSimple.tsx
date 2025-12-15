@@ -16,6 +16,8 @@ interface Props {
   periodLabel?: string;
   valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
+  yAxisMap?: Record<string, "left" | "right">;
+  isBiaxial?: boolean;
 }
 
 const TooltipSimple: React.FC<Props> = ({
@@ -26,6 +28,8 @@ const TooltipSimple: React.FC<Props> = ({
   periodLabel = "Período",
   valueFormatter,
   categoryFormatter,
+  yAxisMap,
+  isBiaxial = false,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -55,6 +59,23 @@ const TooltipSimple: React.FC<Props> = ({
         {payload.map((entry, index: number) => {
           const value = typeof entry.value === "number" ? entry.value : 0;
           const color = finalColors[entry.dataKey] || entry.color || "#999";
+          let pct = 0;
+          if (isBiaxial && yAxisMap) {
+            const axis =
+              (yAxisMap[entry.dataKey] as "left" | "right") || "left";
+            // compute sum for the axis
+            const axisSum = payload
+              .filter(
+                (p) =>
+                  ((yAxisMap[p.dataKey] as "left" | "right") || "left") === axis
+              )
+              .reduce(
+                (s, p) =>
+                  s + Math.abs(typeof p.value === "number" ? p.value : 0),
+                0
+              );
+            pct = axisSum > 0 ? (Math.abs(value) / axisSum) * 100 : 0;
+          }
           const defaultFormatted = ((): string => {
             try {
               if (Math.abs(value) < 1000) {
@@ -94,13 +115,20 @@ const TooltipSimple: React.FC<Props> = ({
               </div>
 
               <div className="ml-3">
-                <span
-                  className={`font-medium tabular-nums ${
-                    value < 0 ? "text-destructive" : "text-foreground"
-                  }`}
-                >
-                  {displayValue}
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span
+                    className={`font-medium tabular-nums ${
+                      value < 0 ? "text-destructive" : "text-foreground"
+                    }`}
+                  >
+                    {displayValue}
+                  </span>
+                  {isBiaxial ? (
+                    <span className="text-xs text-muted-foreground">
+                      {pct > 0 ? `${pct.toFixed(1)}%` : "-"}
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </div>
           );

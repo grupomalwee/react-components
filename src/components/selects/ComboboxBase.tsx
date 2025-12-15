@@ -42,6 +42,7 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
   checkIsSelected: (value: T) => boolean;
+  disabled?: boolean;
   keepOpen?: boolean;
   closeAll?: ReactNode;
   searchPlaceholder?: string;
@@ -54,6 +55,7 @@ export function ComboboxBase<T extends string>({
   renderSelected,
   handleSelection,
   checkIsSelected,
+  disabled = false,
   keepOpen = false,
   closeAll,
   searchPlaceholder,
@@ -68,7 +70,11 @@ export function ComboboxBase<T extends string>({
       className="col-span-1 w-full"
       data-testid={testIds.root ?? "combobox-base-root"}
     >
-      <PopoverBase open={open} onOpenChange={setOpen} modal>
+      <PopoverBase
+        open={open}
+        onOpenChange={(v) => !disabled && setOpen(v)}
+        modal
+      >
         <PopoverTriggerBase
           asChild
           className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]"
@@ -78,6 +84,8 @@ export function ComboboxBase<T extends string>({
             size="select"
             role="combobox"
             aria-expanded={open}
+            aria-disabled={disabled || undefined}
+            disabled={disabled}
             className={cn(
               "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
               error && "border-red-500"
@@ -106,6 +114,7 @@ export function ComboboxBase<T extends string>({
           >
             <CommandInputBase
               tabIndex={-1}
+              disabled={disabled}
               placeholder={searchPlaceholder ?? "Busque uma opção..."}
               data-testid={testIds.search ?? "combobox-search"}
             />
@@ -122,9 +131,11 @@ export function ComboboxBase<T extends string>({
                       keywords={[item.label]}
                       value={item.value}
                       onSelect={(value) => {
+                        if (disabled) return;
                         handleSelection(value as T);
                         if (!keepOpen) setOpen(false);
                       }}
+                      disabled={disabled}
                       data-testid={testIds.option ?? "combobox-option"}
                     >
                       {item.label}

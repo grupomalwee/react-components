@@ -635,7 +635,6 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
             <div className="flex flex-col gap-1">
               {title && (
                 <div className="flex items-center gap-2 pb-0.5">
-                  {/* <div className="w-2 h-2 bg-blue-500 rounded-full" /> */}
                   <p className="font-bold text-foreground text-base">{title}</p>
                 </div>
               )}
@@ -675,7 +674,6 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
               {dataLabel}
             </p>
-            {/* Dados renderizados com memoização para performance */}
             {useMemo(
               () =>
                 visibleKeys.map((key) => {

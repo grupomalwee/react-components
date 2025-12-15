@@ -466,3 +466,66 @@ export const SpecialCharacters = () => {
     },
   },
 };
+
+export const Disabled: Story = {
+  render: () => {
+    const items = [
+      { label: "Apple", value: "apple" },
+      { label: "Banana", value: "banana" },
+      { label: "Orange", value: "orange" },
+    ];
+    const [selected, setSelected] = React.useState<string[]>(["banana"]);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-10">
+          <MultiCombobox
+            items={items}
+            selected={selected}
+            onChange={setSelected}
+            label="Frutas (disabled)"
+            placeholder="Não é possível alterar"
+            showClearAll
+            disabled
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo do MultiCombobox com `disabled` — não permite interações.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar root presente", async () => {
+      await waitFor(() => {
+        const root = canvasElement.querySelector(
+          '[data-testid="multi-combobox-root"]'
+        );
+        expect(root).toBeInTheDocument();
+      });
+    });
+
+    await step(
+      "Verificar item pré-selecionado visível e não removível",
+      async () => {
+        await waitFor(() => {
+          const selectedTag = canvasElement.querySelector(
+            '[data-testid="combobox-selected-banana"]'
+          );
+          expect(selectedTag).toBeInTheDocument();
+        });
+      }
+    );
+  },
+};

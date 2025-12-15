@@ -26,6 +26,7 @@ interface MultiComboboxProps<T extends string>
   testIds?: MultiComboboxTestIds;
   keepOpen?: boolean;
   showClearAll?: boolean;
+  disabled?: boolean;
 }
 export function MultiCombobox<T extends string>({
   items,
@@ -38,8 +39,10 @@ export function MultiCombobox<T extends string>({
   labelClassname,
   testIds = {},
   error,
+  disabled = false,
   keepOpen = true,
   showClearAll = false,
+  empty,
 }: MultiComboboxProps<T>) {
   const selectedItems = items.filter((item) => selected.includes(item.value));
   const checkIsSelected = useCallback(
@@ -64,7 +67,9 @@ export function MultiCombobox<T extends string>({
           variant="ghost"
           data-testid={testIds.clearAll ?? "combobox-clear-all"}
           size="icon"
+          disabled={disabled}
           onClick={(e) => {
+            if (disabled) return;
             e.stopPropagation();
             onChange([]);
           }}
@@ -111,15 +116,21 @@ export function MultiCombobox<T extends string>({
             >
               <span className="text-xs truncate">{item.label}</span>
               <motion.span
-                role="button"
-                tabIndex={0}
+                role={disabled ? undefined : "button"}
+                tabIndex={disabled ? -1 : 0}
                 onClick={(e) => {
+                  if (disabled) return;
                   e.stopPropagation();
                   handleSelection(item.value);
                 }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="cursor-pointer text-xs flex items-center justify-center hover:text-red-500 transition-colors flex-shrink-0 rounded hover:bg-red-50 "
+                className={cn(
+                  "text-xs flex items-center justify-center transition-colors flex-shrink-0 rounded",
+                  !disabled
+                    ? "cursor-pointer hover:text-red-500 hover:bg-red-50"
+                    : "opacity-50 pointer-events-none"
+                )}
               >
                 <XIcon size={14} />
               </motion.span>
@@ -128,7 +139,7 @@ export function MultiCombobox<T extends string>({
         </AnimatePresence>
       </div>
     );
-  }, [handleSelection, placeholder, selectedItems, testIds]);
+  }, [handleSelection, placeholder, selectedItems, testIds, disabled]);
   return (
     <div
       className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}
@@ -151,6 +162,8 @@ export function MultiCombobox<T extends string>({
         closeAll={closeAll}
         searchPlaceholder={searchPlaceholder}
         error={error}
+        empty={empty}
+        disabled={disabled}
       />
     </div>
   );

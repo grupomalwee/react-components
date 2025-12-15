@@ -31,6 +31,7 @@ export interface ComboboxProps<T extends string> extends ErrorMessageProps {
   label?: string;
   labelClassname?: string;
   testIds?: ComboboxTestIds;
+  disabled?: boolean;
 }
 
 export function Combobox<T extends string>({
@@ -41,6 +42,7 @@ export function Combobox<T extends string>({
   placeholder,
   searchPlaceholder,
   empty,
+  disabled = false,
   label,
   labelClassname,
   testIds,
@@ -52,12 +54,16 @@ export function Combobox<T extends string>({
     return (
       <span
         data-testid={testIds?.selected ?? "combobox-selected"}
-        className={cn("truncate", !selectedItem && "text-gray-500")}
+        className={cn(
+          "truncate",
+          disabled && "opacity-60 cursor-not-allowed",
+          !selectedItem && "text-gray-500"
+        )}
       >
         {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}
       </span>
     );
-  }, [placeholder, selectedItem, testIds?.selected]);
+  }, [placeholder, selectedItem, testIds?.selected, disabled]);
 
   const checkIsSelected = useCallback(
     (value: T) => (selected == null ? false : selected == value),
@@ -80,6 +86,7 @@ export function Combobox<T extends string>({
         renderSelected={renderSelected}
         handleSelection={handleSelection}
         checkIsSelected={checkIsSelected}
+        disabled={disabled}
         searchPlaceholder={searchPlaceholder}
         empty={empty}
         error={error}
