@@ -28,6 +28,15 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.16 — 2025-12-15
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- Chart: corrigido erro de yAxis e erros de Build.
+
+---
 ## 1.7.15 — 2025-12-15
 
 **Author:** Gabriel Glatz

@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.16",
+    author: "Gabriel Glatz",
+    date: "2025-12-16",
+    shortTitle: "Chart",
+    fixed: [
+      "Chart: corrigido erro de yAxis e erros de Build.",
+    ],
+  },
+  {
     version: "1.7.15",
     author: "Gabriel Glatz",
     date: "2025-12-16",
