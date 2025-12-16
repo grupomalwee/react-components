@@ -5,3 +5,5 @@ export { default as PieChart } from "./PieChart";
 export * from "./components";
 export * from "./hooks";
 export * from "./utils";
+export { default as NoData } from "./NoData";
+export * from "./types";

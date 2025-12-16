@@ -61,14 +61,15 @@ const TooltipSimple: React.FC<Props> = ({
           const color = finalColors[entry.dataKey] || entry.color || "#999";
           let pct = 0;
           if (isBiaxial && yAxisMap) {
-            const axis =
-              (yAxisMap[entry.dataKey] as "left" | "right") || "left";
+            const normalize = (v: unknown) => {
+              if (v === "left" || v === "right") return v as "left" | "right";
+              if (v === 1 || v === "1" || v === true) return "right";
+              return "left";
+            };
+            const axis = normalize(yAxisMap[entry.dataKey]);
             // compute sum for the axis
             const axisSum = payload
-              .filter(
-                (p) =>
-                  ((yAxisMap[p.dataKey] as "left" | "right") || "left") === axis
-              )
+              .filter((p) => normalize(yAxisMap[p.dataKey]) === axis)
               .reduce(
                 (s, p) =>
                   s + Math.abs(typeof p.value === "number" ? p.value : 0),

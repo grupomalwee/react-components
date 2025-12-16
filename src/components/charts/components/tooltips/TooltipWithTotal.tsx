@@ -75,8 +75,13 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
 
   const axisDenominators: Record<string, number> = {};
   if (isBiaxial && yAxisMap) {
+    const normalize = (v: unknown) => {
+      if (v === "left" || v === "right") return v as "left" | "right";
+      if (v === 1 || v === "1" || v === true) return "right";
+      return "left";
+    };
     for (const p of numeric) {
-      const axis = (yAxisMap[p.dataKey] as "left" | "right") || "left";
+      const axis = normalize(yAxisMap[p.dataKey]);
       axisDenominators[axis] =
         (axisDenominators[axis] || 0) + Math.abs(p.value || 0);
     }
@@ -161,9 +166,14 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                   <span className="text-xs text-muted-foreground">
                     {isBiaxial && yAxisMap
                       ? (() => {
-                          const axis =
-                            (yAxisMap[entry.dataKey] as "left" | "right") ||
-                            "left";
+                          const normalize = (v: unknown) => {
+                            if (v === "left" || v === "right")
+                              return v as "left" | "right";
+                            if (v === 1 || v === "1" || v === true)
+                              return "right";
+                            return "left";
+                          };
+                          const axis = normalize(yAxisMap[entry.dataKey]);
                           const denom = axisDenominators[axis] || 0;
                           const p =
                             denom > 0 ? (Math.abs(value) / denom) * 100 : 0;
