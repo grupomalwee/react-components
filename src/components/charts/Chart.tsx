@@ -40,7 +40,7 @@ import {
   PeriodsDropdown,
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
-import { renderPillLabel, valueFormatter } from "./utils";
+import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -61,9 +61,11 @@ interface DataMapper {
   };
 }
 interface BiaxialConfig {
-  dataKeys: string[];
+  key: string[];
   label?: string;
   percentage?: boolean;
+  decimals?: number;
+  stroke?: string | Record<string, string>;
 }
 type SeriesProp = {
   bar?: string[];
@@ -259,14 +261,26 @@ const Chart: React.FC<ChartProps> = ({
 
   const biaxialConfigNormalized = useMemo(() => {
     if (!biaxial) return null;
-    if (typeof biaxial === "string")
-      return { dataKeys: [biaxial] } as BiaxialConfig;
-    if (Array.isArray(biaxial)) return { dataKeys: biaxial } as BiaxialConfig;
+    if (typeof biaxial === "string") return { key: [biaxial] } as BiaxialConfig;
+    if (Array.isArray(biaxial)) return { key: biaxial } as BiaxialConfig;
     return biaxial as BiaxialConfig;
   }, [biaxial]);
 
+  useMemo(() => {
+    if (!biaxialConfigNormalized) return;
+    const leftLabelMissing = !yAxisLabel || String(yAxisLabel).trim() === "";
+    const rightLabelMissing =
+      !biaxialConfigNormalized.label ||
+      String(biaxialConfigNormalized.label).trim() === "";
+    if (leftLabelMissing || rightLabelMissing) {
+      throw new Error(
+        "When using `biaxial`, you must provide both `yAxisLabel` (left axis) and `biaxial.label` (right axis)."
+      );
+    }
+  }, [biaxialConfigNormalized, yAxisLabel]);
+
   const rightKeys = useMemo(
-    () => biaxialConfigNormalized?.dataKeys ?? [],
+    () => biaxialConfigNormalized?.key ?? [],
     [biaxialConfigNormalized]
   );
   const leftKeys = useMemo(
@@ -621,12 +635,20 @@ const Chart: React.FC<ChartProps> = ({
 
   const defaultChartRightMargin = 30;
   const defaultChartLeftMargin = 0;
+  const axisLabelMargin = 56;
 
   const containerPaddingLeft = 16;
 
-  const finalChartRightMargin = chartMargin?.right ?? defaultChartRightMargin;
+  const finalChartRightMargin =
+    chartMargin?.right ??
+    (rightKeys.length > 0 ? axisLabelMargin : defaultChartRightMargin);
   const finalChartLeftMargin =
-    chartMargin?.left ?? (yAxisLabel ? 40 : defaultChartLeftMargin);
+    chartMargin?.left ??
+    (yAxisLabel ? axisLabelMargin : defaultChartLeftMargin);
+
+  const composedChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
+  const composedChartRightMargin =
+    chartMargin?.right ?? defaultChartRightMargin;
   const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
   const baseBottom = chartMargin?.bottom ?? 5;
   const extraForXAxisLabel = xAxisLabel ? 22 : 0;
@@ -639,7 +661,10 @@ const Chart: React.FC<ChartProps> = ({
   const effectiveChartWidth =
     typeof width === "number" ? width : measuredInner ?? computedWidth;
   const chartInnerWidth =
-    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
+    effectiveChartWidth - composedChartLeftMargin - composedChartRightMargin;
+
+  const leftYAxisLabelDx = -Math.max(12, Math.round(finalChartLeftMargin / 2));
+  const rightYAxisLabelDx = Math.max(12, Math.round(finalChartRightMargin / 2));
 
   const openTooltipForPeriod = useCallback(
     (periodName: string) => {
@@ -732,7 +757,6 @@ const Chart: React.FC<ChartProps> = ({
             style={{
               paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
               width: "100%",
-              maxWidth: `${chartInnerWidth}px`,
               display: "flex",
               justifyContent:
                 titlePosition === "center"
@@ -872,6 +896,7 @@ const Chart: React.FC<ChartProps> = ({
             {/* Left Y Axis */}
             <YAxis
               yAxisId="left"
+              width={finalChartLeftMargin}
               stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
@@ -884,7 +909,8 @@ const Chart: React.FC<ChartProps> = ({
                   ? {
                       value: yAxisLabel,
                       angle: -90,
-                      position: "leftTop",
+                      position: "left",
+                      dx: leftYAxisLabelDx,
                       style: {
                         fontSize: 12,
                         fill: "hsl(var(--muted-foreground))",
@@ -907,20 +933,61 @@ const Chart: React.FC<ChartProps> = ({
 
             {rightKeys.length > 0 &&
               (() => {
+                const decimals =
+                  typeof biaxialConfigNormalized?.decimals === "number"
+                    ? Math.max(0, Math.floor(biaxialConfigNormalized!.decimals))
+                    : 2;
+
                 const rightTickFormatter = (v: number | string) => {
-                  const base = yTickFormatter(v);
-                  if (biaxialConfigNormalized?.percentage) return `${base}%`;
-                  return base;
+                  if (biaxialConfigNormalized?.percentage) {
+                    const num = Number(String(v));
+                    const nf = new Intl.NumberFormat("pt-BR", {
+                      minimumFractionDigits: decimals,
+                      maximumFractionDigits: decimals,
+                    });
+                    const out = Number.isNaN(num)
+                      ? String(v ?? "")
+                      : nf.format(num);
+                    return `${out}%`;
+                  }
+
+                  return yTickFormatter(v);
                 };
+
+                const firstRightKey = (biaxialConfigNormalized?.key &&
+                  biaxialConfigNormalized.key[0]) as string | undefined;
+                const defaultRightColor =
+                  (firstRightKey && finalColors[firstRightKey]) ||
+                  "hsl(var(--muted-foreground))";
+
+                const rightAxisColor = (() => {
+                  if (!biaxialConfigNormalized) return defaultRightColor;
+                  if (typeof biaxialConfigNormalized.stroke === "string")
+                    return biaxialConfigNormalized.stroke;
+                  if (
+                    biaxialConfigNormalized.stroke &&
+                    firstRightKey &&
+                    typeof biaxialConfigNormalized.stroke === "object"
+                  )
+                    return (
+                      (
+                        biaxialConfigNormalized.stroke as Record<string, string>
+                      )[firstRightKey] || defaultRightColor
+                    );
+
+                  return defaultRightColor;
+                })();
 
                 return (
                   <YAxis
                     yAxisId="right"
+                    width={finalChartRightMargin}
                     orientation="right"
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke={"hsl(var(--muted-foreground))"}
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    tick={{ fill: rightAxisColor }}
                     tickFormatter={rightTickFormatter}
                     domain={[Math.min(minRightDataValue, 0), niceMaxRight]}
                     tickCount={6}
@@ -929,7 +996,8 @@ const Chart: React.FC<ChartProps> = ({
                         ? {
                             value: biaxialConfigNormalized.label,
                             angle: -90,
-                            position: "rightTop",
+                            position: "right",
+                            dx: rightYAxisLabelDx,
                             style: {
                               fontSize: 12,
                               fill: "hsl(var(--muted-foreground))",
@@ -981,7 +1049,18 @@ const Chart: React.FC<ChartProps> = ({
                 mapperConfig[key]?.label ??
                 labelMap?.[key] ??
                 formatFieldName(key);
-              const color = finalColors[key];
+              // If this key is on the right axis and a custom stroke is provided
+              // in the `biaxial` config, prefer that stroke (either a single
+              // color for all right-axis keys or a per-key mapping). Fallback
+              // to the computed `finalColors` otherwise.
+              let color = finalColors[key];
+              if (rightKeys.includes(key) && biaxialConfigNormalized?.stroke) {
+                if (typeof biaxialConfigNormalized.stroke === "string") {
+                  color = biaxialConfigNormalized.stroke;
+                } else {
+                  color = biaxialConfigNormalized.stroke[key] ?? color;
+                }
+              }
               if (s.type === "bar") {
                 return (
                   <Bar
@@ -1014,15 +1093,14 @@ const Chart: React.FC<ChartProps> = ({
                     highlightedSeries.has(key) ? (
                       <LabelList
                         dataKey={key}
-                        position="top"
+                        position="insideTop"
                         content={
-                          renderPillLabel(
+                          renderInsideBarLabel(
                             color,
-                            "filled",
                             finalValueFormatter
                           ) as LabelListContent
                         }
-                        offset={8}
+                        offset={0}
                       />
                     ) : null}
                   </Bar>

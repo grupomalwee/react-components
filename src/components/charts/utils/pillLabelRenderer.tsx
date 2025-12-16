@@ -83,7 +83,7 @@ export const renderPillLabel = (
       40,
       String(text).length * approxCharWidth + paddingX * 2
     );
-    const pillHeight = 20;
+    const pillHeight = 14;
 
     const xNum = parseNumber(x);
     const px = parseNumber(props.x);
@@ -177,9 +177,9 @@ export const renderPillLabel = (
         />
         <text
           x={textX}
-          y={textY + 2}
+          y={textY + 1}
           fill={textColor}
-          fontSize={13}
+          fontSize={10}
           fontWeight={700}
           textAnchor="middle"
           dominantBaseline="central"
@@ -195,3 +195,80 @@ export const renderPillLabel = (
 export type { LabelRendererProps, valueFormatter };
 
 export default renderPillLabel;
+
+export const renderInsideBarLabel = (
+  color: string,
+  valueFormatter?: valueFormatter
+) => {
+  return (props: LabelRendererProps) => {
+    const { x, y, value, width, height, viewBox, cx, cy, index } = props;
+
+    const defaultFormatted =
+      typeof value === "number"
+        ? formatCompactNumber(value)
+        : String(value ?? "");
+
+    const text = valueFormatter
+      ? valueFormatter({ value, formattedValue: defaultFormatted, ...props })
+      : defaultFormatted;
+
+    const parseNumberLocal = (v: number | string | undefined) => {
+      if (typeof v === "number") return v;
+      if (typeof v === "string" && v.trim() !== "" && !Number.isNaN(Number(v)))
+        return Number(v);
+      return undefined;
+    };
+
+    const px = parseNumberLocal(x as number | string | undefined);
+    const py = parseNumberLocal(y as number | string | undefined);
+    const pWidth = parseNumberLocal(width);
+    const pHeight = parseNumberLocal(height);
+    const cxNum = parseNumberLocal(cx as number | string | undefined);
+    const vb = viewBox as
+      | { x?: number; y?: number; width?: number; height?: number }
+      | undefined;
+
+    let centerX: number;
+    if (typeof px === "number" && typeof pWidth === "number") {
+      centerX = px + pWidth / 2;
+    } else if (typeof cxNum === "number") {
+      centerX = cxNum;
+    } else if (vb && typeof vb.x === "number" && typeof vb.width === "number") {
+      const approxCols = Math.max(1, (index as number) + 1);
+      const colWidth = vb.width / approxCols;
+      centerX = (vb.x ?? 0) + colWidth * ((index as number) + 0.5);
+    } else {
+      centerX = typeof index === "number" ? index * 40 + 24 : 0;
+    }
+
+    let centerY: number;
+    if (typeof py === "number" && typeof pHeight === "number") {
+      centerY = py + pHeight / 2;
+    } else if (typeof cy === "number") {
+      centerY = cy as number;
+    } else if (
+      vb &&
+      typeof vb.y === "number" &&
+      typeof vb.height === "number"
+    ) {
+      centerY = (vb.y ?? 0) + (vb.height ?? 0) / 2;
+    } else {
+      centerY = 0;
+    }
+
+    return (
+      <text
+        x={centerX}
+        y={centerY}
+        fill="#ffffff"
+        fontSize={10}
+        fontWeight={700}
+        textAnchor="middle"
+        dominantBaseline="central"
+        style={{ pointerEvents: "none" }}
+      >
+        {text}
+      </text>
+    );
+  };
+};

@@ -218,6 +218,65 @@ export default function Combined() {
   },
 };
 
+export const Biaxial: Story = {
+  render: (args) => (
+    <div style={{ width: "900px", height: "420px" }}>
+      <Chart
+        {...args}
+        height={360}
+        xAxis="periodo"
+        series={{ bar: ["receita", "despesas"], line: ["churn"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
+        yAxisLabel="Valor (R$)"
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true ,}}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo demonstrando o uso de `biaxial` para mapear `churn` ao eixo direito (com sufixo `%`).",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [
+  { periodo: 'Q1/24', receita: 1000, despesas: 400, churn: 180 },
+  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
+  { periodo: 'Q3/24', receita: 6800, despesas: 3800, churn: 120 },
+  { periodo: 'Q4/24', receita: 7500, despesas: 4200, churn: 100 },
+];
+
+export default function BiaxialExample() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart
+        data={data}
+        xAxis="periodo"
+        height={360}
+        series={{ bar: ['receita', 'despesas'], line: ['churn'] }}
+        labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }}
+        yAxisLabel="Valor (R$)"
+        colors={["#3b82f6", "#ef4444", "#f59e0b"]}
+        biaxial={{ keys: ['churn'], label: 'Churn (%)', percentage: true }}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar dois eixos Y renderizados", async () => {
+      const yAxes = canvasElement.querySelectorAll(".recharts-yAxis");
+      expect(yAxes.length).toBeGreaterThan(1);
+    });
+  },
+};
+
 export const NegativeValues: Story = {
   name: "Com Negativos",
   render: (args) => (
@@ -314,278 +373,6 @@ export default function NegativeValues() {
         ".recharts-xAxis .recharts-cartesian-axis-tick"
       );
       expect(xAxisTicks.length).toBe(4);
-    });
-  },
-};
-
-export const MultipleBars: Story = {
-  name: "Múltiplas Barras",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita", "despesas", "churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-          churn: "Churn",
-        }}
-        colors={["#3b82f6", "#ef4444", "#f59e0b"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com múltiplas séries de barras agrupadas.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function MultipleBarSeries() {
-  const data = [
-    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
-    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
-  ];
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={data} xAxis="periodo" series={{ bar: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#3b82f6","#ef4444","#f59e0b"]} height={350} />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-  // play: async ({ canvasElement, step }) => {
-  //   await step("Verificar renderização de múltiplas barras", async () => {
-  //     await waitFor(() => {
-  //       const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-  //       // 3 séries × 6 pontos = 18 barras
-  //       expect(bars.length).toBe(18);
-  //     });
-  //   });
-
-  //   await step("Verificar agrupamento de barras", async () => {
-  //     const barGroups = canvasElement.querySelectorAll(".recharts-bar");
-  //     expect(barGroups.length).toBe(3);
-  //   });
-
-  //   await step("Verificar legenda com 3 itens", async () => {
-  //     const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-  //     expect(legend).toBeInTheDocument();
-  //   });
-  // },
-};
-
-export const MultipleLines: Story = {
-  name: "Múltiplas Linhas",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          line: ["receita", "despesas", "churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-          churn: "Churn",
-        }}
-        colors={["#10b981", "#8b5cf6", "#f97316"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com múltiplas séries de linhas sobrepostas.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function MultipleLineSeries() {
-  const data = [
-    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
-    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
-  ];
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={data} xAxis="periodo" series={{ line: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#10b981","#8b5cf6","#f97316"]} height={350} />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-  // play: async ({ canvasElement, step }) => {
-  //   await step("Verificar renderização de múltiplas linhas", async () => {
-  //     await waitFor(() => {
-  //       const lines = canvasElement.querySelectorAll(".recharts-line");
-  //       expect(lines.length).toBe(3);
-  //     });
-  //   });
-
-  //   await step("Verificar pontos nas linhas", async () => {
-  //     const dots = canvasElement.querySelectorAll(".recharts-line-dots");
-  //     expect(dots.length).toBeGreaterThan(0);
-  //   });
-
-  //   await step("Verificar cores diferenciadas", async () => {
-  //     const coloredElements = canvasElement.querySelectorAll(
-  //       '[stroke="#10b981"], [stroke="#8b5cf6"], [stroke="#f97316"]'
-  //     );
-  //     expect(coloredElements.length).toBeGreaterThan(0);
-  //   });
-  // },
-};
-
-export const MultipleAreas: Story = {
-  name: "Múltiplas Áreas",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          area: ["receita", "despesas", "churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-          churn: "Churn",
-        }}
-        colors={["#06b6d4", "#ec4899", "#84cc16"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com múltiplas séries de áreas empilhadas.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function MultipleAreaSeries() {
-  const data = [
-    { periodo: 'Q1', receita: 4000, despesas: 2400, churn: 180 },
-    { periodo: 'Q2', receita: 5200, despesas: 3100, churn: 150 },
-  ];
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={data} xAxis="periodo" series={{ area: ['receita','despesas','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#06b6d4","#ec4899","#84cc16"]} height={350} />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização de múltiplas áreas", async () => {
-      await waitFor(() => {
-        const areas = canvasElement.querySelectorAll(".recharts-area");
-        expect(areas.length).toBe(3);
-      });
-    });
-
-    await step("Verificar preenchimento das áreas", async () => {
-      const areaPaths = canvasElement.querySelectorAll(".recharts-area-area");
-      expect(areaPaths.length).toBe(3);
-    });
-
-    await step("Verificar cores das áreas", async () => {
-      const coloredElements = canvasElement.querySelectorAll(
-        '[fill="#06b6d4"], [fill="#ec4899"], [fill="#84cc16"]'
-      );
-      expect(coloredElements.length).toBeGreaterThan(0);
-    });
-  },
-};
-
-export const ComplexMixed: Story = {
-  name: "Misto Complexo",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={380}
-        series={{
-          bar: ["despesas"],
-          area: ["receita"],
-          line: ["churn"],
-        }}
-        labelMap={{
-          receita: "Receita (R$)",
-          despesas: "Despesas (R$)",
-          churn: "Taxa de Churn (%)",
-        }}
-        colors={["#dc2626", "#16a34a", "#2563eb"]}
-        showGrid={true}
-        showLegend={true}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Combinação complexa de barras, áreas e linhas com labels personalizados.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function ComplexMixedChart() {
-  const data = [
-    { periodo: 'Q1', receita: 100000, despesas: 50, churn: 5 },
-    { periodo: 'Q2', receita: 200, despesas: 99000, churn: 500 },
-  ];
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={data} xAxis="periodo" series={{ bar: ['despesas'], area: ['receita'], line: ['churn'] }} labelMap={{ receita: 'Receita (R$)', despesas: 'Despesas (R$)', churn: 'Taxa de Churn (%)' }} colors={["#dc2626","#16a34a","#2563eb"]} height={380} showGrid showLegend />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar todos os tipos de série presentes", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        const areas = canvasElement.querySelectorAll(".recharts-area");
-        const lines = canvasElement.querySelectorAll(".recharts-line");
-
-        expect(bars.length).toBeGreaterThan(0);
-        expect(areas.length).toBeGreaterThan(0);
-        expect(lines.length).toBeGreaterThan(0);
-      });
-    });
-
-    await step("Verificar grid e legenda visíveis", async () => {
-      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-
-      expect(grid).toBeInTheDocument();
-      expect(legend).toBeInTheDocument();
-    });
-
-    await step("Verificar labels personalizados na legenda", async () => {
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-      expect(legend?.textContent).toContain("Receita");
-      expect(legend?.textContent).toContain("Despesas");
-      expect(legend?.textContent).toContain("Churn");
     });
   },
 };
@@ -738,6 +525,7 @@ export const AdvancedFormatter: Story = {
           churn: "Churn",
         }}
         showLabels={true}
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
         valueFormatter={(props) => {
           const numValue =
             typeof props.value === "number"
