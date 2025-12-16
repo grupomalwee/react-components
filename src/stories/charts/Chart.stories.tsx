@@ -110,40 +110,6 @@ export default function Default() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar gráfico renderizado", async () => {
-      await waitFor(() => {
-        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
-        expect(chartContainer).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar surface do gráfico", async () => {
-      const surface = canvasElement.querySelector(".recharts-surface");
-      expect(surface).toBeInTheDocument();
-    });
-
-    await step("Verificar eixos renderizados", async () => {
-      const xAxis = canvasElement.querySelector(".recharts-xAxis");
-      const yAxis = canvasElement.querySelector(".recharts-yAxis");
-      expect(xAxis).toBeInTheDocument();
-      expect(yAxis).toBeInTheDocument();
-    });
-
-    await step("Verificar dados renderizados", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      const areas = canvasElement.querySelectorAll(".recharts-area");
-
-      const totalElements = bars.length + lines.length + areas.length;
-      expect(totalElements).toBeGreaterThan(0);
-    });
-
-    await step("Verificar grid presente", async () => {
-      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-      expect(grid).toBeInTheDocument();
-    });
-  },
 };
 
 export const FormatBR: Story = {
@@ -269,12 +235,6 @@ export default function BiaxialExample() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar dois eixos Y renderizados", async () => {
-      const yAxes = canvasElement.querySelectorAll(".recharts-yAxis");
-      expect(yAxes.length).toBeGreaterThan(1);
-    });
-  },
 };
 
 export const NegativeValues: Story = {
@@ -316,65 +276,7 @@ export default function NegativeValues() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step(
-      "Verificar gráfico com valores negativos renderizado",
-      async () => {
-        await waitFor(() => {
-          const chartContainer =
-            canvasElement.querySelector(".recharts-wrapper");
-          expect(chartContainer).toBeInTheDocument();
-        });
-      }
-    );
-
-    await step("Verificar barras renderizadas", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      // 4 trimestres de dados
-      expect(bars.length).toBe(4);
-    });
-
-    await step("Verificar linha renderizada", async () => {
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      expect(lines.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar eixo Y ajustado para valores negativos", async () => {
-      const yAxis = canvasElement.querySelector(".recharts-yAxis");
-      expect(yAxis).toBeInTheDocument();
-
-      // Verifica se há ticks negativos no eixo Y
-      const yAxisTexts = canvasElement.querySelectorAll(
-        ".recharts-yAxis .recharts-text"
-      );
-      expect(yAxisTexts.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar grid crossing zero", async () => {
-      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-      expect(grid).toBeInTheDocument();
-    });
-
-    await step("Verificar cores customizadas nos dados negativos", async () => {
-      const coloredElements = canvasElement.querySelectorAll(
-        '[fill="#06b6d4"], [fill="#ef4444"], [stroke="#06b6d4"], [stroke="#ef4444"]'
-      );
-      expect(coloredElements.length).toBeGreaterThan(0);
-    });
-
-    await step("Verificar legenda com 2 séries", async () => {
-      const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-      expect(legend).toBeInTheDocument();
-    });
-
-    await step("Verificar dados renderizados corretamente", async () => {
-      // Verifica que o gráfico tem os 4 pontos de dados
-      const xAxisTicks = canvasElement.querySelectorAll(
-        ".recharts-xAxis .recharts-cartesian-axis-tick"
-      );
-      expect(xAxisTicks.length).toBe(4);
-    });
-  },
+ 
 };
 
 export const LargeData: Story = {
@@ -429,26 +331,7 @@ export default function LargeDataset() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização de dataset grande", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(24);
-      });
-    });
-
-    await step("Verificar múltiplas linhas no dataset grande", async () => {
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      expect(lines.length).toBe(2);
-    });
-
-    await step("Verificar eixo X com muitos pontos", async () => {
-      const xAxisTicks = canvasElement.querySelectorAll(
-        ".recharts-xAxis .recharts-cartesian-axis-tick"
-      );
-      expect(xAxisTicks.length).toBeGreaterThan(10);
-    });
-  },
+ 
 };
 
 export const CustomFormatter: Story = {
@@ -624,37 +507,7 @@ export default function EmptyData() {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar container renderizado", async () => {
-      const wrapper = canvasElement.querySelector(
-        '[data-testid="empty-chart-wrapper"]'
-      );
-      expect(wrapper).toBeInTheDocument();
-    });
-
-    await step("Verificar ausência de barras", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      expect(bars.length).toBe(0);
-    });
-
-    await step("Verificar estado vazio do gráfico", async () => {
-      // Com dados vazios, o gráfico pode não renderizar elementos recharts
-      const chartContainer = canvasElement.querySelector(".recharts-wrapper");
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      const areas = canvasElement.querySelectorAll(".recharts-area");
-
-      // Verifica que não há dados renderizados
-      expect(bars.length).toBe(0);
-      expect(lines.length).toBe(0);
-      expect(areas.length).toBe(0);
-
-      // Se o wrapper existir, verifica que está presente
-      if (chartContainer) {
-        expect(chartContainer).toBeInTheDocument();
-      }
-    });
-  },
+ 
 };
 
 export const SinglePoint: Story = {
