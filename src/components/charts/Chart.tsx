@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   ComposedChart,
   Bar,
@@ -19,6 +26,7 @@ import {
   formatFieldName,
   detectDataFields,
   detectXAxis,
+  generateAdditionalColors,
   niceCeil,
 } from "./utils/helpers";
 import { cn } from "@/lib/utils";
@@ -32,45 +40,39 @@ import {
   PeriodsDropdown,
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
-import NoData from "./NoData";
 import { renderPillLabel, valueFormatter } from "./utils";
-import {
-  buildPercentFormatter,
-  TITLE_CLASSNAME,
-  createFinalValueFormatter,
-  createYTickFormatter,
-} from "./utils/formatters";
-import {
-  maxForKeys as maxForKeysUtil,
-  minForKeys as minForKeysUtil,
-} from "./utils/dataStats";
-import { generateColors } from "./utils/generateColorMap";
-import { adaptDataForTooltip as adaptDataForTooltipUtil } from "./utils/tooltip";
-import {
-  computeSeriesOrder,
-  computeProcessedData,
-  computeAllKeys,
-  computeLeftRightKeys,
-  computeLabelSample,
-  computeNiceMax,
-} from "./utils/chartHelpers";
-import { useMeasureWidth } from "./hooks/useMeasureWidth";
-import { useChartLayout } from "./hooks/useChartLayout";
-import type {
-  ChartData,
-  XAxisConfig,
-  SeriesProp,
-  MapperConfig,
-  YAxes,
-  YAxisMap,
-  TooltipItem,
-} from "./types";
 
+interface ChartData {
+  [key: string]: string | number | boolean | null | undefined;
+}
+interface XAxisConfig {
+  dataKey: string;
+  label?: string;
+  valueFormatter?: (value: string | number) => string;
+  autoLabel?: boolean;
+}
+interface DataMapper {
+  [dataKey: string]: {
+    label?: string;
+    valueFormatter?: (value: string | number) => string | number;
+    color?: string;
+    type?: "number" | "string" | "auto";
+    visible?: boolean;
+  };
+}
+interface BiaxialConfig {
+  dataKeys: string[];
+  label?: string;
+  percentage?: boolean;
+}
+type SeriesProp = {
+  bar?: string[];
+  line?: string[];
+  area?: string[];
+};
 interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
-  yAxisMap?: YAxisMap;
-  yAxes?: YAxes;
   className?: string;
   chartMargin?: Partial<{
     top: number;
@@ -91,9 +93,11 @@ interface ChartProps {
   labelMap?: Record<string, string>;
   valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
+  periodLabel?: string;
   xAxisLabel?: string;
   yAxisLabel?: string;
   xAxis?: XAxisConfig | string;
+  biaxial?: BiaxialConfig | string | string[];
   enableHighlights?: boolean;
   enableShowOnly?: boolean;
   enablePeriodsDropdown?: boolean;
@@ -101,7 +105,6 @@ interface ChartProps {
   showTooltipTotal?: boolean;
   maxTooltips?: number;
   formatBR?: boolean;
-  periodLabel?: string;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -121,6 +124,7 @@ const Chart: React.FC<ChartProps> = ({
   titlePosition = "left",
   showLabels = false,
   xAxis,
+  biaxial,
   xAxisLabel,
   yAxisLabel,
   labelMap,
@@ -131,12 +135,10 @@ const Chart: React.FC<ChartProps> = ({
   enablePeriodsDropdown = false,
   enableDraggableTooltips = false,
   showTooltipTotal = false,
+  periodLabel = "Período",
   maxTooltips = 5,
   formatBR = false,
   chartMargin,
-  yAxisMap,
-  yAxes,
-  periodLabel = "Período",
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -169,12 +171,18 @@ const Chart: React.FC<ChartProps> = ({
         visible: true,
       };
       return acc;
-    }, {} as MapperConfig);
+    }, {} as DataMapper);
 
     return { xAxisConfig, mapperConfig };
   }, [data, xAxis, labelMap]);
 
   const { xAxisConfig, mapperConfig } = smartConfig;
+
+  type TooltipItem = {
+    id: string;
+    data: ChartData;
+    position: { top: number; left: number };
+  };
 
   const [activeTooltips, setActiveTooltips] = useState<TooltipItem[]>([]);
 
@@ -189,24 +197,88 @@ const Chart: React.FC<ChartProps> = ({
     }
   }, [highlightedSeries, showOnlyHighlighted]);
 
-  const processedData = computeProcessedData(
-    data as Array<Record<string, unknown>>,
-    xAxisConfig.dataKey
-  ) as unknown as ChartData[];
+  const processedData = data.map((item) => ({
+    ...item,
+    name: String(item[xAxisConfig.dataKey] || "N/A"),
+  }));
 
-  const { wrapperRef, measuredWidth } = useMeasureWidth<HTMLDivElement>();
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0];
+      if (r && typeof r.contentRect.width === "number") {
+        setMeasuredWidth(Math.round(r.contentRect.width));
+      }
+    });
+    ro.observe(el);
 
-  const seriesOrder = computeSeriesOrder(series, mapperConfig);
-  const allKeys = computeAllKeys(seriesOrder);
+    setMeasuredWidth(Math.round(el.getBoundingClientRect().width));
+    return () => ro.disconnect();
+  }, []);
+
+  const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
+  if (series) {
+    if (series.bar)
+      series.bar.forEach((k) => seriesOrder.push({ type: "bar", key: k }));
+    if (series.line)
+      series.line.forEach((k) => seriesOrder.push({ type: "line", key: k }));
+    if (series.area)
+      series.area.forEach((k) => seriesOrder.push({ type: "area", key: k }));
+  } else {
+    Object.keys(mapperConfig).forEach((k) =>
+      seriesOrder.push({ type: "bar", key: k })
+    );
+  }
+
+  const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
+
+  const generateColors = useCallback(
+    (dataKeys: string[]): Record<string, string> => {
+      const colorMap: Record<string, string> = {};
+      const allColors = generateAdditionalColors(colors, dataKeys.length);
+
+      dataKeys.forEach((key, index) => {
+        colorMap[key] =
+          mapperConfig[key]?.color ||
+          allColors[index] ||
+          colors[index % colors.length];
+      });
+
+      return colorMap;
+    },
+    [colors, mapperConfig]
+  );
 
   const finalColors = useMemo(
-    () => generateColors(allKeys, colors, mapperConfig),
-    [allKeys, colors, mapperConfig]
+    () => generateColors(allKeys),
+    [generateColors, allKeys]
+  );
+
+  const biaxialConfigNormalized = useMemo(() => {
+    if (!biaxial) return null;
+    if (typeof biaxial === "string")
+      return { dataKeys: [biaxial] } as BiaxialConfig;
+    if (Array.isArray(biaxial)) return { dataKeys: biaxial } as BiaxialConfig;
+    return biaxial as BiaxialConfig;
+  }, [biaxial]);
+
+  const rightKeys = useMemo(
+    () => biaxialConfigNormalized?.dataKeys ?? [],
+    [biaxialConfigNormalized]
+  );
+  const leftKeys = useMemo(
+    () => allKeys.filter((k) => !rightKeys.includes(k)),
+    [allKeys, rightKeys]
   );
 
   const adaptDataForTooltip = useCallback(
-    (universalData: ChartData) =>
-      adaptDataForTooltipUtil(universalData, xAxisConfig.dataKey),
+    (universalData: ChartData) => ({
+      ...universalData,
+      name: String(universalData[xAxisConfig.dataKey] || "N/A"),
+    }),
     [xAxisConfig.dataKey]
   );
 
@@ -228,52 +300,120 @@ const Chart: React.FC<ChartProps> = ({
     });
   }, []);
 
-  const maxDataValue = useMemo(
-    () => maxForKeysUtil(processedData, allKeys),
-    [processedData, allKeys]
-  );
+  const maxLeftDataValue = useMemo(() => {
+    let max = 0;
+    const numericKeys = leftKeys.length > 0 ? leftKeys : allKeys;
+    for (const row of processedData) {
+      const r = row as Record<string, unknown>;
+      for (const key of numericKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
+      }
+    }
+    return max;
+  }, [processedData, leftKeys, allKeys]);
 
-  const minDataValue = useMemo(
-    () => minForKeysUtil(processedData, allKeys),
-    [processedData, allKeys]
-  );
+  const minLeftDataValue = useMemo(() => {
+    let min = 0;
+    const numericKeys = leftKeys.length > 0 ? leftKeys : allKeys;
+    for (const row of processedData) {
+      const r = row as Record<string, unknown>;
+      for (const key of numericKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v < min)
+          min = v as number;
+      }
+    }
+    return min;
+  }, [processedData, leftKeys, allKeys]);
 
-  const { leftKeys, rightKeys } = useMemo(
-    () => computeLeftRightKeys(allKeys, yAxisMap),
-    [allKeys, yAxisMap]
-  );
+  const maxRightDataValue = useMemo(() => {
+    let max = 0;
+    if (rightKeys.length === 0) return max;
+    for (const row of processedData) {
+      const r = row as Record<string, unknown>;
+      for (const key of rightKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
+      }
+    }
+    return max;
+  }, [processedData, rightKeys]);
 
-  const maxLeft = useMemo(
-    () => maxForKeysUtil(processedData, leftKeys),
-    [leftKeys, processedData]
-  );
-  const minLeft = useMemo(
-    () => minForKeysUtil(processedData, leftKeys),
-    [leftKeys, processedData]
-  );
-  const maxRight = useMemo(
-    () => (rightKeys.length > 0 ? maxForKeysUtil(processedData, rightKeys) : 0),
-    [rightKeys, processedData]
-  );
-  const minRight = useMemo(
-    () => (rightKeys.length > 0 ? minForKeysUtil(processedData, rightKeys) : 0),
-    [rightKeys, processedData]
-  );
+  const minRightDataValue = useMemo(() => {
+    let min = 0;
+    if (rightKeys.length === 0) return min;
+    for (const row of processedData) {
+      const r = row as Record<string, unknown>;
+      for (const key of rightKeys) {
+        const v = r[key];
+        if (typeof v === "number" && Number.isFinite(v) && v < min)
+          min = v as number;
+      }
+    }
+    return min;
+  }, [processedData, rightKeys]);
+
+  const computeNiceMax = useCallback((maxValue: number) => {
+    let padding = 0.08;
+    if (maxValue > 1_000_000) padding = 0.05;
+    if (maxValue > 10_000_000) padding = 0.03;
+    if (maxValue === 0) padding = 0.12;
+    const padded = maxValue * (1 + padding);
+    return niceCeil(padded);
+  }, []);
 
   const niceMaxLeft = useMemo(
-    () => niceCeil(computeNiceMax(maxLeft)),
-    [maxLeft]
+    () => computeNiceMax(maxLeftDataValue),
+    [computeNiceMax, maxLeftDataValue]
   );
-
   const niceMaxRight = useMemo(
-    () => niceCeil(computeNiceMax(maxRight)),
-    [maxRight]
+    () => computeNiceMax(maxRightDataValue),
+    [computeNiceMax, maxRightDataValue]
   );
 
-  const niceMax = useMemo(
-    () => niceCeil(computeNiceMax(maxDataValue)),
-    [maxDataValue]
-  );
+  const computedWidth = useMemo(() => {
+    if (typeof width === "number") return width;
+
+    const points = Math.max(1, processedData.length);
+    const barCount = series?.bar?.length ?? 0;
+    const lineCount = series?.line?.length ?? 0;
+    const areaCount = series?.area?.length ?? 0;
+
+    // Base width calculation with better scaling
+    const basePerPoint = 60;
+    const perBarExtra = barCount > 0 ? Math.max(0, barCount - 1) * 8 : 0;
+    const perOtherExtra = (lineCount + areaCount) * 4;
+
+    // Size factor based on data magnitude (use the larger axis magnitude)
+    const overallNiceMax = Math.max(niceMaxLeft || 0, niceMaxRight || 0);
+    let sizeFactor = 1;
+    if (overallNiceMax > 100_000) sizeFactor = 1.1;
+    if (overallNiceMax > 1_000_000) sizeFactor = 1.2;
+    if (overallNiceMax > 10_000_000) sizeFactor = 1.3;
+
+    const perPoint = Math.round(
+      (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
+    );
+
+    // More conservative margins
+    const marginExtra = 120;
+    const calculated = points * perPoint + marginExtra;
+
+    // Improved bounds
+    const minWidth = 300;
+    const maxWidth = 1800;
+
+    return Math.max(minWidth, Math.min(maxWidth, calculated));
+  }, [
+    width,
+    processedData.length,
+    series?.bar?.length,
+    series?.line?.length,
+    series?.area?.length,
+    niceMaxLeft,
+    niceMaxRight,
+  ]);
 
   const toggleTooltip = useCallback(
     (
@@ -380,83 +520,126 @@ const Chart: React.FC<ChartProps> = ({
     []
   );
 
-  const titleClassName = TITLE_CLASSNAME;
-
-  const finalValueFormatter = useMemo(
-    () => createFinalValueFormatter(valueFormatter, formatBR),
-    [valueFormatter, formatBR]
+  const titleClassName = useMemo(
+    () => "text-xl font-semibold text-foreground mb-3",
+    []
   );
+  const finalValueFormatter = useMemo(() => {
+    const nf = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
-  const yTickFormatter = useMemo(
-    () => createYTickFormatter(finalValueFormatter),
-    [finalValueFormatter]
-  );
+    // If user provided a custom formatter
+    if (valueFormatter) {
+      // If formatBR is requested, wrap the user's formatter so that
+      // `formattedValue` received by the user's formatter is the pt-BR formatted string.
+      if (formatBR) {
+        const wrapped: valueFormatter = (props) => {
+          const { value, formattedValue } = props as {
+            value: number | string | undefined;
+            formattedValue: string;
+            [key: string]: unknown;
+          };
+
+          let num: number = NaN;
+          if (typeof value === "number") num = value;
+          else if (typeof value === "string" && value.trim() !== "") {
+            const parsed = Number(value);
+            num = Number.isNaN(parsed) ? NaN : parsed;
+          }
+
+          const brFormatted = !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
+
+          return valueFormatter({
+            ...(props as object),
+            formattedValue: brFormatted,
+            value: undefined,
+          });
+        };
+        return wrapped;
+      }
+
+      return valueFormatter;
+    }
+
+    if (!formatBR) return undefined;
+
+    const builtIn: valueFormatter = (props) => {
+      const { value, formattedValue } = props as {
+        value: number | string | undefined;
+        formattedValue: string;
+        [key: string]: unknown;
+      };
+
+      let num: number = NaN;
+      if (typeof value === "number") num = value;
+      else if (typeof value === "string" && value.trim() !== "") {
+        const parsed = Number(value);
+        num = Number.isNaN(parsed) ? NaN : parsed;
+      }
+
+      if (!Number.isNaN(num)) return nf.format(num);
+
+      return String(formattedValue ?? value ?? "");
+    };
+
+    return builtIn;
+  }, [valueFormatter, formatBR]);
+
+  const yTickFormatter = useMemo(() => {
+    const nf = new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");
+
+    if (finalValueFormatter) {
+      return (v: number | string) => {
+        const num = Number(String(v));
+        const formatted = Number.isNaN(num) ? String(v ?? "") : nf.format(num);
+        const out = finalValueFormatter({
+          value: v as number | string,
+          formattedValue: formatted,
+        });
+        return stripCurrency(String(out));
+      };
+    }
+
+    return (value: number | string) => {
+      const num = Number(String(value));
+      return Number.isNaN(num) ? String(value ?? "") : nf.format(num);
+    };
+  }, [finalValueFormatter]);
   const finalEnableHighlights = enableHighlights;
   const finalEnableShowOnly = enableShowOnly;
   const finalEnablePeriodsDropdown =
     enablePeriodsDropdown && enableDraggableTooltips;
-  const leftLabelSample = useMemo(
-    () =>
-      computeLabelSample(
-        leftKeys,
-        [maxLeft, minLeft, niceMaxLeft],
-        yTickFormatter
-      ),
-    [leftKeys, maxLeft, minLeft, niceMaxLeft, yTickFormatter]
-  );
 
-  const rightLabelSample = useMemo(
-    () =>
-      computeLabelSample(
-        rightKeys,
-        [maxRight, minRight, niceMaxRight],
-        yTickFormatter
-      ),
-    [rightKeys, maxRight, minRight, niceMaxRight, yTickFormatter]
-  );
+  const defaultChartRightMargin = 30;
+  const defaultChartLeftMargin = 0;
 
-  const {
-    containerPaddingLeft,
-    computedWidth,
-    measuredInner,
-    chartInnerWidth,
-    finalChartLeftMargin,
-    finalChartRightMargin,
-    finalChartTopMargin,
-    finalChartBottomMargin,
-    leftYAxisLabelDx,
-    rightYAxisLabelDx,
-  } = useChartLayout({
-    width,
-    measuredWidth,
-    points: Math.max(1, processedData.length),
-    seriesCounts: {
-      bar: series?.bar?.length ?? 0,
-      line: series?.line?.length ?? 0,
-      area: series?.area?.length ?? 0,
-    },
-    niceMax,
-    yAxes,
-    yAxisLabel,
-    chartMargin,
-    showLabels,
-    showLegend,
-    xAxisLabel,
-    leftLabelSample,
-    rightLabelSample,
-  });
+  const containerPaddingLeft = 16;
 
-  const leftAxisTickFormatter = useMemo(() => {
-    if (yAxes?.left?.percent)
-      return buildPercentFormatter(yAxes.left.percentDecimals ?? 0);
-    return yTickFormatter;
-  }, [yAxes?.left, yTickFormatter]);
-
-  const rightAxisTickFormatter = useMemo(() => {
-    if (yAxes?.right?.percent)
-      return buildPercentFormatter(yAxes.right.percentDecimals ?? 0);
-    return yTickFormatter;
-  }, [yAxes?.right, yTickFormatter]);
+  const finalChartRightMargin = chartMargin?.right ?? defaultChartRightMargin;
+  const finalChartLeftMargin =
+    chartMargin?.left ?? (yAxisLabel ? 40 : defaultChartLeftMargin);
+  const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
+  const baseBottom = chartMargin?.bottom ?? 5;
+  const extraForXAxisLabel = xAxisLabel ? 22 : 0;
+  const extraForLegend = showLegend ? 36 : 0;
+  const finalChartBottomMargin =
+    baseBottom + extraForXAxisLabel + extraForLegend;
+  const measuredInner = measuredWidth
+    ? Math.max(0, measuredWidth - 32)
+    : undefined;
+  const effectiveChartWidth =
+    typeof width === "number" ? width : measuredInner ?? computedWidth;
+  const chartInnerWidth =
+    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
 
   const openTooltipForPeriod = useCallback(
     (periodName: string) => {
@@ -514,11 +697,19 @@ const Chart: React.FC<ChartProps> = ({
 
   if (Array.isArray(data) && data.length === 0) {
     return (
-      <NoData
-        paddingLeft={containerPaddingLeft + finalChartLeftMargin}
-        height={height}
-        message={"Sem dados para exibir"}
-      />
+      <div
+        className={cn(
+          "rounded-lg bg-card p-4 relative w-full text-muted-foreground"
+        )}
+      >
+        <div
+          style={{
+            paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
+          }}
+        >
+          Sem dados para exibir
+        </div>
+      </div>
     );
   }
 
@@ -527,7 +718,8 @@ const Chart: React.FC<ChartProps> = ({
       ref={wrapperRef}
       style={{
         width: "100%",
-        overflow: "visible",
+        overflowX: "hidden",
+        overflowY: "hidden",
         minWidth: 0,
       }}
     >
@@ -540,6 +732,7 @@ const Chart: React.FC<ChartProps> = ({
             style={{
               paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
               width: "100%",
+              maxWidth: `${chartInnerWidth}px`,
               display: "flex",
               justifyContent:
                 titlePosition === "center"
@@ -596,9 +789,7 @@ const Chart: React.FC<ChartProps> = ({
                   }}
                 >
                   <PeriodsDropdown
-                    processedData={
-                      processedData as unknown as { name: string }[]
-                    }
+                    processedData={processedData}
                     onOpenPeriod={openTooltipForPeriod}
                     rightOffset={finalChartRightMargin}
                     activePeriods={activePeriods}
@@ -624,7 +815,7 @@ const Chart: React.FC<ChartProps> = ({
               }}
             >
               <PeriodsDropdown
-                processedData={processedData as unknown as { name: string }[]}
+                processedData={processedData}
                 onOpenPeriod={openTooltipForPeriod}
                 rightOffset={finalChartRightMargin}
               />
@@ -633,11 +824,7 @@ const Chart: React.FC<ChartProps> = ({
 
         <ResponsiveContainer width="100%" height={height}>
           <ComposedChart
-            data={
-              processedData as unknown as Array<
-                { name: string } & Record<string, unknown>
-              >
-            }
+            data={processedData}
             height={height}
             margin={{
               top: finalChartTopMargin,
@@ -671,11 +858,10 @@ const Chart: React.FC<ChartProps> = ({
                 xAxisLabel
                   ? {
                       value: xAxisLabel,
-                      position: "bottom",
-                      offset: 12,
+                      position: "insideBottomRight",
+                      offset: -5,
                       style: {
                         fontSize: 12,
-
                         fill: "hsl(var(--muted-foreground))",
                         fontWeight: 500,
                       },
@@ -683,126 +869,95 @@ const Chart: React.FC<ChartProps> = ({
                   : undefined
               }
             />
-            {rightKeys.length > 0 ? (
-              <>
-                <YAxis
-                  yAxisId="left"
-                  stroke={yAxes?.left?.stroke || "hsl(var(--muted-foreground))"}
-                  width={yAxes?.left?.width}
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={leftAxisTickFormatter}
-                  domain={[Math.min(minLeft, 0), niceMaxLeft]}
-                  tickCount={6}
-                  label={
-                    yAxes?.left?.label ?? yAxisLabel
-                      ? {
-                          value: yAxes?.left?.label ?? yAxisLabel,
-                          angle: -90,
-                          position: "left",
-                          dx: -leftYAxisLabelDx,
-                          style: {
-                            fontSize: 12,
-                            fill: "hsl(var(--muted-foreground))",
-                            fontWeight: 500,
-                            textAnchor: "middle",
-                          },
-                        }
-                      : undefined
-                  }
-                />
-
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  stroke={
-                    yAxes?.right?.stroke || "hsl(var(--muted-foreground))"
-                  }
-                  width={yAxes?.right?.width}
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={rightAxisTickFormatter}
-                  domain={[Math.min(minRight, 0), niceMaxRight]}
-                  tickCount={6}
-                  label={
-                    yAxes?.right?.label
-                      ? {
-                          value: yAxes?.right?.label,
-                          angle: -90,
-                          position: "right",
-
-                          dx: rightYAxisLabelDx,
-                          style: {
-                            fontSize: 12,
-                            fill: "hsl(var(--muted-foreground))",
-                            fontWeight: 500,
-                            textAnchor: "middle",
-                          },
-                        }
-                      : undefined
-                  }
-                />
-              </>
-            ) : (
-              <>
-                <YAxis
-                  stroke="hsl(var(--muted-foreground))"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={yTickFormatter}
-                  domain={[Math.min(minDataValue, 0), niceMax]}
-                  tickCount={6}
-                  label={
-                    yAxisLabel
-                      ? {
-                          value: yAxisLabel,
-                          angle: -90,
-                          position: "left",
-                          dx: -leftYAxisLabelDx,
-                          style: {
-                            fontSize: 12,
-                            fill: "hsl(var(--muted-foreground))",
-                            fontWeight: 500,
-                            textAnchor: "middle",
-                          },
-                        }
-                      : undefined
-                  }
-                />
-              </>
-            )}
-
-            {(minDataValue < 0 || minLeft < 0 || minRight < 0) && (
+            {/* Left Y Axis */}
+            <YAxis
+              yAxisId="left"
+              stroke="hsl(var(--muted-foreground))"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={yTickFormatter}
+              domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
+              tickCount={6}
+              label={
+                yAxisLabel
+                  ? {
+                      value: yAxisLabel,
+                      angle: -90,
+                      position: "leftTop",
+                      style: {
+                        fontSize: 12,
+                        fill: "hsl(var(--muted-foreground))",
+                        fontWeight: 500,
+                        textAnchor: "middle",
+                      },
+                    }
+                  : undefined
+              }
+            />
+            {minLeftDataValue < 0 && (
               <ReferenceLine
                 y={0}
+                yAxisId="left"
                 stroke="hsl(var(--muted-foreground))"
                 strokeWidth={1}
                 strokeDasharray="4 4"
               />
             )}
+
+            {rightKeys.length > 0 &&
+              (() => {
+                const rightTickFormatter = (v: number | string) => {
+                  const base = yTickFormatter(v);
+                  if (biaxialConfigNormalized?.percentage) return `${base}%`;
+                  return base;
+                };
+
+                return (
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="hsl(var(--muted-foreground))"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={rightTickFormatter}
+                    domain={[Math.min(minRightDataValue, 0), niceMaxRight]}
+                    tickCount={6}
+                    label={
+                      biaxialConfigNormalized?.label
+                        ? {
+                            value: biaxialConfigNormalized.label,
+                            angle: -90,
+                            position: "rightTop",
+                            style: {
+                              fontSize: 12,
+                              fill: "hsl(var(--muted-foreground))",
+                              fontWeight: 500,
+                              textAnchor: "middle",
+                            },
+                          }
+                        : undefined
+                    }
+                  />
+                );
+              })()}
             {showTooltip && (
               <Tooltip
                 content={
                   showTooltipTotal ? (
                     <RechartTooltipWithTotal
-                      periodLabel={periodLabel}
                       finalColors={finalColors}
                       valueFormatter={finalValueFormatter}
                       categoryFormatter={categoryFormatter}
-                      yAxisMap={yAxisMap}
-                      isBiaxial={rightKeys.length > 0}
+                      periodLabel={periodLabel}
                     />
                   ) : (
                     <TooltipSimple
-                      periodLabel={periodLabel}
                       finalColors={finalColors}
                       valueFormatter={finalValueFormatter}
                       categoryFormatter={categoryFormatter}
-                      yAxisMap={yAxisMap}
-                      isBiaxial={rightKeys.length > 0}
+                      periodLabel={periodLabel}
                     />
                   )
                 }
@@ -820,22 +975,6 @@ const Chart: React.FC<ChartProps> = ({
             )}
             {seriesOrder.map((s) => {
               const key = s.key;
-              const rawMapped =
-                rightKeys.length > 0 ? yAxisMap?.[key] ?? "left" : undefined;
-              const seriesYAxisId = (() => {
-                if (rawMapped === undefined) return undefined;
-                if (rawMapped === "left" || rawMapped === "right")
-                  return rawMapped;
-                if (
-                  rawMapped === 1 ||
-                  rawMapped === "1" ||
-                  rawMapped === "right"
-                )
-                  return "right";
-                // treat 0 / '0' as left, any unknown as left
-                return "left";
-              })();
-
               if (showOnlyHighlighted && !highlightedSeries.has(key))
                 return null;
               const label =
@@ -847,8 +986,8 @@ const Chart: React.FC<ChartProps> = ({
                 return (
                   <Bar
                     key={`bar-${key}`}
-                    yAxisId={seriesYAxisId}
                     dataKey={key}
+                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
                     name={label}
                     fill={color}
                     radius={[4, 4, 0, 0]}
@@ -893,8 +1032,8 @@ const Chart: React.FC<ChartProps> = ({
                 return (
                   <Line
                     key={`line-${key}`}
-                    yAxisId={seriesYAxisId}
                     dataKey={key}
+                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
                     name={label}
                     stroke={color}
                     strokeWidth={2}
@@ -934,8 +1073,8 @@ const Chart: React.FC<ChartProps> = ({
                 return (
                   <Area
                     key={`area-${key}`}
-                    yAxisId={seriesYAxisId}
                     dataKey={key}
+                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
                     name={label}
                     stroke={color}
                     fill={color}

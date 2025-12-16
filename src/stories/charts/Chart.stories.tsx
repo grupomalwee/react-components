@@ -65,16 +65,12 @@ export default function Example() {
     xAxis: { control: "text" },
     data: { control: "object" },
     colors: { control: "object" },
-    periodLabel: {
-      control: "text",
-      description: "Texto exibido no cabeçalho dos tooltips",
-    },
+
     showLegend: { control: "boolean" },
     showGrid: { control: "boolean" },
   },
   args: {
     data: sampleData,
-    periodLabel: "Período Selecionado",
   },
 };
 
@@ -1310,67 +1306,5 @@ export const CustomColors: Story = {
       expect(lines.length).toBeGreaterThan(0);
       expect(areas.length).toBeGreaterThan(0);
     });
-  },
-};
-
-export const Biaxial: Story = {
-  name: "Biaxial (Eixo Duplo)",
-  render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
-      <Chart
-        {...args}
-        height={360}
-        data={sampleData}
-        series={{ bar: ["receita"], line: ["churn"] }}
-        yAxisMap={{ churn: "right" }}
-        yAxes={{
-          left: { label: "Valor",},
-          right: {
-            label: "Churn",           
-            percent: true,
-          },
-        }}
-        labelMap={{ receita: "Receita (R$)", churn: "Churn" }}
-        showLegend={true}
-        showGrid={true}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo de gráfico biaxial — barras no eixo esquerdo (valor em R$) e linha de churn no eixo direito (percentual). Use `yAxisMap` para mapear séries para o eixo direito.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const sampleData = [
-  { periodo: 'Q1/24', receita: 1000, despesas: 400, churn: 18 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 15 },
-  { periodo: 'Q3/24', receita: 6800, despesas: 3800, churn: 12 },
-  { periodo: 'Q4/24', receita: 7500, despesas: 4200, churn: 10 },
-];
-
-export default function BiaxialExample() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart
-        data={sampleData}
-        xAxis="periodo"
-        series={{ bar: ['receita'], line: ['churn'] }}
-        yAxisMap={{ churn: 'right' }}
-        yAxes={{ left: { label: 'Valor (R$)' }, right: { label: 'Churn (%)', percent: true, percentDecimals: 0 } }}
-        labelMap={{ receita: 'Receita (R$)', churn: 'Churn (%)' }}
-        colors={["#3b82f6", "#ef4444"]}
-        height={360}
-      />
-    </div>
-  );
-}
-`,
-      },
-    },
   },
 };
