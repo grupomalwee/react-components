@@ -219,7 +219,9 @@ export default meta;
 
 type Story = StoryObj<typeof EventCalendar>;
 
-function Wrapper(props: { initialView?: CalendarView } = {}) {
+function Wrapper(
+  props: { initialView?: CalendarView; mode?: "agenda-only" | "default" } = {}
+) {
   const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
 
   const handleEventAdd = (event: CalendarEvent) =>
@@ -237,6 +239,7 @@ function Wrapper(props: { initialView?: CalendarView } = {}) {
     <EventCalendar
       events={events}
       initialView={props.initialView || undefined}
+      mode={props.mode}
       onEventAdd={(e) => handleEventAdd(e)}
       onEventDelete={(id) => handleEventDelete(id)}
       onEventUpdate={(ev) => handleEventUpdate(ev)}
@@ -468,7 +471,6 @@ export default function ManyEvents() {
     },
   },
   render: () => {
-    // create many events to stress layout
     const many = Array.from({ length: 40 }).map((_, i) => {
       const start = addDays(new Date(), i % 7);
       return {
@@ -483,4 +485,83 @@ export default function ManyEvents() {
     return <EventCalendar events={many} initialView="week" />;
   },
   name: "Muitos eventos",
+};
+
+export const AgendaOnly: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function AgendaOnly() {
+  const events: CalendarEvent[] = /* ... */ [];
+
+  return <EventCalendar events={events} mode="agenda-only" initialView="agenda" />;
+}
+`,
+      },
+    },
+  },
+  render: () => <Wrapper initialView="agenda" mode="agenda-only"  />,
+  name: "Agenda (somente visualização)",
+};
+
+export const AgendaWithUndated: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function AgendaWithUndated() {
+  const events: CalendarEvent[] = [
+      {
+      id: 'u1',
+      title: 'Consulta sem data',
+      start: undefined as unknown as Date,
+      end: undefined as unknown as Date,
+      description: 'Cliente sem agendamento definido',
+      color: 'rose',
+    },
+    {
+      id: 'u2',
+      title: 'Retorno sem previsão',
+      start: '' as unknown as Date,
+      end: '' as unknown as Date,
+      color: 'amber',
+    },
+  ];
+
+  return <EventCalendar events={events} mode="agenda-only" initialView="agenda" />;
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const events: CalendarEvent[] = [
+      ...sampleEvents.slice(0, 4),
+      {
+        id: "u1",
+        title: "Acme Corp",
+        start: undefined as unknown as Date,
+        end: undefined as unknown as Date,
+        description: "Malwee - 9000",
+        color: "rose",
+      },
+      {
+        id: "u2",
+        title: "Retorno sem previsão",
+        start: "" as unknown as Date,
+        end: "" as unknown as Date,
+        color: "amber",
+      },
+    ];
+
+    return (
+      <EventCalendar events={events} mode="agenda-only" initialView="agenda" />
+    );
+  },
+  name: "Agenda — Datas não previstas",
 };

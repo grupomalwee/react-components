@@ -6,6 +6,7 @@ export interface CalendarEvent {
   description?: string;
   start: Date;
   end: Date;
+  attend_date?: Date | null;
   allDay?: boolean;
   color?: EventColor;
   location?: string;

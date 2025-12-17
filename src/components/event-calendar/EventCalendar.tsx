@@ -55,6 +55,7 @@ export interface EventCalendarProps {
   onEventDelete?: (eventId: string) => void;
   className?: string;
   initialView?: CalendarView;
+  mode?: "agenda-only" | "default";
 }
 
 export function EventCalendar({
@@ -64,15 +65,20 @@ export function EventCalendar({
   onEventDelete,
   className,
   initialView = "month",
+  mode = "default",
 }: EventCalendarProps) {
+  const isAgendaOnly = mode === "agenda-only";
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<CalendarView>(initialView);
+  const [view, setView] = useState<CalendarView>(
+    isAgendaOnly ? "agenda" : initialView
+  );
   const [isFading, setIsFading] = useState(false);
 
-  const FADE_DURATION = 220; // ms - keep in sync with Tailwind duration class
+  const FADE_DURATION = 220;
 
   const changeView = useCallback(
     (next: CalendarView) => {
+      if (isAgendaOnly) return;
       if (next === view) return;
       setIsFading(true);
       window.setTimeout(() => {
@@ -80,9 +86,8 @@ export function EventCalendar({
         requestAnimationFrame(() => setIsFading(false));
       }, FADE_DURATION);
     },
-    [view]
+    [view, isAgendaOnly]
   );
-  // pagination (previous/next) animation state
   const [isPaging, setIsPaging] = useState(false);
   const [pageDirection, setPageDirection] = useState<"left" | "right" | null>(
     null
@@ -108,11 +113,8 @@ export function EventCalendar({
     null
   );
 
-  // Add keyboard shortcuts for view switching
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Skip if user is typing in an input, textarea or contentEditable element
-      // or if the event dialog is open
       if (
         isEventDialogOpen ||
         e.target instanceof HTMLInputElement ||
@@ -121,12 +123,12 @@ export function EventCalendar({
       ) {
         return;
       }
+      if (isAgendaOnly) return;
 
       switch (e.key.toLowerCase()) {
         case "m":
           changeView("month");
           break;
-        // aceitar tanto 'w' (inglês) quanto 's' (pt-BR para "semana")
         case "w":
         case "s":
           changeView("week");
@@ -145,10 +147,9 @@ export function EventCalendar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isEventDialogOpen, changeView]);
+  }, [isEventDialogOpen, changeView, isAgendaOnly]);
 
   const handlePrevious = () => {
-    // animate page transition (previous)
     pageTransition(() => {
       if (view === "month") {
         setCurrentDate(subMonths(currentDate, 1));
@@ -163,7 +164,6 @@ export function EventCalendar({
   };
 
   const handleNext = () => {
-    // animate page transition (next)
     pageTransition(() => {
       if (view === "month") {
         setCurrentDate(addMonths(currentDate, 1));
@@ -182,23 +182,24 @@ export function EventCalendar({
   };
 
   const handleEventSelect = (event: CalendarEvent) => {
-    console.log("Event selected:", event); // Debug log
+    if (isAgendaOnly) return;
+
+    console.log("Event selected:", event);
     setSelectedEvent(event);
     setIsEventDialogOpen(true);
   };
 
   const handleEventCreate = (startTime: Date) => {
-    console.log("Creating new event at:", startTime); // Debug log
+    if (isAgendaOnly) return;
 
-    // Snap to 15-minute intervals
+    console.log("Creating new event at:", startTime);
+
     const minutes = startTime.getMinutes();
     const remainder = minutes % 15;
     if (remainder !== 0) {
       if (remainder < 7.5) {
-        // Round down to nearest 15 min
         startTime.setMinutes(minutes - remainder);
       } else {
-        // Round up to nearest 15 min
         startTime.setMinutes(minutes + (15 - remainder));
       }
       startTime.setSeconds(0);
@@ -302,7 +303,9 @@ export function EventCalendar({
       const year = format(currentDate, "yyyy", { locale: ptBR });
 
       const short = `${dayNum} de ${month} de ${year}`;
-      const long = `${format(currentDate, "EEE", { locale: ptBR })}, ${dayNum} de ${month} de ${year}`;
+      const long = `${format(currentDate, "EEE", {
+        locale: ptBR,
+      })}, ${dayNum} de ${month} de ${year}`;
 
       return (
         <>
@@ -332,25 +335,16 @@ export function EventCalendar({
     return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
   }, [currentDate, view]);
 
-  return (
-    <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 p-6"
-      style={
-        {
-          "--event-gap": `${EventGap}px`,
-          "--event-height": `${EventHeight}px`,
-          "--week-cells-height": `${WeekCellsHeight}px`,
-        } as React.CSSProperties
-      }
-    >
-      <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div
-          className={cn(
-            "flex items-center justify-between p-2 sm:p-4",
-            className
-          )}
-        >
-          <div className="flex items-center gap-1 sm:gap-4">
+  const calendarContent = (
+    <>
+      <div
+        className={cn(
+          "flex items-center justify-between p-2 sm:p-4",
+          className
+        )}
+      >
+        <div className="flex items-center gap-1 sm:gap-4">
+          {!isAgendaOnly && (
             <ButtonBase
               className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={handleToday}
@@ -363,156 +357,185 @@ export function EventCalendar({
               />
               <span className="max-[479px]:sr-only">Hoje</span>
             </ButtonBase>
-            <div className="flex items-center sm:gap-2">
-              <ButtonBase
-                aria-label="Anterior"
-                onClick={handlePrevious}
-                size="icon"
-                variant="ghost"
-              >
-                <CaretLeft aria-hidden="true" size={16} />
-              </ButtonBase>
-              <ButtonBase
-                aria-label="Próximo"
-                onClick={handleNext}
-                size="icon"
-                variant="ghost"
-              >
-                <CaretRight aria-hidden="true" size={16} />
-              </ButtonBase>
-            </div>
-            <h2 className="font-semibold text-sm sm:text-lg md:text-xl">
-              {viewTitle}
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <DropDownMenuBase>
-              <DropDownMenuTriggerBase asChild>
-                <ButtonBase
-                  className="gap-1.5 max-[479px]:h-8"
-                  variant="outline"
-                >
-                  <span>
-                    <span aria-hidden="true" className="min-[480px]:hidden">
-                      {(() => {
-                        const labels: Record<string, string> = {
-                          month: "Mês",
-                          week: "Semana",
-                          day: "Dia",
-                          agenda: "Agenda",
-                        };
-                        return (labels[view] || view).charAt(0).toUpperCase();
-                      })()}
-                    </span>
-                    <span className="max-[479px]:sr-only">
-                      {(() => {
-                        const labels: Record<string, string> = {
-                          month: "Mês",
-                          week: "Semana",
-                          day: "Dia",
-                          agenda: "Agenda",
-                        };
-                        return labels[view] || view;
-                      })()}
-                    </span>
-                  </span>
-                  <ArrowDownIcon
-                    aria-hidden="true"
-                    className="-me-1 opacity-60"
-                    size={16}
-                  />
-                </ButtonBase>
-              </DropDownMenuTriggerBase>
-              <DropDownMenuContentBase align="end" className="min-w-32">
-                <DropDownMenuItemBase onClick={() => changeView("month")}>
-                  Mês <DropDownMenuShortcutBase>M</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("week")}>
-                  Semana <DropDownMenuShortcutBase>S</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("day")}>
-                  Dia <DropDownMenuShortcutBase>D</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("agenda")}>
-                  Agenda <DropDownMenuShortcutBase>A</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-              </DropDownMenuContentBase>
-            </DropDownMenuBase>
+          )}
+          <div className="flex items-center sm:gap-2">
             <ButtonBase
-              className="max-[479px]:aspect-square max-[479px]:p-0!"
-              onClick={() => {
-                setSelectedEvent(null); // Ensure we're creating a new event
-                setIsEventDialogOpen(true);
-              }}
-              size="sm"
+              aria-label="Anterior"
+              onClick={handlePrevious}
+              size="icon"
+              variant="ghost"
             >
-              <PlusIcon
-                aria-hidden="true"
-                className="sm:-ms-1 opacity-60"
-                size={16}
-              />
-              <span className="max-sm:sr-only">Novo evento</span>
+              <CaretLeft aria-hidden="true" size={16} />
+            </ButtonBase>
+            <ButtonBase
+              aria-label="Próximo"
+              onClick={handleNext}
+              size="icon"
+              variant="ghost"
+            >
+              <CaretRight aria-hidden="true" size={16} />
             </ButtonBase>
           </div>
+          <h2 className="font-semibold text-sm sm:text-lg md:text-xl">
+            {viewTitle}
+          </h2>
         </div>
-
-        <div
-          className={cn(
-            "flex flex-1 flex-col transition-all duration-200 ease-in-out",
-            isFading
-              ? "opacity-0 -translate-y-2 pointer-events-none"
-              : isPaging
-              ? pageDirection === "left"
-                ? "-translate-x-4 opacity-0 pointer-events-none"
-                : "translate-x-4 opacity-0 pointer-events-none"
-              : "opacity-100 translate-y-0"
-          )}
-          aria-live="polite"
-        >
-          {view === "month" && (
-            <MonthView
-              currentDate={currentDate}
-              events={events}
-              onEventCreate={handleEventCreate}
-              onEventSelect={handleEventSelect}
-            />
-          )}
-          {view === "week" && (
-            <WeekView
-              currentDate={currentDate}
-              events={events}
-              onEventCreate={handleEventCreate}
-              onEventSelect={handleEventSelect}
-            />
-          )}
-          {view === "day" && (
-            <DayView
-              currentDate={currentDate}
-              events={events}
-              onEventCreate={handleEventCreate}
-              onEventSelect={handleEventSelect}
-            />
-          )}
-          {view === "agenda" && (
-            <AgendaView
-              currentDate={currentDate}
-              events={events}
-              onEventSelect={handleEventSelect}
-            />
+        <div className="flex items-center gap-2">
+          {!isAgendaOnly && (
+            <>
+              <DropDownMenuBase>
+                <DropDownMenuTriggerBase asChild>
+                  <ButtonBase
+                    className="gap-1.5 max-[479px]:h-8"
+                    variant="outline"
+                  >
+                    <span>
+                      <span aria-hidden="true" className="min-[480px]:hidden">
+                        {(() => {
+                          const labels: Record<string, string> = {
+                            month: "Mês",
+                            week: "Semana",
+                            day: "Dia",
+                            agenda: "Agenda",
+                          };
+                          return (labels[view] || view).charAt(0).toUpperCase();
+                        })()}
+                      </span>
+                      <span className="max-[479px]:sr-only">
+                        {(() => {
+                          const labels: Record<string, string> = {
+                            month: "Mês",
+                            week: "Semana",
+                            day: "Dia",
+                            agenda: "Agenda",
+                          };
+                          return labels[view] || view;
+                        })()}
+                      </span>
+                    </span>
+                    <ArrowDownIcon
+                      aria-hidden="true"
+                      className="-me-1 opacity-60"
+                      size={16}
+                    />
+                  </ButtonBase>
+                </DropDownMenuTriggerBase>
+                <DropDownMenuContentBase align="end" className="min-w-32">
+                  <DropDownMenuItemBase onClick={() => changeView("month")}>
+                    Mês <DropDownMenuShortcutBase>M</DropDownMenuShortcutBase>
+                  </DropDownMenuItemBase>
+                  <DropDownMenuItemBase onClick={() => changeView("week")}>
+                    Semana{" "}
+                    <DropDownMenuShortcutBase>S</DropDownMenuShortcutBase>
+                  </DropDownMenuItemBase>
+                  <DropDownMenuItemBase onClick={() => changeView("day")}>
+                    Dia <DropDownMenuShortcutBase>D</DropDownMenuShortcutBase>
+                  </DropDownMenuItemBase>
+                  <DropDownMenuItemBase onClick={() => changeView("agenda")}>
+                    Agenda{" "}
+                    <DropDownMenuShortcutBase>A</DropDownMenuShortcutBase>
+                  </DropDownMenuItemBase>
+                </DropDownMenuContentBase>
+              </DropDownMenuBase>
+              <ButtonBase
+                className="max-[479px]:aspect-square max-[479px]:p-0!"
+                onClick={() => {
+                  setSelectedEvent(null); 
+                  setIsEventDialogOpen(true);
+                }}
+                size="sm"
+              >
+                <PlusIcon
+                  aria-hidden="true"
+                  className="sm:-ms-1 opacity-60"
+                  size={16}
+                />
+                <span className="max-sm:sr-only">Novo evento</span>
+              </ButtonBase>
+            </>
           )}
         </div>
+      </div>
 
-        <EventDialog
-          event={selectedEvent}
-          isOpen={isEventDialogOpen}
-          onClose={() => {
-            setIsEventDialogOpen(false);
-            setSelectedEvent(null);
-          }}
-          onDelete={handleEventDelete}
-          onSave={handleEventSave}
-        />
-      </CalendarDndProvider>
+      <div
+        className={cn(
+          "flex flex-1 flex-col transition-all duration-200 ease-in-out",
+          isFading
+            ? "opacity-0 -translate-y-2 pointer-events-none"
+            : isPaging
+            ? pageDirection === "left"
+              ? "-translate-x-4 opacity-0 pointer-events-none"
+              : "translate-x-4 opacity-0 pointer-events-none"
+            : "opacity-100 translate-y-0"
+        )}
+        aria-live="polite"
+      >
+        {view === "month" && (
+          <MonthView
+            currentDate={currentDate}
+            events={events}
+            onEventCreate={handleEventCreate}
+            onEventSelect={handleEventSelect}
+          />
+        )}
+        {view === "week" && (
+          <WeekView
+            currentDate={currentDate}
+            events={events}
+            onEventCreate={handleEventCreate}
+            onEventSelect={handleEventSelect}
+          />
+        )}
+        {view === "day" && (
+          <DayView
+            currentDate={currentDate}
+            events={events}
+            onEventCreate={handleEventCreate}
+            onEventSelect={handleEventSelect}
+          />
+        )}
+        {view === "agenda" && (
+          <AgendaView
+            currentDate={currentDate}
+            events={events}
+            onEventSelect={isAgendaOnly ? undefined : handleEventSelect}
+            showUndatedEvents={isAgendaOnly}
+          />
+        )}
+      </div>
+
+      <EventDialog
+        event={selectedEvent}
+        isOpen={isEventDialogOpen}
+        onClose={() => {
+          setIsEventDialogOpen(false);
+          setSelectedEvent(null);
+        }}
+        onDelete={handleEventDelete}
+        onSave={handleEventSave}
+      />
+    </>
+  );
+
+  return (
+    <div
+      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 p-6"
+      style={
+        {
+          "--event-gap": `${EventGap}px`,
+          "--event-height": `${EventHeight}px`,
+          "--week-cells-height": `${WeekCellsHeight}px`,
+        } as React.CSSProperties
+      }
+    >
+      {/* Wrap with DnD provider only when editing is allowed */}
+      {isAgendaOnly ? (
+        calendarContent
+      ) : (
+        <CalendarDndProvider onEventUpdate={handleEventUpdate}>
+          {calendarContent}
+        </CalendarDndProvider>
+      )}
     </div>
   );
 }

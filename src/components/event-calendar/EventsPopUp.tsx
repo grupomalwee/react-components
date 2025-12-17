@@ -13,7 +13,7 @@ interface EventsPopupProps {
   events: CalendarEvent[];
   position: { top: number; left: number };
   onClose: () => void;
-  onEventSelect: (event: CalendarEvent) => void;
+  onEventSelect?: (event: CalendarEvent) => void;
 }
 
 export function EventsPopup({
@@ -57,7 +57,7 @@ export function EventsPopup({
   }, [onClose]);
 
   const handleEventClick = (event: CalendarEvent) => {
-    onEventSelect(event);
+    if (onEventSelect) onEventSelect(event);
     onClose();
   };
 
@@ -130,17 +130,24 @@ export function EventsPopup({
             const isFirstDay = isSameDay(date, eventStart);
             const isLastDay = isSameDay(date, eventEnd);
 
+            const clickable = Boolean(onEventSelect);
+
             return (
               <div
-                className="cursor-pointer"
+                className={clickable ? "cursor-pointer" : "cursor-default"}
                 key={event.id}
-                onClick={() => handleEventClick(event)}
+                onClick={clickable ? () => handleEventClick(event) : undefined}
               >
                 <EventItem
                   event={event}
                   isFirstDay={isFirstDay}
                   isLastDay={isLastDay}
                   view="agenda"
+                  className={
+                    clickable
+                      ? undefined
+                      : "cursor-default hover:shadow-none hover:scale-100"
+                  }
                 />
               </div>
             );
