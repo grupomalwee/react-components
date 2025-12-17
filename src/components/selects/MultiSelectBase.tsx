@@ -1,0 +1,427 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { CaretUpDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
+import {
+  type ComponentPropsWithoutRef,
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import {
+  PopoverBase,
+  PopoverContentBase,
+  PopoverTriggerBase,
+} from "../ui/overlays/PopoverBase";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { motion } from "framer-motion";
+import { ButtonBase } from "../ui/form/ButtonBase";
+import { Badge } from "../ui/data/Badge";
+import {
+  CommandBase,
+  CommandEmptyBase,
+  CommandGroupBase,
+  CommandInputBase,
+  CommandItemBase,
+  CommandListBase,
+  CommandSeparatorBase,
+} from "../ui/navigation/CommandBase";
+
+type MultiSelectContextType = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  selectedValues: Set<string>;
+  toggleValue: (value: string) => void;
+  items: Map<string, ReactNode>;
+  onItemAdded: (value: string, label: ReactNode) => void;
+  disabled?: boolean;
+  emptyMessage?: ReactNode;
+  error?: string;
+};
+const MultiSelectContext = createContext<MultiSelectContextType | null>(null);
+
+export function MultiSelectBase({
+  children,
+  values,
+  defaultValues,
+  onValuesChange,
+  disabled,
+  empty,
+  error,
+}: {
+  children: ReactNode;
+  values?: string[];
+  defaultValues?: string[];
+  onValuesChange?: (values: string[]) => void;
+  disabled?: boolean;
+  empty?: ReactNode;
+  error?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [internalValues, setInternalValues] = useState(
+    new Set<string>(values ?? defaultValues)
+  );
+  const selectedValues = values ? new Set(values) : internalValues;
+  const [items, setItems] = useState<Map<string, ReactNode>>(new Map());
+
+  function toggleValue(value: string) {
+    if (disabled) return;
+    const getNewSet = (prev: Set<string>) => {
+      const newSet = new Set(prev);
+      if (newSet.has(value)) {
+        newSet.delete(value);
+      } else {
+        newSet.add(value);
+      }
+      return newSet;
+    };
+    setInternalValues(getNewSet);
+    onValuesChange?.([...getNewSet(selectedValues)]);
+  }
+
+  const onItemAdded = useCallback((value: string, label: ReactNode) => {
+    setItems((prev) => {
+      if (prev.get(value) === label) return prev;
+      return new Map(prev).set(value, label);
+    });
+  }, []);
+
+  return (
+    <MultiSelectContext.Provider
+      value={{
+        open,
+        setOpen,
+        selectedValues,
+        toggleValue,
+        items,
+        onItemAdded,
+        disabled,
+        emptyMessage: empty,
+        error,
+      }}
+    >
+      <PopoverBase
+        open={open}
+        onOpenChange={(v) => !disabled && setOpen(v)}
+        modal={true}
+      >
+        {children}
+      </PopoverBase>
+    </MultiSelectContext.Provider>
+  );
+}
+
+export function MultiSelectTriggerBase({
+  className,
+  children,
+  error: propError,
+  ...props
+}: {
+  className?: string;
+  children?: ReactNode;
+} & ComponentPropsWithoutRef<typeof ButtonBase> &
+  ErrorMessageProps) {
+  const { open, disabled, error: contextError } = useMultiSelectContext();
+  const error = propError ?? contextError;
+
+  return (
+    <div className={cn("w-full", error && "mb-0")}>
+      <PopoverTriggerBase asChild>
+        <ButtonBase
+          {...props}
+          variant={props.variant ?? "outline"}
+          role={props.role ?? "combobox"}
+          aria-expanded={props["aria-expanded"] ?? open}
+          aria-disabled={disabled || undefined}
+          disabled={disabled}
+          className={cn(
+            "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 min-w-[150px]",
+            error
+              ? "border-destructive focus:ring-1 focus:ring-destructive"
+              : "border-input focus:ring-1 focus:ring-ring",
+            className
+          )}
+        >
+          {children}
+          <CaretUpDownIcon className="size-4 shrink-0 opacity-50" />
+        </ButtonBase>
+      </PopoverTriggerBase>
+      {error ? <ErrorMessage error={error} /> : null}
+    </div>
+  );
+}
+
+export function MultiSelectValueBase({
+  placeholder,
+  clickToRemove = true,
+  className,
+  overflowBehavior = "wrap-when-open",
+  ...props
+}: {
+  placeholder?: string;
+  clickToRemove?: boolean;
+  overflowBehavior?: "wrap" | "wrap-when-open" | "cutoff";
+} & Omit<ComponentPropsWithoutRef<"div">, "children">) {
+  const { selectedValues, toggleValue, items, open } = useMultiSelectContext();
+  const [overflowAmount, setOverflowAmount] = useState(0);
+  const valueRef = useRef<HTMLDivElement | null>(null);
+  const overflowRef = useRef<HTMLDivElement | null>(null);
+  const mutationObserverRef = useRef<MutationObserver | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+  const shouldWrap =
+    overflowBehavior === "wrap" ||
+    (overflowBehavior === "wrap-when-open" && open);
+
+  const checkOverflow = useCallback(() => {
+    if (valueRef.current == null) return;
+
+    const containerElement = valueRef.current;
+    const overflowElement = overflowRef.current;
+    const items = containerElement.querySelectorAll<HTMLElement>(
+      "[data-selected-item]"
+    );
+
+    if (overflowElement != null) overflowElement.style.display = "none";
+    items.forEach((child) => child.style.removeProperty("display"));
+    let amount = 0;
+    for (let i = items.length - 1; i >= 0; i--) {
+      const child = items[i]!;
+      if (containerElement.scrollWidth <= containerElement.clientWidth) {
+        break;
+      }
+      amount = items.length - i;
+      child.style.display = "none";
+      overflowElement?.style.removeProperty("display");
+    }
+    setOverflowAmount(amount);
+  }, []);
+
+  const handleResize = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node == null) {
+        valueRef.current = null;
+        if (resizeObserverRef.current) {
+          resizeObserverRef.current.disconnect();
+          resizeObserverRef.current = null;
+        }
+        if (mutationObserverRef.current) {
+          mutationObserverRef.current.disconnect();
+          mutationObserverRef.current = null;
+        }
+        return;
+      }
+
+      valueRef.current = node;
+
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
+      }
+      if (mutationObserverRef.current) {
+        mutationObserverRef.current.disconnect();
+        mutationObserverRef.current = null;
+      }
+
+      const mo = new MutationObserver(checkOverflow);
+      const ro = new ResizeObserver(debounce(checkOverflow, 100));
+
+      mutationObserverRef.current = mo;
+      resizeObserverRef.current = ro;
+
+      mo.observe(node, {
+        childList: true,
+        attributes: true,
+        attributeFilter: ["class", "style"],
+      });
+      ro.observe(node);
+
+      checkOverflow();
+    },
+    [checkOverflow]
+  );
+
+  if (selectedValues.size === 0 && placeholder) {
+    return (
+      <span className="min-w-0 overflow-hidden font-normal text-muted-foreground ">
+        {placeholder}
+      </span>
+    );
+  }
+
+  return (
+    <div
+      {...props}
+      ref={handleResize}
+      className={cn(
+        "flex w-full gap-1.5 overflow-hidden",
+        shouldWrap && "h-full flex-wrap",
+        className
+      )}
+    >
+      {[...selectedValues]
+        .filter((value) => items.has(value))
+        .map((value) => (
+          <Badge
+            data-selected-item
+            size="sm"
+            className="group flex items-center gap-1"
+            key={value}
+            onClick={
+              clickToRemove
+                ? (e) => {
+                    e.stopPropagation();
+                    toggleValue(value);
+                  }
+                : undefined
+            }
+          >
+            {items.get(value)}
+            {clickToRemove && (
+              <XIcon className="size-3 text-muted-foreground group-hover:text-destructive" />
+            )}
+          </Badge>
+        ))}
+      <Badge
+        style={{
+          display: overflowAmount > 0 && !shouldWrap ? "block" : "none",
+        }}
+        ref={overflowRef}
+      >
+        +{overflowAmount}
+      </Badge>
+    </div>
+  );
+}
+
+export function MultiSelectContentBase({
+  search = true,
+  children,
+  ...props
+}: {
+  search?: boolean | { placeholder?: string; emptyMessage?: string };
+  children: ReactNode;
+} & Omit<ComponentPropsWithoutRef<typeof CommandBase>, "children">) {
+  const canSearch = typeof search === "object" ? true : search;
+  const { emptyMessage } = useMultiSelectContext();
+
+  return (
+    <>
+      <PopoverContentBase className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <div className={cn(" ")}>
+            <CommandBase {...props}>
+              {canSearch ? (
+                <CommandInputBase
+                  placeholder={
+                    typeof search === "object" ? search.placeholder : undefined
+                  }
+                />
+              ) : (
+                <button autoFocus className="sr-only" />
+              )}
+              <CommandListBase>
+                {canSearch && (
+                  <CommandEmptyBase>
+                    {typeof search === "object"
+                      ? search.emptyMessage ?? emptyMessage
+                      : emptyMessage}
+                  </CommandEmptyBase>
+                )}
+                {children}
+              </CommandListBase>
+            </CommandBase>
+          </div>
+        </motion.div>
+      </PopoverContentBase>
+    </>
+  );
+}
+
+export function MultiSelectItemBase({
+  value,
+  children,
+  badgeLabel,
+  onSelect,
+  ...props
+}: {
+  badgeLabel?: ReactNode;
+  value: string;
+} & Omit<ComponentPropsWithoutRef<typeof CommandItemBase>, "value">) {
+  const { toggleValue, selectedValues, onItemAdded } = useMultiSelectContext();
+  const isSelected = selectedValues.has(value);
+
+  useEffect(() => {
+    onItemAdded(value, badgeLabel ?? children);
+  }, [value, children, onItemAdded, badgeLabel]);
+
+  return (
+    <CommandItemBase
+      {...props}
+      onSelect={() => {
+        toggleValue(value);
+        onSelect?.(value);
+      }}
+    >
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.1 }}
+      >
+        <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: isSelected ? 1 : 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <CheckIcon className="size-4" />
+          </motion.div>
+        </span>
+        {children}
+      </motion.div>
+    </CommandItemBase>
+  );
+}
+
+export function MultiSelectGroupBase(
+  props: ComponentPropsWithoutRef<typeof CommandGroupBase>
+) {
+  return <CommandGroupBase {...props} />;
+}
+
+export function MultiSelectSeparatorBase(
+  props: ComponentPropsWithoutRef<typeof CommandSeparatorBase>
+) {
+  return <CommandSeparatorBase {...props} />;
+}
+
+function useMultiSelectContext() {
+  const context = useContext(MultiSelectContext);
+  if (context == null) {
+    throw new Error(
+      "useMultiSelectContext must be used within a MultiSelectContext"
+    );
+  }
+  return context;
+}
+
+function debounce<T extends (...args: never[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  return function (this: unknown, ...args: Parameters<T>) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}

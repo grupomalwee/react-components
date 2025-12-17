@@ -9,6 +9,14 @@ import { DateTimePicker } from "@/components/picker/DateTimePicker";
 import React from "react";
 import { Select } from "@/components/selects/Select";
 import { AvatarCombobox } from "@/components/selects/AvatarCombobox";
+import {
+  MultiSelectBase,
+  MultiSelectContentBase,
+  MultiSelectGroupBase,
+  MultiSelectItemBase,
+  MultiSelectTriggerBase,
+  MultiSelectValueBase,
+} from "@/components/selects/MultiSelectBase";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -27,6 +35,7 @@ function ComparisonRowGrid({
   setInputValue,
 }: Props) {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [values, setValues] = React.useState<string[]>([]);
 
   return (
     <div>
@@ -95,8 +104,34 @@ function ComparisonRowGrid({
         />
 
         <DateTimePicker date={date} onChange={setDate} hideSeconds />
+
+        <MultiSelectBase values={values} onValuesChange={setValues}>
+          <MultiSelectTriggerBase>
+            <MultiSelectValueBase placeholder={"Selecione"} />
+          </MultiSelectTriggerBase>
+
+          <MultiSelectContentBase search={{ placeholder: "Pesquisar..." }}>
+            <MultiSelectGroupBase>
+              <MultiSelectItemBase value="apple" badgeLabel="Apple">
+                Apple
+              </MultiSelectItemBase>
+              <MultiSelectItemBase value="banana" badgeLabel="Banana">
+                Banana
+              </MultiSelectItemBase>
+              <MultiSelectItemBase value="blueberry" badgeLabel="Blueberry">
+                Blueberry
+              </MultiSelectItemBase>
+              <MultiSelectItemBase value="grapes" badgeLabel="Grapes">
+                Grapes
+              </MultiSelectItemBase>
+              <MultiSelectItemBase value="pineapple" badgeLabel="Pineapple">
+                Pineapple
+              </MultiSelectItemBase>
+            </MultiSelectGroupBase>
+          </MultiSelectContentBase>
+        </MultiSelectBase>
       </section>
-      <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
+      {/* <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
         <DateTimePicker
           date={date}
           onChange={setDate}
@@ -114,7 +149,7 @@ function ComparisonRowGrid({
           label="eeeeeeeeeeee"
           placeholder="Selecione uma opção"
         />
-      </section>
+      </section> */}
     </div>
   );
 }
