@@ -11,6 +11,19 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.17",
+    author: "Gabriel Glatz",
+    date: "2025-12-17",
+    shortTitle: "Chart",
+    added: [
+      "MultiSelect: adicionado novo componente.",
+      "Banner: adicionado novo componente.",
+    ],
+    fixed: [
+      "Chart: corrigido erros de Rotulos X e title position.",
+    ],
+  },
+  {
     version: "1.7.16",
     author: "Gabriel Glatz",
     date: "2025-12-16",

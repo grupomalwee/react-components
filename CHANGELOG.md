@@ -28,7 +28,22 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
-## 1.7.16 — 2025-12-15
+## 1.7.17 — 2025-12-17
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- MultiSelect: adicionado novo componente.
+- Banner: adicionado novo componente.
+
+
+### Fixed
+
+- Chart: corrigido erros de Rotulos X e title position.
+
+---
+## 1.7.16 — 2025-12-16
 
 **Author:** Gabriel Glatz
 
