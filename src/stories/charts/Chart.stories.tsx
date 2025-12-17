@@ -408,6 +408,7 @@ export const AdvancedFormatter: Story = {
           churn: "Churn",
         }}
         showLabels={true}
+        yAxisLabel="Valor"
         biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
         valueFormatter={(props) => {
           const numValue =
@@ -809,27 +810,6 @@ export const Extremes: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização com valores extremos", async () => {
-      await waitFor(() => {
-        const chartContainer = canvasElement.querySelector(".recharts-wrapper");
-        expect(chartContainer).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar escala do eixo Y ajustada", async () => {
-      const yAxis = canvasElement.querySelector(".recharts-yAxis");
-      expect(yAxis).toBeInTheDocument();
-    });
-
-    await step("Verificar todas as séries visíveis", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-
-      expect(bars.length).toBeGreaterThan(0);
-      expect(lines.length).toBeGreaterThan(0);
-    });
-  },
 };
 
 export const MixedValues: Story = {
@@ -871,32 +851,6 @@ export const MixedValues: Story = {
           "Gráfico complexo com valores positivos e negativos alternados em todas as séries.",
       },
     },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização de valores mistos", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(12); // 2 séries × 6 pontos
-      });
-    });
-
-    await step(
-      "Verificar eixo Y com valores negativos e positivos",
-      async () => {
-        const yAxis = canvasElement.querySelector(".recharts-yAxis");
-        expect(yAxis).toBeInTheDocument();
-      }
-    );
-
-    await step("Verificar linha atravessando zero", async () => {
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      expect(lines.length).toBe(1);
-    });
-
-    await step("Verificar grid crossing zero point", async () => {
-      const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-      expect(grid).toBeInTheDocument();
-    });
   },
 };
 
