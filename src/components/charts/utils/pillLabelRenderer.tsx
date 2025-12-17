@@ -256,12 +256,28 @@ export const renderInsideBarLabel = (
       centerY = 0;
     }
 
+    const baseFontSize = 10;
+    let fontSize = baseFontSize;
+    if (typeof pWidth === "number") {
+      const padding = 7; 
+      const approxCharWidth = 7; 
+      const requiredWidth = String(text).length * approxCharWidth + padding * 2;
+      const widthScale = Math.min(1, pWidth / Math.max(1, requiredWidth));
+      fontSize = Math.max(1, Math.round(baseFontSize * widthScale));
+    }
+
+    if (typeof pHeight === "number") {
+      const heightRef = 14; 
+      const heightFactor = Math.max(0.8, Math.min(1.6, pHeight / heightRef));
+      fontSize = Math.min(18, Math.max(8, Math.round(fontSize * heightFactor)));
+    }
+
     return (
       <text
         x={centerX}
         y={centerY}
         fill="#ffffff"
-        fontSize={10}
+        fontSize={fontSize}
         fontWeight={700}
         textAnchor="middle"
         dominantBaseline="central"

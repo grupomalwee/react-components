@@ -56,7 +56,7 @@ const Highlights: React.FC<Props> = ({
           const color = finalColors[k];
 
           const pillClasses = cn(
-            "inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm border transition-all select-none relative overflow-hidden",
+            "inline-flex items-center gap-2 px-2 rounded-lg text-xs border transition-all select-none relative overflow-hidden h-7",
             isHighlighted ? "pr-8" : "",
             isHighlighted
               ? "bg-card/95 border-2 text-foreground shadow-[0_6px_18px_rgba(0,0,0,0.12)]"
@@ -97,7 +97,7 @@ const Highlights: React.FC<Props> = ({
                         backgroundColor: color,
                         borderColor: isHighlighted ? color : "transparent",
                         boxShadow: isHighlighted
-                          ? `0 6px 20px ${color}33`
+                          ? `0 6px 10px ${color}33`
                           : undefined,
                       }}
                       layout
@@ -112,7 +112,7 @@ const Highlights: React.FC<Props> = ({
 
                     {showFullLabel ? (
                       <motion.span
-                        className="truncate max-w-[10rem] pr-2"
+                        className="truncate max-w-[10rem] mt-0.5"
                         layout
                       >
                         {label}

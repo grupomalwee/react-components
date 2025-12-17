@@ -32,7 +32,7 @@ const NoData: React.FC<NoDataProps> = ({
   return (
     <div
       className={cn(
-        "rounded-lg bg-card p-2 relative overflow-visible w-full",
+        "rounded-lg bg-card p-3 relative overflow-visible w-full",
         className
       )}
       style={styleVars}
@@ -47,6 +47,28 @@ const NoData: React.FC<NoDataProps> = ({
             viewBox={`0 0 900 ${svgHeight}`}
             preserveAspectRatio="none"
           >
+            <defs>
+              <linearGradient id="barGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.95" />
+=              </linearGradient>
+
+              <filter
+                id="softShadow"
+                x="-20%"
+                y="-20%"
+                width="140%"
+                height="140%"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="6"
+                  stdDeviation="8"
+                  floodColor="#0f172a"
+                  floodOpacity="0.06"
+                />
+              </filter>
+            </defs>
+
             <rect
               x={0}
               y={0}
@@ -64,7 +86,7 @@ const NoData: React.FC<NoDataProps> = ({
                   x2={840}
                   y1={y}
                   y2={y}
-                  stroke="rgba(0,0,0,0.06)"
+                  stroke="rgba(15,23,42,0.06)"
                   strokeWidth={1}
                 />
               );
@@ -77,15 +99,26 @@ const NoData: React.FC<NoDataProps> = ({
                   y={svgHeight - 60 - b.h}
                   width={b.w}
                   height={b.h}
-                  rx={6}
-                  fill="rgba(0,0,0,0.06)"
-                  stroke="rgba(0,0,0,0.04)"
+                  rx={8}
+                  fill="url(#barGradient)"
+                  filter="url(#softShadow)"
+                  opacity={0.95}
+                />
+
+                <rect
+                  x={b.x}
+                  y={svgHeight - 60 - b.h}
+                  width={b.w}
+                  height={b.h}
+                  rx={8}
+                  fill="none"
+                  stroke="rgba(15,23,42,0.06)"
                 />
 
                 <text
                   x={b.x + b.w / 2}
                   y={svgHeight - 20}
-                  fill="rgba(0,0,0,0.35)"
+                  fill="rgba(15,23,42,0.45)"
                   fontSize={12}
                   textAnchor="middle"
                 >
@@ -96,10 +129,11 @@ const NoData: React.FC<NoDataProps> = ({
           </svg>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none h-[var(--svg-h)]">
-            <div className="pointer-events-auto bg-transparent px-3">
-              <div className="text-2xl font-extrabold text-black/80">
+            <div className="pointer-events-auto bg-transparent px-3 text-center">
+            
+              <div className="text-2xl sm:text-3xl font-semibold text-black">
                 {message}
-              </div>
+              </div>             
             </div>
           </div>
         </div>

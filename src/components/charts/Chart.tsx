@@ -41,6 +41,7 @@ import {
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
+import NoData from "./NoData";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -535,7 +536,7 @@ const Chart: React.FC<ChartProps> = ({
   );
 
   const titleClassName = useMemo(
-    () => "text-xl font-semibold text-foreground mb-3",
+    () => "text-[1.4rem] font-semibold text-foreground mb-3",
     []
   );
   const finalValueFormatter = useMemo(() => {
@@ -544,10 +545,7 @@ const Chart: React.FC<ChartProps> = ({
       maximumFractionDigits: 2,
     });
 
-    // If user provided a custom formatter
     if (valueFormatter) {
-      // If formatBR is requested, wrap the user's formatter so that
-      // `formattedValue` received by the user's formatter is the pt-BR formatted string.
       if (formatBR) {
         const wrapped: valueFormatter = (props) => {
           const { value, formattedValue } = props as {
@@ -637,7 +635,7 @@ const Chart: React.FC<ChartProps> = ({
   const defaultChartLeftMargin = 0;
   const axisLabelMargin = 56;
 
-  const containerPaddingLeft = 16;
+  const containerPaddingLeft = -6;
 
   const finalChartRightMargin =
     chartMargin?.right ??
@@ -645,6 +643,17 @@ const Chart: React.FC<ChartProps> = ({
   const finalChartLeftMargin =
     chartMargin?.left ??
     (yAxisLabel ? axisLabelMargin : defaultChartLeftMargin);
+  const yAxisTickWidth = useMemo(() => {
+    if (typeof chartMargin?.left === "number") return chartMargin.left;
+
+    if (yAxisLabel) return axisLabelMargin;
+    const samples = [minLeftDataValue, niceMaxLeft, Math.round((minLeftDataValue + niceMaxLeft) / 2), 0];
+    const formatted = samples.map((v) => String(yTickFormatter(v)));
+    const maxLen = formatted.reduce((m, s) => Math.max(m, s.length), 0);
+
+    const estimated = Math.max(48, Math.min(220, maxLen * 8 + 24));
+    return estimated;
+  }, [chartMargin?.left, yAxisLabel, yTickFormatter, minLeftDataValue, niceMaxLeft]);
 
   const composedChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
   const composedChartRightMargin =
@@ -663,7 +672,7 @@ const Chart: React.FC<ChartProps> = ({
   const chartInnerWidth =
     effectiveChartWidth - composedChartLeftMargin - composedChartRightMargin;
 
-  const leftYAxisLabelDx = -Math.max(12, Math.round(finalChartLeftMargin / 2));
+  const leftYAxisLabelDx = -Math.max(12, Math.round(yAxisTickWidth / 2));
   const rightYAxisLabelDx = Math.max(12, Math.round(finalChartRightMargin / 2));
 
   const openTooltipForPeriod = useCallback(
@@ -732,7 +741,7 @@ const Chart: React.FC<ChartProps> = ({
             paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
           }}
         >
-          Sem dados para exibir
+          <NoData />
         </div>
       </div>
     );
@@ -749,7 +758,7 @@ const Chart: React.FC<ChartProps> = ({
       }}
     >
       <div
-        className={cn("rounded-lg bg-card p-2 relative", className)}
+        className={cn("rounded-lg bg-card relative", className)}
         style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}
       >
         {title && (
@@ -765,10 +774,10 @@ const Chart: React.FC<ChartProps> = ({
                   ? "flex-end"
                   : "flex-start",
               alignItems: "center",
-              marginTop: 4,
+              marginTop: "19px",
             }}
           >
-            <h3 className={titleClassName}>{title}</h3>
+            <div className={titleClassName}>{title}</div>
           </div>
         )}
 
@@ -893,10 +902,9 @@ const Chart: React.FC<ChartProps> = ({
                   : undefined
               }
             />
-            {/* Left Y Axis */}
             <YAxis
               yAxisId="left"
-              width={finalChartLeftMargin}
+              width={yAxisTickWidth}
               stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
@@ -1049,10 +1057,6 @@ const Chart: React.FC<ChartProps> = ({
                 mapperConfig[key]?.label ??
                 labelMap?.[key] ??
                 formatFieldName(key);
-              // If this key is on the right axis and a custom stroke is provided
-              // in the `biaxial` config, prefer that stroke (either a single
-              // color for all right-axis keys or a per-key mapping). Fallback
-              // to the computed `finalColors` otherwise.
               let color = finalColors[key];
               if (rightKeys.includes(key) && biaxialConfigNormalized?.stroke) {
                 if (typeof biaxialConfigNormalized.stroke === "string") {
