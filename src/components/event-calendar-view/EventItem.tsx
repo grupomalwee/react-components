@@ -10,11 +10,10 @@ import {
   getBorderRadiusClasses,
   getEventColorClasses,
   addHoursToDate,
-} from "@/components/event-calendar";
+  normalizeAttendDate,
+} from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
-import {
-  ClockUserIcon,
-} from "@phosphor-icons/react";
+import { ClockUserIcon } from "@phosphor-icons/react";
 
 const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, "HH:mm");
@@ -65,6 +64,7 @@ function EventWrapper({
     isValidDate(event.attend_date);
 
   const displayEnd = (() => {
+    // Prefer start/end when available
     if (isValidDate(event.start) && isValidDate(event.end)) {
       return currentTime
         ? new Date(
@@ -74,9 +74,10 @@ function EventWrapper({
           )
         : new Date(event.end as Date);
     }
+    // Fallback to attend_date + 1 hour when only attend_date exists
     if (isValidDate(event.attend_date)) {
-      const start = new Date(event.attend_date as Date);
-      return addHoursToDate(start, 1);
+      const start = normalizeAttendDate(event.attend_date as Date);
+      return start ? addHoursToDate(start, 1) : undefined;
     }
     return undefined;
   })();
@@ -159,7 +160,7 @@ export function EventItem({
     if (isValidDate(event.start))
       return currentTime || new Date(event.start as Date);
     if (isValidDate(event.attend_date))
-      return currentTime || new Date(event.attend_date as Date);
+      return currentTime || normalizeAttendDate(event.attend_date as Date);
     return undefined;
   }, [currentTime, event.start, event.attend_date, hasValidTime]);
 
@@ -176,8 +177,8 @@ export function EventItem({
     }
     // fallback to attend_date + 1 hour
     if (isValidDate(event.attend_date)) {
-      const start = new Date(event.attend_date as Date);
-      return addHoursToDate(start, 1);
+      const start = normalizeAttendDate(event.attend_date as Date);
+      return start ? addHoursToDate(start, 1) : undefined;
     }
     return undefined;
   }, [currentTime, event.start, event.end, event.attend_date, hasValidTime]);
@@ -272,13 +273,10 @@ export function EventItem({
         ariaLabel={ariaLabel}
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
-
       >
         {durationMinutes < 45 ? (
           <div className="flex items-center justify-between w-full">
-            <div className={cn("truncate text-lg")}>
-              {event.title}
-            </div>
+            <div className={cn("truncate text-lg")}>{event.title}</div>
             {showTime && hasValidTime && displayStart && (
               <span className="ml-2 inline-block bg-white/10 px-2 py-0.5 rounded-full text-[11px] opacity-90">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
@@ -287,11 +285,7 @@ export function EventItem({
           </div>
         ) : (
           <>
-            <div
-              className={cn(
-                "truncate font-medium text-lg"
-              )}
-            >
+            <div className={cn("truncate font-medium text-lg")}>
               {event.title}
             </div>
             {showTime && hasValidTime && (
@@ -373,20 +367,14 @@ export function EventItem({
       {...dndListeners}
       {...dndAttributes}
     >
-      <div className="flex w-full justify-between border-b-2 border-black/5 ">
-        <div className={cn("font-bold text-lg")}>
-            {event.title}
-        </div>
-        <div
-          className={cn(
-            "opacity-90 flex items-center gap-2 text-lg" 
-          )}
-        >
+      <div className="flex w-full justify-between ">
+        <div className={cn("font-bold text-lg")}>{event.title}</div>
+        <div className={cn("opacity-90 flex items-center gap-2 text-lg")}>
           {event.allDay ? (
             <span>Dia todo</span>
           ) : (
             <span className="uppercase font-semibold flex items-center gap-2">
-              {formatTimeWithOptionalMinutes(displayStart as Date)} 
+              {formatTimeWithOptionalMinutes(displayStart as Date)}
               <span className="opacity-70">-</span>
               {formatTimeWithOptionalMinutes(displayEnd as Date)}
               <ClockUserIcon />
@@ -397,9 +385,7 @@ export function EventItem({
 
       {event.description && (
         <div
-          className={cn(
-            "my-1 opacity-90 flex text-md"
-          )}
+          className={cn("my-1 opacity-90 flex text-md")}
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,

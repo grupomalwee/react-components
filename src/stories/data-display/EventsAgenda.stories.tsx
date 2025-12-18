@@ -7,9 +7,9 @@ import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import {
   CalendarEvent,
-  EventCalendar,
   CalendarView,
-} from "@/components/event-calendar";
+  EventAgenda,
+} from "@/components/event-calendar-view";
 
 const sampleEvents: CalendarEvent[] = [
   {
@@ -20,7 +20,7 @@ const sampleEvents: CalendarEvent[] = [
     id: "1",
     location: "Main Conference Hall",
     start: subDays(new Date(), 24),
-    title: "Annual Planning",
+    title: "Acme Corp - Malwee",
   },
   {
     color: "amber",
@@ -29,7 +29,7 @@ const sampleEvents: CalendarEvent[] = [
     id: "2",
     location: "Office",
     start: setMinutes(setHours(subDays(new Date(), 9), 13), 0),
-    title: "Project Deadline",
+    title: "Acme Corp - Emfim",
   },
   {
     allDay: true,
@@ -39,7 +39,7 @@ const sampleEvents: CalendarEvent[] = [
     id: "3",
     location: "Main Conference Hall",
     start: subDays(new Date(), 13),
-    title: "Quarterly Budget Review",
+    title: "Acme Corp - Malwee Kids",
   },
   {
     color: "sky",
@@ -48,7 +48,7 @@ const sampleEvents: CalendarEvent[] = [
     id: "4",
     location: "Conference Room A",
     start: setMinutes(setHours(new Date(), 10), 0),
-    title: "Team Meeting",
+    title: "Acme Corp - carinhoso",
   },
   {
     color: "emerald",
@@ -57,7 +57,7 @@ const sampleEvents: CalendarEvent[] = [
     id: "5",
     location: "Downtown Cafe",
     start: setMinutes(setHours(addDays(new Date(), 1), 12), 0),
-    title: "Lunch with Client",
+    title: "Acme Corp - Lunch with Client",
   },
   {
     allDay: true,
@@ -66,7 +66,7 @@ const sampleEvents: CalendarEvent[] = [
     end: addDays(new Date(), 6),
     id: "6",
     start: addDays(new Date(), 3),
-    title: "Product Launch",
+    title: "Acme Corp - Product Launch",
   },
   {
     color: "rose",
@@ -134,9 +134,9 @@ const sampleEvents: CalendarEvent[] = [
   },
 ];
 
-const meta: Meta<typeof EventCalendar> = {
-  title: "data/Event Calendar",
-  component: EventCalendar,
+const meta: Meta<typeof EventAgenda> = {
+  title: "data/Event Agenda",
+  component: EventAgenda,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
@@ -166,7 +166,7 @@ const meta: Meta<typeof EventCalendar> = {
       },
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function Example() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -183,7 +183,7 @@ export default function Example() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       onEventAdd={handleEventAdd}
       onEventDelete={handleEventDelete}
@@ -209,38 +209,28 @@ export default function Example() {
       options: ["month", "week", "day", "agenda"],
       description: "View inicial do calendário",
     },
-    onEventAdd: { action: "onEventAdd" },
     onEventUpdate: { action: "onEventUpdate" },
-    onEventDelete: { action: "onEventDelete" },
   },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof EventCalendar>;
+type Story = StoryObj<typeof EventAgenda>;
 
 function Wrapper(
   props: { initialView?: CalendarView; mode?: "agenda-only" | "default" } = {}
 ) {
   const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
 
-  const handleEventAdd = (event: CalendarEvent) =>
-    setEvents((s) => [...s, event]);
-
   const handleEventUpdate = (updatedEvent: CalendarEvent) =>
     setEvents((s) =>
       s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
     );
 
-  const handleEventDelete = (eventId: string) =>
-    setEvents((s) => s.filter((ev) => ev.id !== eventId));
-
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       initialView={props.initialView || undefined}
-      onEventAdd={(e) => handleEventAdd(e)}
-      onEventDelete={(id) => handleEventDelete(id)}
       onEventUpdate={(ev) => handleEventUpdate(ev)}
     />
   );
@@ -251,7 +241,7 @@ export const Playground: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function Playground() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -268,7 +258,7 @@ export default function Playground() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       initialView="month"
       onEventAdd={handleEventAdd}
@@ -292,7 +282,7 @@ export const MonthViewExample: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function MonthViewExample() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -309,7 +299,7 @@ export default function MonthViewExample() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       onEventAdd={handleEventAdd}
       onEventDelete={handleEventDelete}
@@ -330,7 +320,7 @@ export const WeekViewExample: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function WeekViewExample() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -347,7 +337,7 @@ export default function WeekViewExample() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       initialView="week"
       onEventAdd={handleEventAdd}
@@ -369,7 +359,7 @@ export const DayViewExample: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function DayViewExample() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -386,7 +376,7 @@ export default function DayViewExample() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       initialView="day"
       onEventAdd={handleEventAdd}
@@ -408,7 +398,7 @@ export const AgendaViewExample: Story = {
     docs: {
       source: {
         code: `import React, { useState } from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function AgendaViewExample() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -425,7 +415,7 @@ export default function AgendaViewExample() {
     setEvents((s) => s.filter((ev) => ev.id !== eventId));
 
   return (
-    <EventCalendar
+    <EventAgenda
       events={events}
       initialView="agenda"
       onEventAdd={handleEventAdd}
@@ -447,7 +437,7 @@ export const ManyEvents: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 import { addDays, setHours, setMinutes } from 'date-fns';
 
 export default function ManyEvents() {
@@ -463,7 +453,7 @@ export default function ManyEvents() {
     } as CalendarEvent;
   });
 
-  return <EventCalendar events={many} initialView="week" />;
+  return <EventAgenda events={many} initialView="week" />;
 }
 `,
       },
@@ -481,7 +471,7 @@ export default function ManyEvents() {
       } as CalendarEvent;
     });
 
-    return <EventCalendar events={many} initialView="week" />;
+    return <EventAgenda events={many} initialView="week" />;
   },
   name: "Muitos eventos",
 };
@@ -491,18 +481,18 @@ export const AgendaOnly: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function AgendaOnly() {
   const events: CalendarEvent[] = /* ... */ [];
 
-  return <EventCalendar events={events} mode="agenda-only" initialView="agenda" />;
+  return <EventAgenda events={events} mode="agenda-only" initialView="agenda" />;
 }
 `,
       },
     },
   },
-  render: () => <Wrapper initialView="agenda" mode="agenda-only"  />,
+  render: () => <Wrapper initialView="agenda" />,
   name: "Agenda (somente visualização)",
 };
 
@@ -511,28 +501,24 @@ export const AgendaWithUndated: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import { EventCalendar, CalendarEvent } from '@mlw-packages/react-components';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function AgendaWithUndated() {
   const events: CalendarEvent[] = [
       {
       id: 'u1',
       title: 'Consulta sem data',
-      start: undefined as unknown as Date,
-      end: undefined as unknown as Date,
       description: 'Cliente sem agendamento definido',
       color: 'rose',
     },
     {
       id: 'u2',
       title: 'Retorno sem previsão',
-      start: '' as unknown as Date,
-      end: '' as unknown as Date,
       color: 'amber',
     },
   ];
 
-  return <EventCalendar events={events} mode="agenda-only" initialView="agenda" />;
+  return <EventAgenda events={events} mode="agenda-only" initialView="agenda" />;
 }
 `,
       },
@@ -540,27 +526,55 @@ export default function AgendaWithUndated() {
   },
   render: () => {
     const events: CalendarEvent[] = [
-      ...sampleEvents.slice(0, 4),
       {
         id: "u1",
-        title: "Acme Corp",
-        start: undefined as unknown as Date,
-        end: undefined as unknown as Date,
-        description: "Malwee - 9000",
-        color: "rose",
+        title: "Acme Corp - Malwee",
+        color: "green",
+        attend_date: new Date("2025-03-03T00:00:00.000Z"),
+      },
+      {
+        id: "u1b",
+        title: "Acme Corp - Malwee",
+        color: "amber",
+        attend_date: new Date("2025-03-03T10:30:00.000Z"),
+      },
+      {
+        id: "u1c",
+        title: "Acme Corp - Malwee",
+        color: "emerald",
+        attend_date: new Date("2025-03-03T14:00:00"),
       },
       {
         id: "u2",
+        title: "Acme Corp - Malwee",
+        color: "rose",
+        attend_date: new Date("2025-03-03T14:00:00"),
+      },
+      {
+        id: "u3",
+        title: "Acme Corp - Emfim",
+        color: "rose",
+      },
+      {
+        id: "u4",
+        title: "Acme Corp - Malwee Kids",
+        color: "rose",
+      },
+      {
+        id: "u5",
         title: "Retorno sem previsão",
-        start: "" as unknown as Date,
-        end: "" as unknown as Date,
+
         color: "amber",
       },
     ];
 
     return (
-      <EventCalendar events={events} initialView="agenda" />
-    );
+      <EventAgenda
+        events={events}
+        initialView="agenda"
+        initialDate={new Date("2025-03-03T00:00:00.000Z")}
+      />
+    )
   },
   name: "Agenda — Datas não previstas",
 };

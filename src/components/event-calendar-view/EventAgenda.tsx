@@ -19,18 +19,16 @@ import { toast } from "sonner";
 import {
   AgendaDaysToShow,
   AgendaView,
-  addHoursToDate,
   CalendarDndProvider,
   type CalendarEvent,
   type CalendarView,
   DayView,
-  EventDialog,
   EventGap,
   EventHeight,
   MonthView,
   WeekCellsHeight,
   WeekView,
-} from "@/components/event-calendar";
+} from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
 import {
   DropDownMenuBase,
@@ -40,32 +38,35 @@ import {
   DropDownMenuTriggerBase,
 } from "@/components/ui/navigation/DropDownMenuBase";
 import {
-  ArrowDownIcon,
-  CaretLeft,
-  CaretRight,
   CalendarIcon,
-  PlusIcon,
+  CaretDownIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+  Check,
 } from "@phosphor-icons/react";
 import { ButtonBase } from "../ui/form/ButtonBase";
 
 export interface EventCalendarProps {
   events?: CalendarEvent[];
-  onEventAdd?: (event: CalendarEvent) => void;
   onEventUpdate?: (event: CalendarEvent) => void;
-  onEventDelete?: (eventId: string) => void;
   className?: string;
   initialView?: CalendarView;
+  mode?: "agenda-only";
+  /** Optional initial date for the calendar (used by stories/tests) */
+  initialDate?: Date;
 }
 
-export function EventCalendar({
+export function EventAgenda({
   events = [],
-  onEventAdd,
   onEventUpdate,
-  onEventDelete,
   className,
   initialView = "month",
+  mode,
+  initialDate,
 }: EventCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(
+    (initialDate && new Date(initialDate)) || new Date()
+  );
   const [view, setView] = useState<CalendarView>(initialView);
   const [isFading, setIsFading] = useState(false);
 
@@ -73,6 +74,7 @@ export function EventCalendar({
 
   const changeView = useCallback(
     (next: CalendarView) => {
+      if (mode === "agenda-only") return;
       if (next === view) return;
       setIsFading(true);
       window.setTimeout(() => {
@@ -80,7 +82,7 @@ export function EventCalendar({
         requestAnimationFrame(() => setIsFading(false));
       }, FADE_DURATION);
     },
-    [view]
+    [view, mode]
   );
   const [isPaging, setIsPaging] = useState(false);
   const [pageDirection, setPageDirection] = useState<"left" | "right" | null>(
@@ -103,10 +105,6 @@ export function EventCalendar({
     []
   );
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
-    null
-  );
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -117,6 +115,8 @@ export function EventCalendar({
       ) {
         return;
       }
+
+      if (mode === "agenda-only") return; // disable keyboard shortcuts in agenda-only
 
       switch (e.key.toLowerCase()) {
         case "m":
@@ -140,7 +140,12 @@ export function EventCalendar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isEventDialogOpen, changeView]);
+  }, [isEventDialogOpen, changeView, mode]);
+
+  // If running in agenda-only mode, force agenda view on mount
+  useEffect(() => {
+    if (mode === "agenda-only") setView("agenda");
+  }, [mode]);
 
   const handlePrevious = () => {
     pageTransition(() => {
@@ -176,108 +181,16 @@ export function EventCalendar({
 
   const handleEventSelect = (event: CalendarEvent) => {
     console.log("Event selected:", event);
-    setSelectedEvent(event);
     setIsEventDialogOpen(true);
-  };
-
-  const handleEventCreate = (startTime: Date) => {
-    console.log("Creating new event at:", startTime);
-
-    const minutes = startTime.getMinutes();
-    const remainder = minutes % 15;
-    if (remainder !== 0) {
-      if (remainder < 7.5) {
-        startTime.setMinutes(minutes - remainder);
-      } else {
-        startTime.setMinutes(minutes + (15 - remainder));
-      }
-      startTime.setSeconds(0);
-      startTime.setMilliseconds(0);
-    }
-
-    const newEvent: CalendarEvent = {
-      allDay: false,
-      end: addHoursToDate(startTime, 1),
-      id: "",
-      start: startTime,
-      title: "",
-    };
-    setSelectedEvent(newEvent);
-    setIsEventDialogOpen(true);
-  };
-
-  const handleEventSave = (event: CalendarEvent) => {
-    if (event.id) {
-      onEventUpdate?.(event);
-      // Show toast notification when an event is updated
-      toast(`Evento "${event.title}" atualizado`, {
-        description: format(
-          new Date(event.start ?? event.attend_date ?? event.end ?? Date.now()),
-          "d 'de' MMMM 'de' yyyy",
-          {
-            locale: ptBR,
-          }
-        ),
-        position: "bottom-left",
-      });
-    } else {
-      onEventAdd?.({
-        ...event,
-        id: Math.random().toString(36).substring(2, 11),
-      });
-      // Show toast notification when an event is added
-      toast(`Evento "${event.title}" adicionado`, {
-        description: format(
-          new Date(event.start ?? event.attend_date ?? event.end ?? Date.now()),
-          "d 'de' MMMM 'de' yyyy",
-          { locale: ptBR }
-        ),
-        position: "bottom-left",
-      });
-    }
-    setIsEventDialogOpen(false);
-    setSelectedEvent(null);
-  };
-
-  const handleEventDelete = (eventId: string) => {
-    const deletedEvent = events.find((e) => e.id === eventId);
-    onEventDelete?.(eventId);
-    setIsEventDialogOpen(false);
-    setSelectedEvent(null);
-
-    // Show toast notification when an event is deleted
-    if (deletedEvent) {
-      toast(`Evento "${deletedEvent.title}" excluído`, {
-        description: format(
-          new Date(
-            deletedEvent.start ??
-              deletedEvent.attend_date ??
-              deletedEvent.end ??
-              Date.now()
-          ),
-          "d 'de' MMMM 'de' yyyy",
-          { locale: ptBR }
-        ),
-        position: "bottom-left",
-      });
-    }
   };
 
   const handleEventUpdate = (updatedEvent: CalendarEvent) => {
     onEventUpdate?.(updatedEvent);
 
-    // Show toast notification when an event is updated via drag and drop
+    const startDate = updatedEvent.start ?? new Date();
+
     toast(`Evento "${updatedEvent.title}" movido`, {
-      description: format(
-        new Date(
-          updatedEvent.start ??
-            updatedEvent.attend_date ??
-            updatedEvent.end ??
-            Date.now()
-        ),
-        "d 'de' MMMM 'de' yyyy",
-        { locale: ptBR }
-      ),
+      description: format(startDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }),
       position: "bottom-left",
     });
   };
@@ -302,15 +215,11 @@ export function EventCalendar({
     }
 
     if (view === "day") {
-      // build string parts so month name can be capitalized
       const dayNum = format(currentDate, "d", { locale: ptBR });
       const month = capitalize(format(currentDate, "MMMM", { locale: ptBR }));
       const year = format(currentDate, "yyyy", { locale: ptBR });
 
       const short = `${dayNum} de ${month} de ${year}`;
-      const long = `${format(currentDate, "EEE", {
-        locale: ptBR,
-      })}, ${dayNum} de ${month} de ${year}`;
 
       return (
         <>
@@ -320,7 +229,6 @@ export function EventCalendar({
           <span aria-hidden="true" className="max-[479px]:hidden min-md:hidden">
             {short}
           </span>
-          <span className="max-md:hidden">{long}</span>
         </>
       );
     }
@@ -332,8 +240,8 @@ export function EventCalendar({
       if (isSameMonth(start, end)) {
         return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
       }
-      const s1 = capitalize(format(start, "MMM", { locale: ptBR }));
-      const s2 = capitalize(format(end, "MMM yyyy", { locale: ptBR }));
+      const s1 = capitalize(format(start, "MMMM", { locale: ptBR }));
+      const s2 = capitalize(format(end, "MMMM yyyy", { locale: ptBR }));
       return `${s1} - ${s2}`;
     }
 
@@ -369,7 +277,7 @@ export function EventCalendar({
               size="icon"
               variant="ghost"
             >
-              <CaretLeft aria-hidden="true" size={16} />
+              <CaretLeftIcon aria-hidden="true" size={16} />
             </ButtonBase>
             <ButtonBase
               aria-label="Próximo"
@@ -377,34 +285,21 @@ export function EventCalendar({
               size="icon"
               variant="ghost"
             >
-              <CaretRight aria-hidden="true" size={16} />
+              <CaretRightIcon aria-hidden="true" size={16} />
             </ButtonBase>
           </div>
-          <h2 className="font-semibold text-sm sm:text-lg md:text-xl">
-            {viewTitle}
-          </h2>
+          <h2 className="font-semibold text-xl">{viewTitle}</h2>
         </div>
         <div className="flex items-center gap-2">
           <>
             <DropDownMenuBase>
               <DropDownMenuTriggerBase asChild>
                 <ButtonBase
-                  className="gap-1.5 max-[479px]:h-8"
+                  className="gap-2 px-3 py-1.5 max-[479px]:h-8"
                   variant="outline"
                 >
-                  <span>
-                    <span aria-hidden="true" className="min-[480px]:hidden">
-                      {(() => {
-                        const labels: Record<string, string> = {
-                          month: "Mês",
-                          week: "Semana",
-                          day: "Dia",
-                          agenda: "Agenda",
-                        };
-                        return (labels[view] || view).charAt(0).toUpperCase();
-                      })()}
-                    </span>
-                    <span className="max-[479px]:sr-only">
+                  <span className="flex items-center gap-2">
+                    <span className="hidden min-[480px]:inline-block">
                       {(() => {
                         const labels: Record<string, string> = {
                           month: "Mês",
@@ -415,44 +310,103 @@ export function EventCalendar({
                         return labels[view] || view;
                       })()}
                     </span>
+                    <span className="min-[480px]:hidden">
+                      {(() => {
+                        const labels: Record<string, string> = {
+                          month: "M",
+                          week: "S",
+                          day: "D",
+                          agenda: "A",
+                        };
+                        return labels[view] || view;
+                      })()}
+                    </span>
                   </span>
-                  <ArrowDownIcon
+                  <CaretDownIcon
                     aria-hidden="true"
                     className="-me-1 opacity-60"
                     size={16}
                   />
                 </ButtonBase>
               </DropDownMenuTriggerBase>
-              <DropDownMenuContentBase align="end" className="min-w-32">
-                <DropDownMenuItemBase onClick={() => changeView("month")}>
-                  Mês <DropDownMenuShortcutBase>M</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("week")}>
-                  Semana <DropDownMenuShortcutBase>S</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("day")}>
-                  Dia <DropDownMenuShortcutBase>D</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-                <DropDownMenuItemBase onClick={() => changeView("agenda")}>
-                  Agenda <DropDownMenuShortcutBase>A</DropDownMenuShortcutBase>
-                </DropDownMenuItemBase>
-              </DropDownMenuContentBase>
+
+              {mode === "agenda-only" ? null : (
+                <DropDownMenuContentBase
+                  align="end"
+                  className="min-w-32 rounded-md p-1"
+                >
+                  <DropDownMenuItemBase
+                    onClick={() => changeView("month")}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2 rounded",
+                      view === "month"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span> Mês </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {view === "month" ? (
+                        <Check aria-hidden className="opacity-80" size={14} />
+                      ) : (
+                        <DropDownMenuShortcutBase>M</DropDownMenuShortcutBase>
+                      )}
+                    </div>
+                  </DropDownMenuItemBase>
+
+                  <DropDownMenuItemBase
+                    onClick={() => changeView("week")}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2 rounded",
+                      view === "week"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">Semana</div>
+                    <div className="flex items-center gap-2">
+                      {view === "week" ? (
+                        <Check aria-hidden className="opacity-80" size={14} />
+                      ) : (
+                        <DropDownMenuShortcutBase>S</DropDownMenuShortcutBase>
+                      )}
+                    </div>
+                  </DropDownMenuItemBase>
+
+                  <DropDownMenuItemBase
+                    onClick={() => changeView("day")}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2 rounded",
+                      view === "day"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">Dia</div>
+                    <div className="flex items-center gap-2">
+                      {view === "day" ? (
+                        <Check aria-hidden className="opacity-80" size={14} />
+                      ) : (
+                        <DropDownMenuShortcutBase>D</DropDownMenuShortcutBase>
+                      )}
+                    </div>
+                  </DropDownMenuItemBase>
+
+                  <DropDownMenuItemBase
+                    onClick={() => changeView("agenda")}
+                    className={cn(
+                      "flex items-center justify-between gap-2 px-3 py-2 rounded",
+                      view === "agenda"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">Agenda</div>
+                    <div className="flex items-center gap-2">
+                      {view === "agenda" ? (
+                        <Check aria-hidden className="opacity-80" size={14} />
+                      ) : (
+                        <DropDownMenuShortcutBase>A</DropDownMenuShortcutBase>
+                      )}
+                    </div>
+                  </DropDownMenuItemBase>
+                </DropDownMenuContentBase>
+              )}
             </DropDownMenuBase>
-            <ButtonBase
-              className="max-[479px]:aspect-square max-[479px]:p-0!"
-              onClick={() => {
-                setSelectedEvent(null);
-                setIsEventDialogOpen(true);
-              }}
-              size="sm"
-            >
-              <PlusIcon
-                aria-hidden="true"
-                className="sm:-ms-1 opacity-60"
-                size={16}
-              />
-              <span className="max-sm:sr-only">Novo evento</span>
-            </ButtonBase>
           </>
         </div>
       </div>
@@ -474,7 +428,6 @@ export function EventCalendar({
           <MonthView
             currentDate={currentDate}
             events={events}
-            onEventCreate={handleEventCreate}
             onEventSelect={handleEventSelect}
           />
         )}
@@ -482,7 +435,6 @@ export function EventCalendar({
           <WeekView
             currentDate={currentDate}
             events={events}
-            onEventCreate={handleEventCreate}
             onEventSelect={handleEventSelect}
           />
         )}
@@ -490,7 +442,6 @@ export function EventCalendar({
           <DayView
             currentDate={currentDate}
             events={events}
-            onEventCreate={handleEventCreate}
             onEventSelect={handleEventSelect}
           />
         )}
@@ -502,23 +453,12 @@ export function EventCalendar({
           />
         )}
       </div>
-
-      <EventDialog
-        event={selectedEvent}
-        isOpen={isEventDialogOpen}
-        onClose={() => {
-          setIsEventDialogOpen(false);
-          setSelectedEvent(null);
-        }}
-        onDelete={handleEventDelete}
-        onSave={handleEventSave}
-      />
     </>
   );
 
   return (
     <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 p-6"
+      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 px-6"
       style={
         {
           "--event-gap": `${EventGap}px`,
