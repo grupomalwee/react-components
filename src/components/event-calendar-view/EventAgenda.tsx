@@ -17,17 +17,17 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
 
 import {
-  AgendaDaysToShow,
-  AgendaView,
-  CalendarDndProvider,
+  AgendaDaysToShowAgenda,
+  Agenda,
+  CalendarDndProviderAgenda,
   type CalendarEventAgenda,
-  type CalendarView,
-  DayView,
-  EventGap,
-  EventHeight,
-  MonthView,
-  WeekCellsHeight,
-  WeekView,
+  type CalendarViewAgenda,
+  DayViewAgenda,
+  EventGapAgenda,
+  EventHeightAgenda,
+  MonthViewAgenda,
+  WeekCellsHeightAgenda,
+  WeekViewAgenda,
 } from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
 import {
@@ -50,7 +50,7 @@ export interface EventCalendarProps {
   events?: CalendarEventAgenda[];
   onEventUpdate?: (event: CalendarEventAgenda) => void;
   className?: string;
-  initialView?: CalendarView;
+  initialView?: CalendarViewAgenda;
   mode?: "agenda-only";
   /** Optional initial date for the calendar (used by stories/tests) */
   initialDate?: Date;
@@ -67,13 +67,13 @@ export function EventAgenda({
   const [currentDate, setCurrentDate] = useState(
     (initialDate && new Date(initialDate)) || new Date()
   );
-  const [view, setView] = useState<CalendarView>(initialView);
+  const [view, setView] = useState<CalendarViewAgenda>(initialView);
   const [isFading, setIsFading] = useState(false);
 
   const FADE_DURATION = 220;
 
   const changeView = useCallback(
-    (next: CalendarView) => {
+    (next: CalendarViewAgenda) => {
       if (mode === "agenda-only") return;
       if (next === view) return;
       setIsFading(true);
@@ -156,7 +156,7 @@ export function EventAgenda({
       } else if (view === "day") {
         setCurrentDate(addDays(currentDate, -1));
       } else if (view === "agenda") {
-        setCurrentDate(addDays(currentDate, -AgendaDaysToShow));
+        setCurrentDate(addDays(currentDate, -AgendaDaysToShowAgenda));
       }
     }, "right");
   };
@@ -170,7 +170,7 @@ export function EventAgenda({
       } else if (view === "day") {
         setCurrentDate(addDays(currentDate, 1));
       } else if (view === "agenda") {
-        setCurrentDate(addDays(currentDate, AgendaDaysToShow));
+        setCurrentDate(addDays(currentDate, AgendaDaysToShowAgenda));
       }
     }, "left");
   };
@@ -235,7 +235,7 @@ export function EventAgenda({
 
     if (view === "agenda") {
       const start = currentDate;
-      const end = addDays(currentDate, AgendaDaysToShow - 1);
+      const end = addDays(currentDate, AgendaDaysToShowAgenda - 1);
 
       if (isSameMonth(start, end)) {
         return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
@@ -425,28 +425,28 @@ export function EventAgenda({
         aria-live="polite"
       >
         {view === "month" && (
-          <MonthView
+          <MonthViewAgenda
             currentDate={currentDate}
             events={events}
             onEventSelect={handleEventSelect}
           />
         )}
         {view === "week" && (
-          <WeekView
+          <WeekViewAgenda
             currentDate={currentDate}
             events={events}
             onEventSelect={handleEventSelect}
           />
         )}
         {view === "day" && (
-          <DayView
+          <DayViewAgenda
             currentDate={currentDate}
             events={events}
             onEventSelect={handleEventSelect}
           />
         )}
         {view === "agenda" && (
-          <AgendaView
+          <Agenda
             currentDate={currentDate}
             events={events}
             onEventSelect={handleEventSelect}
@@ -461,15 +461,15 @@ export function EventAgenda({
       className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 px-6"
       style={
         {
-          "--event-gap": `${EventGap}px`,
-          "--event-height": `${EventHeight}px`,
-          "--week-cells-height": `${WeekCellsHeight}px`,
+          "--event-gap": `${EventGapAgenda}px`,
+          "--event-height": `${EventHeightAgenda}px`,
+          "--week-cells-height": `${WeekCellsHeightAgenda}px`,
         } as React.CSSProperties
       }
     >
-      <CalendarDndProvider onEventUpdate={handleEventUpdate}>
+      <CalendarDndProviderAgenda onEventUpdate={handleEventUpdate}>
         {calendarContent}
-      </CalendarDndProvider>
+      </CalendarDndProviderAgenda>
     </div>
   );
 }

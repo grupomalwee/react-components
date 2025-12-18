@@ -2,7 +2,7 @@
 
 import { useDroppable } from "@dnd-kit/core";
 
-import { useCalendarDnd } from '@/components/event-calendar-view';
+import { useCalendarDndAgenda } from '@/components/event-calendar-view';
 import { cn } from '@/lib/utils';
 
 interface DroppableCellProps {
@@ -14,7 +14,7 @@ interface DroppableCellProps {
   onClick?: () => void;
 }
 
-export function DroppableCell({
+export function DroppableCellAgenda({
   id,
   date,
   time,
@@ -22,7 +22,7 @@ export function DroppableCell({
   className,
   onClick,
 }: DroppableCellProps) {
-  const { activeEvent } = useCalendarDnd();
+  const { activeEvent } = useCalendarDndAgenda();
 
   const { setNodeRef, isOver } = useDroppable({
     data: {

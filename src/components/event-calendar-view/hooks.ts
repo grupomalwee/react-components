@@ -33,4 +33,4 @@ export const CalendarDndContext = createContext<CalendarDndContextType>({
 });
 
 // Hook to use the context
-export const useCalendarDnd = () => useContext(CalendarDndContext);
+export const useCalendarDndAgenda = () => useContext(CalendarDndContext);

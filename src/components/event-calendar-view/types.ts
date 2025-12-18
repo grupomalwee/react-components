@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export type CalendarView = "month" | "week" | "day" | "agenda";
+export type CalendarViewAgenda = "month" | "week" | "day" | "agenda";
 
 export interface CalendarEventAgenda {
   id: string;
@@ -10,11 +10,11 @@ export interface CalendarEventAgenda {
   end?: Date | null;
   attend_date?: Date | null;
   allDay?: boolean;
-  color?: EventColor;
+  color?: EventColorAgenda;
   location?: string;
 }
 
-export type EventColor =
+export type EventColorAgenda =
   | "sky"
   | "amber"
   | "violet"

@@ -7,9 +7,9 @@ import { useMemo } from "react";
 
 import {
   type CalendarEventAgenda,
-  getBorderRadiusClasses,
-  getEventColorClasses,
-  addHoursToDate,
+  getBorderRadiusClassesAgenda,
+  getEventColorClassesAgenda,
+  addHoursToDateAgenda,
   normalizeAttendDate,
 } from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
@@ -77,7 +77,7 @@ function EventWrapper({
     // Fallback to attend_date + 1 hour when only attend_date exists
     if (isValidDate(event.attend_date)) {
       const start = normalizeAttendDate(event.attend_date as Date);
-      return start ? addHoursToDate(start, 1) : undefined;
+      return start ? addHoursToDateAgenda(start, 1) : undefined;
     }
     return undefined;
   })();
@@ -85,7 +85,7 @@ function EventWrapper({
   const isEventInPast = displayEnd ? isPast(displayEnd) : false;
 
   const colorClasses = hasValidTimeForWrapper
-    ? getEventColorClasses(event.color)
+    ? getEventColorClassesAgenda(event.color)
     : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none";
 
   return (
@@ -93,7 +93,7 @@ function EventWrapper({
       className={cn(
         "flex w-full select-none overflow-hidden px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md ",
         colorClasses,
-        getBorderRadiusClasses(isFirstDay, isLastDay),
+        getBorderRadiusClassesAgenda(isFirstDay, isLastDay),
         className
       )}
       data-dragging={isDragging || undefined}
@@ -129,7 +129,7 @@ interface EventItemProps {
   onTouchStart?: (e: React.TouchEvent) => void;
 }
 
-export function EventItem({
+export function EventItemAgenda({
   event,
   view,
   onClick,
@@ -152,7 +152,7 @@ export function EventItem({
     isValidDate(event.attend_date);
 
   const colorClasses = hasValidTime
-    ? getEventColorClasses(eventColor)
+    ? getEventColorClassesAgenda(eventColor)
     : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none";
 
   const displayStart = useMemo(() => {
@@ -178,7 +178,7 @@ export function EventItem({
     // fallback to attend_date + 1 hour
     if (isValidDate(event.attend_date)) {
       const start = normalizeAttendDate(event.attend_date as Date);
-      return start ? addHoursToDate(start, 1) : undefined;
+      return start ? addHoursToDateAgenda(start, 1) : undefined;
     }
     return undefined;
   }, [currentTime, event.start, event.end, event.attend_date, hasValidTime]);
@@ -305,7 +305,7 @@ export function EventItem({
       <button
         className={cn(
           "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring",
-          getEventColorClasses(eventColor),
+          getEventColorClassesAgenda(eventColor),
           className
         )}
         aria-label={ariaLabel}

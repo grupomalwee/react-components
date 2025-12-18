@@ -4,9 +4,9 @@ import { endOfWeek, isSameDay, isWithinInterval, startOfWeek } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
 
-import { EndHour, StartHour } from "@/components/event-calendar-view/constants";
+import { EndHourAgenda, StartHourAgenda } from "@/components/event-calendar-view/constants";
 
-export function useCurrentTimeIndicator(
+export function useCurrentTimeIndicatorAgenda(
   currentDate: Date,
   view: "day" | "week"
 ) {
@@ -18,9 +18,9 @@ export function useCurrentTimeIndicator(
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const totalMinutes = (hours - StartHour) * 60 + minutes;
+      const totalMinutes = (hours - StartHourAgenda) * 60 + minutes;
       const dayStartMinutes = 0; // 12am
-      const dayEndMinutes = (EndHour - StartHour) * 60; 
+      const dayEndMinutes = (EndHourAgenda - StartHourAgenda) * 60; 
 
       const position =
         ((totalMinutes - dayStartMinutes) / (dayEndMinutes - dayStartMinutes)) *

@@ -7,8 +7,8 @@ import { useRef, useState } from "react";
 
 import {
   type CalendarEventAgenda,
-  EventItem,
-  useCalendarDnd,
+  EventItemAgenda,
+  useCalendarDndAgenda,
 } from '@/components/event-calendar-view';
 
 interface DraggableEventProps {
@@ -36,7 +36,7 @@ export function DraggableEvent({
   isLastDay = true,
   "aria-hidden": ariaHidden,
 }: DraggableEventProps) {
-  const { activeId } = useCalendarDnd();
+  const { activeId } = useCalendarDndAgenda();
   const elementRef = useRef<HTMLDivElement>(null);
   const [dragHandlePosition, setDragHandlePosition] = useState<{
     x: number;
@@ -122,7 +122,7 @@ export function DraggableEvent({
       }}
       style={style}
     >
-      <EventItem
+      <EventItemAgenda
         aria-hidden={ariaHidden}
         dndAttributes={attributes}
         dndListeners={listeners}

@@ -16,7 +16,7 @@ import {
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { type ReactNode, useId, useRef, useState } from "react";
 
-import { type CalendarEventAgenda, EventItem } from "@/components/event-calendar-view";
+import { type CalendarEventAgenda, EventItemAgenda } from "@/components/event-calendar-view";
 import { CalendarDndContext } from "./hooks";
 
 // Props for the provider
@@ -25,7 +25,7 @@ interface CalendarDndProviderProps {
   onEventUpdate: (event: CalendarEventAgenda) => void;
 }
 
-export function CalendarDndProvider({
+export function CalendarDndProviderAgenda({
   children,
   onEventUpdate,
 }: CalendarDndProviderProps) {
@@ -318,7 +318,7 @@ export function CalendarDndProvider({
                   isMultiDay && multiDayWidth ? `${multiDayWidth}%` : "100%",
               }}
             >
-              <EventItem
+              <EventItemAgenda
                 currentTime={currentTime || undefined}
                 event={activeEvent}
                 isDragging={true}

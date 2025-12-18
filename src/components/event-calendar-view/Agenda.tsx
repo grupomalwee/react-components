@@ -5,10 +5,10 @@ import { ptBR } from "date-fns/locale";
 import { useMemo } from "react";
 
 import {
-  AgendaDaysToShow,
+  AgendaDaysToShowAgenda,
   type CalendarEventAgenda,
-  EventItem,
-  getAgendaEventsForDay,
+  EventItemAgenda,
+  getAgendaEventsForDayAgenda,
   UndatedEvents,
 } from "@/components/event-calendar-view";
 import { CalendarIcon } from "@phosphor-icons/react";
@@ -21,7 +21,7 @@ interface AgendaViewProps {
   showUndatedEvents?: boolean;
 }
 
-export function AgendaView({
+export function Agenda({
   currentDate,
   events,
   onEventSelect,
@@ -58,7 +58,7 @@ export function AgendaView({
 
   const days = useMemo(() => {
     console.log("Agenda view updating with date:", currentDate.toISOString());
-    return Array.from({ length: AgendaDaysToShow }, (_, i) =>
+    return Array.from({ length: AgendaDaysToShowAgenda }, (_, i) =>
       addDays(new Date(currentDate), i)
     );
   }, [currentDate]);
@@ -70,7 +70,7 @@ export function AgendaView({
   };
 
   const hasEvents = days.some(
-    (day) => getAgendaEventsForDay(datedEvents, day).length > 0
+    (day) => getAgendaEventsForDayAgenda(datedEvents, day).length > 0
   );
 
   return (
@@ -86,7 +86,7 @@ export function AgendaView({
       ) : (
         <>
           {days.map((day) => {
-            const dayEvents = getAgendaEventsForDay(datedEvents, day);
+            const dayEvents = getAgendaEventsForDayAgenda(datedEvents, day);
 
             if (dayEvents.length === 0) return null;
 
@@ -109,7 +109,7 @@ export function AgendaView({
                 </span>
                 <div className="mt-6 space-y-2">
                   {dayEvents.map((event) => (
-                    <EventItem
+                    <EventItemAgenda
                     
                       event={event}
                       key={event.id}

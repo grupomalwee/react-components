@@ -17,7 +17,7 @@ interface EventVisibilityResult {
  * Hook for calculating event visibility based on container height
  * Uses ResizeObserver for efficient updates
  */
-export function useEventVisibility({
+export function useEventVisibilityAgenda({
   eventHeight,
   eventGap,
 }: EventVisibilityOptions): EventVisibilityResult {

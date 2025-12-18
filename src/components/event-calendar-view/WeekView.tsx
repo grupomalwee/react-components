@@ -23,11 +23,11 @@ import { useMemo } from "react";
 
 import {
   type CalendarEventAgenda,
-  DroppableCell,
-  EventItem,
-  isMultiDayEvent,
-  useCurrentTimeIndicator,
-  WeekCellsHeight,
+  DroppableCellAgenda,
+  EventItemAgenda,
+  isMultiDayEventAgenda,
+  useCurrentTimeIndicatorAgenda,
+  WeekCellsHeightAgenda,
 } from "@/components/event-calendar-view";
 import { EndHour, StartHour } from "@/components/event-calendar/constants";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ interface PositionedEvent {
   zIndex: number;
 }
 
-export function WeekView({
+export function WeekViewAgenda({
   currentDate,
   events,
   onEventSelect,
@@ -78,7 +78,7 @@ export function WeekView({
   const allDayEvents = useMemo(() => {
     return events
       .filter((event) => {
-        return event.allDay || isMultiDayEvent(event);
+        return event.allDay || isMultiDayEventAgenda(event);
       })
       .filter((event) => {
         const eventStart = event.start
@@ -101,7 +101,7 @@ export function WeekView({
     const result = days.map((day) => {
 
       const dayEventsWithIntervals = events
-        .filter((event) => !event.allDay && !isMultiDayEvent(event))
+        .filter((event) => !event.allDay && !isMultiDayEventAgenda(event))
         .map((event) => {
           let eventStart: Date | undefined =
             event.start != null ? new Date(event.start as Date) : undefined;
@@ -180,8 +180,8 @@ export function WeekView({
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
 
         // Adjust the top calculation to account for the new start time
-        const top = (startHour - StartHour) * WeekCellsHeight;
-        const height = (endHour - startHour) * WeekCellsHeight;
+        const top = (startHour - StartHour) * WeekCellsHeightAgenda;
+        const height = (endHour - startHour) * WeekCellsHeightAgenda;
 
         // Find a column for this event
         let columnIndex = 0;
@@ -239,7 +239,7 @@ export function WeekView({
   };
 
   const showAllDaySection = allDayEvents.length > 0;
-  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(
+  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicatorAgenda(
     currentDate,
     "week"
   );
@@ -314,7 +314,7 @@ export function WeekView({
                     const shouldShowTitle = isFirstDay || isFirstVisibleDay;
 
                     return (
-                      <EventItem
+                      <EventItemAgenda
                         event={event}
                         isFirstDay={isFirstDay}
                         isLastDay={isLastDay}
@@ -331,7 +331,7 @@ export function WeekView({
                         >
                           {event.title}
                         </div>
-                      </EventItem>
+                      </EventItemAgenda>
                     );
                   })}
                 </div>
@@ -409,7 +409,7 @@ export function WeekView({
                   {[0, 1, 2, 3].map((quarter) => {
                     const quarterHourTime = hourValue + quarter * 0.25;
                     return (
-                      <DroppableCell
+                      <DroppableCellAgenda
                         className={cn(
                           "absolute h-[calc(var(--week-cells-height)/4)] w-full",
                           quarter === 0 && "top-0",

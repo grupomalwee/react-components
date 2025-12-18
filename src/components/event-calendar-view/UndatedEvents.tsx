@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import type { CalendarEventAgenda } from "./types";
-import { EventItem } from "./EventItem";
+import { EventItemAgenda } from "./EventItemAgenda";
 
 interface UndatedEventsProps {
   events: CalendarEventAgenda[];
@@ -48,7 +48,7 @@ export function UndatedEvents({
         </span>
         <div className="mt-6 space-y-2">
           {undatedEvents.map((event) => (
-            <EventItem
+            <EventItemAgenda
               event={event}
               key={event.id}
               onClick={onEventSelect ? () => onEventSelect(event) : undefined}

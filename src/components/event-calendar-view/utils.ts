@@ -1,12 +1,12 @@
 import { isSameDay } from "date-fns";
 import { addHours } from "date-fns";
 
-import type { CalendarEventAgenda, EventColor } from "@/components/event-calendar-view/types";
+import type { CalendarEventAgenda, EventColorAgenda } from "@/components/event-calendar-view/types";
 
 /**
  * Get CSS classes for event colors
  */
-export function getEventColorClasses(color?: EventColor | string): string {
+export function getEventColorClassesAgenda(color?: EventColorAgenda | string): string {
   const eventColor = color || "sky";
 
   switch (eventColor) {
@@ -30,7 +30,7 @@ export function getEventColorClasses(color?: EventColor | string): string {
 /**
  * Get CSS classes for border radius based on event position in multi-day events
  */
-export function getBorderRadiusClasses(
+export function getBorderRadiusClassesAgenda(
   isFirstDay: boolean,
   isLastDay: boolean
 ): string {
@@ -49,7 +49,7 @@ export function getBorderRadiusClasses(
 /**
  * Check if an event is a multi-day event
  */
-export function isMultiDayEvent(event: CalendarEventAgenda): boolean {
+export function isMultiDayEventAgenda(event: CalendarEventAgenda): boolean {
   const eventStart = isValidDate(event.start)
     ? new Date(event.start as Date)
     : undefined;
@@ -63,7 +63,7 @@ export function isMultiDayEvent(event: CalendarEventAgenda): boolean {
 /**
  * Filter events for a specific day
  */
-export function getEventsForDay(
+export function getEventsForDayAgenda(
   events: CalendarEventAgenda[],
   day: Date
 ): CalendarEventAgenda[] {
@@ -79,10 +79,10 @@ export function getEventsForDay(
     .sort((a, b) => getEventStartTimestamp(a) - getEventStartTimestamp(b));
 }
 
-export function sortEvents(events: CalendarEventAgenda[]): CalendarEventAgenda[] {
+export function sortEventsAgenda(events: CalendarEventAgenda[]): CalendarEventAgenda[] {
   return [...events].sort((a, b) => {
-    const aIsMultiDay = isMultiDayEvent(a);
-    const bIsMultiDay = isMultiDayEvent(b);
+    const aIsMultiDay = isMultiDayEventAgenda(a);
+    const bIsMultiDay = isMultiDayEventAgenda(b);
 
     if (aIsMultiDay && !bIsMultiDay) return -1;
     if (!aIsMultiDay && bIsMultiDay) return 1;
@@ -91,12 +91,12 @@ export function sortEvents(events: CalendarEventAgenda[]): CalendarEventAgenda[]
   });
 }
 
-export function getSpanningEventsForDay(
+export function getSpanningEventsForDayAgenda(
   events: CalendarEventAgenda[],
   day: Date
 ): CalendarEventAgenda[] {
   return events.filter((event) => {
-    if (!isMultiDayEvent(event)) return false;
+    if (!isMultiDayEventAgenda(event)) return false;
     const eventStart = isValidDate(event.start)
       ? new Date(event.start as Date)
       : undefined;
@@ -116,7 +116,7 @@ export function getSpanningEventsForDay(
 /**
  * Get all events visible on a specific day (starting, ending, or spanning)
  */
-export function getAllEventsForDay(
+export function getAllEventsForDayAgenda(
   events: CalendarEventAgenda[],
   day: Date
 ): CalendarEventAgenda[] {
@@ -139,7 +139,7 @@ export function getAllEventsForDay(
 /**
  * Get all events for a day (for agenda view)
  */
-export function getAgendaEventsForDay(
+export function getAgendaEventsForDayAgenda(
   events: CalendarEventAgenda[],
   day: Date
 ): CalendarEventAgenda[] {
@@ -212,7 +212,7 @@ export function normalizeAttendDate(d?: unknown): Date | undefined {
 /**
  * Add hours to a date
  */
-export function addHoursToDate(date: Date, hours: number): Date {
+export function addHoursToDateAgenda(date: Date, hours: number): Date {
   const result = new Date(date);
   result.setHours(result.getHours() + hours);
   return result;

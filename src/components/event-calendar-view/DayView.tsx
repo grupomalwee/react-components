@@ -16,16 +16,16 @@ import type React from "react";
 import { useMemo } from "react";
 
 import {
-  EndHour,
-  StartHour,
-  WeekCellsHeight,
+  EndHourAgenda,
+  StartHourAgenda,
+  WeekCellsHeightAgenda,
 } from "@/components/event-calendar-view/constants";
 import { cn } from "@/lib/utils";
 import { CalendarEventAgenda } from "./types";
-import { isMultiDayEvent } from "./utils";
-import { useCurrentTimeIndicator } from "./hooks/use-current-time-indicator";
-import { EventItem } from "./EventItem";
-import { DroppableCell } from "./DroppableCell";
+import { isMultiDayEventAgenda } from "./utils";
+import { useCurrentTimeIndicatorAgenda } from "./hooks/use-current-time-indicator";
+import { EventItemAgenda } from "./EventItemAgenda";
+import { DroppableCellAgenda } from "./DroppableCell";
 import { UndatedEvents } from "@/components/event-calendar-view";
 
 interface DayViewProps {
@@ -44,7 +44,7 @@ interface PositionedEvent {
   zIndex: number;
 }
 
-export function DayView({
+export function DayViewAgenda({
   currentDate,
   events,
   onEventSelect,
@@ -53,8 +53,8 @@ export function DayView({
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
     return eachHourOfInterval({
-      end: addHours(dayStart, EndHour - 1),
-      start: addHours(dayStart, StartHour),
+      end: addHours(dayStart, EndHourAgenda - 1),
+      start: addHours(dayStart, StartHourAgenda),
     });
   }, [currentDate]);
 
@@ -113,13 +113,13 @@ export function DayView({
 
   const allDayEvents = useMemo(() => {
     return dayEvents.filter((event) => {
-      return event.allDay || isMultiDayEvent(event);
+      return event.allDay || isMultiDayEventAgenda(event);
     });
   }, [dayEvents]);
 
   const timeEvents = useMemo(() => {
     return dayEvents.filter((event) => {
-      return !event.allDay && !isMultiDayEvent(event);
+      return !event.allDay && !isMultiDayEventAgenda(event);
     });
   }, [dayEvents]);
 
@@ -186,8 +186,8 @@ export function DayView({
         getHours(adjustedStart) + getMinutes(adjustedStart) / 60;
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
 
-      const top = (startHour - StartHour) * WeekCellsHeight;
-      const height = (endHour - startHour) * WeekCellsHeight;
+      const top = (startHour - StartHourAgenda) * WeekCellsHeightAgenda;
+      const height = (endHour - startHour) * WeekCellsHeightAgenda;
 
       // Find a column for this event
       let columnIndex = 0;
@@ -242,7 +242,7 @@ export function DayView({
   };
 
   const showAllDaySection = allDayEvents.length > 0;
-  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(
+  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicatorAgenda(
     currentDate,
     "day"
   );
@@ -269,7 +269,7 @@ export function DayView({
                 const isLastDay = isSameDay(currentDate, eventEnd);
 
                 return (
-                  <EventItem
+                  <EventItemAgenda
                     event={event}
                     isFirstDay={isFirstDay}
                     isLastDay={isLastDay}
@@ -279,7 +279,7 @@ export function DayView({
                   >
                     {/* Always show the title in day view for better usability */}
                     <div>{event.title}</div>
-                  </EventItem>
+                  </EventItemAgenda>
                 );
               })}
             </div>
@@ -327,7 +327,7 @@ export function DayView({
                   zIndex: positionedEvent.zIndex,
                 }}
               >
-                <EventItem
+                <EventItemAgenda
                   event={evt}
                   view="day"
                   isFirstDay={isFirstDay}
@@ -364,7 +364,7 @@ export function DayView({
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25;
                   return (
-                    <DroppableCell
+                    <DroppableCellAgenda
                       className={cn(
                         "absolute h-[calc(var(--week-cells-height)/4)] w-full",
                         quarter === 0 && "top-0",

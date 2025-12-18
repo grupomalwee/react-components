@@ -7,7 +7,7 @@ import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import {
   CalendarEventAgenda,
-  CalendarView,
+  CalendarViewAgenda,
   EventAgenda,
 } from "@/components/event-calendar-view";
 
@@ -218,7 +218,7 @@ export default meta;
 type Story = StoryObj<typeof EventAgenda>;
 
 function Wrapper(
-  props: { initialView?: CalendarView; mode?: "agenda-only" | "default" } = {}
+  props: { initialView?: CalendarViewAgenda; mode?: "agenda-only" | "default" } = {}
 ) {
   const [events, setEvents] = useState<CalendarEventAgenda[]>(sampleEvents);
 

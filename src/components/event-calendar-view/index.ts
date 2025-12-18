@@ -1,17 +1,17 @@
 "use client";
 
-export { AgendaView } from "./AgendaView";
-export { CalendarDndProvider } from "./CalendarDND";
-export { useCalendarDnd } from "./hooks";
+export { Agenda } from "./Agenda";
+export { CalendarDndProviderAgenda } from "./CalendarDND";
+export { useCalendarDndAgenda } from "./hooks";
 export * from "./constants";
-export { DayView } from "./DayView";
-export { DroppableCell } from "./DroppableCell";
+export { DayViewAgenda } from "./DayView";
+export { DroppableCellAgenda } from "./DroppableCell";
 export { EventAgenda } from "./EventAgenda";
-export { EventItem } from "./EventItem";
+export { EventItemAgenda } from "./EventItemAgenda";
 export { UndatedEvents } from "./UndatedEvents";
 export * from "./hooks/use-current-time-indicator";
 export * from "./hooks/use-event-visibility";
-export { MonthView } from "./MonthView";
-export type { CalendarEventAgenda, CalendarView, EventColor } from "./types";
+export { MonthViewAgenda } from "./MonthView";
+export type { CalendarEventAgenda, CalendarViewAgenda, EventColorAgenda } from "./types";
 export * from "./utils";
-export { WeekView } from "./WeekView";
+export { WeekViewAgenda } from "./WeekView";
