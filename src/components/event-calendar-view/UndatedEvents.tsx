@@ -29,12 +29,7 @@ export function UndatedEvents({
   show = true,
 }: UndatedEventsProps) {
   const undatedEvents = useMemo(
-    () =>
-      events.filter(
-        (e) =>
-          !(isValidDate(e.start) && isValidDate(e.end)) &&
-          !isValidDate(e.attend_date)
-      ),
+    () => events.filter((e) => !(isValidDate(e.start) || isValidDate(e.end))),
     [events]
   );
 
@@ -43,7 +38,7 @@ export function UndatedEvents({
   return (
     <div className={className}>
       <div className="relative border-border/70 border-t">
-        <span className="-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase sm:pe-4 text-lg">
+        <span className="-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase sm:pe-4 text-md sm:text-lg">
           {title}
         </span>
         <div className="mt-6 space-y-2">

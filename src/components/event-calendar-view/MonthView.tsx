@@ -166,13 +166,11 @@ export function MonthViewAgenda({
                       {sortEventsAgenda(allDayEvents).map((event, index) => {
                         const eventStart = new Date(
                           event.start ??
-                            event.attend_date ??
                             event.end ??
                             Date.now()
                         );
                         const eventEnd = new Date(
                           event.end ??
-                            event.attend_date ??
                             event.start ??
                             Date.now()
                         );

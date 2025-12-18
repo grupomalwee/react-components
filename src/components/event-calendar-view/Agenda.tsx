@@ -37,22 +37,12 @@ export function Agenda({
   };
 
   const datedEvents = useMemo(
-    () =>
-      events.filter(
-        (e) =>
-          (isValidDate(e.start) && isValidDate(e.end)) ||
-          isValidDate(e.attend_date)
-      ),
+    () => events.filter((e) => isValidDate(e.start) || isValidDate(e.end)),
     [events]
   );
 
   const undatedEvents = useMemo(
-    () =>
-      events.filter(
-        (e) =>
-          !(isValidDate(e.start) && isValidDate(e.end)) &&
-          !isValidDate(e.attend_date)
-      ),
+    () => events.filter((e) => !(isValidDate(e.start) || isValidDate(e.end))),
     [events]
   );
 
@@ -63,7 +53,10 @@ export function Agenda({
     );
   }, [currentDate]);
 
-  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
+  const handleEventClick = (
+    event: CalendarEventAgenda,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
     console.log("Agenda view event clicked:", event);
     if (onEventSelect) onEventSelect(event);
@@ -92,11 +85,17 @@ export function Agenda({
 
             return (
               <div
-                className={twMerge("relative my-12 border-border/70 border-t", isToday(day) ? "border-blue-200" : "")}
+                className={twMerge(
+                  "relative my-12 border-border/70 border-t",
+                  isToday(day) ? "border-blue-200" : ""
+                )}
                 key={day.toString()}
               >
                 <span
-                  className={twMerge("-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase data-today:font-extrabold sm:pe-4 text-lg font-bold", isToday(day) ? "text-blue-500" : "")}
+                  className={twMerge(
+                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase data-today:font-extrabold sm:pe-4 text-lg font-bold",
+                    isToday(day) ? "text-blue-500" : ""
+                  )}
                   data-today={isToday(day) || undefined}
                 >
                   {(() => {
@@ -110,7 +109,6 @@ export function Agenda({
                 <div className="mt-6 space-y-2">
                   {dayEvents.map((event) => (
                     <EventItemAgenda
-                    
                       event={event}
                       key={event.id}
                       onClick={

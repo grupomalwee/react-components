@@ -9,8 +9,6 @@ import {
   type CalendarEventAgenda,
   getBorderRadiusClassesAgenda,
   getEventColorClassesAgenda,
-  addHoursToDateAgenda,
-  normalizeAttendDate,
 } from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
 import { ClockUserIcon } from "@phosphor-icons/react";
@@ -60,11 +58,9 @@ function EventWrapper({
   ariaLabel,
 }: EventWrapperProps) {
   const hasValidTimeForWrapper =
-    (isValidDate(event.start) && isValidDate(event.end)) ||
-    isValidDate(event.attend_date);
+    isValidDate(event.start) || isValidDate(event.end);
 
   const displayEnd = (() => {
-    // Prefer start/end when available
     if (isValidDate(event.start) && isValidDate(event.end)) {
       return currentTime
         ? new Date(
@@ -74,10 +70,15 @@ function EventWrapper({
           )
         : new Date(event.end as Date);
     }
-    // Fallback to attend_date + 1 hour when only attend_date exists
-    if (isValidDate(event.attend_date)) {
-      const start = normalizeAttendDate(event.attend_date as Date);
-      return start ? addHoursToDateAgenda(start, 1) : undefined;
+    // if only start exists, use start as end (zero-duration)
+    if (isValidDate(event.start) && !isValidDate(event.end)) {
+      return currentTime
+        ? new Date(currentTime)
+        : new Date(event.start as Date);
+    }
+    // if only end exists, use end as displayEnd
+    if (!isValidDate(event.start) && isValidDate(event.end)) {
+      return currentTime ? new Date(currentTime) : new Date(event.end as Date);
     }
     return undefined;
   })();
@@ -91,7 +92,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "flex w-full select-none overflow-hidden px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md ",
+        "flex w-full select-none overflow-hidden px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md border",
         colorClasses,
         getBorderRadiusClassesAgenda(isFirstDay, isLastDay),
         className
@@ -147,9 +148,7 @@ export function EventItemAgenda({
 }: EventItemProps) {
   const eventColor = event.color;
   // Use the provided currentTime (for dragging) or the event's actual time
-  const hasValidTime =
-    (isValidDate(event.start) && isValidDate(event.end)) ||
-    isValidDate(event.attend_date);
+  const hasValidTime = isValidDate(event.start) || isValidDate(event.end);
 
   const colorClasses = hasValidTime
     ? getEventColorClassesAgenda(eventColor)
@@ -159,10 +158,10 @@ export function EventItemAgenda({
     if (!hasValidTime) return undefined;
     if (isValidDate(event.start))
       return currentTime || new Date(event.start as Date);
-    if (isValidDate(event.attend_date))
-      return currentTime || normalizeAttendDate(event.attend_date as Date);
+    if (isValidDate(event.end))
+      return currentTime || new Date(event.end as Date);
     return undefined;
-  }, [currentTime, event.start, event.attend_date, hasValidTime]);
+  }, [currentTime, event.start, event.end, hasValidTime]);
 
   const displayEnd = useMemo(() => {
     if (!hasValidTime) return undefined;
@@ -170,18 +169,20 @@ export function EventItemAgenda({
       return currentTime
         ? new Date(
             new Date(currentTime).getTime() +
-              (new Date(event.end as Date).getTime() -
-                new Date(event.start as Date).getTime())
+              (isValidDate(event.start)
+                ? new Date(event.end as Date).getTime() -
+                  new Date(event.start as Date).getTime()
+                : 0)
           )
         : new Date(event.end as Date);
     }
-    // fallback to attend_date + 1 hour
-    if (isValidDate(event.attend_date)) {
-      const start = normalizeAttendDate(event.attend_date as Date);
-      return start ? addHoursToDateAgenda(start, 1) : undefined;
+    if (isValidDate(event.start)) {
+      return currentTime
+        ? new Date(currentTime)
+        : new Date(event.start as Date);
     }
     return undefined;
-  }, [currentTime, event.start, event.end, event.attend_date, hasValidTime]);
+  }, [currentTime, event.start, event.end, hasValidTime]);
 
   // Calculate event duration in minutes
   const durationMinutes = useMemo(() => {
@@ -203,8 +204,6 @@ export function EventItemAgenda({
       displayStart as Date
     )} - ${formatTimeWithOptionalMinutes(displayEnd as Date)}`;
   };
-
-  // Compute an accessible label for the event button
   let ariaLabel: string;
   if (!hasValidTime) {
     ariaLabel = event.title;
@@ -224,7 +223,7 @@ export function EventItemAgenda({
     return (
       <EventWrapper
         className={cn(
-          "mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs",
+          "mt-[var(--event-gap)] h-[var(--event-height)] items-center sm:text-xs",
           className
         )}
         currentTime={currentTime}
@@ -239,7 +238,7 @@ export function EventItemAgenda({
         {children || (
           <span className="flex items-center gap-2 truncate">
             {!event.allDay && hasValidTime && displayStart && (
-              <span className="truncate font-normal opacity-80 sm:text-[11px] bg-white/10 px-2 py-0.5 rounded-full text-[11px]">
+              <span className="truncate text-2xl opacity-80 bg-white/10 px-2 rounded-full">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
             )}
@@ -278,8 +277,9 @@ export function EventItemAgenda({
           <div className="flex items-center justify-between w-full">
             <div className={cn("truncate text-lg")}>{event.title}</div>
             {showTime && hasValidTime && displayStart && (
-              <span className="ml-2 inline-block bg-white/10 px-2 py-0.5 rounded-full text-[11px] opacity-90">
-                {formatTimeWithOptionalMinutes(displayStart as Date)}
+              <span className="ml-2 flex items-center gap-3 bg-white/10  py-0.5 rounded-full opacity-90 text-lg ">
+                {formatTimeWithOptionalMinutes(displayStart as Date)}               
+                <ClockUserIcon />
               </span>
             )}
           </div>
@@ -289,7 +289,7 @@ export function EventItemAgenda({
               {event.title}
             </div>
             {showTime && hasValidTime && (
-              <div className="truncate font-normal opacity-70 sm:text-[15px]">
+              <div className="truncate font-normal opacity-70">
                 <span className="inline-block bg-white/5 px-0.5 py-0.5 rounded-full">
                   {getEventTime()}
                 </span>
@@ -373,10 +373,8 @@ export function EventItemAgenda({
           {event.allDay ? (
             <span>Dia todo</span>
           ) : (
-            <span className="uppercase font-semibold flex items-center gap-2">
+            <span className="uppercase font-semibold flex items-center gap-2 ">
               {formatTimeWithOptionalMinutes(displayStart as Date)}
-              <span className="opacity-70">-</span>
-              {formatTimeWithOptionalMinutes(displayEnd as Date)}
               <ClockUserIcon />
             </span>
           )}

@@ -9,7 +9,7 @@ import {
   type CalendarEventAgenda,
   EventItemAgenda,
   useCalendarDndAgenda,
-} from '@/components/event-calendar-view';
+} from "@/components/event-calendar-view";
 
 interface DraggableEventProps {
   event: CalendarEventAgenda;
@@ -22,6 +22,7 @@ interface DraggableEventProps {
   isFirstDay?: boolean;
   isLastDay?: boolean;
   "aria-hidden"?: boolean | "true" | "false";
+  draggable?: boolean;
 }
 
 export function DraggableEvent({
@@ -35,6 +36,7 @@ export function DraggableEvent({
   isFirstDay = true,
   isLastDay = true,
   "aria-hidden": ariaHidden,
+  draggable = true,
 }: DraggableEventProps) {
   const { activeId } = useCalendarDndAgenda();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,8 @@ export function DraggableEvent({
         multiDayWidth: multiDayWidth,
         view,
       },
+      // allow callers to disable dragging
+      disabled: !draggable,
       id: `${event.id}-${view}`,
     });
 

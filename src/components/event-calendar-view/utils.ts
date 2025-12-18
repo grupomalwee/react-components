@@ -1,5 +1,4 @@
 import { isSameDay } from "date-fns";
-import { addHours } from "date-fns";
 
 import type { CalendarEventAgenda, EventColorAgenda } from "@/components/event-calendar-view/types";
 
@@ -71,8 +70,6 @@ export function getEventsForDayAgenda(
     .filter((event) => {
       const eventStart = isValidDate(event.start)
         ? new Date(event.start as Date)
-        : isValidDate(event.attend_date)
-        ? normalizeAttendDate(event.attend_date as Date)
         : undefined;
       return eventStart ? isSameDay(day, eventStart) : false;
     })
@@ -148,18 +145,12 @@ export function getAgendaEventsForDayAgenda(
       // prefer explicit start/end, fallback to attend_date
       const eventStart = isValidDate(event.start)
         ? new Date(event.start as Date)
-        : isValidDate(event.attend_date)
-        ? normalizeAttendDate(event.attend_date as Date)
         : undefined;
 
       const eventEnd = isValidDate(event.end)
         ? new Date(event.end as Date)
-        : isValidDate(event.attend_date)
-        ? (() => {
-            const dt = normalizeAttendDate(event.attend_date as Date);
-            return dt ? addHours(dt, 1) : undefined;
-          })()
         : undefined;
+
 
       if (!eventStart) return false;
 
@@ -183,8 +174,6 @@ function isValidDate(d: unknown) {
 
 function getEventStartTimestamp(e: CalendarEventAgenda) {
   if (isValidDate(e.start)) return new Date(e.start as Date).getTime();
-  if (isValidDate(e.attend_date))
-    return normalizeAttendDate(e.attend_date as Date)!.getTime();
   return Number.MAX_SAFE_INTEGER;
 }
 

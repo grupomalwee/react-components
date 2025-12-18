@@ -218,7 +218,10 @@ export default meta;
 type Story = StoryObj<typeof EventAgenda>;
 
 function Wrapper(
-  props: { initialView?: CalendarViewAgenda; mode?: "agenda-only" | "default" } = {}
+  props: {
+    initialView?: CalendarViewAgenda;
+    mode?: "agenda-only" | "default";
+  } = {}
 ) {
   const [events, setEvents] = useState<CalendarEventAgenda[]>(sampleEvents);
 
@@ -528,43 +531,42 @@ export default function AgendaWithUndated() {
       {
         id: "u1",
         title: "Acme Corp - Malwee",
-        attend_date: new Date("2025-03-03T00:00:00.000Z"),
-      },
-      {
-        id: "u1b",
-        title: "Acme Corp - Malwee",
-        color: "amber",
-        attend_date: new Date("2025-03-03T10:30:00.000Z"),
-      },
-      {
-        id: "u1c",
-        title: "Acme Corp - Malwee",
-        color: "emerald",
-        attend_date: new Date("2025-03-03T14:00:00"),
+        start: new Date("2025-03-02T09:00:00.000Z"),
+        color: "rose",
       },
       {
         id: "u2",
         title: "Acme Corp - Malwee",
-        color: "rose",
-        attend_date: new Date("2025-03-03T14:00:00"),
+        start: new Date("2025-03-02T14:00:00.000Z"),
+        color: "amber",
+        duration: 120,
       },
       {
         id: "u3",
-        title: "Acme Corp - Emfim",
-        color: "rose",
+        title: "Acme Corp - Malwee",
+        color: "emerald",
       },
       {
         id: "u4",
-        title: "Acme Corp - Malwee Kids",
+        title: "Acme Corp - Malwee",
         color: "rose",
       },
       {
         id: "u5",
+        title: "Acme Corp - Emfim",
+        color: "rose",
+      },
+      {
+        id: "u6",
+        title: "Acme Corp - Malwee Kids",
+        color: "rose",
+      },
+      {
+        id: "u7",
         title: "Retorno sem previsão",
-
         color: "amber",
       },
-    ];
+    ]; 
 
     return (
       <EventAgenda

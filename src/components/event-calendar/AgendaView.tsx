@@ -34,14 +34,16 @@ export function AgendaView({
     }
   };
 
-  // Split events into dated and undated (invalid start/end)
+  // Split events into dated and undated
+  // Consider an event dated if it has at least one valid time (start OR end)
   const datedEvents = useMemo(
-    () => events.filter((e) => isValidDate(e.start) && isValidDate(e.end)),
+    () => events.filter((e) => isValidDate(e.start) || isValidDate(e.end)),
     [events]
   );
 
+  // Consider undated only when neither start nor end is a valid date
   const undatedEvents = useMemo(
-    () => events.filter((e) => !(isValidDate(e.start) && isValidDate(e.end))),
+    () => events.filter((e) => !(isValidDate(e.start) || isValidDate(e.end))),
     [events]
   );
 

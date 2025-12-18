@@ -8,10 +8,10 @@ export interface CalendarEventAgenda {
   description?: ReactNode;
   start?: Date | null;
   end?: Date | null;
-  attend_date?: Date | null;
   allDay?: boolean;
   color?: EventColorAgenda;
   location?: string;
+  duration?: number; 
 }
 
 export type EventColorAgenda =

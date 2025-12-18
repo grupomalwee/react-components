@@ -10,7 +10,6 @@ import {
   getMinutes,
   isSameDay,
   startOfDay,
-  endOfDay,
 } from "date-fns";
 import type React from "react";
 import { useMemo } from "react";
@@ -59,56 +58,21 @@ export function DayViewAgenda({
   }, [currentDate]);
 
   const dayEvents = useMemo(() => {
-    const dayStart = startOfDay(currentDate);
-    const dayEnd = endOfDay(currentDate);
-
     return events
-      .map((event) => {
-        let eventStart: Date | undefined =
-          event.start != null ? new Date(event.start as Date) : undefined;
-        let eventEnd: Date | undefined =
-          event.end != null ? new Date(event.end as Date) : undefined;
-
-        if ((!eventStart || !eventEnd) && event.attend_date) {
-          try {
-            const ad = new Date(event.attend_date as Date);
-            const hasTime =
-              ad.getHours() !== 0 ||
-              ad.getMinutes() !== 0 ||
-              ad.getSeconds() !== 0 ||
-              ad.getMilliseconds() !== 0;
-            if (hasTime) {
-              if (!eventStart) eventStart = ad;
-              if (!eventEnd) eventEnd = addHours(ad, 1);
-            }
-          } catch {
-            // ignore invalid attend_date
-          }
-        }
-
-        return { event, eventStart, eventEnd } as const;
+      .filter((event) => {
+        const eventStart = new Date(event.start ?? event.end ?? Date.now());
+        const eventEnd = new Date(event.end ?? event.start ?? Date.now());
+        return (
+          isSameDay(currentDate, eventStart) ||
+          isSameDay(currentDate, eventEnd) ||
+          (currentDate > eventStart && currentDate < eventEnd)
+        );
       })
-      .filter(({ eventStart, eventEnd }) => !!eventStart && !!eventEnd)
-      .filter(({ eventStart, eventEnd }) =>
-        areIntervalsOverlapping(
-          { start: eventStart as Date, end: eventEnd as Date },
-          { start: dayStart, end: dayEnd }
-        )
-      )
-      .map(({ event }) => event)
-      .sort((a, b) => {
-        const aStart = a.start
-          ? new Date(a.start as Date).getTime()
-          : a.attend_date
-          ? new Date(a.attend_date as Date).getTime()
-          : 0;
-        const bStart = b.start
-          ? new Date(b.start as Date).getTime()
-          : b.attend_date
-          ? new Date(b.attend_date as Date).getTime()
-          : 0;
-        return aStart - bStart;
-      });
+      .sort(
+        (a, b) =>
+          new Date(a.start ?? a.end ?? Date.now()).getTime() -
+          new Date(b.start ?? b.end ?? Date.now()).getTime()
+      );
   }, [currentDate, events]);
 
   const allDayEvents = useMemo(() => {
@@ -130,10 +94,10 @@ export function DayViewAgenda({
 
     // Sort events by start time and duration
     const sortedEvents = [...timeEvents].sort((a, b) => {
-      const aStart = new Date(a.start as Date);
-      const bStart = new Date(b.start as Date);
-      const aEnd = new Date(a.end as Date);
-      const bEnd = new Date(b.end as Date);
+      const aStart = new Date(a.start ?? a.end ?? Date.now());
+      const bStart = new Date(b.start ?? b.end ?? Date.now());
+      const aEnd = new Date(a.end ?? a.start ?? Date.now());
+      const bEnd = new Date(b.end ?? b.start ?? Date.now());
 
       // First sort by start time
       if (aStart < bStart) return -1;
@@ -146,34 +110,13 @@ export function DayViewAgenda({
     });
 
     // Track columns for overlapping events
-    const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] = [];
+    const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] =
+      [];
 
     for (const event of sortedEvents) {
-      let eventStart: Date | undefined =
-        event.start != null ? new Date(event.start as Date) : undefined;
-      let eventEnd: Date | undefined =
-        event.end != null ? new Date(event.end as Date) : undefined;
+      const eventStart = new Date(event.start ?? event.end ?? Date.now());
+      const eventEnd = new Date(event.end ?? event.start ?? Date.now());
 
-      if ((!eventStart || !eventEnd) && event.attend_date) {
-        try {
-          const ad = new Date(event.attend_date as Date);
-          const hasTime =
-            ad.getHours() !== 0 ||
-            ad.getMinutes() !== 0 ||
-            ad.getSeconds() !== 0 ||
-            ad.getMilliseconds() !== 0;
-          if (hasTime) {
-            if (!eventStart) eventStart = ad;
-            if (!eventEnd) eventEnd = addHours(ad, 1);
-          }
-        } catch {
-          // ignore invalid attend_date
-        }
-      }
-
-      if (!eventStart || !eventEnd) continue;
-
-      // Adjust start and end times if they're outside this day
       const adjustedStart = isSameDay(currentDate, eventStart)
         ? eventStart
         : dayStart;
@@ -202,7 +145,10 @@ export function DayViewAgenda({
           const overlaps = col.some((c) =>
             areIntervalsOverlapping(
               { end: adjustedEnd, start: adjustedStart },
-              { end: c.end, start: c.start }
+              {
+                end: new Date(c.event.end ?? c.event.start ?? Date.now()),
+                start: new Date(c.event.start ?? c.event.end ?? Date.now()),
+              }
             )
           );
 
@@ -217,7 +163,11 @@ export function DayViewAgenda({
       // Ensure column is initialized before pushing
       const currentColumn = columns[columnIndex] || [];
       columns[columnIndex] = currentColumn;
-      currentColumn.push({ start: adjustedStart, end: adjustedEnd, event });
+      currentColumn.push({
+        end: adjustedEnd,
+        event,
+        start: adjustedStart,
+      });
 
       // First column takes full width, others are indented by 10% and take 90% width
       const width = columnIndex === 0 ? 1 : 0.9;
@@ -236,16 +186,17 @@ export function DayViewAgenda({
     return result;
   }, [currentDate, timeEvents]);
 
-  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
+  const handleEventClick = (
+    event: CalendarEventAgenda,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
     onEventSelect(event);
   };
 
   const showAllDaySection = allDayEvents.length > 0;
-  const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicatorAgenda(
-    currentDate,
-    "day"
-  );
+  const { currentTimePosition, currentTimeVisible } =
+    useCurrentTimeIndicatorAgenda(currentDate, "day");
 
   return (
     <div className="contents" data-slot="day-view">
@@ -260,10 +211,10 @@ export function DayViewAgenda({
             <div className="relative border-border/70 border-r p-1 last:border-r-0">
               {allDayEvents.map((event) => {
                 const eventStart = new Date(
-                  event.start ?? event.attend_date ?? event.end ?? Date.now()
+                  event.start ?? event.end ?? Date.now()
                 );
                 const eventEnd = new Date(
-                  event.end ?? event.attend_date ?? event.start ?? Date.now()
+                  event.end ?? event.start ?? Date.now()
                 );
                 const isFirstDay = isSameDay(currentDate, eventStart);
                 const isLastDay = isSameDay(currentDate, eventEnd);
@@ -306,12 +257,8 @@ export function DayViewAgenda({
         <div className="relative">
           {positionedEvents.map((positionedEvent) => {
             const evt = positionedEvent.event;
-            const eventStart = new Date(
-              evt.start ?? evt.attend_date ?? evt.end ?? Date.now()
-            );
-            const eventEnd = new Date(
-              evt.end ?? evt.attend_date ?? evt.start ?? Date.now()
-            );
+            const eventStart = new Date(evt.start ?? evt.end ?? Date.now());
+            const eventEnd = new Date(evt.end ?? evt.start ?? Date.now());
             const isFirstDay = isSameDay(currentDate, eventStart);
             const isLastDay = isSameDay(currentDate, eventEnd);
 
