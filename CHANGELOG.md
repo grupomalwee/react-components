@@ -33,6 +33,14 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.20 — 2025-12-18
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- EventAgenda: arrumar uso de types e props.
+---
 ## 1.7.19 — 2025-12-18
 
 **Author:** Gabriel Glatz
