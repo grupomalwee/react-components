@@ -21,7 +21,7 @@ import {
   WeekCellsHeight,
 } from "@/components/event-calendar-view/constants";
 import { cn } from "@/lib/utils";
-import { CalendarEvent } from "./types";
+import { CalendarEventAgenda } from "./types";
 import { isMultiDayEvent } from "./utils";
 import { useCurrentTimeIndicator } from "./hooks/use-current-time-indicator";
 import { EventItem } from "./EventItem";
@@ -30,13 +30,13 @@ import { UndatedEvents } from "@/components/event-calendar-view";
 
 interface DayViewProps {
   currentDate: Date;
-  events: CalendarEvent[];
-  onEventSelect: (event: CalendarEvent) => void;
+  events: CalendarEventAgenda[];
+  onEventSelect: (event: CalendarEventAgenda) => void;
   showUndatedEvents?: boolean;
 }
 
 interface PositionedEvent {
-  event: CalendarEvent;
+  event: CalendarEventAgenda;
   top: number;
   height: number;
   left: number;
@@ -146,7 +146,7 @@ export function DayView({
     });
 
     // Track columns for overlapping events
-    const columns: { event: CalendarEvent; start: Date; end: Date }[][] = [];
+    const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] = [];
 
     for (const event of sortedEvents) {
       let eventStart: Date | undefined =
@@ -236,7 +236,7 @@ export function DayView({
     return result;
   }, [currentDate, timeEvents]);
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
+  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
     e.stopPropagation();
     onEventSelect(event);
   };

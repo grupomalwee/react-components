@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import type { CalendarEvent } from "./types";
+import type { CalendarEventAgenda } from "./types";
 import { EventItem } from "./EventItem";
 
 interface UndatedEventsProps {
-  events: CalendarEvent[];
-  onEventSelect?: (event: CalendarEvent) => void;
+  events: CalendarEventAgenda[];
+  onEventSelect?: (event: CalendarEventAgenda) => void;
   className?: string;
   title?: string;
   show?: boolean;

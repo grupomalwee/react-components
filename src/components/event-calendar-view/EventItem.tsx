@@ -6,7 +6,7 @@ import { differenceInMinutes, format, isPast } from "date-fns";
 import { useMemo } from "react";
 
 import {
-  type CalendarEvent,
+  type CalendarEventAgenda,
   getBorderRadiusClasses,
   getEventColorClasses,
   addHoursToDate,
@@ -29,7 +29,7 @@ const isValidDate = (d: unknown) => {
 };
 
 interface EventWrapperProps {
-  event: CalendarEvent;
+  event: CalendarEventAgenda;
   isFirstDay?: boolean;
   isLastDay?: boolean;
   isDragging?: boolean;
@@ -112,7 +112,7 @@ function EventWrapper({
 }
 
 interface EventItemProps {
-  event: CalendarEvent;
+  event: CalendarEventAgenda;
   view: "month" | "week" | "day" | "agenda";
   agendaOnly?: boolean;
   isDragging?: boolean;

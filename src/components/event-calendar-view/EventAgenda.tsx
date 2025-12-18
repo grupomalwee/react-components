@@ -20,7 +20,7 @@ import {
   AgendaDaysToShow,
   AgendaView,
   CalendarDndProvider,
-  type CalendarEvent,
+  type CalendarEventAgenda,
   type CalendarView,
   DayView,
   EventGap,
@@ -47,8 +47,8 @@ import {
 import { ButtonBase } from "../ui/form/ButtonBase";
 
 export interface EventCalendarProps {
-  events?: CalendarEvent[];
-  onEventUpdate?: (event: CalendarEvent) => void;
+  events?: CalendarEventAgenda[];
+  onEventUpdate?: (event: CalendarEventAgenda) => void;
   className?: string;
   initialView?: CalendarView;
   mode?: "agenda-only";
@@ -179,12 +179,12 @@ export function EventAgenda({
     setCurrentDate(new Date());
   };
 
-  const handleEventSelect = (event: CalendarEvent) => {
+  const handleEventSelect = (event: CalendarEventAgenda) => {
     console.log("Event selected:", event);
     setIsEventDialogOpen(true);
   };
 
-  const handleEventUpdate = (updatedEvent: CalendarEvent) => {
+  const handleEventUpdate = (updatedEvent: CalendarEventAgenda) => {
     onEventUpdate?.(updatedEvent);
 
     const startDate = updatedEvent.start ?? new Date();

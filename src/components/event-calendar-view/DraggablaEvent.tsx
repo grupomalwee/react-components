@@ -6,13 +6,13 @@ import { differenceInDays } from "date-fns";
 import { useRef, useState } from "react";
 
 import {
-  type CalendarEvent,
+  type CalendarEventAgenda,
   EventItem,
   useCalendarDnd,
-} from '@/components/event-calendar';
+} from '@/components/event-calendar-view';
 
 interface DraggableEventProps {
-  event: CalendarEvent;
+  event: CalendarEventAgenda;
   view: "month" | "week" | "day";
   showTime?: boolean;
   onClick?: (e: React.MouseEvent) => void;
@@ -44,8 +44,8 @@ export function DraggableEvent({
   } | null>(null);
 
   // Check if this is a multi-day event
-  const eventStart = new Date(event.start);
-  const eventEnd = new Date(event.end);
+  const eventStart = new Date(event.start ?? Date.now());
+  const eventEnd = new Date(event.end ?? Date.now());
   const isMultiDayEvent =
     isMultiDay || event.allDay || differenceInDays(eventEnd, eventStart) >= 1;
 

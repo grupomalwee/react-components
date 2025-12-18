@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
 import type { UniqueIdentifier } from "@dnd-kit/core";
-import type { CalendarEvent } from "@/components/event-calendar-view";
+import type { CalendarEventAgenda } from "@/components/event-calendar-view";
 
 // Define the context type
 export type CalendarDndContextType = {
-  activeEvent: CalendarEvent | null;
+  activeEvent: CalendarEventAgenda | null;
   activeId: UniqueIdentifier | null;
   activeView: "month" | "week" | "day" | null;
   currentTime: Date | null;

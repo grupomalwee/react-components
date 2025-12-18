@@ -12,6 +12,6 @@ export { UndatedEvents } from "./UndatedEvents";
 export * from "./hooks/use-current-time-indicator";
 export * from "./hooks/use-event-visibility";
 export { MonthView } from "./MonthView";
-export type { CalendarEvent, CalendarView, EventColor } from "./types";
+export type { CalendarEventAgenda, CalendarView, EventColor } from "./types";
 export * from "./utils";
 export { WeekView } from "./WeekView";

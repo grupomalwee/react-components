@@ -11,6 +11,13 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.18",
+    author: "Gabriel Glatz",
+    date: "2025-12-18",
+    shortTitle: "Event Agenda",
+    added: ["EventaAgenda: adicionado novo componente."],
+  },
+  {
     version: "1.7.17",
     author: "Gabriel Glatz",
     date: "2025-12-17",
@@ -19,27 +26,21 @@ export const changelogData: ChangeItem[] = [
       "MultiSelect: adicionado novo componente.",
       "Banner: adicionado novo componente.",
     ],
-    fixed: [
-      "Chart: corrigido erros de Rotulos X e title position.",
-    ],
+    fixed: ["Chart: corrigido erros de Rotulos X e title position."],
   },
   {
     version: "1.7.16",
     author: "Gabriel Glatz",
     date: "2025-12-16",
     shortTitle: "Chart",
-    fixed: [
-      "Chart: corrigido erro de yAxis e erros de Build.",
-    ],
+    fixed: ["Chart: corrigido erro de yAxis e erros de Build."],
   },
   {
     version: "1.7.15",
     author: "Gabriel Glatz",
     date: "2025-12-16",
     shortTitle: "Chart",
-    fixed: [
-      "Chart: corrigido erro de yAxis.",
-    ],
+    fixed: ["Chart: corrigido erro de yAxis."],
   },
   {
     version: "1.7.14",

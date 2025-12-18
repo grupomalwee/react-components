@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import {
-  CalendarEvent,
+  CalendarEventAgenda,
   CalendarView,
   EventAgenda,
 } from "@/components/event-calendar-view";
 
-const sampleEvents: CalendarEvent[] = [
+const sampleEvents: CalendarEventAgenda[] = [
   {
     allDay: true,
     color: "sky",
@@ -220,9 +220,9 @@ type Story = StoryObj<typeof EventAgenda>;
 function Wrapper(
   props: { initialView?: CalendarView; mode?: "agenda-only" | "default" } = {}
 ) {
-  const [events, setEvents] = useState<CalendarEvent[]>(sampleEvents);
+  const [events, setEvents] = useState<CalendarEventAgenda[]>(sampleEvents);
 
-  const handleEventUpdate = (updatedEvent: CalendarEvent) =>
+  const handleEventUpdate = (updatedEvent: CalendarEventAgenda) =>
     setEvents((s) =>
       s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
     );
@@ -468,7 +468,7 @@ export default function ManyEvents() {
         start: setMinutes(setHours(start, 9 + (i % 8)), 0),
         end: setMinutes(setHours(start, 10 + (i % 8)), 0),
         color: ["sky", "amber", "emerald", "violet", "rose", "orange"][i % 6],
-      } as CalendarEvent;
+      } as CalendarEventAgenda;
     });
 
     return <EventAgenda events={many} initialView="week" />;
@@ -485,7 +485,6 @@ import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
 
 export default function AgendaOnly() {
   const events: CalendarEvent[] = /* ... */ [];
-
   return <EventAgenda events={events} mode="agenda-only" initialView="agenda" />;
 }
 `,
@@ -525,11 +524,10 @@ export default function AgendaWithUndated() {
     },
   },
   render: () => {
-    const events: CalendarEvent[] = [
+    const events: CalendarEventAgenda[] = [
       {
         id: "u1",
         title: "Acme Corp - Malwee",
-        color: "green",
         attend_date: new Date("2025-03-03T00:00:00.000Z"),
       },
       {
@@ -574,7 +572,7 @@ export default function AgendaWithUndated() {
         initialView="agenda"
         initialDate={new Date("2025-03-03T00:00:00.000Z")}
       />
-    )
+    );
   },
   name: "Agenda — Datas não previstas",
 };

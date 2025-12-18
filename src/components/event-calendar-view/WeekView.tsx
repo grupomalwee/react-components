@@ -22,26 +22,26 @@ import type React from "react";
 import { useMemo } from "react";
 
 import {
-  type CalendarEvent,
-  DraggableEvent,
+  type CalendarEventAgenda,
   DroppableCell,
   EventItem,
   isMultiDayEvent,
   useCurrentTimeIndicator,
   WeekCellsHeight,
-} from "@/components/event-calendar";
+} from "@/components/event-calendar-view";
 import { EndHour, StartHour } from "@/components/event-calendar/constants";
 import { cn } from "@/lib/utils";
+import { DraggableEvent } from "./DraggablaEvent";
 
 interface WeekViewProps {
   currentDate: Date;
-  events: CalendarEvent[];
-  onEventSelect: (event: CalendarEvent) => void;
+  events: CalendarEventAgenda[];
+  onEventSelect: (event: CalendarEventAgenda) => void;
   onEventCreate?: (startTime: Date) => void;
 }
 
 interface PositionedEvent {
-  event: CalendarEvent;
+  event: CalendarEventAgenda;
   top: number;
   height: number;
   left: number;
@@ -81,14 +81,19 @@ export function WeekView({
         return event.allDay || isMultiDayEvent(event);
       })
       .filter((event) => {
-        const eventStart = new Date(event.start);
-        const eventEnd = new Date(event.end);
-        return days.some(
-          (day) =>
-            isSameDay(day, eventStart) ||
-            isSameDay(day, eventEnd) ||
-            (day > eventStart && day < eventEnd)
-        );
+        const eventStart = event.start
+          ? new Date(event.start as Date | string | number)
+          : undefined;
+        const eventEnd = event.end
+          ? new Date(event.end as Date | string | number)
+          : undefined;
+
+        return days.some((day) => {
+          if (eventStart && isSameDay(day, eventStart)) return true;
+          if (eventEnd && isSameDay(day, eventEnd)) return true;
+          if (eventStart && eventEnd && day > eventStart && day < eventEnd) return true;
+          return false;
+        });
       });
   }, [events, days]);
 
@@ -154,7 +159,7 @@ export function WeekView({
       const dayStart = startOfDay(day);
 
       // Track columns for overlapping events
-      const columns: { event: CalendarEvent; start: Date; end: Date }[][] = [];
+      const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] = [];
 
       for (const item of sortedEvents) {
         const event = item.event;
@@ -209,8 +214,8 @@ export function WeekView({
         currentColumn.push({ start: adjustedStart, end: adjustedEnd, event });
 
         // Calculate width and left position based on number of columns
-        const width = columnIndex === 0 ? 1 : 0.9;
-        const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
+        const width = columnIndex === 0 ? 1 : 0.7;
+        const left = columnIndex === 0 ? 0 : columnIndex * 0.3;
 
         positionedEvents.push({
           event,
@@ -218,7 +223,7 @@ export function WeekView({
           left,
           top,
           width,
-          zIndex: 10 + columnIndex, // Higher columns get higher z-index
+          zIndex: 10 + columnIndex, 
         });
       }
 
@@ -228,7 +233,7 @@ export function WeekView({
     return result;
   }, [days, events]);
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
+  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
     e.stopPropagation();
     onEventSelect(event);
   };
@@ -241,7 +246,7 @@ export function WeekView({
 
   return (
     <div className="flex h-full flex-col" data-slot="week-view">
-      <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background/80 backdrop-blur-md">
+      <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background">
         <div className="py-2 text-center text-muted-foreground/70 text-sm">
           <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
         </div>
@@ -272,12 +277,19 @@ export function WeekView({
             </div>
             {days.map((day, dayIndex) => {
               const dayAllDayEvents = allDayEvents.filter((event) => {
-                const eventStart = new Date(event.start);
-                const eventEnd = new Date(event.end);
+                const eventStart = event.start
+                  ? new Date(event.start as Date | string | number)
+                  : undefined;
+                const eventEnd = event.end
+                  ? new Date(event.end as Date | string | number)
+                  : undefined;
+
+                if (!eventStart && !eventEnd) return false;
+
                 return (
-                  isSameDay(day, eventStart) ||
-                  (day > eventStart && day < eventEnd) ||
-                  isSameDay(day, eventEnd)
+                  (eventStart && isSameDay(day, eventStart)) ||
+                  (eventStart && eventEnd && day > eventStart && day < eventEnd) ||
+                  (eventEnd && isSameDay(day, eventEnd))
                 );
               });
 
@@ -288,13 +300,17 @@ export function WeekView({
                   key={day.toString()}
                 >
                   {dayAllDayEvents.map((event) => {
-                    const eventStart = new Date(event.start);
-                    const eventEnd = new Date(event.end);
-                    const isFirstDay = isSameDay(day, eventStart);
-                    const isLastDay = isSameDay(day, eventEnd);
+                    const eventStart = event.start
+                      ? new Date(event.start as Date | string | number)
+                      : undefined;
+                    const eventEnd = event.end
+                      ? new Date(event.end as Date | string | number)
+                      : undefined;
+                    const isFirstDay = eventStart ? isSameDay(day, eventStart) : false;
+                    const isLastDay = eventEnd ? isSameDay(day, eventEnd) : false;
 
                     const isFirstVisibleDay =
-                      dayIndex === 0 && isBefore(eventStart, weekStart);
+                      eventStart ? dayIndex === 0 && isBefore(eventStart, weekStart) : false;
                     const shouldShowTitle = isFirstDay || isFirstVisibleDay;
 
                     return (

@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import {
   AgendaDaysToShow,
-  type CalendarEvent,
+  type CalendarEventAgenda,
   EventItem,
   getAgendaEventsForDay,
   UndatedEvents,
@@ -16,8 +16,8 @@ import { twMerge } from "tailwind-merge";
 
 interface AgendaViewProps {
   currentDate: Date;
-  events: CalendarEvent[];
-  onEventSelect?: (event: CalendarEvent) => void;
+  events: CalendarEventAgenda[];
+  onEventSelect?: (event: CalendarEventAgenda) => void;
   showUndatedEvents?: boolean;
 }
 
@@ -63,7 +63,7 @@ export function AgendaView({
     );
   }, [currentDate]);
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
+  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
     e.stopPropagation();
     console.log("Agenda view event clicked:", event);
     if (onEventSelect) onEventSelect(event);

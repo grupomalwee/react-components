@@ -17,7 +17,6 @@ import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  type CalendarEvent,
   DroppableCell,
   EventGap,
   EventHeight,
@@ -28,6 +27,7 @@ import {
   sortEvents,
   useEventVisibility,
   UndatedEvents,
+  CalendarEventAgenda,
 } from "@/components/event-calendar-view";
 import { DefaultStartHour } from "@/components/event-calendar-view/constants";
 import {
@@ -39,8 +39,8 @@ import { twMerge } from "tailwind-merge";
 
 interface MonthViewProps {
   currentDate: Date;
-  events: CalendarEvent[];
-  onEventSelect: (event: CalendarEvent) => void;
+  events: CalendarEventAgenda[];
+  onEventSelect: (event: CalendarEventAgenda) => void;
   showUndatedEvents?: boolean;
 }
 
@@ -82,7 +82,7 @@ export function MonthView({
     return result;
   }, [days]);
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
+  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
     e.stopPropagation();
     onEventSelect(event);
   };

@@ -1,7 +1,7 @@
 import { isSameDay } from "date-fns";
 import { addHours } from "date-fns";
 
-import type { CalendarEvent, EventColor } from "@/components/event-calendar";
+import type { CalendarEventAgenda, EventColor } from "@/components/event-calendar-view/types";
 
 /**
  * Get CSS classes for event colors
@@ -49,7 +49,7 @@ export function getBorderRadiusClasses(
 /**
  * Check if an event is a multi-day event
  */
-export function isMultiDayEvent(event: CalendarEvent): boolean {
+export function isMultiDayEvent(event: CalendarEventAgenda): boolean {
   const eventStart = isValidDate(event.start)
     ? new Date(event.start as Date)
     : undefined;
@@ -64,9 +64,9 @@ export function isMultiDayEvent(event: CalendarEvent): boolean {
  * Filter events for a specific day
  */
 export function getEventsForDay(
-  events: CalendarEvent[],
+  events: CalendarEventAgenda[],
   day: Date
-): CalendarEvent[] {
+): CalendarEventAgenda[] {
   return events
     .filter((event) => {
       const eventStart = isValidDate(event.start)
@@ -79,7 +79,7 @@ export function getEventsForDay(
     .sort((a, b) => getEventStartTimestamp(a) - getEventStartTimestamp(b));
 }
 
-export function sortEvents(events: CalendarEvent[]): CalendarEvent[] {
+export function sortEvents(events: CalendarEventAgenda[]): CalendarEventAgenda[] {
   return [...events].sort((a, b) => {
     const aIsMultiDay = isMultiDayEvent(a);
     const bIsMultiDay = isMultiDayEvent(b);
@@ -92,9 +92,9 @@ export function sortEvents(events: CalendarEvent[]): CalendarEvent[] {
 }
 
 export function getSpanningEventsForDay(
-  events: CalendarEvent[],
+  events: CalendarEventAgenda[],
   day: Date
-): CalendarEvent[] {
+): CalendarEventAgenda[] {
   return events.filter((event) => {
     if (!isMultiDayEvent(event)) return false;
     const eventStart = isValidDate(event.start)
@@ -117,9 +117,9 @@ export function getSpanningEventsForDay(
  * Get all events visible on a specific day (starting, ending, or spanning)
  */
 export function getAllEventsForDay(
-  events: CalendarEvent[],
+  events: CalendarEventAgenda[],
   day: Date
-): CalendarEvent[] {
+): CalendarEventAgenda[] {
   return events.filter((event) => {
     const eventStart = isValidDate(event.start)
       ? new Date(event.start as Date)
@@ -140,9 +140,9 @@ export function getAllEventsForDay(
  * Get all events for a day (for agenda view)
  */
 export function getAgendaEventsForDay(
-  events: CalendarEvent[],
+  events: CalendarEventAgenda[],
   day: Date
-): CalendarEvent[] {
+): CalendarEventAgenda[] {
   return events
     .filter((event) => {
       // prefer explicit start/end, fallback to attend_date
@@ -181,7 +181,7 @@ function isValidDate(d: unknown) {
   }
 }
 
-function getEventStartTimestamp(e: CalendarEvent) {
+function getEventStartTimestamp(e: CalendarEventAgenda) {
   if (isValidDate(e.start)) return new Date(e.start as Date).getTime();
   if (isValidDate(e.attend_date))
     return normalizeAttendDate(e.attend_date as Date)!.getTime();

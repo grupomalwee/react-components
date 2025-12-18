@@ -16,20 +16,20 @@ import {
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { type ReactNode, useId, useRef, useState } from "react";
 
-import { type CalendarEvent, EventItem } from "@/components/event-calendar-view";
+import { type CalendarEventAgenda, EventItem } from "@/components/event-calendar-view";
 import { CalendarDndContext } from "./hooks";
 
 // Props for the provider
 interface CalendarDndProviderProps {
   children: ReactNode;
-  onEventUpdate: (event: CalendarEvent) => void;
+  onEventUpdate: (event: CalendarEventAgenda) => void;
 }
 
 export function CalendarDndProvider({
   children,
   onEventUpdate,
 }: CalendarDndProviderProps) {
-  const [activeEvent, setActiveEvent] = useState<CalendarEvent | null>(null);
+  const [activeEvent, setActiveEvent] = useState<CalendarEventAgenda | null>(null);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [activeView, setActiveView] = useState<"month" | "week" | "day" | null>(
     null
@@ -93,7 +93,7 @@ export function CalendarDndProvider({
       multiDayWidth: eventMultiDayWidth,
       dragHandlePosition: eventDragHandlePosition,
     } = active.data.current as {
-      event: CalendarEvent;
+      event: CalendarEventAgenda;
       view: "month" | "week" | "day";
       height?: number;
       isMultiDay?: boolean;
@@ -206,7 +206,7 @@ export function CalendarDndProvider({
       }
 
       const activeData = active.data.current as {
-        event?: CalendarEvent;
+        event?: CalendarEventAgenda;
         view?: string;
       };
       const overData = over.data.current as { date?: Date; time?: number };
