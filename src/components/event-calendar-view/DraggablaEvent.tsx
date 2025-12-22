@@ -10,6 +10,10 @@ import {
   EventItemAgenda,
   useCalendarDndAgenda,
 } from "@/components/event-calendar-view";
+import {
+  getEventStartDate,
+  getEventEndDate,
+} from "@/components/event-calendar-view";
 
 interface DraggableEventProps {
   event: CalendarEventAgenda;
@@ -46,8 +50,9 @@ export function DraggableEvent({
   } | null>(null);
 
   // Check if this is a multi-day event
-  const eventStart = new Date(event.start ?? Date.now());
-  const eventEnd = new Date(event.end ?? Date.now());
+  const eventStart = getEventStartDate(event) ?? new Date();
+  const eventEnd =
+    getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
   const isMultiDayEvent =
     isMultiDay || event.allDay || differenceInDays(eventEnd, eventStart) >= 1;
 

@@ -16,7 +16,12 @@ import {
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { type ReactNode, useId, useRef, useState } from "react";
 
-import { type CalendarEventAgenda, EventItemAgenda } from "@/components/event-calendar-view";
+import {
+  type CalendarEventAgenda,
+  EventItemAgenda,
+  getEventStartDate,
+  getEventEndDate,
+} from "@/components/event-calendar-view";
 import { CalendarDndContext } from "./hooks";
 
 // Props for the provider
@@ -29,7 +34,9 @@ export function CalendarDndProviderAgenda({
   children,
   onEventUpdate,
 }: CalendarDndProviderProps) {
-  const [activeEvent, setActiveEvent] = useState<CalendarEventAgenda | null>(null);
+  const [activeEvent, setActiveEvent] = useState<CalendarEventAgenda | null>(
+    null
+  );
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [activeView, setActiveView] = useState<"month" | "week" | "day" | null>(
     null
@@ -111,7 +118,7 @@ export function CalendarDndProviderAgenda({
     setActiveEvent(calendarEvent);
     setActiveId(active.id);
     setActiveView(view);
-    setCurrentTime(calendarEvent.start ? new Date(calendarEvent.start) : null);
+    setCurrentTime(getEventStartDate(calendarEvent) ?? null);
     setIsMultiDay(eventIsMultiDay || false);
     setMultiDayWidth(eventMultiDayWidth || null);
     setDragHandlePosition(eventDragHandlePosition || null);
@@ -246,14 +253,18 @@ export function CalendarDndProviderAgenda({
         );
       }
 
-      // Calculate new end time based on the original duration
-      if (!calendarEvent.start || !calendarEvent.end) {
-        console.error("Cannot compute duration: event start or end is null", calendarEvent);
+      // Calculate new end time based on the original duration. Support events
+      // that provide `duration` instead of explicit `end` by using helpers.
+      const originalStart = getEventStartDate(calendarEvent);
+      const originalEnd = getEventEndDate(calendarEvent);
+      if (!originalStart || !originalEnd) {
+        console.error(
+          "Cannot compute duration: event start or end (or duration) is missing",
+          calendarEvent
+        );
         // Exit early; finally block will reset state
         return;
       }
-      const originalStart = new Date(calendarEvent.start);
-      const originalEnd = new Date(calendarEvent.end);
       const durationMinutes = differenceInMinutes(originalEnd, originalStart);
       const newEnd = addMinutes(newStart, durationMinutes);
 

@@ -9,6 +9,7 @@ import {
   MultiSelectGroupBase,
 } from "@/components/selects/MultiSelectBase";
 import * as React from "react";
+// removed unused import SelectValueBase
 
 type MultiSelectStoryArgs = {
   values?: string[];
@@ -127,12 +128,30 @@ export default function Default() {
   },
 
   render: (args: MultiSelectStoryArgs) => {
-    const [values, setValues] = React.useState<string[]>(
-      args.values ?? args.defaultValues ?? []
-    );
+    const [values, setValues] = React.useState<string[]>(args.values ?? []);
+
     React.useEffect(() => {
       if (args.values !== undefined) setValues(args.values);
     }, [args.values]);
+
+    const items = [
+      {
+        label: "1030000 - John Doe",
+        value: "1030000",
+      },
+      {
+        label: "1030001 - Thomas Turband",
+        value: "1030001",
+      },
+      {
+        label: "1030002 - Alice Johnson",
+        value: "1030002",
+      },
+      {
+        label: "1040000 - Kleber Norte",
+        value: "1040000",
+      },
+    ];
 
     return (
       <div
@@ -146,40 +165,21 @@ export default function Default() {
       >
         <MultiSelectBase
           values={values}
-          defaultValues={args.defaultValues}
-          disabled={args.disabled}
-          empty={args.empty}
-          error={args.error}
           onValuesChange={(v) => {
             setValues(v);
             args.onValuesChange?.(v);
           }}
         >
-          <MultiSelectTriggerBase>
-            <MultiSelectValueBase
-              placeholder={args.placeholder || "Selecione"}
-            />
+          <MultiSelectTriggerBase className="max-w-80">
+            <MultiSelectValueBase placeholder="Selecione os representantes" />
           </MultiSelectTriggerBase>
-
-          <MultiSelectContentBase
-            search={{ placeholder: args.placeholder || "Pesquisar..." }}
-          >
+          <MultiSelectContentBase>
             <MultiSelectGroupBase>
-              <MultiSelectItemBase value="apple" badgeLabel="Apple">
-                Apple
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="banana" badgeLabel="Banana">
-                Banana
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="blueberry" badgeLabel="Blueberry">
-                Blueberry
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="grapes" badgeLabel="Grapes">
-                Grapes
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="pineapple" badgeLabel="Pineapple">
-                Pineapple
-              </MultiSelectItemBase>
+              {items.map((item) => (
+                <MultiSelectItemBase key={item.value} value={item.label}>
+                  {item.label}
+                </MultiSelectItemBase>
+              ))}
             </MultiSelectGroupBase>
           </MultiSelectContentBase>
         </MultiSelectBase>

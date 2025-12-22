@@ -6,7 +6,7 @@ import { EventItemAgenda } from "./EventItemAgenda";
 
 interface UndatedEventsProps {
   events: CalendarEventAgenda[];
-  onEventSelect?: (event: CalendarEventAgenda) => void;
+  onEventSelect?: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   className?: string;
   title?: string;
   show?: boolean;
@@ -46,10 +46,12 @@ export function UndatedEvents({
             <EventItemAgenda
               event={event}
               key={event.id}
-              onClick={onEventSelect ? () => onEventSelect(event) : undefined}
+              onClick={
+                onEventSelect ? (e) => onEventSelect(event, e) : undefined
+              }
               view="agenda"
               agendaOnly
-              className="cursor-default hover:shadow-none hover:scale-100 bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none "
+              className="hover:shadow-none hover:scale-100 bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none "
             />
           ))}
         </div>

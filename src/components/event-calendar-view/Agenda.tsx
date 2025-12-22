@@ -17,7 +17,7 @@ import { twMerge } from "tailwind-merge";
 interface AgendaViewProps {
   currentDate: Date;
   events: CalendarEventAgenda[];
-  onEventSelect?: (event: CalendarEventAgenda) => void;
+  onEventSelect?: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
 }
 
@@ -59,7 +59,7 @@ export function Agenda({
   ) => {
     e.stopPropagation();
     console.log("Agenda view event clicked:", event);
-    if (onEventSelect) onEventSelect(event);
+    if (onEventSelect) onEventSelect(event, e);
   };
 
   const hasEvents = days.some(
@@ -69,10 +69,12 @@ export function Agenda({
   return (
     <div className="border-border/70 border-t px-4">
       {!hasEvents && !(showUndatedEvents && undatedEvents.length > 0) ? (
-        <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
+        <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center px-4">
           <CalendarIcon className="mb-2 text-muted-foreground/50" size={32} />
-          <h3 className="font-medium text-lg">Nenhum evento encontrado</h3>
-          <p className="text-muted-foreground">
+          <h3 className="font-semibold text-sm sm:text-base md:text-lg lg:text-xl min-w-0 truncate sm:whitespace-normal">
+            Nenhum evento encontrado
+          </h3>
+          <p className="text-muted-foreground text-sm sm:text-base md:text-md max-w-prose">
             Não há eventos agendados para este período.
           </p>
         </div>
@@ -93,7 +95,7 @@ export function Agenda({
               >
                 <span
                   className={twMerge(
-                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase data-today:font-extrabold sm:pe-4 text-lg font-bold",
+                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase data-today:font-extrabold sm:pe-4 text-sm sm:text-base md:text-lg font-bold min-w-0",
                     isToday(day) ? "text-blue-500" : ""
                   )}
                   data-today={isToday(day) || undefined}
@@ -120,7 +122,7 @@ export function Agenda({
                       className={
                         onEventSelect
                           ? undefined
-                          : "cursor-default hover:shadow-none hover:scale-100"
+                          : "hover:shadow-none hover:scale-100"
                       }
                     />
                   ))}

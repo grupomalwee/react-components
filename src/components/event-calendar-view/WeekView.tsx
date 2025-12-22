@@ -28,6 +28,8 @@ import {
   UndatedEvents,
   useCurrentTimeIndicatorAgenda,
   WeekCellsHeightAgenda,
+  getEventStartDate,
+  getEventEndDate,
 } from "@/components/event-calendar-view";
 import { EndHour, StartHour } from "@/components/event-calendar/constants";
 import { cn } from "@/lib/utils";
@@ -36,7 +38,7 @@ import { DraggableEvent } from "./DraggablaEvent";
 interface WeekViewProps {
   currentDate: Date;
   events: CalendarEventAgenda[];
-  onEventSelect: (event: CalendarEventAgenda) => void;
+  onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   onEventCreate?: (startTime: Date) => void;
   showUndatedEvents?: boolean;
 }
@@ -76,23 +78,28 @@ export function WeekViewAgenda({
     });
   }, [currentDate]);
 
-  // Get all-day events and multi-day events for the week
   const allDayEvents = useMemo(() => {
+    const isValidStart = (ev: CalendarEventAgenda) => {
+      try {
+        if (ev.start == null) return false;
+        const t =
+          ev.start instanceof Date
+            ? ev.start.getTime()
+            : new Date(String(ev.start)).getTime();
+        return !isNaN(t);
+      } catch {
+        return false;
+      }
+    };
+
     return events
       .filter((event) => {
+        if (!isValidStart(event)) return false;
         return event.allDay || isMultiDayEventAgenda(event);
       })
       .filter((event) => {
-        const eventStart = event.start
-          ? new Date(event.start as Date | string | number)
-          : event.end
-          ? new Date(event.end as Date | string | number)
-          : undefined;
-        const eventEnd = event.end
-          ? new Date(event.end as Date | string | number)
-          : event.start
-          ? new Date(event.start as Date | string | number)
-          : undefined;
+        const eventStart = getEventStartDate(event);
+        const eventEnd = getEventEndDate(event) ?? getEventStartDate(event);
 
         return days.some((day) => {
           if (eventStart && isSameDay(day, eventStart)) return true;
@@ -106,28 +113,25 @@ export function WeekViewAgenda({
 
   const processedDayEvents = useMemo(() => {
     const result = days.map((day) => {
-      // Get events for this day that are not all-day events or multi-day events
       const dayEvents = events.filter((event) => {
-        // Skip all-day events and multi-day events
         if (event.allDay || isMultiDayEventAgenda(event)) return false;
+        if (event.start == null) return false;
+        const eventStart = getEventStartDate(event);
+        const eventEnd = getEventEndDate(event) ?? getEventStartDate(event);
 
-        const eventStart = new Date(event.start ?? event.end ?? Date.now());
-        const eventEnd = new Date(event.end ?? event.start ?? Date.now());
-
-        // Check if event is on this day
         return (
-          isSameDay(day, eventStart) ||
-          isSameDay(day, eventEnd) ||
-          (eventStart < day && eventEnd > day)
+          (eventStart ? isSameDay(day, eventStart) : false) ||
+          (eventEnd ? isSameDay(day, eventEnd) : false) ||
+          (eventStart && eventEnd ? eventStart < day && eventEnd > day : false)
         );
       });
 
       // Sort events by start time and duration
       const sortedEvents = [...dayEvents].sort((a, b) => {
-        const aStart = new Date(a.start ?? a.end ?? Date.now());
-        const bStart = new Date(b.start ?? b.end ?? Date.now());
-        const aEnd = new Date(a.end ?? a.start ?? Date.now());
-        const bEnd = new Date(b.end ?? b.start ?? Date.now());
+        const aStart = getEventStartDate(a) ?? getEventEndDate(a) ?? new Date();
+        const bStart = getEventStartDate(b) ?? getEventEndDate(b) ?? new Date();
+        const aEnd = getEventEndDate(a) ?? getEventStartDate(a) ?? new Date();
+        const bEnd = getEventEndDate(b) ?? getEventStartDate(b) ?? new Date();
 
         // First sort by start time
         if (aStart < bStart) return -1;
@@ -147,8 +151,10 @@ export function WeekViewAgenda({
       const columns: { event: CalendarEventAgenda; end: Date }[][] = [];
 
       for (const event of sortedEvents) {
-        const eventStart = new Date(event.start ?? event.end ?? Date.now());
-        const eventEnd = new Date(event.end ?? event.start ?? Date.now());
+        const eventStart =
+          getEventStartDate(event) ?? getEventEndDate(event) ?? new Date();
+        const eventEnd =
+          getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
 
         // Adjust start and end times if they're outside this day
         const adjustedStart = isSameDay(day, eventStart)
@@ -177,15 +183,20 @@ export function WeekViewAgenda({
             columns[columnIndex] = col;
             placed = true;
           } else {
-            const overlaps = col.some((c) =>
-              areIntervalsOverlapping(
+            const overlaps = col.some((c) => {
+              const cStart =
+                getEventStartDate(c.event) ??
+                getEventEndDate(c.event) ??
+                new Date();
+              const cEnd =
+                getEventEndDate(c.event) ??
+                getEventStartDate(c.event) ??
+                new Date();
+              return areIntervalsOverlapping(
                 { end: adjustedEnd, start: adjustedStart },
-                {
-                  end: new Date(c.event.end ?? c.event.start ?? Date.now()),
-                  start: new Date(c.event.start ?? c.event.end ?? Date.now()),
-                }
-              )
-            );
+                { end: cEnd, start: cStart }
+              );
+            });
 
             if (!overlaps) {
               placed = true;
@@ -225,7 +236,7 @@ export function WeekViewAgenda({
     e: React.MouseEvent
   ) => {
     e.stopPropagation();
-    onEventSelect(event);
+    onEventSelect(event, e);
   };
 
   const showAllDaySection = allDayEvents.length > 0;
@@ -265,12 +276,9 @@ export function WeekViewAgenda({
             </div>
             {days.map((day, dayIndex) => {
               const dayAllDayEvents = allDayEvents.filter((event) => {
-                const eventStart = event.start
-                  ? new Date(event.start as Date | string | number)
-                  : undefined;
-                const eventEnd = event.end
-                  ? new Date(event.end as Date | string | number)
-                  : undefined;
+                const eventStart = getEventStartDate(event);
+                const eventEnd =
+                  getEventEndDate(event) ?? getEventStartDate(event);
 
                 if (!eventStart && !eventEnd) return false;
 
@@ -291,12 +299,9 @@ export function WeekViewAgenda({
                   key={day.toString()}
                 >
                   {dayAllDayEvents.map((event) => {
-                    const eventStart = event.start
-                      ? new Date(event.start as Date | string | number)
-                      : undefined;
-                    const eventEnd = event.end
-                      ? new Date(event.end as Date | string | number)
-                      : undefined;
+                    const eventStart = getEventStartDate(event);
+                    const eventEnd =
+                      getEventEndDate(event) ?? getEventStartDate(event);
                     const isFirstDay = eventStart
                       ? isSameDay(day, eventStart)
                       : false;
@@ -439,6 +444,7 @@ export function WeekViewAgenda({
         events={events}
         onEventSelect={onEventSelect}
         show={showUndatedEvents}
+        className="my-6"
       />
     </div>
   );

@@ -1,83 +1,40 @@
 import "../../style/global.css";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  SelectBase,
-  SelectTriggerBase,
-  SelectContentBase,
-  SelectItemBase,
-  SelectValueBase,
-  SelectGroupBase,
-  SelectLabelBase,
-} from "@/components/ui/SelectBase";
-import * as React from "react";
+import { Meta, StoryObj } from "@storybook/react-vite";
+import { Select } from "@/components/selects/Select";
 
-type SelectStoryArgs = {
-  open?: boolean;
-  disabled?: boolean;
-  error?: string;
-  value?: string;
-  width?: string;
-  placeholder?: string;
-  onOpenChange?: (v: boolean) => void;
-  onValueChange?: (v: string) => void;
-};
-
-const meta: Meta<typeof SelectBase> = {
-  title: "selects/SelectBase",
-  component: SelectBase,
+const meta: Meta<typeof Select> = {
+  title: "selects/Select",
+  component: Select,
   tags: ["autodocs"],
-  args: {
-    open: false,
-    disabled: false,
-    value: "",
-  },
-  argTypes: {
-    open: { control: { type: "boolean" } },
-    disabled: { control: { type: "boolean" } },
-    value: { control: { type: "text" } },
-    onOpenChange: { action: "onOpenChange" },
-    onValueChange: { action: "onValueChange" },
-  },
   parameters: {
     docs: {
       description: {
         component:
-          "Select para seleção de opções, listas e agrupamentos. Componente base altamente personalizável.",
+          "Select simplificado para seleção de opções. Suporta itens simples e agrupados, com estados de erro e desabilitado.",
       },
       source: {
-        code: `import React, { useState } from 'react';
-import {
-  SelectBase,
-  SelectTriggerBase,
-  SelectContentBase,
-  SelectItemBase,
-  SelectValueBase,
-  SelectGroupBase,
-  SelectLabelBase,
-} from '@mlw-packages/react-components';
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
 
 export default function Example() {
-  const [value, setValue] = useState<string>("");
+  const items = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+  ];
 
   return (
-    <SelectBase value={value} onValueChange={setValue}>
-      <SelectTriggerBase className="w-[180px]">
-        <SelectValueBase placeholder="Select a fruit" />
-      </SelectTriggerBase>
-      <SelectContentBase>
-        <SelectGroupBase>
-          <SelectLabelBase>Fruits</SelectLabelBase>
-          <SelectItemBase value="apple">Apple</SelectItemBase>
-          <SelectItemBase value="banana">Banana</SelectItemBase>
-          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-        </SelectGroupBase>
-      </SelectContentBase>
-    </SelectBase>
+    <Select
+      items={items}
+      onChange={(v) => console.log("changed", v)}
+      placeholder="Select an option"
+    />
   );
 }
 `,
       },
     },
+    layout: "centered",
     backgrounds: {
       default: "light",
       values: [
@@ -85,106 +42,180 @@ export default function Example() {
         { name: "dark", value: "#222" },
       ],
     },
-    layout: "centered",
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof SelectBase>;
+
+type Story = StoryObj<typeof Select>;
+
+const simpleItems = [
+  { label: "Option A", value: "a" },
+  { label: "Option B", value: "b" },
+  { label: "Option C", value: "c" },
+];
+
+const groupedItems = {
+  "Group One": [
+    { label: "G1 - One", value: "g1-1" },
+    { label: "G1 - Two", value: "g1-2" },
+  ],
+  "Group Two": [
+    { label: "G2 - One", value: "g2-1" },
+    { label: "G2 - Two", value: "g2-2" },
+  ],
+};
 
 export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';
-import {
-  SelectBase,
-  SelectTriggerBase,
-  SelectContentBase,
-  SelectItemBase,
-  SelectValueBase,
-  SelectGroupBase,
-  SelectLabelBase,
-} from '@mlw-packages/react-components';
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
 
 export default function Default() {
-  const [value, setValue] = useState<string>("");
+  const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+  ];
 
   return (
-    <SelectBase value={value} onValueChange={setValue}>
-      <SelectTriggerBase className="w-[180px]">
-        <SelectValueBase placeholder="Select a fruit" />
-      </SelectTriggerBase>
-      <SelectContentBase>
-        <SelectGroupBase>
-          <SelectLabelBase>Fruits</SelectLabelBase>
-          <SelectItemBase value="apple">Apple</SelectItemBase>
-          <SelectItemBase value="banana">Banana</SelectItemBase>
-          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-          <SelectItemBase value="grapes">Grapes</SelectItemBase>
-          <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-        </SelectGroupBase>
-      </SelectContentBase>
-    </SelectBase>
+    <Select
+      items={simpleItems}
+      onChange={(v) => console.log("changed", v)}
+      placeholder="Select an option"
+    />
   );
 }
 `,
       },
     },
   },
-  render: (args: SelectStoryArgs) => {
-    const [open, setOpen] = React.useState<boolean>(!!args.open);
-    const [value, setValue] = React.useState<string>(args.value || "");
-    React.useEffect(() => setOpen(!!args.open), [args.open]);
-    React.useEffect(() => setValue(args.value || ""), [args.value]);
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select an option",
+    testIds: {
+      root: "select-root",
+      base: "select-base",
+      trigger: "select-trigger",
+      value: "select-value",
+      scrollarea: "select-scrollarea",
+      content: "select-content",
+      group: "select-group",
+      label: "select-label",
+      item: (v: string) => `select-item-${v}`,
+    },
+  },
+};
 
-    const widthClass = `w-[${args.width || "180px"}]`;
+export const WithPlaceholder: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
 
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "200px",
-          padding: "32px 0",
-        }}
-      >
-        <SelectBase
-          open={open}
-          onOpenChange={(v) => {
-            setOpen(v);
-            args.onOpenChange?.(v);
-          }}
-          value={value}
-          onValueChange={(v) => {
-            setValue(v);
-            args.onValueChange?.(v);
-          }}
-        >
-          <SelectTriggerBase
-            open={open}
-            className={widthClass}
-            disabled={args.disabled}
-            error={args.error}
-          >
-            <SelectValueBase
-              placeholder={args.placeholder || "Select a fruit"}
-            />
-          </SelectTriggerBase>
-          <SelectContentBase>
-            <SelectGroupBase>
-              <SelectLabelBase>Fruits</SelectLabelBase>
-              <SelectItemBase value="apple">Apple</SelectItemBase>
-              <SelectItemBase value="banana">Banana</SelectItemBase>
-              <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-              <SelectItemBase value="grapes">Grapes</SelectItemBase>
-              <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-            </SelectGroupBase>
-          </SelectContentBase>
-        </SelectBase>
-      </div>
-    );
+export default function WithPlaceholder() {
+  const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+  ];
+
+  return (
+    <Select
+      items={simpleItems}
+      onChange={(v) => console.log("changed", v)}
+      placeholder="Escolha..."
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Escolha...",
+  },
+};
+
+export const Grouped: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function Grouped() {
+  const groupedItems = {
+    "Group One": [
+      { label: "G1 - One", value: "g1-1" },
+      { label: "G1 - Two", value: "g1-2" },
+    ],
+    "Group Two": [
+      { label: "G2 - One", value: "g2-1" },
+      { label: "G2 - Two", value: "g2-2" },
+    ],
+  };
+
+  return (
+    <Select
+      groupItems={groupedItems}
+      onChange={(v) => console.log("changed", v)}
+      placeholder="Select grouped"
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    groupItems: groupedItems,
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select grouped",
+    testIds: {
+      trigger: "select-trigger",
+      value: "select-value",
+      item: (v: string) => `select-item-${v}`,
+    },
+  },
+};
+
+export const Disabled: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function Disabled() {
+  const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+  ];
+
+  return (
+    <Select
+      items={simpleItems}
+      onChange={(v) => console.log("changed", v)}
+      disabled={true}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    disabled: true,
   },
 };
 
@@ -193,85 +224,30 @@ export const WithError: Story = {
     docs: {
       source: {
         code: `import React from 'react';
-import {
-  SelectBase,
-  SelectTriggerBase,
-  SelectContentBase,
-  SelectItemBase,
-  SelectValueBase,
-  SelectGroupBase,
-  SelectLabelBase,
-} from '@mlw-packages/react-components';
+import { Select } from '@mlw-packages/react-components';
 
 export default function WithError() {
+  const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+  ];
+
   return (
-    <SelectBase>
-      <SelectTriggerBase
-        className="w-[180px]"
-        error="Você deve selecionar uma opção"
-      >
-        <SelectValueBase placeholder="Select a fruit" />
-      </SelectTriggerBase>
-      <SelectContentBase>
-        <SelectGroupBase>
-          <SelectLabelBase>Fruits</SelectLabelBase>
-          <SelectItemBase value="apple">Apple</SelectItemBase>
-          <SelectItemBase value="banana">Banana</SelectItemBase>
-          <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-          <SelectItemBase value="grapes">Grapes</SelectItemBase>
-          <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-        </SelectGroupBase>
-      </SelectContentBase>
-    </SelectBase>
+    <Select
+      items={simpleItems}
+      onChange={(v) => console.log("changed", v)}
+      error="This field is required"
+    />
   );
 }
 `,
       },
     },
   },
-  render: (args: SelectStoryArgs) => {
-    const [open, setOpen] = React.useState<boolean>(!!args.open);
-    React.useEffect(() => setOpen(!!args.open), [args.open]);
-    const widthClass = `w-[${args.width || "180px"}]`;
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "200px",
-          padding: "32px 0",
-        }}
-      >
-        <SelectBase
-          open={open}
-          onOpenChange={(v) => {
-            setOpen(v);
-            args.onOpenChange?.(v);
-          }}
-        >
-          <SelectTriggerBase
-            open={open}
-            className={widthClass}
-            error={args.error || "Você deve selecionar uma opção"}
-          >
-            <SelectValueBase
-              placeholder={args.placeholder || "Select a fruit"}
-            />
-          </SelectTriggerBase>
-          <SelectContentBase>
-            <SelectGroupBase>
-              <SelectLabelBase>Fruits</SelectLabelBase>
-              <SelectItemBase value="apple">Apple</SelectItemBase>
-              <SelectItemBase value="banana">Banana</SelectItemBase>
-              <SelectItemBase value="blueberry">Blueberry</SelectItemBase>
-              <SelectItemBase value="grapes">Grapes</SelectItemBase>
-              <SelectItemBase value="pineapple">Pineapple</SelectItemBase>
-            </SelectGroupBase>
-          </SelectContentBase>
-        </SelectBase>
-      </div>
-    );
+  args: {
+    items: simpleItems,
+    onChange: (v: string) => console.log("changed", v),
+    error: "This field is required",
   },
 };

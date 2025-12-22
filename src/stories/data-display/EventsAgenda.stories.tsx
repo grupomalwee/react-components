@@ -10,6 +10,15 @@ import {
   CalendarViewAgenda,
   EventAgenda,
 } from "@/components/event-calendar-view";
+import {
+  ModalBase,
+  ModalContentBase,
+  ModalHeaderBase,
+  ModalTitleBase,
+  ModalDescriptionBase,
+  ModalFooterBase,
+} from "@/components/ui/feedback";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const sampleEvents: CalendarEventAgenda[] = [
   {
@@ -539,16 +548,15 @@ export default function AgendaWithUndated() {
         title: "Acme Corp - Malwee",
         start: new Date("2025-03-02T14:00:00.000Z"),
         color: "amber",
-        duration: 120,
       },
       {
         id: "u3",
-        title: "Acme Corp - Malwee",
+        title: "Acme Corp - Malwee3",
         color: "emerald",
       },
       {
         id: "u4",
-        title: "Acme Corp - Malwee",
+        title: "Acme Corp - Malwee2",
         color: "rose",
       },
       {
@@ -561,12 +569,7 @@ export default function AgendaWithUndated() {
         title: "Acme Corp - Malwee Kids",
         color: "rose",
       },
-      {
-        id: "u7",
-        title: "Retorno sem previsão",
-        color: "amber",
-      },
-    ]; 
+    ];
 
     return (
       <EventAgenda
@@ -577,4 +580,56 @@ export default function AgendaWithUndated() {
     );
   },
   name: "Agenda — Datas não previstas",
+};
+
+function EventDetailsModal({
+  event,
+  onClose,
+}: {
+  event?: CalendarEventAgenda;
+  onClose?: () => void;
+}) {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <ModalBase
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+        if (!v) onClose?.();
+      }}
+    >
+      <ModalContentBase size="sm">
+        <ModalHeaderBase>
+          <ModalTitleBase>
+            {event?.title ?? "Detalhes do evento"}
+          </ModalTitleBase>
+          <ModalDescriptionBase>
+            {event?.description ?? event?.location}
+          </ModalDescriptionBase>
+        </ModalHeaderBase>
+
+        <div className="mt-3 space-y-2 text-sm">
+          {event?.start ? (
+            <div>Início: {event.start.toString()}</div>
+          ) : (
+            <div>Sem data definida</div>
+          )}
+          {event?.end && <div>Fim: {event.end.toString()}</div>}
+        </div>
+
+        <ModalFooterBase>
+          <ButtonBase onClick={() => setOpen(false)}>Fechar</ButtonBase>
+        </ModalFooterBase>
+      </ModalContentBase>
+    </ModalBase>
+  );
+}
+
+export const ModalOnClick: Story = {
+  render: () => {
+    const events = sampleEvents.slice(0, 6);
+    return <EventAgenda events={events} onClick={<EventDetailsModal />} />;
+  },
+  name: "Abrir modal ao clicar",
 };

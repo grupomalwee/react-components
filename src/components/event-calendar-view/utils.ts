@@ -1,11 +1,16 @@
 import { isSameDay } from "date-fns";
 
-import type { CalendarEventAgenda, EventColorAgenda } from "@/components/event-calendar-view/types";
+import type {
+  CalendarEventAgenda,
+  EventColorAgenda,
+} from "@/components/event-calendar-view/types";
 
 /**
  * Get CSS classes for event colors
  */
-export function getEventColorClassesAgenda(color?: EventColorAgenda | string): string {
+export function getEventColorClassesAgenda(
+  color?: EventColorAgenda | string
+): string {
   const eventColor = color || "sky";
 
   switch (eventColor) {
@@ -49,12 +54,8 @@ export function getBorderRadiusClassesAgenda(
  * Check if an event is a multi-day event
  */
 export function isMultiDayEventAgenda(event: CalendarEventAgenda): boolean {
-  const eventStart = isValidDate(event.start)
-    ? new Date(event.start as Date)
-    : undefined;
-  const eventEnd = isValidDate(event.end)
-    ? new Date(event.end as Date)
-    : undefined;
+  const eventStart = getEventStartDate(event);
+  const eventEnd = getEventEndDate(event);
   if (!eventStart || !eventEnd) return !!event.allDay;
   return event.allDay || eventStart.getDate() !== eventEnd.getDate();
 }
@@ -68,15 +69,15 @@ export function getEventsForDayAgenda(
 ): CalendarEventAgenda[] {
   return events
     .filter((event) => {
-      const eventStart = isValidDate(event.start)
-        ? new Date(event.start as Date)
-        : undefined;
+      const eventStart = getEventStartDate(event);
       return eventStart ? isSameDay(day, eventStart) : false;
     })
     .sort((a, b) => getEventStartTimestamp(a) - getEventStartTimestamp(b));
 }
 
-export function sortEventsAgenda(events: CalendarEventAgenda[]): CalendarEventAgenda[] {
+export function sortEventsAgenda(
+  events: CalendarEventAgenda[]
+): CalendarEventAgenda[] {
   return [...events].sort((a, b) => {
     const aIsMultiDay = isMultiDayEventAgenda(a);
     const bIsMultiDay = isMultiDayEventAgenda(b);
@@ -94,12 +95,8 @@ export function getSpanningEventsForDayAgenda(
 ): CalendarEventAgenda[] {
   return events.filter((event) => {
     if (!isMultiDayEventAgenda(event)) return false;
-    const eventStart = isValidDate(event.start)
-      ? new Date(event.start as Date)
-      : undefined;
-    const eventEnd = isValidDate(event.end)
-      ? new Date(event.end as Date)
-      : undefined;
+    const eventStart = getEventStartDate(event);
+    const eventEnd = getEventEndDate(event);
     if (!eventStart || !eventEnd) return false;
 
     // Only include if it's not the start day but is either the end day or a middle day
@@ -118,12 +115,8 @@ export function getAllEventsForDayAgenda(
   day: Date
 ): CalendarEventAgenda[] {
   return events.filter((event) => {
-    const eventStart = isValidDate(event.start)
-      ? new Date(event.start as Date)
-      : undefined;
-    const eventEnd = isValidDate(event.end)
-      ? new Date(event.end as Date)
-      : undefined;
+    const eventStart = getEventStartDate(event);
+    const eventEnd = getEventEndDate(event);
     if (!eventStart) return false;
     return (
       isSameDay(day, eventStart) ||
@@ -143,14 +136,8 @@ export function getAgendaEventsForDayAgenda(
   return events
     .filter((event) => {
       // prefer explicit start/end, fallback to attend_date
-      const eventStart = isValidDate(event.start)
-        ? new Date(event.start as Date)
-        : undefined;
-
-      const eventEnd = isValidDate(event.end)
-        ? new Date(event.end as Date)
-        : undefined;
-
+      const eventStart = getEventStartDate(event);
+      const eventEnd = getEventEndDate(event);
 
       if (!eventStart) return false;
 
@@ -163,6 +150,29 @@ export function getAgendaEventsForDayAgenda(
     .sort((a, b) => getEventStartTimestamp(a) - getEventStartTimestamp(b));
 }
 
+/**
+ * Return the event start as a Date if possible
+ */
+export function getEventStartDate(
+  event: CalendarEventAgenda
+): Date | undefined {
+  if (isValidDate(event.start)) return new Date(event.start as Date);
+  return undefined;
+}
+
+/**
+ * Return the event end as a Date. If `end` is not provided but `duration` (minutes) is,
+ * compute end = start + duration minutes.
+ */
+export function getEventEndDate(event: CalendarEventAgenda): Date | undefined {
+  if (isValidDate(event.end)) return new Date(event.end as Date);
+  const start = getEventStartDate(event);
+  if (start && typeof event.duration === "number" && !isNaN(event.duration)) {
+    return addMinutesToDateAgenda(start, event.duration);
+  }
+  return undefined;
+}
+
 function isValidDate(d: unknown) {
   try {
     const t = d instanceof Date ? d.getTime() : new Date(String(d)).getTime();
@@ -173,7 +183,8 @@ function isValidDate(d: unknown) {
 }
 
 function getEventStartTimestamp(e: CalendarEventAgenda) {
-  if (isValidDate(e.start)) return new Date(e.start as Date).getTime();
+  const s = getEventStartDate(e);
+  if (s) return s.getTime();
   return Number.MAX_SAFE_INTEGER;
 }
 
@@ -201,8 +212,13 @@ export function normalizeAttendDate(d?: unknown): Date | undefined {
 /**
  * Add hours to a date
  */
-export function addHoursToDateAgenda(date: Date, hours: number): Date {
+export function addMinutesToDateAgenda(date: Date, minutes: number): Date {
   const result = new Date(date);
-  result.setHours(result.getHours() + hours);
+  result.setMinutes(result.getMinutes() + minutes);
   return result;
+}
+
+// Backwards-compatible helper in case other code relied on addHoursToDateAgenda
+export function addHoursToDateAgenda(date: Date, hours: number): Date {
+  return addMinutesToDateAgenda(date, Math.round(hours * 60));
 }

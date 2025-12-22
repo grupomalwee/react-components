@@ -26,11 +26,12 @@ import { useCurrentTimeIndicatorAgenda } from "./hooks/use-current-time-indicato
 import { EventItemAgenda } from "./EventItemAgenda";
 import { DroppableCellAgenda } from "./DroppableCell";
 import { UndatedEvents } from "@/components/event-calendar-view";
+import { getEventStartDate, getEventEndDate } from "./utils";
 
 interface DayViewProps {
   currentDate: Date;
   events: CalendarEventAgenda[];
-  onEventSelect: (event: CalendarEventAgenda) => void;
+  onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
 }
 
@@ -60,8 +61,10 @@ export function DayViewAgenda({
   const dayEvents = useMemo(() => {
     return events
       .filter((event) => {
-        const eventStart = new Date(event.start ?? event.end ?? Date.now());
-        const eventEnd = new Date(event.end ?? event.start ?? Date.now());
+        if (event.start == null) return false;
+        const eventStart = getEventStartDate(event) ?? new Date();
+        const eventEnd =
+          getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
         return (
           isSameDay(currentDate, eventStart) ||
           isSameDay(currentDate, eventEnd) ||
@@ -70,8 +73,8 @@ export function DayViewAgenda({
       })
       .sort(
         (a, b) =>
-          new Date(a.start ?? a.end ?? Date.now()).getTime() -
-          new Date(b.start ?? b.end ?? Date.now()).getTime()
+          new Date(a.start as Date | string | number).getTime() -
+          new Date(b.start as Date | string | number).getTime()
       );
   }, [currentDate, events]);
 
@@ -87,35 +90,32 @@ export function DayViewAgenda({
     });
   }, [dayEvents]);
 
-  // Process events to calculate positions
   const positionedEvents = useMemo(() => {
     const result: PositionedEvent[] = [];
     const dayStart = startOfDay(currentDate);
 
-    // Sort events by start time and duration
     const sortedEvents = [...timeEvents].sort((a, b) => {
-      const aStart = new Date(a.start ?? a.end ?? Date.now());
-      const bStart = new Date(b.start ?? b.end ?? Date.now());
-      const aEnd = new Date(a.end ?? a.start ?? Date.now());
-      const bEnd = new Date(b.end ?? b.start ?? Date.now());
+      const aStart = getEventStartDate(a) ?? getEventEndDate(a) ?? new Date();
+      const bStart = getEventStartDate(b) ?? getEventEndDate(b) ?? new Date();
+      const aEnd = getEventEndDate(a) ?? getEventStartDate(a) ?? new Date();
+      const bEnd = getEventEndDate(b) ?? getEventStartDate(b) ?? new Date();
 
-      // First sort by start time
       if (aStart < bStart) return -1;
       if (aStart > bStart) return 1;
 
-      // If start times are equal, sort by duration (longer events first)
       const aDuration = differenceInMinutes(aEnd, aStart);
       const bDuration = differenceInMinutes(bEnd, bStart);
       return bDuration - aDuration;
     });
 
-    // Track columns for overlapping events
     const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] =
       [];
 
     for (const event of sortedEvents) {
-      const eventStart = new Date(event.start ?? event.end ?? Date.now());
-      const eventEnd = new Date(event.end ?? event.start ?? Date.now());
+      const eventStart =
+        getEventStartDate(event) ?? getEventEndDate(event) ?? new Date();
+      const eventEnd =
+        getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
 
       const adjustedStart = isSameDay(currentDate, eventStart)
         ? eventStart
@@ -124,7 +124,6 @@ export function DayViewAgenda({
         ? eventEnd
         : addHours(dayStart, 24);
 
-      // Calculate top position and height
       const startHour =
         getHours(adjustedStart) + getMinutes(adjustedStart) / 60;
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
@@ -132,7 +131,6 @@ export function DayViewAgenda({
       const top = (startHour - StartHourAgenda) * WeekCellsHeightAgenda;
       const height = (endHour - startHour) * WeekCellsHeightAgenda;
 
-      // Find a column for this event
       let columnIndex = 0;
       let placed = false;
 
@@ -142,15 +140,20 @@ export function DayViewAgenda({
           columns[columnIndex] = col;
           placed = true;
         } else {
-          const overlaps = col.some((c) =>
-            areIntervalsOverlapping(
+          const overlaps = col.some((c) => {
+            const cStart =
+              getEventStartDate(c.event) ??
+              getEventEndDate(c.event) ??
+              new Date();
+            const cEnd =
+              getEventEndDate(c.event) ??
+              getEventStartDate(c.event) ??
+              new Date();
+            return areIntervalsOverlapping(
               { end: adjustedEnd, start: adjustedStart },
-              {
-                end: new Date(c.event.end ?? c.event.start ?? Date.now()),
-                start: new Date(c.event.start ?? c.event.end ?? Date.now()),
-              }
-            )
-          );
+              { end: cEnd, start: cStart }
+            );
+          });
 
           if (!overlaps) {
             placed = true;
@@ -160,7 +163,6 @@ export function DayViewAgenda({
         }
       }
 
-      // Ensure column is initialized before pushing
       const currentColumn = columns[columnIndex] || [];
       columns[columnIndex] = currentColumn;
       currentColumn.push({
@@ -169,7 +171,6 @@ export function DayViewAgenda({
         start: adjustedStart,
       });
 
-      // First column takes full width, others are indented by 10% and take 90% width
       const width = columnIndex === 0 ? 1 : 0.9;
       const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
 
@@ -191,7 +192,7 @@ export function DayViewAgenda({
     e: React.MouseEvent
   ) => {
     e.stopPropagation();
-    onEventSelect(event);
+    onEventSelect(event, e);
   };
 
   const showAllDaySection = allDayEvents.length > 0;
@@ -210,14 +211,15 @@ export function DayViewAgenda({
             </div>
             <div className="relative border-border/70 border-r p-1 last:border-r-0">
               {allDayEvents.map((event) => {
-                const eventStart = new Date(
-                  event.start ?? event.end ?? Date.now()
-                );
-                const eventEnd = new Date(
-                  event.end ?? event.start ?? Date.now()
-                );
-                const isFirstDay = isSameDay(currentDate, eventStart);
-                const isLastDay = isSameDay(currentDate, eventEnd);
+                const eventStart = getEventStartDate(event);
+                const eventEnd =
+                  getEventEndDate(event) ?? getEventStartDate(event);
+                const isFirstDay = eventStart
+                  ? isSameDay(currentDate, eventStart)
+                  : false;
+                const isLastDay = eventEnd
+                  ? isSameDay(currentDate, eventEnd)
+                  : false;
 
                 return (
                   <EventItemAgenda
@@ -228,7 +230,6 @@ export function DayViewAgenda({
                     onClick={(e) => handleEventClick(event, e)}
                     view="month"
                   >
-                    {/* Always show the title in day view for better usability */}
                     <div>{event.title}</div>
                   </EventItemAgenda>
                 );
@@ -286,7 +287,6 @@ export function DayViewAgenda({
             );
           })}
 
-          {/* Current time indicator */}
           {currentTimeVisible && (
             <div
               className="pointer-events-none absolute right-0 left-0 z-20"
@@ -299,7 +299,6 @@ export function DayViewAgenda({
             </div>
           )}
 
-          {/* Time grid */}
           {hours.map((hour) => {
             const hourValue = getHours(hour);
             return (
@@ -307,7 +306,6 @@ export function DayViewAgenda({
                 className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
                 key={hour.toString()}
               >
-                {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25;
                   return (

@@ -140,7 +140,7 @@ export function MultiSelectTriggerBase({
           aria-disabled={disabled || undefined}
           disabled={disabled}
           className={cn(
-            "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 min-w-[150px]",
+            "flex h-auto max-h-9 min-h-9 w-full items-center justify-between gap-2 overflow-hidden rounded-md border border-input bg-background px-3 py-1.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
             error
               ? "border-destructive focus:ring-1 focus:ring-destructive"
               : "border-input focus:ring-1 focus:ring-ring",
@@ -246,7 +246,12 @@ export function MultiSelectValueBase({
     [checkOverflow]
   );
 
-  if (selectedValues.size === 0 && placeholder) {
+  // Only show placeholder when there are no visible selected items.
+  const visibleSelected = [...selectedValues].filter((value) =>
+    items.has(value)
+  );
+
+  if (visibleSelected.length === 0 && placeholder) {
     return (
       <span className="min-w-0 overflow-hidden font-normal text-muted-foreground ">
         {placeholder}
@@ -264,29 +269,27 @@ export function MultiSelectValueBase({
         className
       )}
     >
-      {[...selectedValues]
-        .filter((value) => items.has(value))
-        .map((value) => (
-          <Badge
-            data-selected-item
-            size="sm"
-            className="group flex items-center gap-1"
-            key={value}
-            onClick={
-              clickToRemove
-                ? (e) => {
-                    e.stopPropagation();
-                    toggleValue(value);
-                  }
-                : undefined
-            }
-          >
-            {items.get(value)}
-            {clickToRemove && (
-              <XIcon className="size-3 text-muted-foreground group-hover:text-destructive" />
-            )}
-          </Badge>
-        ))}
+      {visibleSelected.map((value) => (
+        <Badge
+          data-selected-item
+          size="sm"
+          className="group flex items-center gap-1"
+          key={value}
+          onClick={
+            clickToRemove
+              ? (e) => {
+                  e.stopPropagation();
+                  toggleValue(value);
+                }
+              : undefined
+          }
+        >
+          {items.get(value)}
+          {clickToRemove && (
+            <XIcon className="size-3 text-muted-foreground group-hover:text-destructive" />
+          )}
+        </Badge>
+      ))}
       <Badge
         style={{
           display: overflowAmount > 0 && !shouldWrap ? "block" : "none",

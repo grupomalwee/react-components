@@ -9,21 +9,13 @@ import {
   type CalendarEventAgenda,
   getBorderRadiusClassesAgenda,
   getEventColorClassesAgenda,
+  getEventStartDate,
+  getEventEndDate,
 } from "@/components/event-calendar-view";
 import { cn } from "@/lib/utils";
-import { ClockUserIcon } from "@phosphor-icons/react";
 
 const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, "HH:mm");
-};
-
-const isValidDate = (d: unknown) => {
-  try {
-    const dt = d instanceof Date ? d : new Date(String(d));
-    return !isNaN(dt.getTime());
-  } catch {
-    return false;
-  }
 };
 
 interface EventWrapperProps {
@@ -57,28 +49,24 @@ function EventWrapper({
   onTouchStart,
   ariaLabel,
 }: EventWrapperProps) {
-  const hasValidTimeForWrapper =
-    isValidDate(event.start) || isValidDate(event.end);
+  const wrapperStart = getEventStartDate(event);
+  const wrapperEnd = getEventEndDate(event);
+  const hasValidTimeForWrapper = !!wrapperStart || !!wrapperEnd;
 
   const displayEnd = (() => {
-    if (isValidDate(event.start) && isValidDate(event.end)) {
+    if (wrapperStart && wrapperEnd) {
       return currentTime
         ? new Date(
             new Date(currentTime).getTime() +
-              (new Date(event.end as Date).getTime() -
-                new Date(event.start as Date).getTime())
+              (wrapperEnd.getTime() - wrapperStart.getTime())
           )
-        : new Date(event.end as Date);
+        : wrapperEnd;
     }
-    // if only start exists, use start as end (zero-duration)
-    if (isValidDate(event.start) && !isValidDate(event.end)) {
-      return currentTime
-        ? new Date(currentTime)
-        : new Date(event.start as Date);
+    if (wrapperStart && !wrapperEnd) {
+      return currentTime ? new Date(currentTime) : wrapperStart;
     }
-    // if only end exists, use end as displayEnd
-    if (!isValidDate(event.start) && isValidDate(event.end)) {
-      return currentTime ? new Date(currentTime) : new Date(event.end as Date);
+    if (!wrapperStart && wrapperEnd) {
+      return currentTime ? new Date(currentTime) : wrapperEnd;
     }
     return undefined;
   })();
@@ -119,7 +107,7 @@ interface EventItemProps {
   isDragging?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   showTime?: boolean;
-  currentTime?: Date; // For updating time during drag
+  currentTime?: Date; 
   isFirstDay?: boolean;
   isLastDay?: boolean;
   children?: React.ReactNode;
@@ -147,8 +135,9 @@ export function EventItemAgenda({
   agendaOnly = false,
 }: EventItemProps) {
   const eventColor = event.color;
-  // Use the provided currentTime (for dragging) or the event's actual time
-  const hasValidTime = isValidDate(event.start) || isValidDate(event.end);
+  const startDate = getEventStartDate(event);
+  const endDate = getEventEndDate(event);
+  const hasValidTime = !!startDate || !!endDate;
 
   const colorClasses = hasValidTime
     ? getEventColorClassesAgenda(eventColor)
@@ -156,35 +145,27 @@ export function EventItemAgenda({
 
   const displayStart = useMemo(() => {
     if (!hasValidTime) return undefined;
-    if (isValidDate(event.start))
-      return currentTime || new Date(event.start as Date);
-    if (isValidDate(event.end))
-      return currentTime || new Date(event.end as Date);
+    if (startDate) return currentTime || startDate;
+    if (endDate) return currentTime || endDate;
     return undefined;
-  }, [currentTime, event.start, event.end, hasValidTime]);
+  }, [currentTime, startDate, endDate, hasValidTime]);
 
   const displayEnd = useMemo(() => {
     if (!hasValidTime) return undefined;
-    if (isValidDate(event.end)) {
+    if (endDate) {
       return currentTime
         ? new Date(
             new Date(currentTime).getTime() +
-              (isValidDate(event.start)
-                ? new Date(event.end as Date).getTime() -
-                  new Date(event.start as Date).getTime()
-                : 0)
+              (startDate ? endDate.getTime() - startDate.getTime() : 0)
           )
-        : new Date(event.end as Date);
+        : endDate;
     }
-    if (isValidDate(event.start)) {
-      return currentTime
-        ? new Date(currentTime)
-        : new Date(event.start as Date);
+    if (startDate) {
+      return currentTime ? new Date(currentTime) : startDate;
     }
     return undefined;
-  }, [currentTime, event.start, event.end, hasValidTime]);
+  }, [currentTime, startDate, endDate, hasValidTime]);
 
-  // Calculate event duration in minutes
   const durationMinutes = useMemo(() => {
     if (!hasValidTime || !displayStart || !displayEnd) return 0;
     return differenceInMinutes(displayEnd, displayStart);
@@ -194,12 +175,10 @@ export function EventItemAgenda({
     if (!hasValidTime) return "";
     if (event.allDay) return "All day";
 
-    // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
       return formatTimeWithOptionalMinutes(displayStart as Date);
     }
 
-    // For longer events, show both start and end time
     return `${formatTimeWithOptionalMinutes(
       displayStart as Date
     )} - ${formatTimeWithOptionalMinutes(displayEnd as Date)}`;
@@ -236,16 +215,18 @@ export function EventItemAgenda({
         onClick={onClick}
       >
         {children || (
-          <span className="flex items-center gap-2 truncate">
+          <span className="flex items-center gap-2 truncate min-w-0">
             {!event.allDay && hasValidTime && displayStart && (
-              <span className="truncate text-2xl opacity-80 bg-white/10 px-2 rounded-full">
+              <span className="truncate text-sm sm:text-base md:text-lg lg:text-xl opacity-80 bg-white/10 px-2 rounded-full min-w-0">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
             )}
             <span
               className={cn(
-                "truncate",
-                agendaOnly ? "font-bold text-lg" : "font-medium"
+                "truncate min-w-0",
+                agendaOnly
+                  ? "font-bold text-sm sm:text-base md:text-lg"
+                  : "font-medium text-sm sm:text-base md:text-lg"
               )}
             >
               {event.title}
@@ -275,21 +256,28 @@ export function EventItemAgenda({
       >
         {durationMinutes < 45 ? (
           <div className="flex items-center justify-between w-full">
-            <div className={cn("truncate text-lg")}>{event.title}</div>
+            <div
+              className={cn("truncate text-sm sm:text-base md:text-lg min-w-0")}
+            >
+              {event.title}
+            </div>
             {showTime && hasValidTime && displayStart && (
-              <span className="ml-2 flex items-center gap-3 bg-white/10  py-0.5 rounded-full opacity-90 text-lg ">
-                {formatTimeWithOptionalMinutes(displayStart as Date)}               
-                <ClockUserIcon />
+              <span className="ml-2 flex items-center gap-3 bg-white/10  py-0.5 rounded-full opacity-90 text-sm sm:text-base md:text-lg min-w-0">
+                {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
             )}
           </div>
         ) : (
           <>
-            <div className={cn("truncate font-medium text-lg")}>
+            <div
+              className={cn(
+                "truncate font-medium text-sm sm:text-base md:text-lg min-w-0"
+              )}
+            >
               {event.title}
             </div>
             {showTime && hasValidTime && (
-              <div className="truncate font-normal opacity-70">
+              <div className="truncate font-normal opacity-70 text-sm sm:text-base">
                 <span className="inline-block bg-white/5 px-0.5 py-0.5 rounded-full">
                   {getEventTime()}
                 </span>
@@ -316,7 +304,14 @@ export function EventItemAgenda({
         {...dndListeners}
         {...dndAttributes}
       >
-        <div className={cn("font-medium", agendaOnly ? "text-lg" : "text-sm")}>
+        <div
+          className={cn(
+            "font-medium min-w-0 truncate",
+            agendaOnly
+              ? "text-sm sm:text-base md:text-lg"
+              : "text-sm sm:text-base"
+          )}
+        >
           {event.title}
         </div>
         <div
@@ -326,7 +321,7 @@ export function EventItemAgenda({
           )}
         >
           {event.location && (
-            <span className="opacity-80 flex items-center gap-1">
+            <span className="opacity-80 flex items-center gap-1 min-w-0">
               -<span className="truncate">{event.location}</span>
             </span>
           )}
@@ -335,7 +330,7 @@ export function EventItemAgenda({
           <div
             className={cn(
               "my-1 opacity-90",
-              agendaOnly ? "text-md" : "text-xs"
+              agendaOnly ? "text-sm sm:text-base" : "text-xs sm:text-sm"
             )}
             style={{
               display: "-webkit-box",
@@ -368,14 +363,23 @@ export function EventItemAgenda({
       {...dndAttributes}
     >
       <div className="flex w-full justify-between ">
-        <div className={cn("font-bold text-lg")}>{event.title}</div>
-        <div className={cn("opacity-90 flex items-center gap-2 text-lg")}>
+        <div
+          className={cn(
+            "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate"
+          )}
+        >
+          {event.title}
+        </div>
+        <div
+          className={cn(
+            "opacity-90 flex items-center gap-2 text-sm sm:text-base md:text-lg min-w-0"
+          )}
+        >
           {event.allDay ? (
             <span>Dia todo</span>
           ) : (
             <span className="uppercase font-semibold flex items-center gap-2 ">
               {formatTimeWithOptionalMinutes(displayStart as Date)}
-              <ClockUserIcon />
             </span>
           )}
         </div>
@@ -383,7 +387,7 @@ export function EventItemAgenda({
 
       {event.description && (
         <div
-          className={cn("my-1 opacity-90 flex text-md")}
+          className={cn("my-1 opacity-90 flex text-sm sm:text-base")}
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,

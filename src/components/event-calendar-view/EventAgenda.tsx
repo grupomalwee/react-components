@@ -13,7 +13,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -41,7 +41,15 @@ export interface EventCalendarProps {
   className?: string;
   initialView?: CalendarViewAgenda;
   initialDate?: Date;
-  
+  onClick?:
+    | ((event: CalendarEventAgenda, e?: React.MouseEvent) => void)
+    | React.ReactElement<ModalLikeProps>;
+}
+
+export interface ModalLikeProps {
+  event?: CalendarEventAgenda;
+  onClose?: () => void;
+  [key: string]: unknown;
 }
 
 export function EventAgenda({
@@ -50,13 +58,15 @@ export function EventAgenda({
   className,
   initialView = "month",
   initialDate,
+  onClick,
 }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(
     (initialDate && new Date(initialDate)) || new Date()
   );
   const [view, setView] = useState<CalendarViewAgenda>(initialView);
+  const [selectedEvent, setSelectedEvent] =
+    useState<CalendarEventAgenda | null>(null);
 
-  // Basic navigation helpers
   const goPrevious = () => {
     if (view === "month") setCurrentDate((d) => subMonths(d, 1));
     else if (view === "week") setCurrentDate((d) => subWeeks(d, 1));
@@ -73,20 +83,44 @@ export function EventAgenda({
       setCurrentDate((d) => addDays(d, AgendaDaysToShowAgenda));
   };
 
-  const handleEventSelect = (event: CalendarEventAgenda) => {
-    // keep simple: open dialog handled elsewhere
+  const handleEventSelect = (
+    event: CalendarEventAgenda,
+    e?: React.MouseEvent
+  ) => {
+    try {
+      if (typeof onClick === "function") {
+        (onClick as (ev: CalendarEventAgenda, e?: React.MouseEvent) => void)(
+          event,
+          e
+        );
+        return;
+      }
+
+      if (React.isValidElement(onClick)) {
+        setSelectedEvent(event);
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
     console.log("Event selected:", event);
   };
 
   const handleEventUpdate = (updatedEvent: CalendarEventAgenda) => {
+    if (updatedEvent.start == null) {
+      console.warn(
+        `Ignored update for event ${updatedEvent.id} because start is null`
+      );
+      return;
+    }
+
     onEventUpdate?.(updatedEvent);
-    const startDate = updatedEvent.start ?? new Date();
+    const startDate = new Date(updatedEvent.start as Date | string | number);
     toast(`Evento "${updatedEvent.title}" movido`, {
       description: format(startDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR }),
       position: "bottom-left",
     });
   };
-
   const viewLabel = (v: CalendarViewAgenda, condensed = false) => {
     const labels: Record<string, { full: string; short: string }> = {
       month: { full: "Mês", short: "M" },
@@ -142,7 +176,7 @@ export function EventAgenda({
     >
       <CalendarDndProviderAgenda onEventUpdate={handleEventUpdate}>
         <div className="flex items-center justify-between p-2 sm:p-4">
-          <div className="flex items-center gap-1 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-4 min-w-0">
             <div className="flex items-center sm:gap-2">
               <ButtonBase
                 aria-label="Anterior"
@@ -161,7 +195,9 @@ export function EventAgenda({
                 <CaretRightIcon aria-hidden size={16} />
               </ButtonBase>
             </div>
-            <h2 className="font-semibold text-md sm:text-xl">{viewTitle}</h2>
+            <h2 className="font-semibold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl min-w-0 truncate sm:whitespace-normal">
+              {viewTitle}
+            </h2>
           </div>
 
           <div className="flex items-center gap-2">
@@ -216,6 +252,12 @@ export function EventAgenda({
           )}
         </div>
       </CalendarDndProviderAgenda>
+      {selectedEvent && React.isValidElement(onClick)
+        ? React.cloneElement(onClick as React.ReactElement<ModalLikeProps>, {
+            event: selectedEvent,
+            onClose: () => setSelectedEvent(null),
+          })
+        : null}
     </div>
   );
 }

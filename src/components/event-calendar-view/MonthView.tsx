@@ -28,6 +28,8 @@ import {
   useEventVisibilityAgenda,
   UndatedEvents,
   CalendarEventAgenda,
+  getEventStartDate,
+  getEventEndDate,
 } from "@/components/event-calendar-view";
 import { DefaultStartHourAgenda } from "@/components/event-calendar-view/constants";
 import {
@@ -40,7 +42,7 @@ import { twMerge } from "tailwind-merge";
 interface MonthViewProps {
   currentDate: Date;
   events: CalendarEventAgenda[];
-  onEventSelect: (event: CalendarEventAgenda) => void;
+  onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
 }
 
@@ -68,8 +70,8 @@ export function MonthViewAgenda({
   }, []);
 
   const weeks = useMemo(() => {
-    const result = [];
-    let week = [];
+    const result: Date[][] = [];
+    let week: Date[] = [];
 
     for (let i = 0; i < days.length; i++) {
       week.push(days[i]);
@@ -82,9 +84,12 @@ export function MonthViewAgenda({
     return result;
   }, [days]);
 
-  const handleEventClick = (event: CalendarEventAgenda, e: React.MouseEvent) => {
+  const handleEventClick = (
+    event: CalendarEventAgenda,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
-    onEventSelect(event);
+    onEventSelect(event, e);
   };
 
   const [isMounted, setIsMounted] = useState(false);
@@ -102,10 +107,11 @@ export function MonthViewAgenda({
       <div className="grid grid-cols-7 border-border/70 border-b">
         {weekdays.map((day) => (
           <div
-            className="py-2 text-center text-muted-foreground/70 text-sm uppercase tracking-wide bg-muted/5"
+            className="py-1 px-1 text-center text-muted-foreground/70 text-xs uppercase sm:tracking-wide bg-muted/5 leading-none"
             key={day}
           >
-            {day}
+            <span className="hidden sm:inline">{day}</span>
+            <span className="inline sm:hidden">{day.charAt(0)}</span>
           </div>
         ))}
       </div>
@@ -113,13 +119,29 @@ export function MonthViewAgenda({
         {weeks.map((week, weekIndex) => (
           <div
             className="grid grid-cols-7 [&:last-child>*]:border-b-0"
-            key={`week-${week}`}
+            key={`week-${weekIndex}`}
           >
             {week.map((day, dayIndex) => {
               if (!day) return null;
 
-              const dayEvents = getEventsForDayAgenda(events, day);
-              const spanningEvents = getSpanningEventsForDayAgenda(events, day);
+              const eventsWithStart = events.filter((ev) => {
+                try {
+                  if (ev.start == null) return false;
+                  const t =
+                    ev.start instanceof Date
+                      ? ev.start.getTime()
+                      : new Date(String(ev.start)).getTime();
+                  return !isNaN(t);
+                } catch {
+                  return false;
+                }
+              });
+
+              const dayEvents = getEventsForDayAgenda(eventsWithStart, day);
+              const spanningEvents = getSpanningEventsForDayAgenda(
+                eventsWithStart,
+                day
+              );
               const isCurrentMonth = isSameMonth(day, currentDate);
               const cellId = `month-cell-${day.toISOString()}`;
               const allDayEvents = [...spanningEvents, ...dayEvents];
@@ -138,7 +160,7 @@ export function MonthViewAgenda({
 
               return (
                 <div
-                  className="group border-border/70 border-r border-b last:border-r-0 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 hover:bg-muted/5 transition-colors p-2 "
+                  className="group border-border/70 border-r border-b last:border-r-0 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 hover:bg-muted/5 transition-colors p-1 sm:p-2"
                   data-outside-cell={!isCurrentMonth || undefined}
                   data-today={isToday(day) || undefined}
                   key={day.toString()}
@@ -153,27 +175,25 @@ export function MonthViewAgenda({
                   >
                     <div
                       className={twMerge(
-                        `mt-1 inline-flex w-7 h-7 items-center justify-center rounded-full text-sm font-semibold text-muted-foreground`,
+                        `mt-1 inline-flex w-6 h-6 sm:w-7 sm:h-7 items-center justify-center rounded-full text-xs sm:text-sm font-semibold text-muted-foreground`,
                         isToday(day) ? "bg-blue-500 text-white" : ""
                       )}
                     >
                       {format(day, "d")}
                     </div>
                     <div
-                      className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-1"
+                      className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-0.5 sm:py-1"
                       ref={isReferenceCell ? contentRef : null}
                     >
                       {sortEventsAgenda(allDayEvents).map((event, index) => {
-                        const eventStart = new Date(
-                          event.start ??
-                            event.end ??
-                            Date.now()
-                        );
-                        const eventEnd = new Date(
-                          event.end ??
-                            event.start ??
-                            Date.now()
-                        );
+                        const eventStart =
+                          getEventStartDate(event) ??
+                          getEventEndDate(event) ??
+                          new Date();
+                        const eventEnd =
+                          getEventEndDate(event) ??
+                          getEventStartDate(event) ??
+                          new Date();
                         const isFirstDay = isSameDay(day, eventStart);
                         const isLastDay = isSameDay(day, eventEnd);
 
@@ -183,6 +203,7 @@ export function MonthViewAgenda({
                         if (!visibleCount) return null;
 
                         if (!isFirstDay) {
+                          // Show a compact visible label for spanning events instead of invisible content
                           return (
                             <div
                               aria-hidden={isHidden ? "true" : undefined}
@@ -198,11 +219,13 @@ export function MonthViewAgenda({
                                 onClick={(e) => handleEventClick(event, e)}
                                 view="month"
                               >
-                                <div aria-hidden={true} className="invisible">
-                                  {!event.allDay && (
-                                    <span>{format(eventStart, "HH:mm")} </span>
-                                  )}
-                                  {event.title}
+                                <div className="flex items-center gap-1 truncate text-[12px] text-foreground">
+                                  <span className="text-[11px] opacity-80">
+                                    →
+                                  </span>
+                                  <span className="truncate font-medium">
+                                    {event.title}
+                                  </span>
                                 </div>
                               </EventItemAgenda>
                             </div>
@@ -216,20 +239,19 @@ export function MonthViewAgenda({
                             key={event.id}
                           >
                             <EventItemAgenda
-                              className="cursor-default"
                               event={event}
                               isFirstDay={isFirstDay}
                               isLastDay={isLastDay}
                               onClick={(e) => handleEventClick(event, e)}
                               view="month"
                             >
-                              <span className="flex items-center gap-2 truncate">
+                              <span className="flex items-center gap-1 sm:gap-2 truncate text-[12px] text-foreground">
                                 {!event.allDay && (
-                                  <span className="truncate font-normal opacity-80 sm:text-[11px] bg-white/10 px-2 py-0.5 rounded-full text-[11px]">
+                                  <span className="truncate font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
                                     {format(eventStart, "HH:mm")}
                                   </span>
                                 )}
-                                <span className="truncate font-medium">
+                                <span className="truncate font-medium text-xs sm:text-sm">
                                   {event.title}
                                 </span>
                               </span>
@@ -272,12 +294,14 @@ export function MonthViewAgenda({
                               </div>
                               <div className="space-y-1">
                                 {sortEventsAgenda(allEvents).map((event) => {
-                                  const eventStart = new Date(
-                                    event.start ?? event.end ?? Date.now()
-                                  );
-                                  const eventEnd = new Date(
-                                    event.end ?? event.start ?? Date.now()
-                                  );
+                                  const eventStart =
+                                    getEventStartDate(event) ??
+                                    getEventEndDate(event) ??
+                                    new Date();
+                                  const eventEnd =
+                                    getEventEndDate(event) ??
+                                    getEventStartDate(event) ??
+                                    new Date();
                                   const isFirstDay = isSameDay(day, eventStart);
                                   const isLastDay = isSameDay(day, eventEnd);
 
