@@ -126,28 +126,23 @@ export function WeekViewAgenda({
         );
       });
 
-      // Sort events by start time and duration
       const sortedEvents = [...dayEvents].sort((a, b) => {
         const aStart = getEventStartDate(a) ?? getEventEndDate(a) ?? new Date();
         const bStart = getEventStartDate(b) ?? getEventEndDate(b) ?? new Date();
         const aEnd = getEventEndDate(a) ?? getEventStartDate(a) ?? new Date();
         const bEnd = getEventEndDate(b) ?? getEventStartDate(b) ?? new Date();
 
-        // First sort by start time
         if (aStart < bStart) return -1;
         if (aStart > bStart) return 1;
 
-        // If start times are equal, sort by duration (longer events first)
         const aDuration = differenceInMinutes(aEnd, aStart);
         const bDuration = differenceInMinutes(bEnd, bStart);
         return bDuration - aDuration;
       });
 
-      // Calculate positions for each event
       const positionedEvents: PositionedEvent[] = [];
       const dayStart = startOfDay(day);
 
-      // Track columns for overlapping events
       const columns: { event: CalendarEventAgenda; end: Date }[][] = [];
 
       for (const event of sortedEvents) {
@@ -156,7 +151,6 @@ export function WeekViewAgenda({
         const eventEnd =
           getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
 
-        // Adjust start and end times if they're outside this day
         const adjustedStart = isSameDay(day, eventStart)
           ? eventStart
           : dayStart;
@@ -164,16 +158,13 @@ export function WeekViewAgenda({
           ? eventEnd
           : addHours(dayStart, 24);
 
-        // Calculate top position and height
         const startHour =
           getHours(adjustedStart) + getMinutes(adjustedStart) / 60;
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
 
-        // Adjust the top calculation to account for the new start time
         const top = (startHour - StartHour) * WeekCellsHeightAgenda;
         const height = (endHour - startHour) * WeekCellsHeightAgenda;
 
-        // Find a column for this event
         let columnIndex = 0;
         let placed = false;
 
@@ -206,12 +197,10 @@ export function WeekViewAgenda({
           }
         }
 
-        // Ensure column is initialized before pushing
         const currentColumn = columns[columnIndex] || [];
         columns[columnIndex] = currentColumn;
         currentColumn.push({ end: adjustedEnd, event });
 
-        // Calculate width and left position based on number of columns
         const width = columnIndex === 0 ? 1 : 0.9;
         const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
 
@@ -221,7 +210,7 @@ export function WeekViewAgenda({
           left,
           top,
           width,
-          zIndex: 10 + columnIndex, // Higher columns get higher z-index
+          zIndex: 10 + columnIndex, 
         });
       }
 
@@ -444,7 +433,7 @@ export function WeekViewAgenda({
         events={events}
         onEventSelect={onEventSelect}
         show={showUndatedEvents}
-        className="my-6"
+        className="my-"
       />
     </div>
   );
