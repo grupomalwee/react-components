@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.22",
+    author: "Gabriel Glatz",
+    date: "2025-12-22",
+    shortTitle: "Event Agenda",
+    added: ["Clear Button: novo componente para uso de Triggers."],
+    fixed: [
+      "EventAgenda: ajuste de visual e range",
+      "Date Time Picker: botão de limpar opções.",
+      "Export: exportação das tipagems dos Selects.",
+    ],
+  },
+  {
     version: "1.7.21",
     author: "Gabriel Glatz",
     date: "2025-12-22",

@@ -35,6 +35,20 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.22 — 2025-12-22
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- Clear Button: novo componente para uso de Triggers.
+---
+### Fixed
+
+- EventAgenda: ajuste de visual e range.
+- Date Time Picker: botão de limpar opções.
+- Export: exportação das tipagems dos Selects.
+---
 ## 1.7.21 — 2025-12-22
 
 **Author:** Gabriel Glatz
