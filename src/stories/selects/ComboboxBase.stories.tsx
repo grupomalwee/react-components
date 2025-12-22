@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ComboboxBase, ComboboxItem } from "@/components/selects/ComboboxBase";
+import { ComboboxBase, ComboboxItem } from "@/components/ui/selects/ComboboxBase";
 import React from "react";
 
 type ComboboxBaseStoryArgs = {

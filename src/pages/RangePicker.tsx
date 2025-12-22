@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RangePicker } from "@/components/picker/RangePicker";
+import { RangePicker } from "@/components/ui/picker/RangePicker";
 import { DateRange } from "react-day-picker";
 
 export default function RangePickerPage() {

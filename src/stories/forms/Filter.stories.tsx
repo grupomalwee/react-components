@@ -4,7 +4,7 @@ import {
   AvailableFilter,
   FilterConditions,
   SelectItem,
-} from "@/components/filter/services/types";
+} from "@/components/ui/filter/services/types";
 import { MemoryRouter } from "react-router-dom";
 import { TooltipProviderBase } from "@/components/ui/feedback/TooltipBase";
 import "../../global.css";

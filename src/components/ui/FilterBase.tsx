@@ -14,11 +14,11 @@ import {
   AvailableFilter,
   Filter,
   FilterConditions,
-} from "../filter/services/types";
-import { buildFilterSummary } from "../filter/utils/build-summary";
+} from "../ui/filter/services/types";
+import { buildFilterSummary } from "../ui/filter/utils/build-summary";
 import { InputBase } from "./form/InputBase";
-import { Combobox } from "@/components/selects/Combobox";
-import { MultiCombobox } from "@/components/selects/MultiCombobox";
+import { Combobox } from "@/components/ui/selects/Combobox";
+import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
 import {
   TooltipBase,
   TooltipContentBase,

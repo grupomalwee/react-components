@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Combobox } from "@/components/selects/Combobox";
+import { Combobox } from "@/components/ui/selects/Combobox";
 import React from "react";
 import { expect } from "storybook/test";
 

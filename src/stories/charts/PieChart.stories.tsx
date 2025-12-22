@@ -1,4 +1,4 @@
-import PieChart from "@/components/charts/PieChart";
+import PieChart from "@/components/ui/charts/PieChart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

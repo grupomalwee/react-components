@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { DayPickerProvider } from "react-day-picker";
-import { ThemeProviderBase } from "@/components/theme-provider";
+import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
@@ -9,7 +9,7 @@ import {
   CalendarEventAgenda,
   CalendarViewAgenda,
   EventAgenda,
-} from "@/components/event-calendar-view";
+} from "@/components/ui/event-calendar-view/";
 import {
   ModalBase,
   ModalContentBase,

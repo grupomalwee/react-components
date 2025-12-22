@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ModeToggleBase } from "@/components/mode-toggle";
-import { ThemeProviderBase } from "@/components/theme-provider";
+import { ModeToggleBase } from "@/components/theme/mode-toggle";
+import { ThemeProviderBase } from "@/components/theme/theme-provider";
 
 const meta: Meta<typeof ModeToggleBase> = {
   title: "Theme/Mode Toggle",

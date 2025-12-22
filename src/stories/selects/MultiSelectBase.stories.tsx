@@ -7,7 +7,7 @@ import {
   MultiSelectContentBase,
   MultiSelectItemBase,
   MultiSelectGroupBase,
-} from "@/components/selects/MultiSelectBase";
+} from "@/components/ui/selects/MultiSelectBase";
 import * as React from "react";
 // removed unused import SelectValueBase
 

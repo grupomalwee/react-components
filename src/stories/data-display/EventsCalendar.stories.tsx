@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { DayPickerProvider } from "react-day-picker";
-import { ThemeProviderBase } from "@/components/theme-provider";
+import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
@@ -9,7 +9,7 @@ import {
   CalendarEvent,
   EventCalendar,
   CalendarView,
-} from "@/components/event-calendar";
+} from "@/components/ui/event-calendar";
 
 const sampleEvents: CalendarEvent[] = [
   {
@@ -502,7 +502,7 @@ export default function AgendaOnly() {
       },
     },
   },
-  render: () => <Wrapper initialView="agenda" mode="agenda-only"  />,
+  render: () => <Wrapper initialView="agenda" mode="agenda-only" />,
   name: "Agenda (somente visualização)",
 };
 
@@ -558,9 +558,7 @@ export default function AgendaWithUndated() {
       },
     ];
 
-    return (
-      <EventCalendar events={events} initialView="agenda" />
-    );
+    return <EventCalendar events={events} initialView="agenda" />;
   },
   name: "Agenda — Datas não previstas",
 };

@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { InputBase } from "@/components/ui/form/InputBase";
-import { Combobox } from "@/components/selects/Combobox";
-import { MultiCombobox } from "@/components/selects/MultiCombobox";
-import { DateTimePicker } from "@/components/picker/DateTimePicker";
+import { Combobox } from "@/components/ui/selects/Combobox";
+import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
+import { DateTimePicker } from "@/components/ui/picker/DateTimePicker";
 import React from "react";
-import { Select } from "@/components/selects/Select";
-import { AvatarCombobox } from "@/components/selects/AvatarCombobox";
+import { Select } from "@/components/ui/selects/Select";
+import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
 import {
   MultiSelectBase,
   MultiSelectContentBase,
@@ -16,7 +16,7 @@ import {
   MultiSelectItemBase,
   MultiSelectTriggerBase,
   MultiSelectValueBase,
-} from "@/components/selects/MultiSelectBase";
+} from "@/components/ui/selects/MultiSelectBase";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },

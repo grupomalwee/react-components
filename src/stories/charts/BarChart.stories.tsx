@@ -1,5 +1,5 @@
 import React from "react";
-import BarChart from "@/components/charts/BarChart";
+import BarChart from "@/components/ui/charts/BarChart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within, waitFor } from "storybook/test";

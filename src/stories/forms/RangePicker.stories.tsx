@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { RangePicker } from "@/components/picker/RangePicker";
+import { RangePicker } from "@/components/ui/picker/RangePicker";
 import type { DateRange } from "react-day-picker";
 
 const meta: Meta<typeof RangePicker> = {

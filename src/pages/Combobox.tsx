@@ -1,6 +1,6 @@
 "use client";
 
-import { Combobox } from "@/components/selects/Combobox";
+import { Combobox } from "@/components/ui/selects/Combobox";
 import { useState } from "react";
 
 export const ComboboxPage = () => {

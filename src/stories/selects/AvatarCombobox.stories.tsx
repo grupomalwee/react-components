@@ -1,7 +1,7 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { AvatarCombobox } from "@/components/selects/AvatarCombobox";
+import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
 
 const meta: Meta<typeof AvatarCombobox> = {
   title: "selects/AvatarCombobox",

@@ -15,7 +15,7 @@ import {
   AddButton,
 } from "@/components/ui/form/SmallButtons";
 import { Badge } from "@/components/ui/data/Badge";
-import { ModeToggleBase } from "@/components/mode-toggle";
+import { ModeToggleBase } from "@/components/theme/mode-toggle";
 import {
   AvatarBase,
   AvatarFallbackBase,
@@ -30,7 +30,7 @@ import {
   CardFooterBase,
   CardDescriptionBase,
 } from "@/components/ui/data/CardBase";
-import Chart from "@/components/charts/Chart";
+import Chart from "@/components/ui/charts/Chart";
 import {
   TableBase,
   TableHeaderBase,
@@ -262,7 +262,6 @@ export default function DashboardTemplate() {
                 formatBR={true}
                 colors={chartColors.revenue}
                 height={320}
-
                 showTooltipTotal={true}
                 enableDraggableTooltips={true}
                 maxTooltips={4}
@@ -280,7 +279,6 @@ export default function DashboardTemplate() {
                 title="Engajamento"
                 colors={chartColors.engagement}
                 height={320}
-
                 showLabels={false}
                 enableDraggableTooltips={true}
               />

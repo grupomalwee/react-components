@@ -1,4 +1,4 @@
-import BarChart from "@/components/charts/BarChart";
+import BarChart from "@/components/ui/charts/BarChart";
 
 export const BarChartPage = () => {
   const quartData = [

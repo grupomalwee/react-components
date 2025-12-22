@@ -1,5 +1,5 @@
 import React from "react";
-import Chart from "@/components/charts/Chart";
+import Chart from "@/components/ui/charts/Chart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";

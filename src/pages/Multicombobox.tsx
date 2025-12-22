@@ -1,6 +1,6 @@
 "use client";
 
-import { MultiCombobox } from "@/components/selects/MultiCombobox";
+import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
 import { useState } from "react";
 
 export const MultiComboboxPage = () => {

@@ -4,7 +4,7 @@ import {
   AvailableFilter,
   FilterConditions,
   SelectItem,
-} from "../components/filter/services/types";
+} from "../components/ui/filter/services/types";
 
 /**
  * Tipo de valores para os filtros.
