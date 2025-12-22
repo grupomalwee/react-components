@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.7.20",
+  "version": "1.7.21",
   "homepage": "https://main--68e80310a069c2f10b546ef3.chromatic.com/",
   "repository": {
     "type": "git",
