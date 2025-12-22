@@ -38,7 +38,7 @@ export function UndatedEvents({
   return (
     <div className={className}>
       <div className="relative border-border/70 border-t">
-        <span className="-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase sm:pe-4 text-md sm:text-lg">
+        <span className="-top-3 absolute left-0 flex h-6 items-center bg-background pe-4  sm:pe-4 text-md sm:text-lg">
           {title}
         </span>
         <div className="mt-6 space-y-2">
@@ -51,7 +51,7 @@ export function UndatedEvents({
               }
               view="agenda"
               agendaOnly
-              className="hover:shadow-none hover:scale-100 bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none "
+              className="hover:shadow-none bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 border"
             />
           ))}
         </div>

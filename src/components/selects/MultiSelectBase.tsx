@@ -32,7 +32,7 @@ import {
   CommandSeparatorBase,
 } from "../ui/navigation/CommandBase";
 
-type MultiSelectContextType = {
+export type MultiSelectContextType = {
   open: boolean;
   setOpen: (open: boolean) => void;
   selectedValues: Set<string>;

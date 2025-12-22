@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/data/utils/bannerStore";
 import { ButtonBase } from "../form/ButtonBase";
 
-type IconProps = {
+export type IconProps = {
   className?: string;
   size?: number | string;
 };
 
-type BannerProps = {
+export type BannerProps = {
   icon?: ReactNode | ComponentType<IconProps>;
   title?: string;
   description?: string;

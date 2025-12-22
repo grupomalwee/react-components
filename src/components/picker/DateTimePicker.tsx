@@ -15,6 +15,7 @@ import LabelBase from "../ui/form/LabelBase";
 import { TimePicker } from "./TimePicker";
 import { CalendarBlankIcon, ClockIcon } from "@phosphor-icons/react";
 import ErrorMessage, { ErrorMessageProps } from "../ui/ErrorMessage";
+import { ClearButton } from "../shared/ClearButton";
 
 interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
@@ -97,26 +98,37 @@ export function DateTimePicker({
           asChild
           className={cn(error && "border-red-500")}
         >
-          <ButtonBase
-            variant={"outline"}
-            className={cn(
-              "w-full justify-start text-left min-w-0 overflow-hidden",
-              !date && "text-muted-foreground"
-            )}
-          >
-            <span
+          <div>
+            <ButtonBase
+              variant={"outline"}
               className={cn(
-                "truncate flex-1",
+                "w-full justify-start text-left min-w-0 overflow-hidden",
                 !date && "text-muted-foreground"
               )}
             >
-              {date
-                ? format(date, getDisplayFormat(), { locale: ptBR })
-                : "Selecione uma data"}
-            </span>
+              <span
+                className={cn(
+                  "truncate flex-1",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                {date
+                  ? format(date, getDisplayFormat(), { locale: ptBR })
+                  : "Selecione uma data"}
+              </span>
+              {date && (
+                <ClearButton
+                  onClick={() => {
+                    setInternalDate(undefined);
+                    onChange(undefined);
+                    setOpen(false);
+                  }}
+                />
+              )}
 
-            <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
-          </ButtonBase>
+              <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
+            </ButtonBase>
+          </div>
         </PopoverTriggerBase>
 
         <ErrorMessage error={error} />
@@ -201,13 +213,23 @@ export function DateTimePicker({
                 </PopoverBase>
               </div>
             )}
-            <ButtonBase
-              variant={"destructive"}
-              className="rounded-t-none no-active-animation"
-              onClick={() => setOpen(false)}
-            >
-              Fechar
-            </ButtonBase>
+            <div className="grid grid-cols-2">
+              <ButtonBase
+                className="no-active-animation rounded-none bg-muted text-gray-800 border-b-2 border-l-2"
+                onClick={() => setOpen(false)}
+              >
+                Cancelar
+              </ButtonBase>
+              <ButtonBase
+                className="no-active-animation rounded-none bg-emerald-600 hover:bg-emerald-700"
+                onClick={() => {
+                  setOpen(false);
+                  onChange(internalDate);
+                }}
+              >
+                Confirmar
+              </ButtonBase>
+            </div>
           </div>
         </PopoverContentBase>
       </PopoverBase>

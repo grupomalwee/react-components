@@ -551,12 +551,12 @@ export default function AgendaWithUndated() {
       },
       {
         id: "u3",
-        title: "Acme Corp - Malwee3",
+        title: "Acme Corp - Malwee",
         color: "emerald",
       },
       {
         id: "u4",
-        title: "Acme Corp - Malwee2",
+        title: "Acme Corp - Malwee",
         color: "rose",
       },
       {

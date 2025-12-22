@@ -7,7 +7,7 @@ import LabelBase from "../ui/form/LabelBase";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
-interface MultiComboboxTestIds {
+export interface MultiComboboxTestIds {
   root?: string;
   label?: string;
   selectedWrapper?: string;
@@ -16,7 +16,7 @@ interface MultiComboboxTestIds {
   clearAll?: string;
 }
 
-interface MultiComboboxProps<T extends string>
+export interface MultiComboboxProps<T extends string>
   extends Omit<ComboboxProps<T>, "selected" | "onChange">,
     ErrorMessageProps {
   selected: T[];

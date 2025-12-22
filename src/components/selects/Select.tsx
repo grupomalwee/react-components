@@ -21,7 +21,7 @@ export interface SelectItem<T extends string> {
   value: T;
 }
 
-interface SelectTestIds {
+export interface SelectTestIds {
   root?: string;
   base?: string;
   trigger?: string;
@@ -36,7 +36,7 @@ interface SelectTestIds {
   paginationPage?: (page: number) => string;
 }
 
-interface DefaultSelectProps<T extends string> extends ErrorMessageProps {
+export interface DefaultSelectProps<T extends string> extends ErrorMessageProps {
   selected: T | null;
   onChange: (value: T) => void;
   placeholder?: string;
@@ -47,13 +47,13 @@ interface DefaultSelectProps<T extends string> extends ErrorMessageProps {
   pagination?: number;
 }
 
-interface SelectPropsWithItems<T extends string> extends DefaultSelectProps<T> {
+export interface SelectPropsWithItems<T extends string> extends DefaultSelectProps<T> {
   items: SelectItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
 }
 
-interface SelectPropsWithGroupItems<T extends string>
+export interface SelectPropsWithGroupItems<T extends string>
   extends DefaultSelectProps<T> {
   items?: never;
   groupItems: {
@@ -62,7 +62,7 @@ interface SelectPropsWithGroupItems<T extends string>
   testIds?: SelectTestIds;
 }
 
-type NewSelectProps<T extends string> =
+export type NewSelectProps<T extends string> =
   | SelectPropsWithItems<T>
   | SelectPropsWithGroupItems<T>;
 

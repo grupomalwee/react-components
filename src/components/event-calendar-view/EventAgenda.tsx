@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { ButtonBase } from "../ui/form/ButtonBase";
-import { Select } from "@/components/selects/Select";
+import { Select, type SelectItem } from "@/components/selects/Select";
 
 export interface EventCalendarProps {
   events?: CalendarEventAgenda[];
@@ -150,16 +150,17 @@ export function EventAgenda({
       return format(currentDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR });
     if (view === "agenda") {
       const start = currentDate;
-      const end = addDays(currentDate, AgendaDaysToShowAgenda - 1);
-      if (isSameMonth(start, end))
-        return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
-      const s1 = capitalize(format(start, "MMMM", { locale: ptBR }));
-      const s2 = capitalize(format(end, "MMMM yyyy", { locale: ptBR }));
-      return `${s1} - ${s2}`;
+      return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
     }
     return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
   }, [currentDate, view]);
 
+  const selectItems: SelectItem<CalendarViewAgenda>[] = (
+    ["month", "week", "day", "agenda"] as CalendarViewAgenda[]
+  ).map((v) => ({
+    label: viewLabel(v),
+    value: v,
+  }));
   return (
     <div
       className={cn(
@@ -206,12 +207,7 @@ export function EventAgenda({
               onChange={(v) => {
                 setView(v);
               }}
-              items={(
-                ["month", "week", "day", "agenda"] as CalendarViewAgenda[]
-              ).map((v) => ({
-                label: viewLabel(v),
-                value: v,
-              }))}
+              items={selectItems as SelectItem<CalendarViewAgenda>[]}
               className="gap-2 px-3 py-1.5 max-[479px]:h-8"
               placeholder={viewLabel(view)}
             />

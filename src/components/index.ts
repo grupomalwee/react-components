@@ -5,7 +5,6 @@ export * from "./theme-provider";
 export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
-export * from "./selects/AvatarCombobox";
 export * from "./charts";
 export * from "./ui/data/AvatarBase";
 export * from "./ui/data/Badge";
@@ -61,3 +60,4 @@ export * from "./ui/form/CheckBoxThree";
 export * from "./selects/MultiSelectBase";
 export * from "./event-calendar-view/";
 export * from "./ui/data/Banner"
+export * from "./selects/AvatarCombobox";

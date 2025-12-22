@@ -11,7 +11,7 @@ export interface CalendarEventAgenda {
   allDay?: boolean;
   color?: EventColorAgenda;
   location?: string;
-  duration?: number; 
+  duration?: number;
 }
 
 export type EventColorAgenda =
@@ -25,3 +25,16 @@ export type EventColorAgenda =
   | "blue"
   | "red"
   | "purple";
+
+export enum EventColorAgendaEnum {
+  sky = "sky",
+  amber = "amber",
+  violet = "violet",
+  rose = "rose",
+  emerald = "emerald",
+  orange = "orange",
+  green = "green",
+  blue = "blue",
+  red = "red",
+  purple = "purple",
+}

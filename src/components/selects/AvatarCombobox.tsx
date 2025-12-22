@@ -60,7 +60,7 @@ export interface AvatarComboboxItem<T extends string> {
   avatarClassName?: string;
 }
 
-interface SelectTestIds {
+export interface AvatarComboboxTestIds {
   root?: string;
   base?: string;
   trigger?: string;
@@ -72,7 +72,7 @@ interface SelectTestIds {
   item?: (value: string) => string;
 }
 
-interface DefaultSelectProps extends ErrorMessageProps {
+export interface DefaultAvatarComboboxProps extends ErrorMessageProps {
   placeholder?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -80,24 +80,24 @@ interface DefaultSelectProps extends ErrorMessageProps {
   colors?: string[];
 }
 
-interface SelectPropsWithItems<T extends string> extends DefaultSelectProps {
+export interface AvatarComboboxPropsWithItems<T extends string> extends DefaultAvatarComboboxProps {
   items: AvatarComboboxItem<T>[];
   groupItems?: never;
-  testIds?: SelectTestIds;
+  testIds?: AvatarComboboxTestIds;
 }
 
-interface SelectPropsWithGroupItems<T extends string>
-  extends DefaultSelectProps {
+export interface AvatarComboboxPropsWithGroupItems<T extends string>
+  extends DefaultAvatarComboboxProps {
   items?: never;
   groupItems: {
     [key: string]: AvatarComboboxItem<T>[];
   };
-  testIds?: SelectTestIds;
+  testIds?: AvatarComboboxTestIds;
 }
 
-type AvatarComboboxProps<T extends string> =
-  | SelectPropsWithItems<T>
-  | SelectPropsWithGroupItems<T>;
+export type AvatarComboboxProps<T extends string> =
+  | AvatarComboboxPropsWithItems<T>
+  | AvatarComboboxPropsWithGroupItems<T>;
 
 export function AvatarCombobox<T extends string>({
   items,

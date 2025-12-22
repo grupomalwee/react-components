@@ -107,7 +107,7 @@ interface EventItemProps {
   isDragging?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   showTime?: boolean;
-  currentTime?: Date; 
+  currentTime?: Date;
   isFirstDay?: boolean;
   isLastDay?: boolean;
   children?: React.ReactNode;
@@ -292,7 +292,7 @@ export function EventItemAgenda({
     return (
       <button
         className={cn(
-          "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring",
+          "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-past-event:line-through data-past-event:opacity-90 border-2 border-border",
           getEventColorClassesAgenda(eventColor),
           className
         )}
@@ -304,44 +304,35 @@ export function EventItemAgenda({
         {...dndListeners}
         {...dndAttributes}
       >
-        <div
-          className={cn(
-            "font-medium min-w-0 truncate",
-            agendaOnly
-              ? "text-sm sm:text-base md:text-lg"
-              : "text-sm sm:text-base"
-          )}
-        >
-          {event.title}
-        </div>
-        <div
-          className={cn(
-            "opacity-70 flex items-center gap-2",
-            agendaOnly ? "text-sm" : "text-xs"
-          )}
-        >
-          {event.location && (
-            <span className="opacity-80 flex items-center gap-1 min-w-0">
-              -<span className="truncate">{event.location}</span>
-            </span>
-          )}
-        </div>
-        {event.description && (
+        <div className="flex w-full justify-between ">
           <div
             className={cn(
-              "my-1 opacity-90",
-              agendaOnly ? "text-sm sm:text-base" : "text-xs sm:text-sm"
+              "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate"
             )}
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
           >
-            {event.description}
+            {event.title}
           </div>
-        )}
+          <div className={cn("opacity-70 flex items-center gap-2")}>
+            {event.location && (
+              <span className="opacity-80 flex items-center gap-1 min-w-0">
+                -<span className="truncate">{event.location}</span>
+              </span>
+            )}
+          </div>
+          {event.description && (
+            <div
+              className={cn("my-1 opacity-90")}
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {event.description}
+            </div>
+          )}
+        </div>
       </button>
     );
   }

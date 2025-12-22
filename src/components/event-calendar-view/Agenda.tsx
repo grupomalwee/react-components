@@ -1,11 +1,10 @@
 "use client";
 
-import { addDays, format, isToday } from "date-fns";
+import { format, isToday, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMemo } from "react";
 
 import {
-  AgendaDaysToShowAgenda,
   type CalendarEventAgenda,
   EventItemAgenda,
   getAgendaEventsForDayAgenda,
@@ -48,9 +47,9 @@ export function Agenda({
 
   const days = useMemo(() => {
     console.log("Agenda view updating with date:", currentDate.toISOString());
-    return Array.from({ length: AgendaDaysToShowAgenda }, (_, i) =>
-      addDays(new Date(currentDate), i)
-    );
+    const start = startOfMonth(new Date(currentDate));
+    const end = endOfMonth(new Date(currentDate));
+    return eachDayOfInterval({ start, end });
   }, [currentDate]);
 
   const handleEventClick = (
