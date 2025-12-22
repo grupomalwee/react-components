@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, userEvent, expect } from "storybook/test";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/feedback/DialogBase";
 
 const meta: Meta<typeof ButtonBase> = {
-  title: "overview/Example",
+  title: "Example",
   component: ButtonBase,
   tags: ["autodocs"],
   parameters: {
