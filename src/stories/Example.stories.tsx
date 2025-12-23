@@ -139,7 +139,7 @@ export const SelectSummary: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByTestId("select-trigger");
     await userEvent.click(trigger);
-    const item = await canvas.getByText("Option B");
+    const item = await within(document.body).findByText("Option B");
     expect(item).toBeInTheDocument();
     await userEvent.click(item);
   },
@@ -173,7 +173,9 @@ export const DialogSummary: Story = {
     const canvas = within(canvasElement);
     const openBtn = canvas.getByRole("button", { name: /open dialog/i });
     await userEvent.click(openBtn);
-    expect(canvas.getByText("Example dialog")).toBeInTheDocument();
+    expect(
+      await within(document.body).findByText("Example dialog")
+    ).toBeInTheDocument();
   },
 };
 
