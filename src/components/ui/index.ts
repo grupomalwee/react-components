@@ -6,11 +6,11 @@ export * from "./overlays";
 export * from "./feedback";
 export * from "./FilterBase";
 export * from "./SelectBase";
-export { default as ErrorMessage } from "./ErrorMessage";
-export * from "./CodeBlock"
-export * from "./FilterBase"
-export * from "./form/DebouncedInput"
-export * from "./form/CheckBoxThree"
+export { default as ErrorMessage } from "./shared/ErrorMessage";
+export * from "./CodeBlock";
+export * from "./FilterBase";
+export * from "./form/DebouncedInput";
+export * from "./form/CheckBoxThree";
 export * from "./data/Banner";
 export * from "./selects/Combobox";
 export * from "./selects/MultiCombobox";

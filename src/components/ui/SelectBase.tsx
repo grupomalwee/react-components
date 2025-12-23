@@ -6,8 +6,8 @@ import { CheckIcon, CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "../..//lib/utils";
-import type { ErrorMessageProps } from "@/components/ui/ErrorMessage";
-import ErrorMessage from "@/components/ui/ErrorMessage";
+import type { ErrorMessageProps } from "@/components/ui/shared/ErrorMessage";
+import ErrorMessage from "@/components/ui/shared/ErrorMessage";
 
 const SelectBase = SelectPrimitive.Root;
 

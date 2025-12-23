@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "../../../lib/utils";
 import LabelBase from "./LabelBase";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../shared/ErrorMessage";
 
 export interface InputBaseProps extends React.ComponentProps<"input"> {
   label?: string;

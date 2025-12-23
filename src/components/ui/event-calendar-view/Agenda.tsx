@@ -1,6 +1,12 @@
 "use client";
 
-import { format, isToday, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+import {
+  format,
+  isToday,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMemo } from "react";
 
@@ -46,7 +52,6 @@ export function Agenda({
   );
 
   const days = useMemo(() => {
-    console.log("Agenda view updating with date:", currentDate.toISOString());
     const start = startOfMonth(new Date(currentDate));
     const end = endOfMonth(new Date(currentDate));
     return eachDayOfInterval({ start, end });
@@ -57,7 +62,6 @@ export function Agenda({
     e: React.MouseEvent
   ) => {
     e.stopPropagation();
-    console.log("Agenda view event clicked:", event);
     if (onEventSelect) onEventSelect(event, e);
   };
 

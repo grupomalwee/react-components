@@ -40,7 +40,7 @@ export function ClearButton({
         onClick?.(e);
       }}
       className={cn(
-        "flex items-center justify-center hover:text-red-500",
+        "flex justify-center hover:text-red-500 hover:bg-transparent",
         className
       )}
     >

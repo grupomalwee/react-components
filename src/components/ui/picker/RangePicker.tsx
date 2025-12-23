@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/overlays/PopoverBase";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { CalendarDotIcon } from "@phosphor-icons/react/dist/ssr";
-import ErrorMessage, { ErrorMessageProps } from "../ErrorMessage";
+import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
 
 export interface RangePickerProps extends ErrorMessageProps {
   value?: DateRange;

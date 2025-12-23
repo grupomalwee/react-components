@@ -12,7 +12,9 @@ import {
   SelectValueBase,
 } from "@/components/ui/SelectBase";
 import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
-import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import ErrorMessage, {
+  ErrorMessageProps,
+} from "@/components/ui/shared/ErrorMessage";
 import { cn } from "@/lib/utils";
 import LabelBase from "../form/LabelBase";
 
@@ -36,7 +38,8 @@ export interface SelectTestIds {
   paginationPage?: (page: number) => string;
 }
 
-export interface DefaultSelectProps<T extends string> extends ErrorMessageProps {
+export interface DefaultSelectProps<T extends string>
+  extends ErrorMessageProps {
   selected: T | null;
   onChange: (value: T) => void;
   placeholder?: string;
@@ -47,7 +50,8 @@ export interface DefaultSelectProps<T extends string> extends ErrorMessageProps 
   pagination?: number;
 }
 
-export interface SelectPropsWithItems<T extends string> extends DefaultSelectProps<T> {
+export interface SelectPropsWithItems<T extends string>
+  extends DefaultSelectProps<T> {
   items: SelectItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
@@ -102,15 +106,19 @@ export function Select<T extends string>({
   const paged = useMemo<PagedGrouped | PagedItems | null>(() => {
     if (!pagination || pagination <= 0) return null;
 
+
     if (groupItems) {
       type Flat = SelectItem<T> & { group: string };
       const flattened: Flat[] = Object.keys(groupItems).flatMap((g) =>
         groupItems[g].map((it) => ({ ...it, group: g }))
       );
       const total = flattened.length;
-      const totalPages = Math.max(1, Math.ceil(total / pagination));
-      const start = (page - 1) * pagination;
-      const pageItems = flattened.slice(start, start + pagination);
+
+      const pageSize = Math.max(1, Math.ceil(total / pagination));
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+      const start = (page - 1) * pageSize;
+      const pageItems = flattened.slice(start, start + pageSize);
       const grouped: Record<string, SelectItem<T>[]> = {};
       pageItems.forEach((it) => {
         if (!grouped[it.group]) grouped[it.group] = [];
@@ -120,9 +128,10 @@ export function Select<T extends string>({
     }
 
     const total = items!.length;
-    const totalPages = Math.max(1, Math.ceil(total / pagination));
-    const start = (page - 1) * pagination;
-    const pageItems = items!.slice(start, start + pagination);
+    const pageSize = Math.max(1, Math.ceil(total / pagination));
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const start = (page - 1) * pageSize;
+    const pageItems = items!.slice(start, start + pageSize);
     return { total, totalPages, pageItems } as PagedItems;
   }, [items, groupItems, page, pagination]);
 
@@ -223,7 +232,7 @@ export function Select<T extends string>({
                       type="button"
                       onClick={goPrev}
                       disabled={page <= 1}
-                      data-testid={   
+                      data-testid={
                         testIds.paginationPrev ?? "select-pagination-prev"
                       }
                       aria-label="Previous page"

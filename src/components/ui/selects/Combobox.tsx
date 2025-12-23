@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { ComboboxBase, ComboboxItem } from "./ComboboxBase";
-import { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import { ErrorMessageProps } from "@/components/ui/shared/ErrorMessage";
 import LabelBase from "../form/LabelBase";
 import { cn } from "@/lib/utils";
 

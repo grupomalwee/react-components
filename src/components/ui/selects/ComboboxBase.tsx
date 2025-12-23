@@ -12,7 +12,9 @@ import {
   PopoverTriggerBase,
 } from "@/components/ui/overlays/PopoverBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
-import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import ErrorMessage, {
+  ErrorMessageProps,
+} from "@/components/ui/shared/ErrorMessage";
 
 import { motion } from "framer-motion";
 import { ReactNode, useState } from "react";

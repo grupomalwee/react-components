@@ -35,6 +35,15 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.23 — 2025-12-23
+
+**Author:** Gabriel Glatz
+
+### Fixed
+- EventAgenda: ajuste de visual e onClick.
+- Date Time Picker: botão de limpar opções ajustado o visual.
+
+---
 ## 1.7.22 — 2025-12-22
 
 **Author:** Gabriel Glatz

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { ComboboxProps } from "./Combobox";
-import { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import { ErrorMessageProps } from "@/components/ui/shared/ErrorMessage";
 import { ComboboxBase } from "./ComboboxBase";
 import { XIcon } from "@phosphor-icons/react";
 import LabelBase from "../form/LabelBase";

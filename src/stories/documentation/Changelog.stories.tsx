@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import changelogData from "@/stories/data/changelog-data";
+import changelogData from "@/stories/changelog/changelog-data";
 import Changelog from "@/components/ui/Changelog";
 
 const meta: Meta = {

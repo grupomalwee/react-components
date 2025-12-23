@@ -14,7 +14,7 @@ import {
 import LabelBase from "../form/LabelBase";
 import { TimePicker } from "./TimePicker";
 import { CalendarBlankIcon, ClockIcon } from "@phosphor-icons/react";
-import ErrorMessage, { ErrorMessageProps } from "../ErrorMessage";
+import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
 import { ClearButton } from "../shared/ClearButton";
 
 interface DateTimePickerProps extends ErrorMessageProps {
@@ -118,6 +118,7 @@ export function DateTimePicker({
               </span>
               {date && (
                 <ClearButton
+                className="-mr-3"
                   onClick={() => {
                     setInternalDate(undefined);
                     onChange(undefined);

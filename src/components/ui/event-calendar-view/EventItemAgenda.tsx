@@ -253,6 +253,7 @@ export function EventItemAgenda({
         ariaLabel={ariaLabel}
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
+        onClick={onClick}
       >
         {durationMinutes < 45 ? (
           <div className="flex items-center justify-between w-full">

@@ -251,3 +251,54 @@ export default function WithError() {
     error: "This field is required",
   },
 };
+
+export const Paginated: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function Paginated() {
+  const items = Array.from({ length: 20 }).map((_, i) => ({
+    label:Option,
+    value: v,
+  }));
+
+  return (
+    <Select
+      items={items}
+      onChange={(v) => console.log('changed', v)}
+      placeholder="Select an option"
+      pagination={5} // interpretado como número de páginas
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    items: Array.from({ length: 20 }).map((_, i) => ({
+      label: `Option ${i + 1}`,
+      value: `v${i + 1}`,
+    })),
+    onChange: (v: string) => console.log("changed", v),
+    placeholder: "Select an option",
+    pagination: 2,
+    testIds: {
+      root: "select-root",
+      base: "select-base",
+      trigger: "select-trigger",
+      value: "select-value",
+      scrollarea: "select-scrollarea",
+      content: "select-content",
+      group: "select-group",
+      label: "select-label",
+      item: (v: string) => `select-item-${v}`,
+      paginationPrev: "select-pagination-prev",
+      paginationNext: "select-pagination-next",
+      paginationPage: (p: number) => `select-pagination-page-${p}`,
+    },
+  },
+};

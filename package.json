@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build-css && tsup",
+    "build:check": "pnpm run build && node ./scripts/check-dist-build.js",
     "build-css": "npx tailwindcss -i ./src/style/global.css -o ./dist/index.css --config ./tailwind.config.js",
     "lint": "tsc --noEmit && eslint .",
     "preview": "vite preview",

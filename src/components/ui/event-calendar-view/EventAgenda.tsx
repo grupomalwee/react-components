@@ -103,7 +103,6 @@ export function EventAgenda({
     } catch (err) {
       console.error(err);
     }
-    console.log("Event selected:", event);
   };
 
   const handleEventUpdate = (updatedEvent: CalendarEventAgenda) => {

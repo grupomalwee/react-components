@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { InputBase } from "./InputBase";
 import { cn } from "../../../lib/utils";
 import { CircleNotchIcon } from "@phosphor-icons/react";
-import { ErrorMessageProps } from "../ErrorMessage";
+import { ErrorMessageProps } from "../shared/ErrorMessage";
 
 export interface DebouncedInputProps
   extends Omit<

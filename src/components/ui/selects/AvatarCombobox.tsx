@@ -16,7 +16,9 @@ import {
   CommandListBase,
 } from "@/components/ui/navigation/CommandBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
-import ErrorMessage, { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import ErrorMessage, {
+  ErrorMessageProps,
+} from "@/components/ui/shared/ErrorMessage";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_COLORS = [
@@ -80,7 +82,8 @@ export interface DefaultAvatarComboboxProps extends ErrorMessageProps {
   colors?: string[];
 }
 
-export interface AvatarComboboxPropsWithItems<T extends string> extends DefaultAvatarComboboxProps {
+export interface AvatarComboboxPropsWithItems<T extends string>
+  extends DefaultAvatarComboboxProps {
   items: AvatarComboboxItem<T>[];
   groupItems?: never;
   testIds?: AvatarComboboxTestIds;

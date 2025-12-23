@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge, BadgeColorType } from "@/components/ui/data/Badge";
-import type { ChangeItem } from "@/stories/data/changelog-data";
+import type { ChangeItem } from "@/stories/changelog/changelog-data";
 
 type TagType = "added" | "changed" | "fixed" | "notes";
 

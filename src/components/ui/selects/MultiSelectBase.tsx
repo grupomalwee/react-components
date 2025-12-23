@@ -12,13 +12,13 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ErrorMessageProps } from "@/components/ui/ErrorMessage";
+import type { ErrorMessageProps } from "@/components/ui/shared/ErrorMessage";
 import {
   PopoverBase,
   PopoverContentBase,
   PopoverTriggerBase,
 } from "../overlays/PopoverBase";
-import ErrorMessage from "@/components/ui/ErrorMessage";
+import ErrorMessage from "@/components/ui/shared/ErrorMessage";
 import { motion } from "framer-motion";
 import { ButtonBase } from "../form/ButtonBase";
 import { Badge } from "../data/Badge";
