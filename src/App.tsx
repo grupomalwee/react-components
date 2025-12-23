@@ -6,7 +6,7 @@ import { ModeToggleBase } from "./components/theme/mode-toggle";
 
 import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
 import { Toaster } from "./components/ui/feedback/SonnerBase";
-import { AppSidebar } from "./components/sidebar/AppSidebar";
+// import { AppSidebar } from "./components/idebar/AppSidebar";
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
       <ThemeProviderBase defaultTheme="light-purple" storageKey="app-ui-theme">
         <div className="flex">
           <SidebarProviderBase>
-            <AppSidebar />
+            {/* <AppSidebar /> */}
             <main></main>
           </SidebarProviderBase>
 
