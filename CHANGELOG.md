@@ -35,6 +35,15 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.24 — 2025-12-26
+
+**Author:** Gabriel Glatz
+
+### Fixed
+- MultiSelect: icons se movendo.
+- DateTimePicker: hover no cancelar.
+
+---
 ## 1.7.23 — 2025-12-23
 
 **Author:** Gabriel Glatz

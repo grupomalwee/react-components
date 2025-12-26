@@ -377,8 +377,6 @@ export function MultiSelectItemBase({
       }}
     >
       <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.1 }}
       >
         <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">

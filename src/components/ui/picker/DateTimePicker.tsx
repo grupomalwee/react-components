@@ -216,7 +216,7 @@ export function DateTimePicker({
             )}
             <div className="grid grid-cols-2">
               <ButtonBase
-                className="no-active-animation rounded-none bg-muted text-gray-800 border-b-2 border-l-2"
+                className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b-2 border-l-2 hover:bg-muted/50 overflow-y-hidden"
                 onClick={() => setOpen(false)}
               >
                 Cancelar

@@ -11,6 +11,16 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.24",
+    author: "Gabriel Glatz",
+    date: "2025-12-26",
+    shortTitle: "DateTimePicker e MultiSelect",
+    fixed: [
+      "MultiSelect: icons se movendo.",
+      "DateTimePicker: hover no cancelar.",
+    ],
+  },
+  {
     version: "1.7.23",
     author: "Gabriel Glatz",
     date: "2025-12-23",

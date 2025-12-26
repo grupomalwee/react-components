@@ -110,6 +110,7 @@ export function Agenda({
                       .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
                       .join(" ");
                   })()}
+                  {isToday(day) ? " - Hoje" : ""}
                 </span>
                 <div className="mt-6 space-y-2">
                   {dayEvents.map((event) => (
