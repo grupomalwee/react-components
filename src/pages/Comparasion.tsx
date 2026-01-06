@@ -105,6 +105,8 @@ function ComparisonRowGrid({
 
         <DateTimePicker date={date} onChange={setDate} hideSeconds />
 
+        {/* <RangePicker value={date2} onChange={setDate} /> */}
+  
         <MultiSelectBase values={values} onValuesChange={setValues}>
           <MultiSelectTriggerBase>
             <MultiSelectValueBase placeholder={"Selecione"} />

@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.25",
+    author: "Gabriel Glatz",
+    date: "2026-01-06",
+    shortTitle: "DateTimePicker",
+    added: [
+      "DateTimePicker: adicionado onConfirm.",
+    ],
+  },
+  {
     version: "1.7.24",
     author: "Gabriel Glatz",
     date: "2025-12-26",

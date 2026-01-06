@@ -43,6 +43,11 @@ const meta: Meta<typeof DateTimePicker> = {
     className: { control: "text" },
     fromDate: { control: "date" },
     toDate: { control: "date" },
+    onConfirm: {
+      description:
+        "Callback executado quando o usuário clica no botão Confirmar",
+      action: "confirmed",
+    },
   },
   args: {
     label: "Selecione uma data",
@@ -50,7 +55,6 @@ const meta: Meta<typeof DateTimePicker> = {
     hideSeconds: false,
     disabled: false,
     className: "",
-    
   },
 };
 
@@ -61,7 +65,7 @@ const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {
   const [date, setDate] = useState<Date | undefined>(args.date ?? undefined);
-  return <DateTimePicker {...args} date={date} onChange={setDate}  />;
+  return <DateTimePicker {...args} date={date} onChange={setDate} />;
 };
 
 export const Default: Story = {
@@ -72,7 +76,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return (\n    <DateTimePicker \n      label='Selecione uma data' \n      date={date} \n      onChange={setDate}\n      onConfirm={(confirmedDate) => console.log('Data confirmada:', confirmedDate)}\n    />\n  );\n}`,
       },
     },
   },
@@ -237,6 +241,59 @@ export default function OpenOnRangeBounds() {
   );
 }
 `,
+      },
+    },
+  },
+};
+
+export const WithOnConfirm: Story = {
+  name: "onConfirm",
+  render: () => {
+    const [date, setDate] = useState<Date | undefined>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <DateTimePicker
+          label="Selecione e confirme a data"
+          date={date}
+          onChange={setDate}
+          onConfirm={(d) => {
+            setDate(d);
+            console.log("Data confirmada:", d);
+          }}
+        />
+        <p>Data atual: {date?.toLocaleString("pt-BR")}</p>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { DateTimePicker } from '@mlw-packages/react-components';
+
+export default function WithOnConfirm() {
+  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));
+  const [confirmedDate, setConfirmedDate] = useState<Date | undefined>();
+
+  return (
+    <>
+      <DateTimePicker
+        label="Selecione e confirme a data"
+        date={date}
+        onChange={setDate}
+        onConfirm={(d) => {
+          setConfirmedDate(d);
+          console.log('Data confirmada:', d);
+        }}
+      />
+      <p>Data atual (onChange): {date?.toLocaleString('pt-BR')}</p>
+      <p>Data confirmada (onConfirm): {confirmedDate?.toLocaleString('pt-BR')}</p>
+    </>
+  );
+}`,
       },
     },
   },

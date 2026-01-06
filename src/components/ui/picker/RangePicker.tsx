@@ -27,9 +27,10 @@ import {
   PopoverTriggerBase,
   PopoverContentBase,
 } from "@/components/ui/overlays/PopoverBase";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CalendarDotIcon } from "@phosphor-icons/react/dist/ssr";
 import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
+import { ClearButton } from "../shared/ClearButton";
 
 export interface RangePickerProps extends ErrorMessageProps {
   value?: DateRange;
@@ -50,7 +51,6 @@ export function RangePicker({
 }: RangePickerProps) {
   const [open, setOpen] = React.useState(false);
   const [range, setRange] = React.useState<DateRange | undefined>(value);
-  const controls = useAnimation();
 
   React.useEffect(() => {
     setRange(value);
@@ -69,42 +69,35 @@ export function RangePicker({
   return (
     <PopoverBase open={open} onOpenChange={setOpen}>
       <PopoverTriggerBase asChild className={cn(error && "border-red-500")}>
-        <motion.div
-          whileTap={{ scale: 0.97 }}
-          whileHover={{ scale: open ? 1.03 : 1.01 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        <ButtonBase
+          variant="outline"
+          className={cn(
+            "w-full justify-start text-left min-w-0 overflow-hidden",
+            !range && "text-muted-foreground"
+          )}
         >
-          <ButtonBase
-            variant="outline"
-            className={cn(
-              "w-full justify-start text-left min-w-0 overflow-hidden",
-              !range && "text-muted-foreground"
-            )}
+          <span
+            className={cn("truncate flex-1", !range && "text-muted-foreground")}
           >
-            <motion.span
-              className={cn(
-                "truncate flex-1",
-                !range && "text-muted-foreground"
-              )}
-              transition={{ duration: 0.2 }}
-              animate={controls}
-            >
-              {range?.from && range?.to
-                ? `${format(range.from, "P", {
-                    locale: dateFnsLocale,
-                  })} - ${format(range.to, "P", { locale: dateFnsLocale })}`
-                : label}
-            </motion.span>
-            <motion.span
-              animate={
-                open ? { rotate: 8, scale: 1.15 } : { rotate: 0, scale: 1 }
-              }
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            >
-              <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
-            </motion.span>
-          </ButtonBase>
-        </motion.div>
+            {range?.from && range?.to
+              ? `${format(range.from, "P", {
+                  locale: dateFnsLocale,
+                })} - ${format(range.to, "P", { locale: dateFnsLocale })}`
+              : label}
+          </span>
+          {range && (
+            <ClearButton
+              className="-mr-3"
+              onClick={() => {
+                setRange(undefined);
+                onChange?.(undefined);
+                setOpen(false);
+              }}
+            />
+          )}
+
+          <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
+        </ButtonBase>
       </PopoverTriggerBase>
 
       <ErrorMessage error={error} />

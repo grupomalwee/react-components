@@ -35,24 +35,38 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.25 — 2026-01-06
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- DateTimePicker: adicionado onConfirm.
+
+---
+
 ## 1.7.24 — 2025-12-26
 
 **Author:** Gabriel Glatz
 
 ### Fixed
+
 - MultiSelect: icons se movendo.
 - DateTimePicker: hover no cancelar.
 
 ---
+
 ## 1.7.23 — 2025-12-23
 
 **Author:** Gabriel Glatz
 
 ### Fixed
+
 - EventAgenda: ajuste de visual e onClick.
 - Date Time Picker: botão de limpar opções ajustado o visual.
 
 ---
+
 ## 1.7.22 — 2025-12-22
 
 **Author:** Gabriel Glatz
@@ -60,13 +74,17 @@
 ### Added
 
 - Clear Button: novo componente para uso de Triggers.
+
 ---
+
 ### Fixed
 
 - EventAgenda: ajuste de visual e range.
 - Date Time Picker: botão de limpar opções.
 - Export: exportação das tipagems dos Selects.
+
 ---
+
 ## 1.7.21 — 2025-12-22
 
 **Author:** Gabriel Glatz
@@ -74,7 +92,9 @@
 ### Fixed
 
 - EventAgenda: ajuste de responsividade e funcionamento.
+
 ---
+
 ## 1.7.20 — 2025-12-18
 
 **Author:** Gabriel Glatz
@@ -82,7 +102,9 @@
 ### Fixed
 
 - EventAgenda: arrumar uso de types e props.
+
 ---
+
 ## 1.7.19 — 2025-12-18
 
 **Author:** Gabriel Glatz
@@ -90,7 +112,9 @@
 ### Fixed
 
 - EventAgenda: erro de build de componente.
+
 ---
+
 ## 1.7.18 — 2025-12-18
 
 **Author:** Gabriel Glatz
@@ -98,7 +122,9 @@
 ### Added
 
 - EventAgenda: adicionado novo componente.
+
 ---
+
 ## 1.7.17 — 2025-12-17
 
 **Author:** Gabriel Glatz
@@ -108,12 +134,12 @@
 - MultiSelect: adicionado novo componente.
 - Banner: adicionado novo componente.
 
-
 ### Fixed
 
 - Chart: corrigido erros de Rotulos X e title position.
 
 ---
+
 ## 1.7.16 — 2025-12-16
 
 **Author:** Gabriel Glatz
@@ -123,6 +149,7 @@
 - Chart: corrigido erro de yAxis e erros de Build.
 
 ---
+
 ## 1.7.15 — 2025-12-15
 
 **Author:** Gabriel Glatz
@@ -132,6 +159,7 @@
 - Chart: corrigido erro de yAxis.
 
 ---
+
 ## 1.7.14 — 2025-12-15
 
 **Author:** Gabriel Glatz

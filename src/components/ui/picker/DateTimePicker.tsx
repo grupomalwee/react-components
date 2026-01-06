@@ -20,7 +20,8 @@ import { ClearButton } from "../shared/ClearButton";
 interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
   date: Date | undefined;
-  onChange: (date: Date | undefined) => void;
+  onChange?: (date: Date | undefined) => void;
+  onConfirm?: (date: Date | undefined) => void;
   displayFormat?: boolean;
   hideTime?: boolean;
   hideSeconds?: boolean;
@@ -35,6 +36,7 @@ export function DateTimePicker({
   label,
   date,
   onChange,
+  onConfirm,
   displayFormat,
   hideTime,
   hideSeconds,
@@ -52,19 +54,19 @@ export function DateTimePicker({
     if (!newDay) return;
     if (!internalDate) {
       setInternalDate(newDay);
-      onChange(newDay);
+      onChange?.(newDay);
       return;
     }
     const diff = newDay.getTime() - internalDate.getTime();
     const diffInDays = diff / (1000 * 60 * 60 * 24);
     const newDateFull = add(internalDate, { days: Math.ceil(diffInDays) });
     setInternalDate(newDateFull);
-    onChange(newDateFull);
+    onChange?.(newDateFull);
   };
 
   const handleTimeChange = (newDate: Date | undefined) => {
     setInternalDate(newDate);
-    onChange(newDate);
+    onChange?.(newDate);
   };
 
   const getTimeFormat = () => {
@@ -98,38 +100,37 @@ export function DateTimePicker({
           asChild
           className={cn(error && "border-red-500")}
         >
-          <div>
-            <ButtonBase
-              variant={"outline"}
+          <ButtonBase
+            variant={"outline"}
+            disabled={disabled}
+            className={cn(
+              "w-full justify-start text-left min-w-0 overflow-hidden",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <span
               className={cn(
-                "w-full justify-start text-left min-w-0 overflow-hidden",
+                "truncate flex-1",
                 !date && "text-muted-foreground"
               )}
             >
-              <span
-                className={cn(
-                  "truncate flex-1",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                {date
-                  ? format(date, getDisplayFormat(), { locale: ptBR })
-                  : "Selecione uma data"}
-              </span>
-              {date && (
-                <ClearButton
+              {date
+                ? format(date, getDisplayFormat(), { locale: ptBR })
+                : "Selecione uma data"}
+            </span>
+            {date && (
+              <ClearButton
                 className="-mr-3"
-                  onClick={() => {
-                    setInternalDate(undefined);
-                    onChange(undefined);
-                    setOpen(false);
-                  }}
-                />
-              )}
+                onClick={() => {
+                  setInternalDate(undefined);
+                  onChange?.(undefined);
+                  setOpen(false);
+                }}
+              />
+            )}
 
-              <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
-            </ButtonBase>
-          </div>
+            <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
+          </ButtonBase>
         </PopoverTriggerBase>
 
         <ErrorMessage error={error} />
@@ -225,7 +226,7 @@ export function DateTimePicker({
                 className="no-active-animation rounded-none bg-emerald-600 hover:bg-emerald-700"
                 onClick={() => {
                   setOpen(false);
-                  onChange(internalDate);
+                  onConfirm?.(internalDate);
                 }}
               >
                 Confirmar
