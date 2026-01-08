@@ -89,8 +89,15 @@ const CommandListBase = React.forwardRef<
 >(({ className, testid: dataTestId = "command-list", ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn(
+      "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
+      className
+    )}
     data-testid={dataTestId}
+    style={{
+      overscrollBehavior: "contain",
+      WebkitOverflowScrolling: "touch",
+    }}
     {...props}
   />
 ));

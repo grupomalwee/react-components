@@ -15,7 +15,7 @@ const meta: Meta<typeof DateTimePicker> = {
           "Componente para seleção de data e hora com diversas opções de configuração.",
       },
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | null>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Selecione uma data' date={date} onChange={setDate} />;\n}`,
       },
     },
     backgrounds: {
@@ -64,7 +64,7 @@ type Story = StoryObj<typeof DateTimePicker>;
 const Template = (
   args: Partial<React.ComponentProps<typeof DateTimePicker>>
 ) => {
-  const [date, setDate] = useState<Date | undefined>(args.date ?? undefined);
+  const [date, setDate] = useState<Date | null>(args.date ?? null);
   return <DateTimePicker {...args} date={date} onChange={setDate} />;
 };
 
@@ -76,7 +76,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025,9,9,14,30,0));\n  return (\n    <DateTimePicker \n      label='Selecione uma data' \n      date={date} \n      onChange={setDate}\n      onConfirm={(confirmedDate) => console.log('Data confirmada:', confirmedDate)}\n    />\n  );\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  const [date, setDate] = useState<Date | null>(new Date(2025,9,9,14,30,0));\n  return (\n    <DateTimePicker \n      label='Selecione uma data' \n      date={date} \n      onChange={setDate}\n      onConfirm={(confirmedDate) => console.log('Data confirmada:', confirmedDate)}\n    />\n  );\n}`,
       },
     },
   },
@@ -85,8 +85,8 @@ export const Default: Story = {
 export const TimeVariants: Story = {
   name: "Variantes de Tempo",
   render: () => {
-    const [date1, setDate1] = useState<Date | undefined>();
-    const [date2, setDate2] = useState<Date | undefined>(
+    const [date1, setDate1] = useState<Date | null>();
+    const [date2, setDate2] = useState<Date | null>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
     return (
@@ -95,7 +95,7 @@ export const TimeVariants: Story = {
           <DateTimePicker
             label="Apenas data"
             hideTime={true}
-            date={date1}
+            date={date1 || null}
             onChange={setDate1}
           />
         </div>
@@ -106,7 +106,7 @@ export const TimeVariants: Story = {
             date={date2}
             onChange={setDate2}
           />
-        </div>
+        </div>      
       </div>
     );
   },
@@ -123,13 +123,13 @@ export const TimeVariants: Story = {
 export const ConfigurationOptions: Story = {
   name: "Opções de Configuração",
   render: () => {
-    const [date1, setDate1] = useState<Date | undefined>(
+    const [date1, setDate1] = useState<Date | null>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
-    const [date2, setDate2] = useState<Date | undefined>(
+    const [date2, setDate2] = useState<Date | null>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
-    const [date3, setDate3] = useState<Date | undefined>(
+    const [date3, setDate3] = useState<Date | null>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
 
@@ -179,7 +179,7 @@ export const WithTimePickerButton: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | null>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
       },
     },
   },
@@ -195,7 +195,7 @@ export const WithError: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function WithError() {\n  const [date, setDate] = useState<Date | null>(new Date(2025, 9, 9, 14, 30, 0));\n  return <DateTimePicker label='Erro' date={date} error={'Data inválida'} onChange={setDate} />;\n}`,
       },
     },
   },
@@ -204,7 +204,7 @@ export const WithError: Story = {
 export const OpenOnRangeBounds: Story = {
   name: "Abrir no mês dos limites",
   render: () => {
-    const [d, setD] = useState<Date | undefined>(undefined);
+    const [d, setD] = useState<Date | null>(null);
 
     const from = new Date(2026, 1, 12);
     const to = new Date(2026, 2, 24);
@@ -232,7 +232,7 @@ import React, { useState } from 'react';
 import { DateTimePicker } from '@mlw-packages/react-components';
 
 export default function OpenOnRangeBounds() {
-  const [d, setD] = useState<Date | undefined>(undefined);
+  const [d, setD] = useState<Date | null>(null);
   const from = new Date(2026, 1, 24);
   const to = new Date(2026, 2, 6);
 
@@ -249,7 +249,7 @@ export default function OpenOnRangeBounds() {
 export const WithOnConfirm: Story = {
   name: "onConfirm",
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(
+    const [date, setDate] = useState<Date | null>(
       new Date(2025, 9, 9, 14, 30, 0)
     );
 
@@ -275,8 +275,8 @@ export const WithOnConfirm: Story = {
 import { DateTimePicker } from '@mlw-packages/react-components';
 
 export default function WithOnConfirm() {
-  const [date, setDate] = useState<Date | undefined>(new Date(2025, 9, 9, 14, 30, 0));
-  const [confirmedDate, setConfirmedDate] = useState<Date | undefined>();
+  const [date, setDate] = useState<Date | null>(new Date(2025, 9, 9, 14, 30, 0));
+  const [confirmedDate, setConfirmedDate] = useState<Date | null>();
 
   return (
     <>

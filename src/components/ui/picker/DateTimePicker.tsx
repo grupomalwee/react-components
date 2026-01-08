@@ -12,16 +12,16 @@ import {
   PopoverContentBase,
 } from "../overlays/PopoverBase";
 import LabelBase from "../form/LabelBase";
-import { TimePicker } from "./TimePicker";
-import { CalendarBlankIcon, ClockIcon } from "@phosphor-icons/react";
+import { CalendarBlankIcon } from "@phosphor-icons/react";
 import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
 import { ClearButton } from "../shared/ClearButton";
+import { TimeScrollPicker } from "./TimeScrollPicker";
 
 interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
-  date: Date | undefined;
-  onChange?: (date: Date | undefined) => void;
-  onConfirm?: (date: Date | undefined) => void;
+  date: Date | null;
+  onChange?: (date: Date | null) => void;
+  onConfirm?: (date: Date | null) => void;
   displayFormat?: boolean;
   hideTime?: boolean;
   hideSeconds?: boolean;
@@ -46,11 +46,10 @@ export function DateTimePicker({
   className,
   error,
 }: DateTimePickerProps) {
-  const [internalDate, setInternalDate] = useState<Date | undefined>(date);
+  const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
-  const [timePickerOpen, setTimePickerOpen] = useState(false);
 
-  const handleSelect = (newDay: Date | undefined) => {
+  const handleSelect = (newDay: Date | null) => {
     if (!newDay) return;
     if (!internalDate) {
       setInternalDate(newDay);
@@ -64,7 +63,7 @@ export function DateTimePicker({
     onChange?.(newDateFull);
   };
 
-  const handleTimeChange = (newDate: Date | undefined) => {
+  const handleTimeChange = (newDate: Date | null) => {
     setInternalDate(newDate);
     onChange?.(newDate);
   };
@@ -121,10 +120,11 @@ export function DateTimePicker({
             {date && (
               <ClearButton
                 className="-mr-3"
-                onClick={() => {
-                  setInternalDate(undefined);
-                  onChange?.(undefined);
-                  setOpen(false);
+                onClick={(e) => {
+                  e?.stopPropagation();
+                  setInternalDate(null);
+                  onChange?.(null);
+                  onConfirm?.(null);
                 }}
               />
             )}
@@ -136,86 +136,38 @@ export function DateTimePicker({
         <ErrorMessage error={error} />
 
         <PopoverContentBase
-          className="w-full p-0 border-none shadow-none"
-          align="center"
+          className="w-auto max-w-[calc(100vw-16px)] p-0 border-none shadow-none"
+          align="start"
           sideOffset={4}
           side="bottom"
           avoidCollisions={true}
-          collisionPadding={8}
+          sticky="always"
         >
-          <div className="flex flex-col max-h-[calc(100vh-4rem)] overflow-y-auto border-none rounded-md">
+          <div className="flex max-h-auto overflow-y-auto border-none rounded-md">
             <CalendarBase
               mode="single"
               locale={ptBR}
-              selected={internalDate}
-              onSelect={(d) => handleSelect(d ?? undefined)}
+              selected={internalDate ?? undefined}
+              onSelect={(d) => handleSelect(d ?? null)}
               initialFocus
               defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
               fromDate={fromDate}
               toDate={toDate}
-              className={cn("w-full", hideTime && "border-0")}
+              className={cn("w-full", !hideTime && "rounded-r-none")}
             />
 
             {!hideTime && (
-              <div className="flex justify-center w-full border-b border-r border-l">
-                <PopoverBase
-                  open={timePickerOpen}
-                  onOpenChange={setTimePickerOpen}
-                >
-                  <PopoverTriggerBase asChild>
-                    <ButtonBase
-                      variant="outline"
-                      size="default"
-                      className={cn(
-                        "flex items-center justify-center rounded-none border-none",
-                        "text-sm sm:text-base font-semibold w-full",
-                        "bg-background hover:bg-accent",
-                        "transition-all duration-200",
-                        "shadow-sm hover:shadow-md no-active-animation"
-                      )}
-                    >
-                      <ClockIcon className="text-primary flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-black truncate">
-                        {internalDate
-                          ? format(internalDate, getTimeFormat() || "HH:mm", {
-                              locale: ptBR,
-                            })
-                          : "00:00"}
-                      </span>
-                    </ButtonBase>
-                  </PopoverTriggerBase>
-
-                  <PopoverContentBase
-                    className="w-auto max-w-sm rounded-md"
-                    align="center"
-                    side="top"
-                    sideOffset={8}
-                    avoidCollisions={true}
-                    collisionPadding={8}
-                  >
-                    <div className="flex flex-col items-center space-y-2 sm:space-y-3">
-                      <h4 className="text-sm sm:text-base font-medium text-center">
-                        Alterar Horário
-                      </h4>
-                      <TimePicker
-                        setDate={(d) => handleTimeChange(d ?? undefined)}
-                        date={internalDate}
-                        hideSeconds={hideSeconds}
-                      />
-                      <ButtonBase
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => setTimePickerOpen(false)}
-                        className="w-full text-xs sm:text-sm min-h-[36px] sm:min-h-[40px] no-active-animation"
-                      >
-                        Fechar
-                      </ButtonBase>
-                    </div>
-                  </PopoverContentBase>
-                </PopoverBase>
+              <div className="flex flex-col items-center justify-center border-t border-b border-r rounded-r-md">
+                <TimeScrollPicker
+                  setDate={(d) => handleTimeChange(d ?? null)}
+                  date={internalDate}
+                  hideSeconds={hideSeconds}
+                />
               </div>
             )}
-            <div className="grid grid-cols-2">
+          </div>
+          <div className="flex border-none rounded-md">
+            <div className="grid grid-cols-2 w-full">
               <ButtonBase
                 className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b-2 border-l-2 hover:bg-muted/50 overflow-y-hidden"
                 onClick={() => setOpen(false)}

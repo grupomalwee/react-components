@@ -1,6 +1,9 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ComboboxBase, ComboboxItem } from "@/components/ui/selects/ComboboxBase";
+import {
+  ComboboxBase,
+  ComboboxItem,
+} from "@/components/ui/selects/ComboboxBase";
 import React from "react";
 
 type ComboboxBaseStoryArgs = {
@@ -68,56 +71,6 @@ const meta: Meta<typeof ComboboxBase> = {
       ],
     },
     layout: "centered",
-  },
-};
-
-export const EmptyWithProp: Story = {
-  name: "Vazio com `empty`",
-  render: () => {
-    const items: ComboboxItem<string>[] = [];
-    const [selected, setSelected] = React.useState<string | null>(null);
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-        }}
-      >
-        <div style={{ width: 320 }}>
-          <ComboboxBase
-            items={items}
-            renderSelected={<span>{items.find((i) => i.value === selected)?.label}</span>}
-            handleSelection={(value) => setSelected(value)}
-            checkIsSelected={(value) => selected === value}
-            empty="Sem opções disponíveis"
-          />
-        </div>
-      </div>
-    );
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `import React from 'react';
-import { ComboboxBase } from '@mlw-packages/react-components';
-
-export default function EmptyWithProp() {
-  const items = [];
-  const [selected, setSelected] = React.useState(null);
-  return (
-    <ComboboxBase
-      items={items}
-      renderSelected={<span>{/* empty */}</span>}
-      handleSelection={(v) => {}}
-      empty={<div>Sem opções disponíveis</div>}
-    />
-  );
-}
-`,
-      },
-    },
   },
 };
 
@@ -189,6 +142,58 @@ export const Default: Story = {
         </div>
       </div>
     );
+  },
+};
+
+export const EmptyWithProp: Story = {
+  name: "Vazio com `empty`",
+  render: () => {
+    const items: ComboboxItem<string>[] = [];
+    const [selected, setSelected] = React.useState<string | null>(null);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div style={{ width: 320 }}>
+          <ComboboxBase
+            items={items}
+            renderSelected={
+              <span>{items.find((i) => i.value === selected)?.label}</span>
+            }
+            handleSelection={(value) => setSelected(value)}
+            checkIsSelected={(value) => selected === value}
+            empty="Sem opções disponíveis"
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { ComboboxBase } from '@mlw-packages/react-components';
+
+export default function EmptyWithProp() {
+  const items = [];
+  const [selected, setSelected] = React.useState(null);
+  return (
+    <ComboboxBase
+      items={items}
+      renderSelected={<span>{/* empty */}</span>}
+      handleSelection={(v) => {}}
+      empty={<div>Sem opções disponíveis</div>}
+    />
+  );
+}
+`,
+      },
+    },
   },
 };
 

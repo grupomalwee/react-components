@@ -51,7 +51,7 @@ import { AlertDialogPage } from "@/pages/Alert-dialog";
 import DestructiveDialogPage from "@/pages/DestructiveDialog";
 import { AvatarPage } from "@/pages/Avatar";
 import { ButtonPage } from "@/pages/Button";
-import { CalendarPage } from "@/pages/Calendar";
+// import { CalendarPage } from "@/pages/Calendar";
 import { CardPage } from "@/pages/Card";
 import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
@@ -94,7 +94,7 @@ import { BarChartPage } from "@/pages/BarChart";
 import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
 // import ChartPage from "@/pages/Chart";
-import DatePickerPage from "@/pages/DatePicker";
+// import DatePickerPage from "@/pages/DatePicker";
 import { FileUploaderPage } from "@/pages/FileUploader";
 import { DebounceInputPage } from "@/pages/DebounceInput";
 import ModalBasePage from "@/pages/Modal";
@@ -210,7 +210,7 @@ export function AppSidebar() {
           <Route path="/draggable-tooltip" element={<DraggableTooltipPage />} />
           <Route path="/button" element={<ButtonPage />} />
           <Route path="/breadcrumb" element={<BreadcrumbPage />} />
-          <Route path="/calender" element={<CalendarPage />} />
+          {/* <Route path="/calender" element={<CalendarPage />} /> */}
           <Route path="/card" element={<CardPage />} />
           <Route path="/contextmenu" element={<ContextMenuPage />} />
           <Route path="/checkbox" element={<CheckBoxPage />} />
@@ -221,7 +221,7 @@ export function AppSidebar() {
           <Route path="/dialog" element={<DialogPage />} />
           <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
-          <Route path="/date-picker" element={<DatePickerPage />} />
+          {/* <Route path="/date-picker" element={<DatePickerPage />} /> */}
           <Route path="/filter" element={<Filter />} />
           {/* <Route path="/form" element={<ProfileForm />} /> */}
           <Route path="/hovercard" element={<HoverCardPage />} />

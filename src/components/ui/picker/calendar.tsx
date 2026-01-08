@@ -21,7 +21,7 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 interface CalendarPopoverProps {
   selected?: Date;
-  onSelect?: (date: Date | undefined) => void;
+  onSelect?: (date: Date | null) => void;
   label?: string;
 }
 
@@ -180,7 +180,7 @@ export const CalendarPopover = ({
             mode="single"
             selected={selected}
             onSelect={(date) => {
-              onSelect?.(date as Date | undefined);
+              onSelect?.(date as Date | null);
               setOpen(false);
             }}
           />

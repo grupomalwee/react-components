@@ -17,6 +17,7 @@ import {
   MultiSelectTriggerBase,
   MultiSelectValueBase,
 } from "@/components/ui/selects/MultiSelectBase";
+// import { RangePicker } from "@/components/ui/picker/RangePicker";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -34,7 +35,8 @@ function ComparisonRowGrid({
   inputValue,
   setInputValue,
 }: Props) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = React.useState<Date | null>(new Date());
+  // const [date2, setDate2] = React.useState<Date | undefined>(new Date());
   const [values, setValues] = React.useState<string[]>([]);
 
   return (
@@ -105,7 +107,7 @@ function ComparisonRowGrid({
 
         <DateTimePicker date={date} onChange={setDate} hideSeconds />
 
-        {/* <RangePicker value={date2} onChange={setDate} /> */}
+        {/* <RangePicker value={date2} onChange={setDate2} /> */}
   
         <MultiSelectBase values={values} onValuesChange={setValues}>
           <MultiSelectTriggerBase>
@@ -164,7 +166,7 @@ function ComparisonRowFlex({
   inputValue,
   setInputValue,
 }: Props) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = React.useState<Date | null>(new Date());
 
   return (
     <section className="flex flex-wrap gap-6 w-full bg-red-500">

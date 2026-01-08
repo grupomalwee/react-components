@@ -76,3 +76,38 @@ export const MinMax: Story = {
     maxDate: new Date(2025, 11, 31),
   },
 };
+
+export const WithOnConfirm: Story = {
+  render: (args) => {
+    const [range, setRange] = useState<DateRange | undefined>(
+      args.value as DateRange | undefined
+    );
+    const [confirmed, setConfirmed] = useState<DateRange | undefined>();
+
+    return (
+      <div className="space-y-4">
+        <RangePicker
+          {...args}
+          value={range}
+          onChange={setRange}
+          onConfirm={(confirmedRange) => {
+            setConfirmed(confirmedRange);
+            console.log("Range confirmado:", confirmedRange);
+          }}
+        />
+        {confirmed && (
+          <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+            <p className="text-sm font-medium text-green-800">
+              Range confirmado: {confirmed.from?.toLocaleDateString()} -{" "}
+              {confirmed.to?.toLocaleDateString()}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  },
+  args: {
+    label: "Selecione e confirme o período",
+    value: undefined,
+  },
+};

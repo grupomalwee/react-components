@@ -13,8 +13,8 @@ import {
 export interface TimePickerInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   picker: TimePickerType;
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  date: Date | null;
+  setDate: (date: Date | null) => void;
   period?: Period;
   onRightFocus?: () => void;
   onLeftFocus?: () => void;
@@ -71,7 +71,8 @@ const TimePickerInput = React.forwardRef<
     }, [flag]);
 
     const calculatedValue = React.useMemo(() => {
-      return getDateByType(date, picker);
+      const safeDate = date ?? new Date(new Date().setHours(0, 0, 0, 0));
+      return getDateByType(safeDate, picker);
     }, [date, picker]);
 
     const calculateNewValue = (key: string) => {
@@ -91,7 +92,9 @@ const TimePickerInput = React.forwardRef<
       const step = direction === "up" ? 1 : -1;
       const newValue = getArrowByType(calculatedValue, step, picker);
       if (flag) setFlag(false);
-      const tempDate = new Date(date);
+      const tempDate = new Date(
+        date ?? new Date(new Date().setHours(0, 0, 0, 0))
+      );
       setDate(setDateByType(tempDate, newValue, picker, period));
     };
 
@@ -104,7 +107,9 @@ const TimePickerInput = React.forwardRef<
         const step = e.key === "ArrowUp" ? 1 : -1;
         const newValue = getArrowByType(calculatedValue, step, picker);
         if (flag) setFlag(false);
-        const tempDate = new Date(date);
+        const tempDate = new Date(
+          date ?? new Date(new Date().setHours(0, 0, 0, 0))
+        );
         setDate(setDateByType(tempDate, newValue, picker, period));
       }
       if (e.key >= "0" && e.key <= "9") {
@@ -113,7 +118,9 @@ const TimePickerInput = React.forwardRef<
         const newValue = calculateNewValue(e.key);
         if (flag) onRightFocus?.();
         setFlag((prev) => !prev);
-        const tempDate = new Date(date);
+        const tempDate = new Date(
+          date ?? new Date(new Date().setHours(0, 0, 0, 0))
+        );
         setDate(setDateByType(tempDate, newValue, picker, period));
       }
     };

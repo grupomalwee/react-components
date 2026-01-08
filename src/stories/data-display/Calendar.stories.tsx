@@ -445,7 +445,7 @@ export default function WithPopover() {
         <CalendarPopover
           label="Escolher Data"
           selected={selectedDate}
-          onSelect={setSelectedDate}
+          onSelect={(d) => setSelectedDate(d ?? undefined)}
         />
       </div>
     );

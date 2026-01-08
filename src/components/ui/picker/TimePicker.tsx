@@ -3,8 +3,8 @@ import * as React from "react";
 import { TimePickerInput } from "./TimePickerInput";
 
 interface TimePickerProps {
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  date: Date | null;
+  setDate: (date: Date | null) => void;
   hideSeconds?: boolean;
   enableButton?: boolean;
 }
