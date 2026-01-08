@@ -1,6 +1,5 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { DayPickerProvider } from "react-day-picker";
 import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -140,22 +139,18 @@ const meta: Meta<typeof EventCalendar> = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <DayPickerProvider initialProps={{}}>
-        <ThemeProviderBase>
-          <div
-            style={{ padding: 24, display: "flex", justifyContent: "center" }}
+      <ThemeProviderBase>
+        <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
+          <motion.div
+            initial={{ opacity: 0, translateY: 8 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.32 }}
+            style={{ width: "100%" }}
           >
-            <motion.div
-              initial={{ opacity: 0, translateY: 8 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              transition={{ duration: 0.32 }}
-              style={{ width: "100%" }}
-            >
-              <Story />
-            </motion.div>
-          </div>
-        </ThemeProviderBase>
-      </DayPickerProvider>
+            <Story />
+          </motion.div>
+        </div>
+      </ThemeProviderBase>
     ),
   ],
   parameters: {

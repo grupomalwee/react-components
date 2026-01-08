@@ -56,9 +56,7 @@ export function CalendarBase({
             key={month.toISOString()}
             className="w-full h-full flex flex-col"
           >
-             <div className="flex items-center justify-end mb-2 -mt-1">
-         
-        </div>
+            <div className="flex items-center justify-end mb-2 -mt-1"></div>
             <DayPicker
               showOutsideDays={showOutsideDays}
               month={month}
@@ -116,22 +114,23 @@ export function CalendarBase({
                   "aria-selected:bg-muted aria-selected:text-foreground",
                 day_hidden: "invisible",
 
-                button:
-                  "p-0 m-0  border-0 outline-none focus:ring-0",
-                
+                button: "p-0 m-0  border-0 outline-none focus:ring-0",
 
                 ...classNames,
               }}
               components={{
-                IconLeft: () => <CaretLeftIcon className="h-4 w-4" />,
-                IconRight: () => <CaretRightIcon className="h-4 w-4" />,
+                Chevron: ({ orientation }) => {
+                  if (orientation === "left") {
+                    return <CaretLeftIcon className="h-4 w-4" />;
+                  }
+                  return <CaretRightIcon className="h-4 w-4" />;
+                },
               }}
               {...props}
             />
           </div>
         </AnimatePresence>
       </div>
-      
     </div>
   );
 }

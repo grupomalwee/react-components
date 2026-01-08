@@ -203,8 +203,12 @@ export function RangePicker({
                         day_hidden: "invisible",
                       }}
                       components={{
-                        IconLeft: () => <CaretLeftIcon className="h-4 w-4" />,
-                        IconRight: () => <CaretRightIcon className="h-4 w-4" />,
+                        Chevron: ({ orientation }) => {
+                          if (orientation === "left") {
+                            return <CaretLeftIcon className="h-4 w-4" />;
+                          }
+                          return <CaretRightIcon className="h-4 w-4" />;
+                        },
                       }}
                     />
                   </motion.div>

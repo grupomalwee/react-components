@@ -67,7 +67,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.15.0",
     "input-otp": "^1.4.2",
-    "react-day-picker": "^8.10.1",
+    "react-day-picker": "^9.9.0",
     "react-router-dom": "6.4",
     "react-syntax-highlighter": "^16.1.0",
     "recharts": "^2.15.3",
