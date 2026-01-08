@@ -147,7 +147,7 @@ export function DateTimePicker({
               fromDate={fromDate}
               toDate={toDate}
               className={cn(
-                "w-max",
+                "w-max rounded-none",
                 !hideTime && "sm:rounded-r-none rounded-b-none"
               )}
             />
@@ -169,7 +169,7 @@ export function DateTimePicker({
           <div className="flex border-none rounded-md">
             <div className="grid grid-cols-2 w-full">
               <ButtonBase
-                className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b-2 border-l-2 hover:bg-muted/50 overflow-y-hidden"
+                className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b border-l hover:bg-muted/50 overflow-y-hidden rounded-tl-none"
                 onClick={() => setOpen(false)}
               >
                 Cancelar
