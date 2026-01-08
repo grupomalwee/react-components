@@ -11,6 +11,20 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.26",
+    author: "Gabriel Glatz",
+    date: "2026-01-08",
+    shortTitle: "DateTimePicker",
+    added: [
+      "DateTimePicker: novo Picker de Horarios.",
+    ],
+    fixed: [
+      "React-day-picker: update version warning.",
+      "DateTimePicker: arrumado tipagem undefined -> null.",
+      "Selects: arrumado erro de Scroll.",
+    ],
+  },
+  {
     version: "1.7.25",
     author: "Gabriel Glatz",
     date: "2026-01-06",

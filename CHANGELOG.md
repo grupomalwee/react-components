@@ -35,6 +35,21 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.26 — 2026-01-08
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- DateTimePicker: novo Picker de Horarios.
+
+### Fixed
+
+- React-day-picker: update version warning.
+- DateTimePicker: arrumado tipagem undefined -> null.
+- Selects: arrumado erro de Scroll.
+
+---
 ## 1.7.25 — 2026-01-06
 
 **Author:** Gabriel Glatz
