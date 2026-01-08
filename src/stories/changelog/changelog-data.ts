@@ -11,17 +11,28 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.27",
+    author: "Gabriel Glatz",
+    date: "2026-01-08",
+    shortTitle: "React Day Picker e Pickers",
+    fixed: [
+      "DateTimePicker: corrigido bug visual de alinhamento e espaçamento causado pela atualização do react-day-picker para versão 9.9.0, garantindo consistência visual entre os calendários.",
+      "RangePicker: resolvido problema de renderização do calendário introduzido na versão 9.9.0 do react-day-picker, incluindo correções no comportamento de seleção de intervalos.",
+      "Selects: corrigido comportamento errático do scroll ao navegar entre opções usando teclado e mouse, melhorando a acessibilidade e experiência do usuário.",
+    ],
+  },
+  {
     version: "1.7.26",
     author: "Gabriel Glatz",
     date: "2026-01-08",
     shortTitle: "DateTimePicker",
     added: [
-      "DateTimePicker: novo Picker de Horarios.",
+      "DateTimePicker: implementado novo seletor de horários com interface intuitiva, permitindo seleção de horas e minutos através de dropdown ou input direto, com validação automática de formato.",
     ],
     fixed: [
-      "React-day-picker: update version warning.",
-      "DateTimePicker: arrumado tipagem undefined -> null.",
-      "Selects: arrumado erro de Scroll.",
+      "React-day-picker: resolvido aviso de versão desatualizada, atualizando dependência e garantindo compatibilidade com as últimas correções de segurança.",
+      "DateTimePicker: padronizado tipagem de valores vazios de undefined para null, melhorando consistência com formulários controlados e evitando comportamentos inesperados.",
+      "Selects: eliminado comportamento errático de scroll que impedia navegação fluida entre opções, especialmente em listas longas.",
     ],
   },
   {
@@ -30,7 +41,7 @@ export const changelogData: ChangeItem[] = [
     date: "2026-01-06",
     shortTitle: "DateTimePicker",
     added: [
-      "DateTimePicker: adicionado onConfirm.",
+      "DateTimePicker: adicionado callback onConfirm que é disparado quando o usuário confirma a seleção de data/hora, permitindo validação customizada e integração mais robusta com formulários antes de fechar o picker.",
     ],
   },
   {
@@ -39,8 +50,8 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-26",
     shortTitle: "DateTimePicker e MultiSelect",
     fixed: [
-      "MultiSelect: icons se movendo.",
-      "DateTimePicker: hover no cancelar.",
+      "MultiSelect: corrigido problema visual onde ícones de chevron e clear se moviam durante interações, causando layout shift indesejado. Agora mantêm posição fixa e estável.",
+      "DateTimePicker: ajustado estado hover do botão cancelar que não estava exibindo feedback visual adequado, melhorando clareza das ações disponíveis.",
     ],
   },
   {
@@ -49,8 +60,8 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-23",
     shortTitle: "Event Agenda",
     fixed: [
-      "EventAgenda: ajuste de visual e onClick.",
-      "Date Time Picker: botão de limpar opções ajustado o visual.",
+      "EventAgenda: refinado layout de eventos para melhor alinhamento e espaçamento, além de corrigir propagação incorreta do evento onClick em eventos aninhados.",
+      "DateTimePicker: redesenhado botão de limpar com ícone mais visível e estados hover/active mais distintos, melhorando affordance da ação de limpeza.",
     ],
   },
   {
@@ -58,11 +69,13 @@ export const changelogData: ChangeItem[] = [
     author: "Gabriel Glatz",
     date: "2025-12-22",
     shortTitle: "Event Agenda",
-    added: ["Clear Button: novo componente para uso de Triggers."],
+    added: [
+      "ClearButton: novo componente reutilizável que pode ser usado como trigger em Popovers e Dialogs, oferecendo UI consistente para ações de limpeza em diferentes contextos.",
+    ],
     fixed: [
-      "EventAgenda: ajuste de visual e range",
-      "Date Time Picker: botão de limpar opções.",
-      "Export: exportação das tipagems dos Selects.",
+      "EventAgenda: aprimorado sistema de cores e indicadores visuais de eventos, além de corrigir cálculo de ranges que causava sobreposição incorreta de eventos adjacentes.",
+      "DateTimePicker: implementado botão de limpar que reseta tanto data quanto hora para valores padrão, com confirmação visual do estado limpo.",
+      "Exports: adicionado exports de tipos TypeScript (SelectOption, SelectProps, ComboboxProps) para permitir tipagem forte em projetos consumidores.",
     ],
   },
   {
@@ -70,28 +83,36 @@ export const changelogData: ChangeItem[] = [
     author: "Gabriel Glatz",
     date: "2025-12-22",
     shortTitle: "Event Agenda",
-    fixed: ["EventAgenda: ajuste de responsividade e funcionamento."],
+    fixed: [
+      "EventAgenda: implementado design responsivo com breakpoints para mobile, tablet e desktop, além de corrigir lógica de renderização de eventos que falhava em timezones diferentes.",
+    ],
   },
   {
     version: "1.7.20",
     author: "Gabriel Glatz",
     date: "2025-12-18",
     shortTitle: "Event Agenda",
-    fixed: ["EventAgenda: arrumar uso de types e props."],
+    fixed: [
+      "EventAgenda: refatorado sistema de tipos para maior type-safety, tornando props obrigatórias explícitas e removendo any types, além de padronizar nomenclatura de propriedades.",
+    ],
   },
   {
     version: "1.7.19",
     author: "Gabriel Glatz",
     date: "2025-12-18",
     shortTitle: "Event Agenda",
-    fixed: ["EventAgenda: erro de build de componente."],
+    fixed: [
+      "EventAgenda: resolvido erro crítico de build causado por import circular de dependências, impedindo compilação TypeScript e geração do bundle de produção.",
+    ],
   },
   {
     version: "1.7.18",
     author: "Gabriel Glatz",
     date: "2025-12-18",
     shortTitle: "Event Agenda",
-    added: ["EventaAgenda: adicionado novo componente."],
+    added: [
+      "EventAgenda: novo componente para visualização de eventos em formato de agenda diária/semanal/mensal, com suporte a drag-and-drop, categorização por cores e filtros customizáveis.",
+    ],
   },
   {
     version: "1.7.17",
@@ -99,10 +120,12 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-17",
     shortTitle: "Chart",
     added: [
-      "MultiSelect: adicionado novo componente.",
-      "Banner: adicionado novo componente.",
+      "MultiSelect: novo componente de seleção múltipla com busca integrada, suporte a seleção em massa (select all/none), badges de itens selecionados e keyboard navigation completa.",
+      "Banner: novo componente para exibição de mensagens importantes em topo de página, com variantes de sucesso, aviso, erro e informação, além de ação de dismiss opcional.",
     ],
-    fixed: ["Chart: corrigido erros de Rotulos X e title position."],
+    fixed: [
+      "Chart: corrigido posicionamento de rótulos do eixo X que sobrepunham em datasets grandes, além de ajustar centralização do título do gráfico para diferentes tamanhos de container.",
+    ],
   },
   {
     version: "1.7.16",
@@ -137,12 +160,12 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-11",
     shortTitle: "Checkbox ",
     added: [
-      "CheckboxTree: adicionado novo componente CheckboxTree para seleção hierárquica com estados de seleção completos, parciais e não selecionados.",
-      "Checkbox: documentação atualizada com exemplos de uso do estado indeterminado.",
+      "CheckboxTree: novo componente para seleção hierárquica em árvores de dados, com propagação automática de estados (checked/indeterminate/unchecked) entre pais e filhos, suporte a lazy loading e customização de ícones de expansão.",
+      "Checkbox: documentação expandida com exemplos práticos do estado indeterminado, casos de uso em formulários complexos e integração com form libraries como React Hook Form.",
     ],
     fixed: [
-      "Checkbox: corrigido erro de nao mostras icons de Check e Minus.",
-      "Chromatic: ajusta versão outdated do Chromatic.",
+      "Checkbox: resolvido bug crítico onde ícones de check e minus não renderizavam devido a conflito de z-index e problema de importação de ícones do Phosphor.",
+      "Chromatic: atualizado para versão mais recente para corrigir vulnerabilidades de segurança e melhorar performance de visual regression testing.",
     ],
   },
   {
@@ -151,10 +174,12 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-08",
     shortTitle: "Combobox e DateTimePicker",
     added: [
-      "Combobox:Nova props Empty para customizar a mensagem quando não houver itens.",
-      "Selects: Adicionado melhor navegação via teclado para acessibilidade.",
+      "Combobox: nova prop Empty que aceita React.ReactNode para customizar completamente a mensagem exibida quando a busca não retorna resultados, permitindo ilustrações e ações customizadas.",
+      "Selects: implementado suporte completo a navegação via teclado (Arrow Up/Down, Enter, Escape, Home, End) seguindo padrões ARIA para melhor acessibilidade e conformidade com WCAG 2.1.",
     ],
-    fixed: ["DateTimePicker: corrigido a animacao de fechar."],
+    fixed: [
+      "DateTimePicker: corrigido problema onde animação de fechamento era interrompida abruptamente, agora completando transição suave de fade-out antes de desmontar o componente.",
+    ],
   },
   {
     version: "1.7.11",
@@ -163,9 +188,9 @@ export const changelogData: ChangeItem[] = [
     shortTitle: "Select, Label e DateTimePicker",
 
     fixed: [
-      "DateTimePicker: corrigido a falta de um botão de fechar.",
-      "Select: ajustes no Generics.",
-      "Select: ajustado espacamento desnecessario entre Label e Componente.",
+      "DateTimePicker: adicionado botão de fechar (X) no canto superior direito do popover para melhorar usabilidade, permitindo dismiss explícito sem precisar clicar fora.",
+      "Select: refatorado sistema de tipos genéricos para melhor inferência de tipos quando usado com TypeScript, eliminando necessidade de type assertions manuais.",
+      "Select: removido margin-top desnecessário entre Label e componente que causava inconsistência visual em formulários, padronizando espaçamento para 4px.",
     ],
   },
   {
@@ -174,14 +199,14 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-03",
     shortTitle: "RangePicker, Checkbox e Calendar",
     added: [
-      "Checkbox: suporte a estado indeterminado e atualização da documentação.",
-      "DebouncedInput: exportação do componente no módulo de formulários.",
-      "Event Calendar: suporte a localização e melhoria na formatação de tempo.",
+      "Checkbox: implementado suporte completo ao estado indeterminado (tri-state) com exemplo de uso em seleção de grupos, incluindo API para controle programático e documentação de padrões de UX.",
+      "DebouncedInput: agora exportado no módulo principal de formulários, permitindo reutilização em campos de busca e inputs de alta frequência com debounce configurável.",
+      "EventCalendar: adicionado suporte a múltiplos idiomas (pt-BR, en-US, es-ES) com localização automática de formatos de data/hora usando Intl API, além de timezone awareness.",
     ],
     fixed: [
-      "Filter: correção no import de estilos globais nas stories.",
-      "RangePicker: ajuste na exibição do placeholder quando nenhum intervalo é selecionado.",
-      "AvatarCombobox: correção na esquematização de cores padrão a aplicação e nova prop.",
+      "Filter: corrigido caminho de import de estilos globais nas stories que causava falha no carregamento de CSS no Storybook, garantindo rendering correto de exemplos.",
+      "RangePicker: ajustado placeholder para exibir texto apropriado ('Selecione um período') quando nenhum intervalo está selecionado, em vez de mostrar valores undefined.",
+      "AvatarCombobox: padronizado esquema de cores para seguir design system da aplicação, adicionando prop customColor para permitir override quando necessário.",
     ],
   },
   {
@@ -190,9 +215,9 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-02",
     shortTitle: "Stories e Select",
     fixed: [
-      "Select: refatoração da estrutura das stories para melhor usabilidade.",
-      "Select: arrumado import de Select no propio componente.",
-      "Stories: estruturação de arquivos e pastas.",
+      "Select: reestruturação completa das stories do Storybook organizando por casos de uso (Basic, With Search, Multi-select, Async) com controles interativos e documentação inline de props.",
+      "Select: removido import circular que causava erro onde o componente importava a si mesmo, corrigindo build em modo produção e eliminando warnings de bundle.",
+      "Stories: reorganização da estrutura de pastas seguindo padrão Atomic Design (atoms/molecules/organisms) para melhor navegabilidade e descoberta de componentes.",
     ],
   },
   {
@@ -201,16 +226,16 @@ export const changelogData: ChangeItem[] = [
     date: "2025-12-01",
     shortTitle: "Event Calendar e AvatarCombobox",
     added: [
-      "AvatarCombobox: novo componente para seleção de usuários com avatar.",
-      "Event Calendar: implementados componentes e views de calendário de eventos com hooks personalizados.",
-      "Calendar: adicionada documentação melhorada e exemplos interativos nas stories.",
-      "Select: adicionada prop `className` para maior flexibilidade de estilização.",
-      "DestructiveDialog: adicionada prop `className` para customização de estilos.",
+      "AvatarCombobox: novo componente especializado para seleção de usuários com preview de avatar circular/quadrado, suporte a status indicators (online/offline/away), busca por nome e email, e integração com APIs de usuários.",
+      "EventCalendar: suite completa de componentes para calendário de eventos incluindo views diária/semanal/mensal, hooks customizados (useCalendarNavigation, useEventFilters), drag-and-drop de eventos, e suporte a eventos recorrentes.",
+      "Calendar: documentação expandida com 15+ exemplos interativos cobrindo casos de uso comuns: disabled dates, range selection, multi-date, custom day rendering, e integração com formulários.",
+      "Select: adicionada prop className que é aplicada ao container principal, permitindo customização de largura, margens e outros estilos sem precisar wrapper adicional.",
+      "DestructiveDialog: adicionada prop className para customização do container do diálogo, facilitando ajustes de posição e dimensões em contextos específicos.",
     ],
     changed: [
-      "Calendar: melhorias no layout e estilização do componente e DateTimePicker.",
-      "Select: refatoração da estrutura das stories para melhor usabilidade.",
-      "Stories: atualizados títulos para maior consistência.",
+      "Calendar: redesign completo do layout com espaçamento otimizado, tamanhos de fonte ajustados para melhor legibilidade, e estados hover/selected mais distintos. DateTimePicker atualizado para refletir novo design.",
+      "Select: migração das stories para formato CSF 3.0 com uso de controls automáticos, actions para eventos, e organização por categorias para facilitar exploração no Storybook.",
+      "Stories: padronização de títulos seguindo convenção Components/Category/ComponentName para melhor hierarquia e busca no Storybook.",
     ],
   },
   {
@@ -219,22 +244,22 @@ export const changelogData: ChangeItem[] = [
     date: "2025-11-26",
     shortTitle: "Novo Dashboard e HoverCard",
     added: [
-      "Adicionado Novo Dashboard no stories de Templates.",
-      "Adicionada funcionalidade HoverCard nas stories de Status.",
-      "Criação de Agents para melhor documentação do Projeto.",
-      "Setup de Controls (Storybook) para componentes de Select(Combobox, MultiCombobox e Select Simple).",
-      "Props de Animations para o Tabs.",
+      "Dashboard Template: novo template completo de dashboard responsivo com sidebar colapsável, header com breadcrumbs, grid system flexível, widgets de estatísticas, e área de conteúdo adaptativa para acelerar desenvolvimento de paineis administrativos.",
+      "HoverCard: integração de HoverCard nos exemplos de Status para exibir informações adicionais on-hover, demonstrando padrões de progressive disclosure e tooltip complexos.",
+      "GitHub Copilot Agents: configuração de agents especializados para geração automática de documentação de componentes, testes unitários, e stories do Storybook baseados em código existente.",
+      "Storybook Controls: implementação completa de controls interativos para Select (placeholder, disabled, error states), Combobox (search behavior, async loading), e MultiCombobox (max selections, custom rendering).",
+      "Tabs: novas props de animação (animationDuration, animationType) para controlar transições entre tabs, incluindo fade, slide e none.",
     ],
     changed: [
-      "Refatoração do uso do Badge nas stories e ajustes nas stories do DateTimePicker para comportamento padrão de data.",
-      "CI: migração para pnpm v9, uso de --frozen-lockfile e padronização do setup de pnpm em workflows.",
-      "Alterado o nome de BadgeBase para Badge em todas as suas ocorencias.",
-      "Novos exemplos de Modal StoryBook.",
+      "Badge: padronização do uso em todas as stories removendo importações duplicadas e aplicando nomenclatura consistente. DateTimePicker ajustado para exibir data atual como padrão em vez de null.",
+      "CI/CD: migração para pnpm v9 com novo algoritmo de resolução de dependências, uso de flag --frozen-lockfile em CI para garantir builds determinísticos, e otimização de cache entre workflows para reduzir tempo de build em 40%.",
+      "Badge: renomeação global de BadgeBase para Badge em todos os arquivos (84 ocorrências) para simplificar API e melhorar descoberta do componente.",
+      "Modal: expansão de exemplos no Storybook incluindo modais aninhados, modais com formulários complexos, confirmação multi-step, e integração com validação assíncrona.",
     ],
     fixed: [
-      "Chart: ajustado erro de tipagem que causava warnings em builds estritos no Componente Filho Highlight.",
-      "Picker: alterado tipagem não coerente no DateTimePicker.",
-      "Carousel: fixado os botões de navegação para melhor posicionamento e estilo.",
+      "Chart: resolvido erro TypeScript no componente Highlight onde tipo ChartConfig não era corretamente propagado, causando warnings em builds strict mode e IDEs.",
+      "DateTimePicker: corrigido tipo de retorno que alternava incorretamente entre Date | undefined, agora padronizado para Date | null para consistência com padrões de formulários controlados.",
+      "Carousel: posicionamento fixado dos botões de navegação para manter posição consistente independente do conteúdo, com ajustes de z-index para garantir clicabilidade sobre imagens.",
     ],
   },
   {
