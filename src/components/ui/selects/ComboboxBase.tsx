@@ -75,7 +75,7 @@ export function ComboboxBase<T extends string>({
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}
-        modal
+        modal={true}
       >
         <PopoverTriggerBase
           asChild

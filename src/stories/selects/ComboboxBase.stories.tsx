@@ -5,6 +5,8 @@ import {
   ComboboxItem,
 } from "@/components/ui/selects/ComboboxBase";
 import React from "react";
+import { DialogBase, DialogContentBase, DialogDescriptionBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 type ComboboxBaseStoryArgs = {
   items?: Array<{ value: string; label: string }>;
@@ -264,4 +266,53 @@ export const WithError: Story = {
       </div>
     );
   },
+};
+export const FixedMiddleMouseScroll: Story = {
+  name: "Dentro do Dialog",
+  render: () => {
+    const items: ComboboxItem<string>[] = Array.from({ length: 80 }, (_, i) => {
+      const n = i + 1;
+      return { value: `item-${n}`, label: `Item ${n}` };
+    });
+
+    const [selected, setSelected] = React.useState<string | null>(
+      items[0].value
+    );
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <DialogBase>
+          <DialogTriggerBase asChild>
+            <ButtonBase variant="outline">Abrir dialog</ButtonBase>
+          </DialogTriggerBase>
+          <DialogContentBase className="sm:max-w-md">
+            <DialogHeaderBase>
+              <DialogTitleBase>Combobox dentro do Dialog</DialogTitleBase>
+              <DialogDescriptionBase>
+                Abra o combobox e use a rolagem (mouse wheel ou mouse3).
+              </DialogDescriptionBase>
+            </DialogHeaderBase>
+
+            <div className="mt-4" style={{ width: 360 }}>
+              <ComboboxBase
+                items={items}
+                renderSelected={
+                  <span>{items.find((i) => i.value === selected)?.label}</span>
+                }
+                handleSelection={(value) => setSelected(value)}
+                checkIsSelected={(value) => selected === value}
+              />
+            </div>
+          </DialogContentBase>
+        </DialogBase>
+      </div>
+    );
+  }
 };
