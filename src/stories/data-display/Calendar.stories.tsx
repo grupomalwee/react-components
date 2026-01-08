@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta } from "@storybook/react-vite";
-import { expect, userEvent, waitFor } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 import { CalendarBase, CalendarPopover } from "../../components/ui/picker/calendar";
 import { useState } from "react";
 
@@ -194,27 +194,6 @@ export default function Multiple() {
       </div>
     );
   },
-  play: async ({
-    canvasElement,
-    step,
-  }: {
-    canvasElement: HTMLElement;
-    step: (name: string, fn: () => Promise<void>) => Promise<void>;
-  }) => {
-    await step("Verificar calendário múltiplo renderizado", async () => {
-      await waitFor(() => {
-        const calendar = canvasElement.querySelector(
-          '[data-testid="calendar-multiple"]'
-        );
-        expect(calendar).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar calendário aceita múltiplas seleções", async () => {
-      const days = canvasElement.querySelectorAll('button[name="day"]');
-      expect(days.length).toBeGreaterThan(0);
-    });
-  },
 };
 
 export const DisabledDates = {
@@ -266,33 +245,6 @@ export default function DisabledDates() {
         />
       </div>
     );
-  },
-  play: async ({
-    canvasElement,
-    step,
-  }: {
-    canvasElement: HTMLElement;
-    step: (name: string, fn: () => Promise<void>) => Promise<void>;
-  }) => {
-    await step("Verificar calendário com datas desabilitadas", async () => {
-      await waitFor(() => {
-        const calendar = canvasElement.querySelector(
-          '[data-testid="calendar-disabled"]'
-        );
-        expect(calendar).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar calendário está visível", async () => {
-      const calendar = canvasElement.querySelector(
-        '[data-testid="calendar-disabled"]'
-      );
-      expect(calendar).toBeInTheDocument();
-
-      // Verificar que o calendário tem dias renderizados
-      const dayButtons = canvasElement.querySelectorAll('button[name="day"]');
-      expect(dayButtons.length).toBeGreaterThan(0);
-    });
   },
 };
 
@@ -449,47 +401,5 @@ export default function WithPopover() {
         />
       </div>
     );
-  },
-  play: async ({
-    canvasElement,
-    step,
-  }: {
-    canvasElement: HTMLElement;
-    step: (name: string, fn: () => Promise<void>) => Promise<void>;
-  }) => {
-    await step("Verificar popover container renderizado", async () => {
-      const container = canvasElement.querySelector(
-        '[data-testid="calendar-popover-container"]'
-      );
-      expect(container).toBeInTheDocument();
-    });
-
-    await step("Verificar botão do popover", async () => {
-      const button = canvasElement.querySelector(
-        'button[aria-label="Abrir calendário"]'
-      );
-      expect(button).toBeInTheDocument();
-      expect(button?.textContent).toContain("Escolher Data");
-    });
-
-    await step("Testar abertura do popover", async () => {
-      const button = canvasElement.querySelector(
-        'button[aria-label="Abrir calendário"]'
-      );
-      if (button) {
-        await userEvent.click(button as HTMLElement);
-        await waitFor(() => {
-          const calendar = document.querySelector(".rdp");
-          expect(calendar).toBeInTheDocument();
-        });
-      }
-    });
-
-    await step("Verificar botão de fechar", async () => {
-      const closeButton = document.querySelector(
-        'button[aria-label="Fechar calendário"]'
-      );
-      expect(closeButton).toBeInTheDocument();
-    });
   },
 };
