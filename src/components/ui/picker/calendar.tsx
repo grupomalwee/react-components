@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
+import { ptBR } from "date-fns/locale";
 import {
   CaretLeftIcon,
   CaretRightIcon,
@@ -10,7 +11,6 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { buttonVariantsBase } from "@/components/ui/form/ButtonBase";
-import { AnimatePresence } from "framer-motion";
 import {
   PopoverBase,
   PopoverTriggerBase,
@@ -31,18 +31,6 @@ export function CalendarBase({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
-  const [month, setMonth] = React.useState<Date>(
-    props.month || props.defaultMonth || new Date()
-  );
-  const [direction, setDirection] = React.useState(1);
-
-  const handleMonthChange = (newMonth: Date) => {
-    const isNext = newMonth > month ? 1 : -1;
-    setDirection(isNext);
-    setMonth(newMonth);
-    props.onMonthChange?.(newMonth);
-  };
-
   return (
     <div
       className={cn(
@@ -51,85 +39,77 @@ export function CalendarBase({
       )}
     >
       <div className="relative flex-1 flex flex-col min-h-0">
-        <AnimatePresence initial={false} mode="wait" custom={direction}>
-          <div
-            key={month.toISOString()}
-            className="w-full h-full flex flex-col"
-          >
-            <div className="flex items-center justify-end mb-2 -mt-1"></div>
-            <DayPicker
-              showOutsideDays={showOutsideDays}
-              month={month}
-              onMonthChange={handleMonthChange}
-              className="w-full h-full flex flex-col"
-              classNames={{
-                months: "flex flex-col sm:flex-row gap-3 sm:gap-4 w-full",
-                month: "flex-1 min-w-0",
+        <DayPicker
+          showOutsideDays={showOutsideDays}
+          fixedWeeks
+          weekStartsOn={1}
+          locale={ptBR}
+          navLayout="around"
+          className="w-full h-full flex flex-col"
+          classNames={{
+            months: "flex flex-col sm:flex-row gap-3 sm:gap-4 w-full",
+            month: "relative flex-1 min-w-0",
 
-                caption:
-                  "flex items-center justify-between gap-2 pr-1 min-h-[2.25rem] mb-2",
-                caption_label:
-                  "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left",
+            month_caption: "flex items-center gap-2 min-h-[2.25rem] mb-4",
+            caption_label:
+              "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize",
 
-                nav: "flex items-center gap-2",
+            nav: "hidden",
 
-                nav_button: cn(
-                  buttonVariantsBase({ variant: "outline" }),
-                  "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95"
-                ),
-                nav_button_previous: "",
-                nav_button_next: "",
+            button_previous: cn(
+              buttonVariantsBase({ variant: "outline" }),
+              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10"
+            ),
+            button_next: cn(
+              buttonVariantsBase({ variant: "outline" }),
+              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10"
+            ),
 
-                table: "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",
+            month_grid: "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",
 
-                head_row: "grid grid-cols-7 gap-1 mb-1",
-                head_cell:
-                  "text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider",
+            weekdays: "grid grid-cols-7 gap-1 mb-1",
+            weekday:
+              "text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider",
 
-                row: "grid grid-cols-7 gap-1",
+            week: "grid grid-cols-7 gap-1",
 
-                cell: cn(
-                  "min-w-0 h-9 sm:h-10 md:h-10 p-0 relative flex items-center justify-center",
-                  "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
-                  "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
-                  "[&:has([aria-selected].day-outside)]:bg-muted/50",
-                  "[&:has([aria-selected])]:bg-muted"
-                ),
+            day: cn(
+              "min-w-0 h-9 sm:h-10 md:h-10 p-0 relative flex items-center justify-center",
+              "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
+              "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
+              "[&:has([aria-selected].day-outside)]:bg-muted/50",
+              "[&:has([aria-selected])]:bg-muted"
+            ),
 
-                day: cn(
-                  buttonVariantsBase({ variant: "ghost" }),
-                  "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
-                  "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95"
-                ),
+            day_button: cn(
+              buttonVariantsBase({ variant: "ghost" }),
+              "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
+              "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95"
+            ),
 
-                day_selected:
-                  "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white",
-                day_today:
-                  "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset",
-                day_outside:
-                  "text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
-                day_disabled:
-                  "text-muted-foreground/30 opacity-40 cursor-not-allowed",
-                day_range_middle:
-                  "aria-selected:bg-muted aria-selected:text-foreground",
-                day_hidden: "invisible",
+            selected:
+              "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white rounded-md",
+            today:
+              "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset rounded-md",
+            outside:
+              "text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
+            disabled: "text-muted-foreground/30 opacity-40 cursor-not-allowed",
+            range_middle:
+              "aria-selected:bg-muted aria-selected:text-foreground",
+            hidden: "invisible",
 
-                button: "p-0 m-0  border-0 outline-none focus:ring-0",
-
-                ...classNames,
-              }}
-              components={{
-                Chevron: ({ orientation }) => {
-                  if (orientation === "left") {
-                    return <CaretLeftIcon className="h-4 w-4" />;
-                  }
-                  return <CaretRightIcon className="h-4 w-4" />;
-                },
-              }}
-              {...props}
-            />
-          </div>
-        </AnimatePresence>
+            ...classNames,
+          }}
+          components={{
+            Chevron: ({ orientation }) => {
+              if (orientation === "left") {
+                return <CaretLeftIcon className="h-4 w-4" />;
+              }
+              return <CaretRightIcon className="h-4 w-4" />;
+            },
+          }}
+          {...props}
+        />
       </div>
     </div>
   );
@@ -182,6 +162,8 @@ export const CalendarPopover = ({
               onSelect?.(date as Date | null);
               setOpen(false);
             }}
+            weekStartsOn={1}
+            locale={ptBR}
           />
         </div>
       </PopoverContentBase>

@@ -8,7 +8,7 @@ export default function DatePickerPage() {
   const [date2, setDate2] = React.useState<Date | null>(new Date());
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginTop: "240px" }}>
       <div>
         <DateTimePicker
           label="Campo desabilitado"

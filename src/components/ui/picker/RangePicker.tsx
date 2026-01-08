@@ -145,62 +145,71 @@ export function RangePicker({
                       onSelect={handleSelect}
                       locale={dateFnsLocale}
                       showOutsideDays
+                      fixedWeeks
+                      weekStartsOn={1}
+                      navLayout="around"
                       fromDate={minDate}
                       toDate={maxDate}
                       className="min-w-0 flex flex-col"
                       classNames={{
                         months:
                           "flex flex-col sm:flex-row gap-3 sm:gap-4 w-full",
-                        month: "flex-1 min-w-0",
+                        month: "relative flex-1 min-w-0",
 
-                        caption:
-                          "flex items-center justify-between gap-2 pr-1 min-h-[2.25rem] mb-2",
+                        month_caption:
+                          "flex items-center gap-2 min-h-[2.25rem] mb-4",
                         caption_label:
-                          "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left",
+                          "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize",
 
-                        nav: "flex items-center gap-2",
+                        nav: "block",
 
-                        nav_button: cn(
+                        button_previous: cn(
                           buttonVariantsBase({ variant: "outline" }),
-                          "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95"
+                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10"
                         ),
-                        nav_button_previous: "",
-                        nav_button_next: "",
+                        button_next: cn(
+                          buttonVariantsBase({ variant: "outline" }),
+                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10"
+                        ),
 
-                        table:
+                        month_grid:
                           "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",
 
-                        head_row: "grid grid-cols-7 gap-1 mb-1",
-                        head_cell:
+                        weekdays: "grid grid-cols-7 gap-1 mb-1",
+                        weekday:
                           "text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider",
 
-                        row: "grid grid-cols-7 gap-1",
+                        week: "grid grid-cols-7 gap-1",
 
-                        cell: cn(
-                          "min-w-0 h-9 p-0 relative flex items-center justify-center",
-                          "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
-                          "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
+                        day: cn(
+                          "min-w-0 h-9 sm:h-10 md:h-10 p-0 relative flex items-center justify-center",
+                          "[&:has([aria-selected].range-end)]:rounded-r-lg",
+                          "[&:has([aria-selected].range-start)]:rounded-l-lg",
                           "[&:has([aria-selected].day-outside)]:bg-muted/50",
                           "[&:has([aria-selected])]:bg-muted"
                         ),
 
-                        day: cn(
+                        day_button: cn(
                           buttonVariantsBase({ variant: "ghost" }),
                           "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
-                          "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95"
+                          "aria-selected:opacity-100  transition-all duration-150 ease-out active:scale-95 hover:bg-background/50 hover:text-primary rounded-none "
                         ),
 
-                        day_selected:
-                          "bg-primary text-primary-foreground hover:bg-primary/90 focus:bg-primary/90 font-semibold hover:text-white",
-                        day_today:
-                          "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset",
-                        day_outside:
-                          "text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
-                        day_disabled:
+                        selected:
+                          "bg-primary text-primary-foreground font-semibold hover:text-white",
+                        today:
+                          "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset rounded-md",
+                        outside:
+                          "day-outside text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
+                        disabled:
                           "text-muted-foreground/30 opacity-40 cursor-not-allowed",
-                        day_range_middle:
-                          "aria-selected:bg-muted aria-selected:text-foreground",
-                        day_hidden: "invisible",
+                        range_start:
+                          "range-start rounded-l-lg aria-selected:bg-primary aria-selected:text-primary-foreground",
+                        range_end:
+                          "range-end rounded-r-lg aria-selected:bg-primary aria-selected:text-primary-foreground",
+                        range_middle:
+                          "range-middle rounded-none aria-selected:bg-muted aria-selected:text-foreground",
+                        hidden: "invisible",
                       }}
                       components={{
                         Chevron: ({ orientation }) => {
