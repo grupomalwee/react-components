@@ -94,7 +94,7 @@ import { BarChartPage } from "@/pages/BarChart";
 import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
 // import ChartPage from "@/pages/Chart";
-// import DatePickerPage from "@/pages/DatePicker";
+import DatePickerPage from "@/pages/DatePicker";
 import { FileUploaderPage } from "@/pages/FileUploader";
 import { DebounceInputPage } from "@/pages/DebounceInput";
 import ModalBasePage from "@/pages/Modal";
@@ -221,7 +221,7 @@ export function AppSidebar() {
           <Route path="/dialog" element={<DialogPage />} />
           <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />
-          {/* <Route path="/date-picker" element={<DatePickerPage />} /> */}
+          <Route path="/date-picker" element={<DatePickerPage />} />
           <Route path="/filter" element={<Filter />} />
           {/* <Route path="/form" element={<ProfileForm />} /> */}
           <Route path="/hovercard" element={<HoverCardPage />} />

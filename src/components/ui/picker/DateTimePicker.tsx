@@ -135,15 +135,8 @@ export function DateTimePicker({
 
         <ErrorMessage error={error} />
 
-        <PopoverContentBase
-          className="w-auto max-w-[calc(100vw-16px)] p-0 border-none shadow-none"
-          align="start"
-          sideOffset={4}
-          side="bottom"
-          avoidCollisions={true}
-          sticky="always"
-        >
-          <div className="flex max-h-auto overflow-y-auto border-none rounded-md">
+        <PopoverContentBase className="w-auto max-w-[calc(100vw-16px)] p-0 border-none shadow-none fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="flex flex-col sm:flex-row max-h-auto overflow-y-auto border-none rounded-md">
             <CalendarBase
               mode="single"
               locale={ptBR}
@@ -153,11 +146,18 @@ export function DateTimePicker({
               defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
               fromDate={fromDate}
               toDate={toDate}
-              className={cn("w-full", !hideTime && "rounded-r-none")}
+              className={cn(
+                "w-max",
+                !hideTime && "sm:rounded-r-none rounded-b-none"
+              )}
             />
 
             {!hideTime && (
-              <div className="flex flex-col items-center justify-center border-t border-b border-r rounded-r-md">
+              <div className="flex flex-col items-center justify-center border border-t-0 sm:border-t sm:border-b sm:border-r rounded-b-md sm:rounded-b-none sm:rounded-r-md">
+                <div className="text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left">
+                  Horário
+                </div>
+
                 <TimeScrollPicker
                   setDate={(d) => handleTimeChange(d ?? null)}
                   date={internalDate}

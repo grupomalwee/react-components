@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TimeScrollPickerProps {
   date: Date | null;
@@ -7,9 +8,12 @@ interface TimeScrollPickerProps {
   hideSeconds?: boolean;
 }
 
-const ITEM_HEIGHT = 32;
+const ITEM_HEIGHT = 36;
+const ITEM_HEIGHT_MOBILE = 32;
 const VISIBLE_ITEMS = 5;
+const VISIBLE_ITEMS_MOBILE = 3;
 const CENTER_INDEX = Math.floor(VISIBLE_ITEMS / 2);
+const CENTER_INDEX_MOBILE = Math.floor(VISIBLE_ITEMS_MOBILE / 2);
 
 interface ScrollColumnProps {
   value: number;
@@ -19,28 +23,53 @@ interface ScrollColumnProps {
 }
 
 function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
+  const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const items = Array.from({ length: max }, (_, i) => i);
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT;
+  const centerIndex = isMobile ? CENTER_INDEX_MOBILE : CENTER_INDEX;
+  const visibleItems = isMobile ? VISIBLE_ITEMS_MOBILE : VISIBLE_ITEMS;
+  const containerHeight = visibleItems * itemHeight;
 
   useEffect(() => {
     if (containerRef.current && !isDragging) {
-      const scrollPosition = value * ITEM_HEIGHT;
-      containerRef.current.scrollTop = scrollPosition;
+      requestAnimationFrame(() => {
+        if (containerRef.current) {
+          const scrollPosition = value * itemHeight;
+          containerRef.current.scrollTop = scrollPosition;
+        }
+      });
     }
-  }, [value, isDragging]);
+  }, [value, isDragging, itemHeight]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleScroll = () => {
     if (!containerRef.current || isDragging) return;
 
-    const scrollTop = containerRef.current.scrollTop;
-    const newValue = Math.round(scrollTop / ITEM_HEIGHT);
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
 
-    if (newValue !== value && newValue >= 0 && newValue < max) {
-      onChange(newValue);
-    }
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (!containerRef.current) return;
+
+      const newValue = Math.round(containerRef.current.scrollTop / itemHeight);
+
+      if (newValue >= 0 && newValue < max) {
+        containerRef.current.scrollTop = newValue * itemHeight;
+        if (newValue !== value) onChange(newValue);
+      }
+    }, 100);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -53,54 +82,52 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !containerRef.current) return;
     e.preventDefault();
-    const y = e.pageY;
-    const walk = (startY - y) * 2;
-    containerRef.current.scrollTop = scrollTop + walk;
+    containerRef.current.scrollTop = scrollTop + (startY - e.pageY) * 2;
   };
 
   const handleMouseUp = () => {
     if (!containerRef.current) return;
     setIsDragging(false);
 
-    const currentScrollTop = containerRef.current.scrollTop;
-    const newValue = Math.round(currentScrollTop / ITEM_HEIGHT);
-
-    if (newValue >= 0 && newValue < max) {
-      onChange(newValue);
-      containerRef.current.scrollTop = newValue * ITEM_HEIGHT;
-    }
+    requestAnimationFrame(() => {
+      if (!containerRef.current) return;
+      const newValue = Math.round(containerRef.current.scrollTop / itemHeight);
+      if (newValue >= 0 && newValue < max) {
+        containerRef.current.scrollTop = newValue * itemHeight;
+        onChange(newValue);
+      }
+    });
   };
 
   const handleMouseLeave = () => {
-    if (isDragging) {
-      handleMouseUp();
-    }
+    if (isDragging) handleMouseUp();
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 ">
-      <span className="text-xs text-muted-foreground font-semibold tracking-wide uppercase">
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider">
         {label}
       </span>
       <div className="relative w-16">
         <div
           className="absolute left-0 right-0 border-y-2 border-primary/20 pointer-events-none z-10"
           style={{
-            top: `${CENTER_INDEX * ITEM_HEIGHT}px`,
-            height: `${ITEM_HEIGHT}px`,
+            top: `${centerIndex * itemHeight}px`,
+            height: `${itemHeight}px`,
           }}
         />
         <div
           ref={containerRef}
-          className="h-[160px] overflow-y-auto snap-y snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           onScroll={handleScroll}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
           style={{
-            paddingTop: `${CENTER_INDEX * ITEM_HEIGHT}px`,
-            paddingBottom: `${CENTER_INDEX * ITEM_HEIGHT}px`,
+            height: `${containerHeight}px`,
+            paddingTop: `${centerIndex * itemHeight}px`,
+            paddingBottom: `${centerIndex * itemHeight}px`,
             cursor: isDragging ? "grabbing" : "",
           }}
         >
@@ -110,13 +137,13 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
               <div
                 key={item}
                 className={cn(
-                  "flex items-center justify-center select-none font-semibold tabular-nums snap-center",
+                  "flex items-center justify-center select-none font-semibold tabular-nums",
                   isDragging ? "cursor-grabbing" : "",
                   isSelected
-                    ? "text-lg text-foreground"
-                    : "text-sm text-muted-foreground"
+                    ? "sm:text-lg text-md text-foreground"
+                    : "sm:text-sm text-xs text-muted-foreground"
                 )}
-                style={{ height: `${ITEM_HEIGHT}px` }}
+                style={{ height: `${itemHeight}px` }}
                 onClick={() => !isDragging && onChange(item)}
               >
                 {item.toString().padStart(2, "0")}
@@ -135,52 +162,40 @@ export function TimeScrollPicker({
   hideSeconds = false,
 }: TimeScrollPickerProps) {
   const currentDate = date || new Date();
-  const hours = currentDate.getHours();
-  const minutes = currentDate.getMinutes();
-  const seconds = currentDate.getSeconds();
 
-  const handleHourChange = (newHour: number) => {
+  const handleTimeChange = (
+    type: "hours" | "minutes" | "seconds",
+    value: number
+  ) => {
     const newDate = new Date(currentDate);
-    newDate.setHours(newHour);
-    setDate(newDate);
-  };
-
-  const handleMinuteChange = (newMinute: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setMinutes(newMinute);
-    setDate(newDate);
-  };
-
-  const handleSecondChange = (newSecond: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setSeconds(newSecond);
+    if (type === "hours") newDate.setHours(value);
+    else if (type === "minutes") newDate.setMinutes(value);
+    else newDate.setSeconds(value);
     setDate(newDate);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 p-4">
-      <div className="flex gap-2">
+    <div className="flex items-center justify-center gap-2 p-3">
+      <div className="flex gap-2 ">
         <ScrollColumn
-          value={hours}
-          onChange={handleHourChange}
+          value={currentDate.getHours()}
+          onChange={(v) => handleTimeChange("hours", v)}
           max={24}
           label="Hora"
         />
         <ScrollColumn
-          value={minutes}
-          onChange={handleMinuteChange}
+          value={currentDate.getMinutes()}
+          onChange={(v) => handleTimeChange("minutes", v)}
           max={60}
           label="Min"
         />
         {!hideSeconds && (
-          <>
-            <ScrollColumn
-              value={seconds}
-              onChange={handleSecondChange}
-              max={60}
-              label="Seg"
-            />
-          </>
+          <ScrollColumn
+            value={currentDate.getSeconds()}
+            onChange={(v) => handleTimeChange("seconds", v)}
+            max={60}
+            label="Seg"
+          />
         )}
       </div>
     </div>
