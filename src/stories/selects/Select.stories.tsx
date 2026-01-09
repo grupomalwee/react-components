@@ -1,6 +1,7 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Select } from "@/components/ui/selects/Select";
+import { useState } from "react";
 
 const meta: Meta<typeof Select> = {
   title: "selects/Select",
@@ -10,13 +11,14 @@ const meta: Meta<typeof Select> = {
     docs: {
       description: {
         component:
-          "Select simplificado para seleção de opções. Suporta itens simples e agrupados, com estados de erro e desabilitado.",
+          "Select simplificado para seleção de opções. Suporta itens simples e agrupados, com estados de erro, desabilitado e paginação.",
       },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
 export default function Example() {
+  const [selected, setSelected] = useState<string | null>(null);
   const items = [
     { label: "Option A", value: "a" },
     { label: "Option B", value: "b" },
@@ -26,7 +28,8 @@ export default function Example() {
   return (
     <Select
       items={items}
-      onChange={(v) => console.log("changed", v)}
+      selected={selected}
+      onChange={setSelected}
       placeholder="Select an option"
     />
   );
@@ -43,6 +46,42 @@ export default function Example() {
       ],
     },
   },
+  argTypes: {
+    selected: {
+      control: "text",
+      description: "Valor atualmente selecionado",
+    },
+    placeholder: {
+      control: "text",
+      description: "Texto exibido quando nenhum item está selecionado",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o select",
+    },
+    error: {
+      control: "text",
+      description: "Mensagem de erro a ser exibida",
+    },
+    label: {
+      control: "text",
+      description: "Label do select",
+    },
+    labelClassname: {
+      control: "text",
+      description: "Classes CSS customizadas para o label",
+    },
+    className: {
+      control: "text",
+      description: "Classes CSS customizadas para o trigger",
+    },
+    pagination: {
+      control: "number",
+      description:
+        "Número de páginas para dividir os itens (0 desabilita paginação)",
+    },
+    onChange: { action: "onChange" },
+  },
 };
 
 export default meta;
@@ -53,6 +92,8 @@ const simpleItems = [
   { label: "Option A", value: "a" },
   { label: "Option B", value: "b" },
   { label: "Option C", value: "c" },
+  { label: "Option D", value: "d" },
+  { label: "Option E", value: "e" },
 ];
 
 const groupedItems = {
@@ -66,25 +107,77 @@ const groupedItems = {
   ],
 };
 
+const manyItems = Array.from({ length: 50 }, (_, i) => ({
+  label: `Item ${i + 1}`,
+  value: `item-${i + 1}`,
+}));
+
 export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
 export default function Default() {
+  const [selected, setSelected] = useState<string | null>(null);
   const simpleItems = [
     { label: "Option A", value: "a" },
     { label: "Option B", value: "b" },
     { label: "Option C", value: "c" },
+    { label: "Option D", value: "d" },
+    { label: "Option E", value: "e" },
   ];
+
+  return (
+    <div className="w-[300px]">
+      <Select
+        items={simpleItems}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Select an option"
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select an option"
+        />
+      </div>
+    );
+  },
+};
+
+export const WithPlaceholder: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Exemplo com placeholder customizado",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function WithPlaceholder() {
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <Select
       items={simpleItems}
-      onChange={(v) => console.log("changed", v)}
-      placeholder="Select an option"
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Escolha uma opção..."
     />
   );
 }
@@ -92,42 +185,40 @@ export default function Default() {
       },
     },
   },
-  args: {
-    items: simpleItems,
-    onChange: (v: string) => console.log("changed", v),
-    placeholder: "Select an option",
-    testIds: {
-      root: "select-root",
-      base: "select-base",
-      trigger: "select-trigger",
-      value: "select-value",
-      scrollarea: "select-scrollarea",
-      content: "select-content",
-      group: "select-group",
-      label: "select-label",
-      item: (v: string) => `select-item-${v}`,
-    },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Escolha uma opção..."
+        />
+      </div>
+    );
   },
 };
 
-export const WithPlaceholder: Story = {
+export const WithLabel: Story = {
   parameters: {
     docs: {
+      description: {
+        story: "Exemplo com label",
+      },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
-export default function WithPlaceholder() {
-  const simpleItems = [
-    { label: "Option A", value: "a" },
-    { label: "Option B", value: "b" },
-    { label: "Option C", value: "c" },
-  ];
+export default function WithLabel() {
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <Select
       items={simpleItems}
-      onChange={(v) => console.log("changed", v)}
+      selected={selected}
+      onChange={setSelected}
+      label="Selecione uma opção"
       placeholder="Escolha..."
     />
   );
@@ -136,21 +227,34 @@ export default function WithPlaceholder() {
       },
     },
   },
-  args: {
-    items: simpleItems,
-    onChange: (v: string) => console.log("changed", v),
-    placeholder: "Escolha...",
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          label="Selecione uma opção"
+          placeholder="Escolha..."
+        />
+      </div>
+    );
   },
 };
 
 export const Grouped: Story = {
   parameters: {
     docs: {
+      description: {
+        story: "Exemplo com itens agrupados",
+      },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
 export default function Grouped() {
+  const [selected, setSelected] = useState<string | null>(null);
   const groupedItems = {
     "Group One": [
       { label: "G1 - One", value: "g1-1" },
@@ -165,7 +269,8 @@ export default function Grouped() {
   return (
     <Select
       groupItems={groupedItems}
-      onChange={(v) => console.log("changed", v)}
+      selected={selected}
+      onChange={setSelected}
       placeholder="Select grouped"
     />
   );
@@ -174,37 +279,41 @@ export default function Grouped() {
       },
     },
   },
-  args: {
-    groupItems: groupedItems,
-    onChange: (v: string) => console.log("changed", v),
-    placeholder: "Select grouped",
-    testIds: {
-      trigger: "select-trigger",
-      value: "select-value",
-      item: (v: string) => `select-item-${v}`,
-    },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          groupItems={groupedItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select grouped"
+        />
+      </div>
+    );
   },
 };
 
 export const Disabled: Story = {
   parameters: {
     docs: {
+      description: {
+        story: "Exemplo com select desabilitado",
+      },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
 export default function Disabled() {
-  const simpleItems = [
-    { label: "Option A", value: "a" },
-    { label: "Option B", value: "b" },
-    { label: "Option C", value: "c" },
-  ];
+  const [selected, setSelected] = useState<string | null>("a");
 
   return (
     <Select
       items={simpleItems}
-      onChange={(v) => console.log("changed", v)}
-      disabled={true}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select an option"
+      disabled
     />
   );
 }
@@ -212,31 +321,42 @@ export default function Disabled() {
       },
     },
   },
-  args: {
-    items: simpleItems,
-    onChange: (v: string) => console.log("changed", v),
-    disabled: true,
+  render: () => {
+    const [selected, setSelected] = useState<string | null>("a");
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select an option"
+          disabled
+        />
+      </div>
+    );
   },
 };
 
 export const WithError: Story = {
   parameters: {
     docs: {
+      description: {
+        story: "Exemplo com mensagem de erro",
+      },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
 export default function WithError() {
-  const simpleItems = [
-    { label: "Option A", value: "a" },
-    { label: "Option B", value: "b" },
-    { label: "Option C", value: "c" },
-  ];
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <Select
       items={simpleItems}
-      onChange={(v) => console.log("changed", v)}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select an option"
+      label="Required Field"
       error="This field is required"
     />
   );
@@ -245,32 +365,49 @@ export default function WithError() {
       },
     },
   },
-  args: {
-    items: simpleItems,
-    onChange: (v: string) => console.log("changed", v),
-    error: "This field is required",
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select an option"
+          label="Required Field"
+          error="This field is required"
+        />
+      </div>
+    );
   },
 };
 
-export const Paginated: Story = {
+export const WithPagination: Story = {
   parameters: {
     docs: {
+      description: {
+        story:
+          "Exemplo com paginação habilitada (muitos itens divididos em páginas)",
+      },
       source: {
-        code: `import React from 'react';
+        code: `import React, { useState } from 'react';
 import { Select } from '@mlw-packages/react-components';
 
-export default function Paginated() {
-  const items = Array.from({ length: 20 }).map((_, i) => ({
-    label:Option,
-    value: v,
+export default function WithPagination() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const manyItems = Array.from({ length: 50 }, (_, i) => ({
+    label: \`Item \${i + 1}\`,
+    value: \`item-\${i + 1}\`,
   }));
 
   return (
     <Select
-      items={items}
-      onChange={(v) => console.log('changed', v)}
-      placeholder="Select an option"
-      pagination={5} // interpretado como número de páginas
+      items={manyItems}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select from many items"
+      label="Paginated Select"
+      pagination={5}
     />
   );
 }
@@ -278,27 +415,109 @@ export default function Paginated() {
       },
     },
   },
-  args: {
-    items: Array.from({ length: 20 }).map((_, i) => ({
-      label: `Option ${i + 1}`,
-      value: `v${i + 1}`,
-    })),
-    onChange: (v: string) => console.log("changed", v),
-    placeholder: "Select an option",
-    pagination: 2,
-    testIds: {
-      root: "select-root",
-      base: "select-base",
-      trigger: "select-trigger",
-      value: "select-value",
-      scrollarea: "select-scrollarea",
-      content: "select-content",
-      group: "select-group",
-      label: "select-label",
-      item: (v: string) => `select-item-${v}`,
-      paginationPrev: "select-pagination-prev",
-      paginationNext: "select-pagination-next",
-      paginationPage: (p: number) => `select-pagination-page-${p}`,
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={manyItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select from many items"
+          label="Paginated Select"
+          pagination={5}
+        />
+      </div>
+    );
+  },
+};
+
+export const CustomClassName: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Exemplo com classes CSS customizadas",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function CustomClassName() {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  return (
+    <Select
+      items={simpleItems}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select an option"
+      label="Styled Select"
+      className="border-2 border-blue-500 rounded-lg"
+      labelClassname="text-blue-600 font-bold"
+    />
+  );
+}
+`,
+      },
     },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select an option"
+          label="Styled Select"
+          className="border-2 border-blue-500 rounded-lg"
+          labelClassname="text-blue-600 font-bold"
+        />
+      </div>
+    );
+  },
+};
+
+export const PreSelected: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Exemplo com valor pré-selecionado",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function PreSelected() {
+  const [selected, setSelected] = useState<string | null>("b");
+
+  return (
+    <Select
+      items={simpleItems}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select an option"
+      label="Pre-selected Value"
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>("b");
+    return (
+      <div className="w-[300px]">
+        <Select
+          items={simpleItems}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select an option"
+          label="Pre-selected Value"
+        />
+      </div>
+    );
   },
 };

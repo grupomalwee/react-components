@@ -16,6 +16,7 @@ import {
   PopoverTriggerBase,
   PopoverContentBase,
 } from "@/components/ui/overlays/PopoverBase";
+import { useIsMobile } from "@/hooks";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -31,6 +32,8 @@ export function CalendarBase({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const isMobile = useIsMobile();
+
   return (
     <div
       className={cn(
@@ -54,15 +57,17 @@ export function CalendarBase({
             caption_label:
               "text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize",
 
-            nav: "hidden",
+            nav: "hidden ",
 
             button_previous: cn(
               buttonVariantsBase({ variant: "outline" }),
-              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10"
+              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10",
+              isMobile ? "mr-8" : ""
             ),
             button_next: cn(
               buttonVariantsBase({ variant: "outline" }),
-              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10"
+              "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10",
+              isMobile ? "mr-8" : ""
             ),
 
             month_grid: "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",

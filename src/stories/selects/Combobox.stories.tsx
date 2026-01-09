@@ -8,21 +8,6 @@ const meta: Meta<typeof Combobox> = {
   title: "selects/Combobox",
   component: Combobox,
   tags: ["autodocs"],
-  args: {
-    selected: "",
-    label: "",
-    placeholder: "",
-    searchPlaceholder: "",
-    error: "",
-  } as unknown as Record<string, unknown>,
-  argTypes: {
-    selected: { control: { type: "text" } },
-    label: { control: { type: "text" } },
-    placeholder: { control: { type: "text" } },
-    searchPlaceholder: { control: { type: "text" } },
-    error: { control: { type: "text" } },
-    onChange: { action: "onChange" },
-  },
   parameters: {
     docs: {
       description: {
@@ -33,7 +18,7 @@ const meta: Meta<typeof Combobox> = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function Example() {
+function Example() {
   const items = [
     { label: 'JavaScript', value: 'js' },
     { label: 'TypeScript', value: 'ts' },
@@ -52,6 +37,45 @@ export default function Example() {
       ],
     },
     layout: "centered",
+  },
+  argTypes: {
+    selected: {
+      control: "text",
+      description: "Valor atualmente selecionado",
+    },
+    placeholder: {
+      control: "text",
+      description: "Texto exibido quando nenhum item está selecionado",
+    },
+    searchPlaceholder: {
+      control: "text",
+      description: "Placeholder para o campo de busca",
+    },
+    label: {
+      control: "text",
+      description: "Label do combobox",
+    },
+    labelClassname: {
+      control: "text",
+      description: "Classes CSS customizadas para o label",
+    },
+    className: {
+      control: "text",
+      description: "Classes CSS customizadas",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o combobox",
+    },
+    error: {
+      control: "text",
+      description: "Mensagem de erro a ser exibida",
+    },
+    empty: {
+      control: "text",
+      description: "Mensagem ou componente exibido quando não há resultados",
+    },
+    onChange: { action: "onChange" },
   },
 };
 
@@ -105,7 +129,7 @@ export const Default: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function Padrão() {
+function Padrão() {
   const items = [
     { label: 'JavaScript', value: 'js' },
     { label: 'TypeScript', value: 'ts' },
@@ -180,7 +204,7 @@ export const EmptyWithProp: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function EmptyWithProp() {
+function EmptyWithProp() {
   const items = [];
   const [selected, setSelected] = React.useState(null);
   return (
@@ -242,7 +266,7 @@ export const Empty: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function Vazio() {
+function Vazio() {
   const items = [
     { label: 'JavaScript', value: 'js' },
     { label: 'TypeScript', value: 'ts' },
@@ -309,7 +333,7 @@ export const LargeList: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function LargeList() {
+function LargeList() {
   const items = Array.from({ length: 100 }, (_, i) => ({ label: Item, value: item- }));
   const [selected, setSelected] = React.useState('item-50');
   return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Lista com 100 itens" searchPlaceholder="Buscar item..." />;
@@ -375,7 +399,7 @@ export const SpecialCharacters: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function SpecialCharacters() {
+function SpecialCharacters() {
   const items = [
     { label: 'C++', value: 'cpp' },
     { label: 'C#', value: 'csharp' },
@@ -442,7 +466,7 @@ export const WithError: Story = {
         code: `import React from 'react';
 import { Combobox } from '@mlw-packages/react-components';
 
-export default function WithError() {
+function WithError() {
   const items = [
     { label: 'C++', value: 'cpp' },
     { label: 'C#', value: 'csharp' },
@@ -450,6 +474,58 @@ export default function WithError() {
   ];
   const [selected, setSelected] = React.useState('emoji');
   return <Combobox items={items} selected={selected} onChange={(v) => v !== null && setSelected(v)} label="Opções com Caracteres Especiais" error="Você deve selecionar uma opção" />;
+}
+`,
+      },
+    },
+  },
+};
+
+export const Disabled: Story = {
+  name: "Desabilitado",
+  render: () => {
+    const items = [
+      { label: "JavaScript", value: "js" },
+      { label: "TypeScript", value: "ts" },
+      { label: "Python", value: "py" },
+    ];
+    const [selected, setSelected] = React.useState<string>("ts");
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-10">
+          <Combobox
+            items={items}
+            selected={selected}
+            onChange={(value) => {
+              if (value !== null) setSelected(value);
+            }}
+            label="Linguagem (Desabilitado)"
+            disabled
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+function Disabled() {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+  ];
+  const [selected, setSelected] = React.useState('ts');
+  return <Combobox items={items} selected={selected} onChange={setSelected} label="Linguagem (Desabilitado)" disabled />;
 }
 `,
       },

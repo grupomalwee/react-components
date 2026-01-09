@@ -98,7 +98,7 @@ export function Agenda({
               >
                 <span
                   className={twMerge(
-                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 uppercase data-today:font-extrabold sm:pe-4 text-sm sm:text-base md:text-lg font-bold min-w-0",
+                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4  data-today:font-extrabold sm:pe-4 text-sm sm:text-md md:text-md font-bold min-w-0",
                     isToday(day) ? "text-blue-500" : ""
                   )}
                   data-today={isToday(day) || undefined}

@@ -1,7 +1,10 @@
 import "../../style/global.css";
 import type { Meta } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
-import { CalendarBase, CalendarPopover } from "../../components/ui/picker/calendar";
+import {
+  CalendarBase,
+  CalendarPopover,
+} from "../../components/ui/picker/calendar";
 import { useState } from "react";
 
 const meta: Meta<typeof CalendarBase> = {
@@ -316,7 +319,7 @@ import { CalendarBase } from '@mlw-packages/react-components';
 
 export default function DateLimits() {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  return <CalendarBase mode="single" selected={date} onSelect={setDate} fromDate={new Date(2025,5,15)} toDate={new Date(2025,5,30)} data-testid="calendar-limits" />;
+  return <CalendarBase mode="single" selected={date} onSelect={setDate} hidden={{ before: new Date(2025,5,15), after: new Date(2025,5,30) }} data-testid="calendar-limits" />;
 }
 `,
       },
@@ -337,8 +340,10 @@ export default function DateLimits() {
           mode="single"
           selected={date}
           onSelect={setDate}
-          fromDate={new Date(2025, 5, 15)}
-          toDate={new Date(2025, 5, 30)}
+          hidden={{
+            before: new Date(2025, 5, 15),
+            after: new Date(2025, 5, 30),
+          }}
           data-testid="calendar-limits"
         />
       </div>

@@ -8,7 +8,7 @@ interface TimeScrollPickerProps {
   hideSeconds?: boolean;
 }
 
-const ITEM_HEIGHT = 36;
+const ITEM_HEIGHT = 39;
 const ITEM_HEIGHT_MOBILE = 32;
 const VISIBLE_ITEMS = 5;
 const VISIBLE_ITEMS_MOBILE = 3;
@@ -20,9 +20,16 @@ interface ScrollColumnProps {
   onChange: (value: number) => void;
   max: number;
   label: string;
+  hideSeconds?: boolean;
 }
 
-function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
+function ScrollColumn({
+  value,
+  onChange,
+  max,
+  label,
+  hideSeconds,
+}: ScrollColumnProps) {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const items = Array.from({ length: max }, (_, i) => i);
@@ -102,20 +109,14 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
   const handleMouseLeave = () => {
     if (isDragging) handleMouseUp();
   };
+  const containerWidth = isMobile ? (hideSeconds ? "w-16" : "w-8") : "w-16";
 
   return (
     <div className="flex flex-col items-center gap-1">
       <span className="text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider">
         {label}
       </span>
-      <div className="relative w-16">
-        <div
-          className="absolute left-0 right-0 border-y-2 border-primary/20 pointer-events-none z-10"
-          style={{
-            top: `${centerIndex * itemHeight}px`,
-            height: `${itemHeight}px`,
-          }}
-        />
+      <div className={cn("relative", containerWidth)}>
         <div
           ref={containerRef}
           className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
@@ -161,7 +162,11 @@ export function TimeScrollPicker({
   setDate,
   hideSeconds = false,
 }: TimeScrollPickerProps) {
+  const isMobile = useIsMobile();
   const currentDate = date || new Date();
+
+  const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT;
+  const centerIndex = isMobile ? CENTER_INDEX_MOBILE : CENTER_INDEX;
 
   const handleTimeChange = (
     type: "hours" | "minutes" | "seconds",
@@ -176,18 +181,27 @@ export function TimeScrollPicker({
 
   return (
     <div className="flex items-center justify-center gap-2 p-3">
-      <div className="flex gap-2 ">
+      <div className={cn("relative flex gap-2")}>
+        <div
+          className="absolute left-0 right-0  pointer-events-none z-10 rounded-md bg-primary/5"
+          style={{
+            top: `calc(1.75rem + ${centerIndex * itemHeight}px)`,
+            height: `${itemHeight}px`,
+          }}
+        />
         <ScrollColumn
           value={currentDate.getHours()}
           onChange={(v) => handleTimeChange("hours", v)}
           max={24}
           label="Hora"
+          hideSeconds={hideSeconds}
         />
         <ScrollColumn
           value={currentDate.getMinutes()}
           onChange={(v) => handleTimeChange("minutes", v)}
           max={60}
           label="Min"
+          hideSeconds={hideSeconds}
         />
         {!hideSeconds && (
           <ScrollColumn
@@ -195,6 +209,7 @@ export function TimeScrollPicker({
             onChange={(v) => handleTimeChange("seconds", v)}
             max={60}
             label="Seg"
+            hideSeconds={hideSeconds}
           />
         )}
       </div>

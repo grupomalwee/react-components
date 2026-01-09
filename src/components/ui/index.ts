@@ -17,6 +17,7 @@ export * from "./selects/MultiCombobox";
 export * from "./selects/Select";
 export * from "./selects/AvatarCombobox";
 export * from "./selects/MultiSelectBase";
+export * from "./selects/MultiSelect";
 export * from "./charts";
 export * from "./shared/ClearButton";
-export * from "./picker/TimeScrollPicker"
+export * from "./picker/TimeScrollPicker";

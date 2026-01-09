@@ -11,6 +11,17 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.7.28",
+    author: "Gabriel Glatz",
+    date: "2026-01-09",
+    shortTitle: "React Day Picker e Selects",
+    fixed: [
+      "DateTimePicker: corrigido uso de propriedades deprecadas 'from' e 'to', para compatibilidade com versões mais recentes do react-day-picker, garantindo funcionamento adequado do seletor de datas.",
+      "RangePicker: atualizado para remover propriedades 'from' e 'to' deprecadas, evitando warnings de depreciação e mantendo estabilidade futura.",
+      "Selects: resolvidos problemas de altura inconsistente que causavam renderização incorreta do dropdown em diferentes contextos, padronizando cálculos de height para garantir alinhamento adequado do menu de opções.",
+    ],
+  },
+  {
     version: "1.7.27",
     author: "Gabriel Glatz",
     date: "2026-01-08",

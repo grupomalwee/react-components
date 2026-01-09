@@ -86,21 +86,52 @@ const CommandListBase = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
     testid?: string;
   }
->(({ className, testid: dataTestId = "command-list", ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn(
-      "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
-      className
-    )}
-    data-testid={dataTestId}
-    style={{
-      overscrollBehavior: "contain",
-      WebkitOverflowScrolling: "touch",
-    }}
-    {...props}
-  />
-));
+>(({ className, testid: dataTestId = "command-list", ...props }, ref) => {
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const element = listRef.current;
+    if (!element) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.stopPropagation();
+    };
+
+    element.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      element.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
+  const combinedRef = React.useCallback(
+    (node: HTMLDivElement) => {
+      (listRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }
+    },
+    [ref]
+  );
+
+  return (
+    <CommandPrimitive.List
+      ref={combinedRef}
+      className={cn(
+        "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
+        className
+      )}
+      data-testid={dataTestId}
+      style={{
+        overscrollBehavior: "contain",
+        WebkitOverflowScrolling: "touch",
+      }}
+      {...props}
+    />
+  );
+});
 CommandListBase.displayName = CommandPrimitive.List.displayName;
 
 const CommandEmptyBase = React.forwardRef<

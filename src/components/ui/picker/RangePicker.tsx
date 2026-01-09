@@ -6,6 +6,7 @@ import {
   DateRange,
   SelectRangeEventHandler,
 } from "react-day-picker";
+import type { Matcher } from "react-day-picker";
 import ptBR from "date-fns/locale/pt-BR";
 import { format } from "date-fns";
 import type { Locale } from "date-fns";
@@ -32,6 +33,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CalendarDotIcon } from "@phosphor-icons/react/dist/ssr";
 import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
 import { ClearButton } from "../shared/ClearButton";
+import useAutoCenter from "@/hooks/use-auto-center";
 
 export interface RangePickerProps extends ErrorMessageProps {
   value?: DateRange;
@@ -72,6 +74,12 @@ export function RangePicker({
     setRange(undefined);
     onChange?.(undefined);
   };
+
+  const { ref: contentRef, center } = useAutoCenter(open);
+  const basePopoverClass =
+    "w-auto max-w-[calc(100vw-16px)] p-0 border shadow-none";
+  const centeredPopoverClass =
+    "w-auto max-w-[calc(100vw-16px)] p-0 border shadow-none fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50";
 
   return (
     <div className={cn("w-full sm:w-auto", className)}>
@@ -123,13 +131,18 @@ export function RangePicker({
           {open && (
             <PopoverContentBase
               asChild
-              className="w-auto min-w-[250px] p-0 shadow-xl  overflow-y-hidden"
+              className={center ? centeredPopoverClass : basePopoverClass}
+              side="top"
+              align="center"
+              sideOffset={-240}
             >
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                ref={contentRef}
+                initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 16 }}
+                exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
+                className="border rounded-md shadow-xl "
               >
                 <div className="p-4">
                   <motion.div
@@ -148,8 +161,14 @@ export function RangePicker({
                       fixedWeeks
                       weekStartsOn={1}
                       navLayout="around"
-                      fromDate={minDate}
-                      toDate={maxDate}
+                      hidden={
+                        minDate || maxDate
+                          ? ({
+                              before: minDate,
+                              after: maxDate,
+                            } as unknown as Matcher)
+                          : undefined
+                      }
                       className="min-w-0 flex flex-col"
                       classNames={{
                         months:
@@ -192,7 +211,7 @@ export function RangePicker({
                         day_button: cn(
                           buttonVariantsBase({ variant: "ghost" }),
                           "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
-                          "aria-selected:opacity-100  transition-all duration-150 ease-out active:scale-95 hover:bg-background/50 hover:text-primary rounded-none "
+                          "aria-selected:opacity-100  transition-all duration-150 ease-out active:scale-95 hover:bg-background/20 hover:text-primary/90 rounded-none "
                         ),
 
                         selected:
@@ -262,12 +281,18 @@ export function RangePicker({
                       whileTap={{ scale: 0.98 }}
                     >
                       <ButtonBase
-                        className="font-semibold w-full  text-center"
+                        className={cn(
+                          "font-semibold w-full text-center",
+                          range?.from && range?.to
+                            ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                            : "opacity-50 cursor-not-allowed"
+                        )}
+                        disabled={!range?.from || !range?.to}
                         onClick={() => {
+                          if (!range?.from || !range?.to) return;
                           onConfirm?.(range);
                           setOpen(false);
                         }}
-                        disabled={!range?.from || !range?.to}
                       >
                         Selecionar
                       </ButtonBase>

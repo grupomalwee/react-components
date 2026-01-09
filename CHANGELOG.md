@@ -35,6 +35,17 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.7.28 — 2026-01-09
+
+**Author:** Gabriel Glatz
+
+### Fixed
+  
+- DateTimePicker: arrumado from e to date deprecated.
+- RangePicker: arrumado from e to date deprecated.
+- Selects: arrumado erros de height.
+
+---
 ## 1.7.27 — 2026-01-08
 
 **Author:** Gabriel Glatz

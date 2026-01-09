@@ -106,7 +106,7 @@ export const TimeVariants: Story = {
             date={date2}
             onChange={setDate2}
           />
-        </div>      
+        </div>
       </div>
     );
   },
@@ -162,7 +162,7 @@ export const ConfigurationOptions: Story = {
   parameters: {
     docs: {
       source: {
-        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function ConfigurationOptions() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Campo desabilitado' disabled date={d1} onChange={setD1} />\n      <DateTimePicker label='Próximos 30 dias' fromDate={new Date()} toDate={new Date(Date.now() + 30*24*60*60*1000)} date={d2} onChange={setD2} />\n      <DateTimePicker date={d3} onChange={setD3} />\n    </>\n  );\n}`,
+        code: `import React, { useState } from 'react';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function ConfigurationOptions() {\n  const [d1, setD1] = useState(new Date());\n  const [d2, setD2] = useState(new Date());\n  const [d3, setD3] = useState(new Date());\n  return (\n    <>\n      <DateTimePicker label='Campo desabilitado' disabled date={d1} onChange={setD1} />\n      <DateTimePicker label='Próximos 30 dias' hidden={{ before: new Date(), after: new Date(Date.now() + 30*24*60*60*1000) }} date={d2} onChange={setD2} />\n      <DateTimePicker date={d3} onChange={setD3} />\n    </>\n  );\n}`,
       },
     },
   },
@@ -237,7 +237,7 @@ export default function OpenOnRangeBounds() {
   const to = new Date(2026, 2, 6);
 
   return (
-    <DateTimePicker label='Período: 24/02 → 06/03' date={d} onChange={setD} fromDate={from} toDate={to} />
+    <DateTimePicker label='Período: 24/02 → 06/03' date={d} onChange={setD} hidden={{ before: from, after: to }} />
   );
 }
 `,

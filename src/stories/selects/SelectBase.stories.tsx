@@ -26,18 +26,6 @@ const meta: Meta<typeof SelectBase> = {
   title: "selects/SelectBase",
   component: SelectBase,
   tags: ["autodocs"],
-  args: {
-    open: false,
-    disabled: false,
-    value: "",
-  },
-  argTypes: {
-    open: { control: { type: "boolean" } },
-    disabled: { control: { type: "boolean" } },
-    value: { control: { type: "text" } },
-    onOpenChange: { action: "onOpenChange" },
-    onValueChange: { action: "onValueChange" },
-  },
   parameters: {
     docs: {
       description: {
@@ -86,6 +74,30 @@ export default function Example() {
       ],
     },
     layout: "centered",
+  },
+  argTypes: {
+    open: {
+      control: "boolean",
+      description: "Estado de abertura do select (controlado)",
+    },
+    defaultOpen: {
+      control: "boolean",
+      description: "Estado inicial de abertura (não controlado)",
+    },
+    value: {
+      control: "text",
+      description: "Valor selecionado (controlado)",
+    },
+    defaultValue: {
+      control: "text",
+      description: "Valor inicial (não controlado)",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o select",
+    },
+    onOpenChange: { action: "onOpenChange" },
+    onValueChange: { action: "onValueChange" },
   },
 };
 

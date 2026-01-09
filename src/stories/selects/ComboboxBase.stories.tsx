@@ -5,8 +5,16 @@ import {
   ComboboxItem,
 } from "@/components/ui/selects/ComboboxBase";
 import React from "react";
-import { DialogBase, DialogContentBase, DialogDescriptionBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
 
 type ComboboxBaseStoryArgs = {
   items?: Array<{ value: string; label: string }>;
@@ -19,50 +27,33 @@ const meta: Meta<typeof ComboboxBase> = {
   title: "selects/ComboboxBase",
   component: ComboboxBase,
   tags: ["autodocs"],
-  args: {
-    items: [
-      { value: "Item A", label: "Item A" },
-      { value: "Item B", label: "Item B" },
-      { value: "Item C", label: "Item C" },
-    ],
-    selected: "",
-    error: "",
-  } as unknown as Record<string, unknown>,
-  argTypes: {
-    items: {
-      control: { type: "object" },
-      description: "Array de itens {value,label}",
-    },
-    selected: { control: { type: "text" } },
-    error: { control: { type: "text" } },
-    handleSelection: { action: "handleSelection" },
-  } as unknown as Record<string, unknown>,
   parameters: {
     docs: {
       description: {
-        component: "ComboboxBase para seleção rápida e busca de itens.",
+        component:
+          "ComboboxBase para seleção rápida e busca de itens. Componente base altamente personalizável.",
       },
       source: {
         code: `import React from 'react';
-    import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
+import { ComboboxBase, ComboboxItem } from '@mlw-packages/react-components';
 
-    export default function Example() {
-      const items: ComboboxItem<string>[] = [
-        { value: 'Item A', label: 'Item A' },
-        { value: 'Item B', label: 'Item B' },
-        { value: 'Item C', label: 'Item C' },
-      ];
+export default function Example() {
+  const items: ComboboxItem<string>[] = [
+    { value: 'Item A', label: 'Item A' },
+    { value: 'Item B', label: 'Item B' },
+    { value: 'Item C', label: 'Item C' },
+  ];
 
-      return (
-        <ComboboxBase
-          items={items}
-          renderSelected={<span>{items[0].label}</span>}
-          handleSelection={(v) => console.log(v)}
-          checkIsSelected={(v) => items[0].value === v}
-        />
-      );
-    }
-    `,
+  return (
+    <ComboboxBase
+      items={items}
+      renderSelected={<span>{items[0].label}</span>}
+      handleSelection={(v) => console.log(v)}
+      checkIsSelected={(v) => items[0].value === v}
+    />
+  );
+}
+`,
       },
     },
     backgrounds: {
@@ -73,6 +64,42 @@ const meta: Meta<typeof ComboboxBase> = {
       ],
     },
     layout: "centered",
+  },
+  argTypes: {
+    items: {
+      control: "object",
+      description: "Array de itens com value e label",
+    },
+    renderSelected: {
+      description: "Elemento React para renderizar o item selecionado",
+    },
+    handleSelection: {
+      action: "handleSelection",
+      description: "Função chamada quando um item é selecionado",
+    },
+    checkIsSelected: {
+      description: "Função que verifica se um valor está selecionado",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o combobox",
+    },
+    searchPlaceholder: {
+      control: "text",
+      description: "Placeholder para o campo de busca",
+    },
+    empty: {
+      control: "text",
+      description: "Mensagem ou componente exibido quando não há resultados",
+    },
+    error: {
+      control: "text",
+      description: "Mensagem de erro a ser exibida",
+    },
+    keepOpen: {
+      control: "boolean",
+      description: "Mantém o dropdown aberto após seleção",
+    },
   },
 };
 
@@ -278,6 +305,9 @@ export const FixedMiddleMouseScroll: Story = {
     const [selected, setSelected] = React.useState<string | null>(
       items[0].value
     );
+    const [multiSelected, setMultiSelected] = React.useState<string[]>(
+      selected ? [selected] : []
+    );
 
     return (
       <div
@@ -306,13 +336,24 @@ export const FixedMiddleMouseScroll: Story = {
                 renderSelected={
                   <span>{items.find((i) => i.value === selected)?.label}</span>
                 }
-                handleSelection={(value) => setSelected(value)}
+                handleSelection={(value) => {
+                  setSelected(value);
+                  setMultiSelected(value ? [value] : []);
+                }}
                 checkIsSelected={(value) => selected === value}
+              />
+              <MultiCombobox
+                items={items}
+                selected={multiSelected}
+                onChange={setMultiSelected}
+                label="Frutas (disabled)"
+                placeholder="Não é possível alterar"
+                showClearAll
               />
             </div>
           </DialogContentBase>
         </DialogBase>
       </div>
     );
-  }
+  },
 };

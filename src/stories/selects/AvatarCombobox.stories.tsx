@@ -54,26 +54,39 @@ export default function Example() {
     },
   },
   argTypes: {
+    selected: {
+      control: "text",
+      description: "Valor do usuário selecionado",
+    },
     placeholder: {
       control: "text",
-      description: "Placeholder text when no item is selected",
+      description: "Texto exibido quando nenhum usuário está selecionado",
     },
     disabled: {
       control: "boolean",
-      description: "Disable the select",
+      description: "Desabilita o select",
     },
     error: {
       control: "text",
-      description: "Error message to display",
+      description: "Mensagem de erro a ser exibida",
     },
     label: {
       control: "text",
-      description: "Label for the select",
+      description: "Label do select",
+    },
+    labelClassname: {
+      control: "text",
+      description: "Classes CSS customizadas para o label",
+    },
+    className: {
+      control: "text",
+      description: "Classes CSS customizadas",
     },
     colors: {
       control: "object",
-      description: "Array of color classes to cycle through for avatars",
+      description: "Array de classes de cores para avatares (cicla entre elas)",
     },
+    onChange: { action: "onChange" },
   },
 };
 
@@ -704,19 +717,84 @@ export default function CitiesExample() {
   },
   args: {
     items: [
-      { label: "Florianópolis, SC", value: "florianopolis-sc", avatar: "SC", avatarClassName: "bg-blue-100 text-blue-700" },
-      { label: "Joinville, SC", value: "joinville-sc", avatar: "SC", avatarClassName: "bg-green-100 text-green-700" },
-      { label: "Blumenau, SC", value: "blumenau-sc", avatar: "SC", avatarClassName: "bg-purple-100 text-purple-700" },
-      { label: "São Paulo, SP", value: "sao-paulo-sp", avatar: "SP", avatarClassName: "bg-gray-100 text-gray-800" },
-      { label: "Rio de Janeiro, RJ", value: "rio-de-janeiro-rj", avatar: "RJ", avatarClassName: "bg-red-100 text-red-700" },
-      { label: "Belo Horizonte, MG", value: "belo-horizonte-mg", avatar: "MG", avatarClassName: "bg-amber-100 text-amber-700" },
-      { label: "Porto Alegre, RS", value: "porto-alegre-rs", avatar: "RS", avatarClassName: "bg-indigo-100 text-indigo-700" },
-      { label: "Curitiba, PR", value: "curitiba-pr", avatar: "PR", avatarClassName: "bg-green-100 text-green-800" },
-      { label: "Salvador, BA", value: "salvador-ba", avatar: "BA", avatarClassName: "bg-orange-100 text-orange-700" },
-      { label: "Brasília, DF", value: "brasilia-df", avatar: "DF", avatarClassName: "bg-yellow-100 text-yellow-800" },
-      { label: "Manaus, AM", value: "manaus-am", avatar: "AM", avatarClassName: "bg-teal-100 text-teal-700" },
-      { label: "Fortaleza, CE", value: "fortaleza-ce", avatar: "CE", avatarClassName: "bg-pink-100 text-pink-700" },
-      { label: "Recife, PE", value: "recife-pe", avatar: "PE", avatarClassName: "bg-violet-100 text-violet-700" },
+      {
+        label: "Florianópolis, SC",
+        value: "florianopolis-sc",
+        avatar: "SC",
+        avatarClassName: "bg-blue-100 text-blue-700",
+      },
+      {
+        label: "Joinville, SC",
+        value: "joinville-sc",
+        avatar: "SC",
+        avatarClassName: "bg-green-100 text-green-700",
+      },
+      {
+        label: "Blumenau, SC",
+        value: "blumenau-sc",
+        avatar: "SC",
+        avatarClassName: "bg-purple-100 text-purple-700",
+      },
+      {
+        label: "São Paulo, SP",
+        value: "sao-paulo-sp",
+        avatar: "SP",
+        avatarClassName: "bg-gray-100 text-gray-800",
+      },
+      {
+        label: "Rio de Janeiro, RJ",
+        value: "rio-de-janeiro-rj",
+        avatar: "RJ",
+        avatarClassName: "bg-red-100 text-red-700",
+      },
+      {
+        label: "Belo Horizonte, MG",
+        value: "belo-horizonte-mg",
+        avatar: "MG",
+        avatarClassName: "bg-amber-100 text-amber-700",
+      },
+      {
+        label: "Porto Alegre, RS",
+        value: "porto-alegre-rs",
+        avatar: "RS",
+        avatarClassName: "bg-indigo-100 text-indigo-700",
+      },
+      {
+        label: "Curitiba, PR",
+        value: "curitiba-pr",
+        avatar: "PR",
+        avatarClassName: "bg-green-100 text-green-800",
+      },
+      {
+        label: "Salvador, BA",
+        value: "salvador-ba",
+        avatar: "BA",
+        avatarClassName: "bg-orange-100 text-orange-700",
+      },
+      {
+        label: "Brasília, DF",
+        value: "brasilia-df",
+        avatar: "DF",
+        avatarClassName: "bg-yellow-100 text-yellow-800",
+      },
+      {
+        label: "Manaus, AM",
+        value: "manaus-am",
+        avatar: "AM",
+        avatarClassName: "bg-teal-100 text-teal-700",
+      },
+      {
+        label: "Fortaleza, CE",
+        value: "fortaleza-ce",
+        avatar: "CE",
+        avatarClassName: "bg-pink-100 text-pink-700",
+      },
+      {
+        label: "Recife, PE",
+        value: "recife-pe",
+        avatar: "PE",
+        avatarClassName: "bg-violet-100 text-violet-700",
+      },
     ],
     onChange: (v: string) => console.log("changed", v),
     placeholder: "Selecione uma cidade",

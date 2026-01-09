@@ -647,13 +647,24 @@ const Chart: React.FC<ChartProps> = ({
     if (typeof chartMargin?.left === "number") return chartMargin.left;
 
     if (yAxisLabel) return axisLabelMargin;
-    const samples = [minLeftDataValue, niceMaxLeft, Math.round((minLeftDataValue + niceMaxLeft) / 2), 0];
+    const samples = [
+      minLeftDataValue,
+      niceMaxLeft,
+      Math.round((minLeftDataValue + niceMaxLeft) / 2),
+      0,
+    ];
     const formatted = samples.map((v) => String(yTickFormatter(v)));
     const maxLen = formatted.reduce((m, s) => Math.max(m, s.length), 0);
 
     const estimated = Math.max(48, Math.min(220, maxLen * 8 + 24));
     return estimated;
-  }, [chartMargin?.left, yAxisLabel, yTickFormatter, minLeftDataValue, niceMaxLeft]);
+  }, [
+    chartMargin?.left,
+    yAxisLabel,
+    yTickFormatter,
+    minLeftDataValue,
+    niceMaxLeft,
+  ]);
 
   const composedChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
   const composedChartRightMargin =
@@ -741,7 +752,7 @@ const Chart: React.FC<ChartProps> = ({
             paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
           }}
         >
-          <NoData />
+          <NoData title={title} />
         </div>
       </div>
     );

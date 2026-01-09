@@ -26,51 +26,38 @@ const meta: Meta<typeof MultiSelectBase> = {
   title: "selects/MultiSelectBase",
   component: MultiSelectBase,
   tags: ["autodocs"],
-  args: {
-    values: undefined,
-    defaultValues: [],
-    disabled: false,
-    empty: "Nenhum dado encontrado",
-    error: undefined,
-  },
-  argTypes: {
-    values: { table: { type: { summary: "string[]" } } },
-    defaultValues: { table: { type: { summary: "string[]" } } },
-    onValuesChange: { action: "onValuesChange" },
-    disabled: { control: "boolean" },
-    empty: { control: "text" },
-    error: { control: "text" },
-  },
   parameters: {
     docs: {
       description: {
-        component: "MultiSelect com trigger, badges e busca integrada.",
+        component:
+          "MultiSelect com trigger, badges e busca integrada. Componente base para seleção múltipla.",
       },
       source: {
         code: `import React, { useState } from 'react';
 import {
-  MultiSelect,
-  MultiSelectTrigger,
-  MultiSelectValue,
-  MultiSelectContent,
-  MultiSelectItem,
+  MultiSelectBase,
+  MultiSelectTriggerBase,
+  MultiSelectValueBase,
+  MultiSelectContentBase,
+  MultiSelectItemBase,
+  MultiSelectGroupBase,
 } from '@mlw-packages/react-components';
 
 export default function Example() {
   const [values, setValues] = useState<string[]>([]);
   return (
-    <MultiSelect values={values} onValuesChange={setValues}>
-      <MultiSelectTrigger>
-        <MultiSelectValue placeholder="Selecione frutas" />
-      </MultiSelectTrigger>
-      <MultiSelectContent search={{ placeholder: 'Pesquisar...' }}>
-        <MultiSelectGroup>
-          <MultiSelectItem value="apple">Apple</MultiSelectItem>
-          <MultiSelectItem value="banana">Banana</MultiSelectItem>
-          <MultiSelectItem value="blueberry">Blueberry</MultiSelectItem>
-        </MultiSelectGroup>
-      </MultiSelectContent>
-    </MultiSelect>
+    <MultiSelectBase values={values} onValuesChange={setValues}>
+      <MultiSelectTriggerBase>
+        <MultiSelectValueBase placeholder="Selecione frutas" />
+      </MultiSelectTriggerBase>
+      <MultiSelectContentBase search={{ placeholder: 'Pesquisar...' }}>
+        <MultiSelectGroupBase>
+          <MultiSelectItemBase value="apple">Apple</MultiSelectItemBase>
+          <MultiSelectItemBase value="banana">Banana</MultiSelectItemBase>
+          <MultiSelectItemBase value="blueberry">Blueberry</MultiSelectItemBase>
+        </MultiSelectGroupBase>
+      </MultiSelectContentBase>
+    </MultiSelectBase>
   );
 }
 `,
@@ -84,6 +71,29 @@ export default function Example() {
       ],
     },
     layout: "centered",
+  },
+  argTypes: {
+    values: {
+      control: "object",
+      description: "Array de valores selecionados (controlado)",
+    },
+    defaultValues: {
+      control: "object",
+      description: "Array de valores iniciais (não controlado)",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o multi select",
+    },
+    empty: {
+      control: "text",
+      description: "Mensagem exibida quando não há itens",
+    },
+    error: {
+      control: "text",
+      description: "Mensagem de erro a ser exibida",
+    },
+    onValuesChange: { action: "onValuesChange" },
   },
 };
 

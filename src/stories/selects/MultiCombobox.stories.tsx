@@ -8,30 +8,31 @@ const meta: Meta<typeof MultiCombobox> = {
   title: "selects/MultiCombobox",
   component: MultiCombobox,
   tags: ["autodocs"],
-  args: {
-    items: undefined,
-    selected: [],
-    placeholder: "",
-    error: "",
-  } as unknown as Record<string, unknown>,
-  argTypes: {
-    items: {
-      control: { type: "object" },
-      description: "Array de itens {value,label}",
-    },
-    selected: {
-      control: { type: "object" },
-      description: "Array de valores selecionados",
-    },
-    placeholder: { control: { type: "text" } },
-    error: { control: { type: "text" } },
-    onChange: { action: "onChange" },
-  } as unknown as Record<string, unknown>,
   parameters: {
     docs: {
       description: {
         component:
           "MultiCombobox para seleção múltipla de tags, com busca e visualização centralizada.",
+      },
+      source: {
+        code: `import React from 'react';
+import { MultiCombobox } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const items = [
+    { label: 'tag1', value: 'tag1' },
+    { label: 'tag2', value: 'tag2' },
+    { label: 'tag3', value: 'tag3' },
+  ];
+
+  const [selected, setSelected] = React.useState([items[0].value]);
+
+  return (
+    <div style={{ padding: 24 }}>
+      <MultiCombobox items={items} selected={selected} onChange={setSelected} />
+    </div>
+  );
+}`,
       },
     },
     backgrounds: {
@@ -42,6 +43,53 @@ const meta: Meta<typeof MultiCombobox> = {
       ],
     },
     layout: "centered",
+  },
+  argTypes: {
+    selected: {
+      control: "object",
+      description: "Array de valores atualmente selecionados",
+    },
+    placeholder: {
+      control: "text",
+      description: "Texto exibido quando nenhum item está selecionado",
+    },
+    searchPlaceholder: {
+      control: "text",
+      description: "Placeholder para o campo de busca",
+    },
+    label: {
+      control: "text",
+      description: "Label do multi combobox",
+    },
+    labelClassname: {
+      control: "text",
+      description: "Classes CSS customizadas para o label",
+    },
+    className: {
+      control: "text",
+      description: "Classes CSS customizadas",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Desabilita o multi combobox",
+    },
+    error: {
+      control: "text",
+      description: "Mensagem de erro a ser exibida",
+    },
+    empty: {
+      control: "text",
+      description: "Mensagem ou componente exibido quando não há resultados",
+    },
+    keepOpen: {
+      control: "boolean",
+      description: "Mantém o dropdown aberto após seleção",
+    },
+    showClearAll: {
+      control: "boolean",
+      description: "Exibe botão para limpar todas as seleções",
+    },
+    onChange: { action: "onChange" },
   },
 };
 
@@ -106,34 +154,6 @@ export const Default: Story = {
       const content = canvasElement.textContent;
       expect(content).toContain("tag1");
     });
-  },
-};
-
-// Snippet consumer-facing no nível do meta
-meta.parameters = {
-  ...meta.parameters,
-  docs: {
-    ...meta.parameters?.docs,
-    source: {
-      code: `import React from 'react';
-import { MultiComboboxBase } from '@mlw-packages/react-components';
-
-export default function Example() {
-  const items = [
-    { label: 'tag1', value: 'tag1' },
-    { label: 'tag2', value: 'tag2' },
-    { label: 'tag3', value: 'tag3' },
-  ];
-
-  const [selected, setSelected] = React.useState([items[0].value]);
-
-  return (
-    <div style={{ padding: 24 }}>
-      <MultiComboboxBase items={items} selected={selected} onChange={setSelected} />
-    </div>
-  );
-}`,
-    },
   },
 };
 
@@ -529,4 +549,3 @@ export const Disabled: Story = {
     );
   },
 };
-
