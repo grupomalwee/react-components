@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface NoDataProps {
@@ -36,7 +37,6 @@ const NoData: React.FC<NoDataProps> = ({
     ["--svg-h"]: typeof height === "number" ? `${height}px` : String(height),
   } as unknown as React.CSSProperties;
 
-
   return (
     <div
       className={cn(
@@ -47,7 +47,6 @@ const NoData: React.FC<NoDataProps> = ({
       role="img"
       aria-label={message}
     >
-
       <div className="w-full flex items-center justify-center pl-[var(--pl)] p-6 h-[var(--svg-h)]">
         <div className="w-full max-w-[900px] relative">
           <svg
@@ -149,7 +148,7 @@ const NoData: React.FC<NoDataProps> = ({
 
             {bars.map((b, i) => (
               <g key={`barg-${i}`}>
-                <rect
+                <motion.rect
                   x={b.x}
                   y={svgHeight - 40 - b.h}
                   width={b.w}
@@ -157,9 +156,28 @@ const NoData: React.FC<NoDataProps> = ({
                   rx={4}
                   fill="url(#barGradient)"
                   filter="url(#softShadow)"
+                  initial={{ scaleY: 0, opacity: 0 }}
+                  animate={{
+                    scaleY: 1,
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    scaleY: {
+                      duration: 0.6,
+                      delay: i * 0.08,
+                      ease: "easeOut",
+                    },
+                    opacity: {
+                      duration: 3,
+                      delay: i * 0.08,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                  }}
+                  style={{ originY: 1, transformBox: "fill-box" }}
                 />
 
-                <rect
+                <motion.rect
                   x={b.x}
                   y={svgHeight - 40 - b.h}
                   width={b.w}
@@ -168,24 +186,40 @@ const NoData: React.FC<NoDataProps> = ({
                   fill="none"
                   stroke="hsl(var(--foreground))"
                   strokeWidth={1}
-                  opacity={0.3}
+                  initial={{ scaleY: 0, opacity: 0 }}
+                  animate={{
+                    scaleY: 1,
+                    opacity: 0.3,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    delay: i * 0.08,
+                    ease: "easeOut",
+                  }}
+                  style={{ originY: 1, transformBox: "fill-box" }}
                 />
 
-                <line
+                <motion.line
                   x1={b.x + b.w / 2}
                   y1={svgHeight - 40}
                   x2={b.x + b.w / 2}
                   y2={svgHeight - 35}
                   stroke="hsl(var(--foreground))"
                   strokeWidth={1.5}
-                  opacity={0.4}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.4 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: i * 0.08,
+                    ease: "easeOut",
+                  }}
                 />
               </g>
             ))}
           </svg>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none h-[var(--svg-h)]">
-            <div className="pointer-events-auto bg-card/95 backdrop-blur-sm px-8 py-6 rounded-xl border border-border/50 shadow-lg text-center max-w-md">           
+            <div className="pointer-events-auto bg-card/95 backdrop-blur-sm px-8 py-6 rounded-xl border border-border/50 shadow-lg text-center max-w-md">
               {title && (
                 <h3 className="text-xl font-semibold text-foreground mb-2">
                   {title}
@@ -195,7 +229,6 @@ const NoData: React.FC<NoDataProps> = ({
               <p className="text-lg font-medium text-foreground/90 mb-2">
                 {message}
               </p>
-             
             </div>
           </div>
         </div>

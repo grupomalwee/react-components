@@ -9,15 +9,7 @@ import { DateTimePicker } from "@/components/ui/picker/DateTimePicker";
 import React from "react";
 import { Select } from "@/components/ui/selects/Select";
 import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
-import {
-  MultiSelectBase,
-  MultiSelectContentBase,
-  MultiSelectGroupBase,
-  MultiSelectItemBase,
-  MultiSelectTriggerBase,
-  MultiSelectValueBase,
-} from "@/components/ui/selects/MultiSelectBase";
-// import { RangePicker } from "@/components/ui/picker/RangePicker";
+import { MultiSelect } from "@/components/ui";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -25,6 +17,42 @@ const cargos = [
   { label: "Product Owner", value: "po" },
   { label: "Scrum Master", value: "scrum" },
   { label: "Tech Lead", value: "techlead" },
+  { label: "Analista de Dados", value: "data-analyst" },
+  { label: "DevOps", value: "devops" },
+  { label: "QA Engineer", value: "qa" },
+];
+
+const usuarios = [
+  {
+    avatarClassName: "bg-indigo-400/20 text-indigo-500",
+    label: "Gabriel Glatz",
+    value: "1",
+  },
+  {
+    avatarClassName: "bg-purple-400/20 text-purple-500",
+    label: "Eduardo Ronchi",
+    value: "2",
+  },
+  {
+    avatarClassName: "bg-rose-400/20 text-rose-500",
+    label: "Anne Kelley",
+    value: "3",
+  },
+  {
+    avatarClassName: "bg-amber-400/20 text-amber-500",
+    label: "Michael Chen",
+    value: "4",
+  },
+  {
+    avatarClassName: "bg-emerald-400/20 text-emerald-500",
+    label: "Sofia Martinez",
+    value: "5",
+  },
+  {
+    avatarClassName: "bg-blue-400/20 text-blue-500",
+    label: "Lucas Silva",
+    value: "6",
+  },
 ];
 
 function ComparisonRowGrid({
@@ -34,126 +62,93 @@ function ComparisonRowGrid({
   setSelectedMulti,
   inputValue,
   setInputValue,
+  selectValue,
+  setSelectValue,
+  avatarValue,
+  setAvatarValue,
+  date,
+  setDate,
+  multiSelectValues,
+  setMultiSelectValues,
 }: Props) {
-  const [date, setDate] = React.useState<Date | null>(new Date());
-  // const [date2, setDate2] = React.useState<Date | undefined>(new Date());
-  const [values, setValues] = React.useState<string[]>([]);
-
   return (
-    <div>
-      <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
-        <Combobox
-          items={cargos}
-          selected={selected}
-          onChange={setSelected}
-          placeholder="Escolha uma opção"
-          searchPlaceholder="Buscar cargo..."
-        />
-        <MultiCombobox
-          items={cargos}
-          selected={selectedMulti}
-          onChange={setSelectedMulti}
-          placeholder="Escolha os cargos"
-          searchPlaceholder="Buscar cargo..."
-        />
-        <InputBase
-          placeholder="Digite algo..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <Select
-          items={[
-            { label: "Opção 1", value: "1" },
-            { label: "Opção 2", value: "2" },
-            { label: "Opção 3", value: "3" },
-          ]}
-          selected={null}
-          onChange={() => {}}
-          placeholder="Selecione uma opção"
-        />
-        <ButtonBase>Comparar</ButtonBase>
-        <AvatarCombobox
-          items={[
-            {
-              avatarClassName: "bg-indigo-400/20 text-indigo-500",
-              label: "Gabriel Glatz",
-              value: "1",
-            },
-            {
-              avatarClassName: "bg-purple-400/20 text-purple-500",
-              label: "Eduardo Ronchi",
-              value: "2",
-            },
-            {
-              avatarClassName: "bg-rose-400/20 text-rose-500",
-              label: "Anne Kelley",
-              value: "3",
-            },
-            {
-              avatarClassName: "bg-amber-400/20 text-amber-500",
-              label: "Michael Chen",
-              value: "4",
-            },
-            {
-              avatarClassName: "bg-emerald-400/20 text-emerald-500",
-              label: "Sofia Martinez",
-              value: "5",
-            },
-          ]}
-          onChange={function nG() {}}
-          placeholder="Select user"
-          selected="1"
-        />
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900 rounded-lg border border-blue-200 dark:border-slate-700">
+        <div className="flex flex-col">
+          <Combobox
+            items={cargos}
+            selected={selected}
+            onChange={setSelected}
+            placeholder="Escolha um cargo"
+            searchPlaceholder="Buscar cargo..."
+            label="Cargo (Combobox)"
+          />
+        </div>
 
-        <DateTimePicker date={date} onChange={setDate} hideSeconds />
+        <div className="flex flex-col">
+          <MultiCombobox
+            items={cargos}
+            selected={selectedMulti}
+            onChange={setSelectedMulti}
+            placeholder="Escolha os cargos"
+            searchPlaceholder="Buscar cargo..."
+            label="Cargos (MultiCombobox)"
+            showClearAll
+          />
+        </div>
 
-        {/* <RangePicker value={date2} onChange={setDate2} /> */}
-  
-        <MultiSelectBase values={values} onValuesChange={setValues}>
-          <MultiSelectTriggerBase>
-            <MultiSelectValueBase placeholder={"Selecione"} />
-          </MultiSelectTriggerBase>
+        <div className="flex flex-col">
+          <Select
+            items={cargos}
+            selected={selectValue}
+            onChange={setSelectValue}
+            placeholder="Selecione um cargo"
+            label="Cargo (Select)"
+            clearable
+          />
+        </div>
 
-          <MultiSelectContentBase search={{ placeholder: "Pesquisar..." }}>
-            <MultiSelectGroupBase>
-              <MultiSelectItemBase value="apple" badgeLabel="Apple">
-                Apple
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="banana" badgeLabel="Banana">
-                Banana
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="blueberry" badgeLabel="Blueberry">
-                Blueberry
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="grapes" badgeLabel="Grapes">
-                Grapes
-              </MultiSelectItemBase>
-              <MultiSelectItemBase value="pineapple" badgeLabel="Pineapple">
-                Pineapple
-              </MultiSelectItemBase>
-            </MultiSelectGroupBase>
-          </MultiSelectContentBase>
-        </MultiSelectBase>
-      </section>
-      {/* <section className="grid grid-cols-1 md:grid-cols-5 gap-6 w-full bg-red-500">
-        <DateTimePicker
-          date={date}
-          onChange={setDate}
-          hideSeconds
-          label="eeeeeeeeeeeeee"
-        />
-        <Select
-          items={[
-            { label: "Opção 1", value: "1" },
-            { label: "Opção 2", value: "2" },
-            { label: "Opção 3", value: "3" },
-          ]}
-          selected={null}
-          onChange={() => {}}
-          label="eeeeeeeeeeee"
-          placeholder="Selecione uma opção"
-        />
-      </section> */}
+        <div className="flex flex-col">
+          <AvatarCombobox
+            items={usuarios}
+            onChange={setAvatarValue}
+            placeholder="Selecione um usuário"
+            selected={avatarValue}
+            label="Usuário (Avatar)"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <InputBase
+            placeholder="Digite seu nome..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            label="Nome"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <DateTimePicker
+            date={date}
+            onChange={setDate}
+            hideSeconds
+            label="Data e Hora"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <MultiSelect
+            selected={multiSelectValues}
+            onChange={setMultiSelectValues}
+            groupItems={{ Cargos: cargos }}
+            label="teste"
+          />
+        </div>
+
+        <div className="flex flex-col justify-end">
+          <ButtonBase className="w-full">Aplicar Filtros</ButtonBase>
+        </div>
+      </div>
     </div>
   );
 }
@@ -165,35 +160,93 @@ function ComparisonRowFlex({
   setSelectedMulti,
   inputValue,
   setInputValue,
+  selectValue,
+  setSelectValue,
+  avatarValue,
+  setAvatarValue,
+  date,
+  setDate,
+  multiSelectValues,
+  setMultiSelectValues,
 }: Props) {
-  const [date, setDate] = React.useState<Date | null>(new Date());
-
   return (
-    <section className="flex flex-wrap gap-6 w-full bg-red-500">
-      <Combobox
-        items={cargos}
-        selected={selected}
-        onChange={setSelected}
-        placeholder="Escolha uma opção"
-        searchPlaceholder="Buscar cargo..."
-      />
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-4 w-full p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-800 dark:to-slate-900 rounded-lg border border-purple-200 dark:border-slate-700">
+        <div className="flex-1 min-w-[250px]">
+          <Combobox
+            items={cargos}
+            selected={selected}
+            onChange={setSelected}
+            placeholder="Escolha um cargo"
+            searchPlaceholder="Buscar cargo..."
+            label="Cargo (Combobox)"
+          />
+        </div>
 
-      <MultiCombobox
-        items={cargos}
-        selected={selectedMulti}
-        onChange={setSelectedMulti}
-        placeholder="Escolha os cargos"
-        searchPlaceholder="Buscar cargo..."
-      />
-      <InputBase
-        type="number"
-        placeholder="Digite algo..."
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <ButtonBase>Comparar</ButtonBase>
-      <DateTimePicker date={date} onChange={setDate} hideSeconds />
-    </section>
+        <div className="flex-1 min-w-[250px]">
+          <MultiCombobox
+            items={cargos}
+            selected={selectedMulti}
+            onChange={setSelectedMulti}
+            placeholder="Escolha os cargos"
+            searchPlaceholder="Buscar cargo..."
+            label="Cargos (MultiCombobox)"
+            showClearAll
+          />
+        </div>
+
+        <div className="flex-1 min-w-[250px]">
+          <Select
+            items={cargos}
+            selected={selectValue}
+            onChange={setSelectValue}
+            placeholder="Selecione um cargo"
+            label="Cargo (Select)"
+            clearable
+          />
+        </div>
+
+        <div className="flex-1 min-w-[250px]">
+          <AvatarCombobox
+            items={usuarios}
+            onChange={setAvatarValue}
+            placeholder="Selecione um usuário"
+            selected={avatarValue}
+            label="Usuário (Avatar)"
+          />
+        </div>
+
+        <div className="flex-1 min-w-[250px]">
+          <InputBase
+            placeholder="Digite seu nome..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            label="Nome"
+          />
+        </div>
+
+        <div className="flex-1 min-w-[250px]">
+          <DateTimePicker
+            date={date}
+            onChange={setDate}
+            hideSeconds
+            label="Data e Hora"
+          />
+        </div>
+        <div className="flex-1 min-w-[250px]">
+          <MultiSelect
+            selected={multiSelectValues}
+            onChange={setMultiSelectValues}
+            groupItems={{ Cargos: cargos }}
+            label="teste"
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-[250px] flex items-end">
+        <ButtonBase className="w-full">Aplicar Filtros</ButtonBase>
+      </div>
+    </div>
   );
 }
 
@@ -204,22 +257,45 @@ type Props = {
   setSelectedMulti: (v: string[]) => void;
   inputValue: string;
   setInputValue: (v: string) => void;
+  selectValue: string | null;
+  setSelectValue: (v: string) => void;
+  avatarValue: string | null;
+  setAvatarValue: (v: string | null) => void;
+  date: Date | null;
+  setDate: (v: Date | null) => void;
+  multiSelectValues: string[];
+  setMultiSelectValues: (v: string[]) => void;
 };
 
 export default function Comparison() {
   const [inputValue, setInputValue] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
+  const [selectValue, setSelectValue] = useState<string | null>(null);
+  const [avatarValue, setAvatarValue] = useState<string | null>(null);
+  const [date, setDate] = useState<Date | null>(new Date());
+  const [multiSelectValues, setMultiSelectValues] = useState<string[]>([]);
 
   return (
-    <main className="flex justify-center px-4 py-16 text-neutral-900 dark:text-white bg-white dark:bg-[hsl(231,15%,19%)]">
-      <div className="w-full max-w-6xl flex flex-col gap-16">
-        <h1 className="text-3xl md:text-4xl font-bold text-center">
-          Comparador
-        </h1>
+    <main className="min-h-screen px-4 py-16 ">
+      <div className="w-full max-w-7xl mx-auto flex flex-col gap-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            Comparador de Layouts
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Compare como os componentes se comportam em layouts{" "}
+            <strong>Grid</strong> vs <strong>Flex</strong>
+          </p>
+        </div>
 
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold  text-primary">Grid</h2>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-1 w-1 bg-blue-500 rounded-full" />
+            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              Layout Grid
+            </h2>
+          </div>
           <ComparisonRowGrid
             selected={selected}
             setSelected={setSelected}
@@ -227,11 +303,24 @@ export default function Comparison() {
             setSelectedMulti={setSelectedMulti}
             inputValue={inputValue}
             setInputValue={setInputValue}
+            selectValue={selectValue}
+            setSelectValue={setSelectValue}
+            avatarValue={avatarValue}
+            setAvatarValue={setAvatarValue}
+            date={date}
+            setDate={setDate}
+            multiSelectValues={multiSelectValues}
+            setMultiSelectValues={setMultiSelectValues}
           />
         </div>
 
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-primary">Flex</h2>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-1 w-1 bg-purple-500 rounded-full" />
+            <h2 className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              Layout Flex
+            </h2>
+          </div>
           <ComparisonRowFlex
             selected={selected}
             setSelected={setSelected}
@@ -239,6 +328,14 @@ export default function Comparison() {
             setSelectedMulti={setSelectedMulti}
             inputValue={inputValue}
             setInputValue={setInputValue}
+            selectValue={selectValue}
+            setSelectValue={setSelectValue}
+            avatarValue={avatarValue}
+            setAvatarValue={setAvatarValue}
+            date={date}
+            setDate={setDate}
+            multiSelectValues={multiSelectValues}
+            setMultiSelectValues={setMultiSelectValues}
           />
         </div>
       </div>

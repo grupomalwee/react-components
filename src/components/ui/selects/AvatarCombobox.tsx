@@ -180,7 +180,12 @@ export function AvatarCombobox<T extends string>({
           align="start"
           data-testid={testIds.content ?? "avatar-select-content"}
         >
-          <CommandBase>
+          <CommandBase
+            filter={(value, search) => {
+              if (value.toLowerCase().includes(search.toLowerCase())) return 1;
+              return 0;
+            }}
+          >
             <CommandInputBase placeholder="Search..." />
             <CommandListBase>
               <CommandEmptyBase>No results found.</CommandEmptyBase>
