@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.0",
+    author: "Gabriel Glatz",
+    date: "2026-01-12",
+    shortTitle: "Chart e Selects",
+    added: [
+      "Selects: adicionado funcionalidade de limpar seleção usando um ícone X no trigger dos componentes Select, Combobox e MultiSelect, permitindo reset rápido do valor selecionado com feedback visual claro e suporte a teclado (Escape).",
+    ],
+    fixed: [
+      "Chart: corrigido bug crítico do formatador de legenda que não aplicava corretamente a função customizada de formatação, resultando em exibição incorreta de labels no eixo e tooltips interativos, afetando principalmente gráficos com valores monetários e percentuais.",
+    ],
+  },
+  {
     version: "1.7.28",
     author: "Gabriel Glatz",
     date: "2026-01-09",

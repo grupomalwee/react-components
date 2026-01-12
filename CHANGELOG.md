@@ -35,28 +35,44 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.8.0 — 2026-01-12
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- Selects: adicionado Clear Button.
+
+### Fixed
+
+- Chart: arrumado formatador de Legenda e Area gradiente.
+
+---
+
 ## 1.7.28 — 2026-01-09
 
 **Author:** Gabriel Glatz
 
 ### Fixed
-  
+
 - DateTimePicker: arrumado from e to date deprecated.
 - RangePicker: arrumado from e to date deprecated.
 - Selects: arrumado erros de height.
 
 ---
+
 ## 1.7.27 — 2026-01-08
 
 **Author:** Gabriel Glatz
 
 ### Fixed
-  
+
 - DateTimePicker: arrumado bug visual provindo da versão 9.9.0.
 - RangePicker: arrumado bug visual provindo da versão 9.9.0.
 - Selects: arrumado erro de Scroll.
 
 ---
+
 ## 1.7.26 — 2026-01-08
 
 **Author:** Gabriel Glatz
@@ -72,6 +88,7 @@
 - Selects: arrumado erro de Scroll.
 
 ---
+
 ## 1.7.25 — 2026-01-06
 
 **Author:** Gabriel Glatz

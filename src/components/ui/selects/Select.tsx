@@ -11,6 +11,7 @@ import {
   SelectTriggerBase,
   SelectValueBase,
 } from "@/components/ui/SelectBase";
+import { ClearButton } from "@/components/ui/shared/ClearButton";
 import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
 import ErrorMessage, {
   ErrorMessageProps,
@@ -48,6 +49,7 @@ export interface DefaultSelectProps<T extends string>
   label?: string;
   labelClassname?: string;
   pagination?: number;
+  clearable?: boolean;
 }
 
 export interface SelectPropsWithItems<T extends string>
@@ -83,6 +85,7 @@ export function Select<T extends string>({
   labelClassname,
   className,
   pagination,
+  clearable = true,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -105,7 +108,6 @@ export function Select<T extends string>({
 
   const paged = useMemo<PagedGrouped | PagedItems | null>(() => {
     if (!pagination || pagination <= 0) return null;
-
 
     if (groupItems) {
       type Flat = SelectItem<T> & { group: string };
@@ -157,7 +159,7 @@ export function Select<T extends string>({
       >
         <SelectTriggerBase
           className={cn(
-            "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 ",
+            "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 relative",
             error && "border-red-500",
             className
           )}
@@ -168,6 +170,15 @@ export function Select<T extends string>({
             placeholder={placeholder}
             data-testid={testIds.value ?? "select-value"}
           />
+          {selected && clearable && (
+            <div className="absolute right-6 flex items-center pointer-events-auto z-10">
+              <ClearButton
+                onClick={() => {
+                  onChange("" as T);
+                }}
+              />
+            </div>
+          )}
         </SelectTriggerBase>
 
         <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>

@@ -1,8 +1,11 @@
 export const formatFieldName = (fieldName: string): string => {
   return fieldName
-    .replace(/([A-Z])/g, " $1")
-    .replace(/[_-]/g, " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase())
+    .split(/[/_-]/)
+    .filter(Boolean)
+    .map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ")
     .trim();
 };
 
@@ -177,4 +180,247 @@ export const resolveChartMargins = (
     left: margins?.left ?? chartMargins?.left ?? defaultLeft,
     bottom: margins?.bottom ?? chartMargins?.bottom ?? bottomDefault,
   };
+};
+
+export const generateColorMap = (
+  dataKeys: string[],
+  baseColors: string[],
+  mapperConfig: Record<string, { color?: string }>
+): Record<string, string> => {
+  const colorMap: Record<string, string> = {};
+  const allColors = generateAdditionalColors(baseColors, dataKeys.length);
+
+  dataKeys.forEach((key, index) => {
+    colorMap[key] =
+      mapperConfig[key]?.color ||
+      allColors[index] ||
+      baseColors[index % baseColors.length];
+  });
+
+  return colorMap;
+};
+
+export const computeNiceMax = (maxValue: number): number => {
+  let padding = 0.08;
+  if (maxValue > 1_000_000) padding = 0.05;
+  if (maxValue > 10_000_000) padding = 0.03;
+  if (maxValue === 0) padding = 0.12;
+  const padded = maxValue * (1 + padding);
+  return niceCeil(padded);
+};
+
+export const getMaxDataValue = (
+  data: Record<string, unknown>[],
+  keys: string[]
+): number => {
+  let max = 0;
+  for (const row of data) {
+    for (const key of keys) {
+      const v = row[key];
+      if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
+    }
+  }
+  return max;
+};
+
+export const getMinDataValue = (
+  data: Record<string, unknown>[],
+  keys: string[]
+): number => {
+  let min = 0;
+  for (const row of data) {
+    for (const key of keys) {
+      const v = row[key];
+      if (typeof v === "number" && Number.isFinite(v) && v < min)
+        min = v as number;
+    }
+  }
+  return min;
+};
+
+interface SeriesConfig {
+  bar?: string[];
+  line?: string[];
+  area?: string[];
+}
+
+export const computeChartWidth = (
+  width: number | string | undefined,
+  dataLength: number,
+  series: SeriesConfig | undefined,
+  niceMaxLeft: number,
+  niceMaxRight: number
+): number => {
+  if (typeof width === "number") return width;
+
+  const points = Math.max(1, dataLength);
+  const barCount = series?.bar?.length ?? 0;
+  const lineCount = series?.line?.length ?? 0;
+  const areaCount = series?.area?.length ?? 0;
+
+  const basePerPoint = 60;
+  const perBarExtra = barCount > 0 ? Math.max(0, barCount - 1) * 8 : 0;
+  const perOtherExtra = (lineCount + areaCount) * 4;
+
+  const overallNiceMax = Math.max(niceMaxLeft || 0, niceMaxRight || 0);
+  let sizeFactor = 1;
+  if (overallNiceMax > 100_000) sizeFactor = 1.1;
+  if (overallNiceMax > 1_000_000) sizeFactor = 1.2;
+  if (overallNiceMax > 10_000_000) sizeFactor = 1.3;
+
+  const perPoint = Math.round(
+    (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
+  );
+
+  const marginExtra = 120;
+  const calculated = points * perPoint + marginExtra;
+
+  const minWidth = 300;
+  const maxWidth = 1800;
+
+  return Math.max(minWidth, Math.min(maxWidth, calculated));
+};
+
+export const adaptDataForTooltip = <T extends Record<string, unknown>>(
+  data: T,
+  xAxisKey: string
+): { name: string; [key: string]: string | number } => {
+  const result: { name: string; [key: string]: string | number } = {
+    name: String(data[xAxisKey] || "N/A"),
+  };
+
+  for (const key in data) {
+    const value = data[key];
+    if (typeof value === "string" || typeof value === "number") {
+      result[key] = value;
+    } else if (value !== null && value !== undefined) {
+      result[key] = String(value);
+    }
+  }
+
+  return result;
+};
+
+export type ValueFormatterType = (props: {
+  value: number | string | undefined;
+  formattedValue: string;
+  [key: string]: unknown;
+}) => string;
+
+export const createValueFormatter = (
+  customFormatter: ValueFormatterType | undefined,
+  formatBR: boolean
+): ValueFormatterType | undefined => {
+  const nf = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  if (customFormatter) {
+    if (formatBR) {
+      const wrapped: ValueFormatterType = (props) => {
+        const { value, formattedValue } = props as {
+          value: number | string | undefined;
+          formattedValue: string;
+          [key: string]: unknown;
+        };
+
+        let num: number = NaN;
+        if (typeof value === "number") num = value;
+        else if (typeof value === "string" && value.trim() !== "") {
+          const parsed = Number(value);
+          num = Number.isNaN(parsed) ? NaN : parsed;
+        }
+
+        const brFormatted = !Number.isNaN(num)
+          ? nf.format(num)
+          : String(formattedValue ?? value ?? "");
+
+        return customFormatter({
+          ...(props as object),
+          formattedValue: brFormatted,
+          value: undefined,
+        }) as string;
+      };
+      return wrapped;
+    }
+
+    return customFormatter;
+  }
+
+  if (!formatBR) return undefined;
+
+  const builtIn: ValueFormatterType = (props) => {
+    const { value, formattedValue } = props as {
+      value: number | string | undefined;
+      formattedValue: string;
+      [key: string]: unknown;
+    };
+
+    let num: number = NaN;
+    if (typeof value === "number") num = value;
+    else if (typeof value === "string" && value.trim() !== "") {
+      const parsed = Number(value);
+      num = Number.isNaN(parsed) ? NaN : parsed;
+    }
+
+    if (!Number.isNaN(num)) return nf.format(num);
+
+    return String(formattedValue ?? value ?? "");
+  };
+
+  return builtIn;
+};
+
+export const createYTickFormatter = (
+  finalValueFormatter: ValueFormatterType | undefined
+): ((value: number | string) => string) => {
+  const nf = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");
+
+  if (finalValueFormatter) {
+    return (v: number | string) => {
+      const num = Number(String(v));
+      const formatted = Number.isNaN(num) ? String(v ?? "") : nf.format(num);
+      const out = finalValueFormatter({
+        value: v as number | string,
+        formattedValue: formatted,
+      });
+      return stripCurrency(String(out));
+    };
+  }
+
+  return (value: number | string) => {
+    const num = Number(String(value));
+    return Number.isNaN(num) ? String(value ?? "") : nf.format(num);
+  };
+};
+
+export const computeYAxisTickWidth = (
+  chartMarginLeft: number | undefined,
+  yAxisLabel: string | undefined,
+  axisLabelMargin: number,
+  yTickFormatter: (value: number | string) => string,
+  minValue: number,
+  maxValue: number
+): number => {
+  if (typeof chartMarginLeft === "number") return chartMarginLeft;
+
+  if (yAxisLabel) return axisLabelMargin;
+
+  const samples = [
+    minValue,
+    maxValue,
+    Math.round((minValue + maxValue) / 2),
+    0,
+  ];
+  const formatted = samples.map((v) => String(yTickFormatter(v)));
+  const maxLen = formatted.reduce((m, s) => Math.max(m, s.length), 0);
+
+  const estimated = Math.max(48, Math.min(220, maxLen * 8 + 24));
+  return estimated;
 };

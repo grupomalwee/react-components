@@ -12,6 +12,7 @@ import {
   PopoverTriggerBase,
 } from "@/components/ui/overlays/PopoverBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { ClearButton } from "@/components/ui/shared/ClearButton";
 import ErrorMessage, {
   ErrorMessageProps,
 } from "@/components/ui/shared/ErrorMessage";
@@ -49,6 +50,8 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   closeAll?: ReactNode;
   searchPlaceholder?: string;
   empty?: ReactNode;
+  clearable?: boolean;
+  onClear?: () => void;
   testIds?: ComboboxTestIds;
 }
 
@@ -62,10 +65,13 @@ export function ComboboxBase<T extends string>({
   closeAll,
   searchPlaceholder,
   empty = "Nenhum dado encontrado",
+  clearable = true,
+  onClear,
   error,
   testIds = {},
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
+  const hasSelection = items.some((item) => checkIsSelected(item.value));
 
   return (
     <div
@@ -89,13 +95,18 @@ export function ComboboxBase<T extends string>({
             aria-disabled={disabled || undefined}
             disabled={disabled}
             className={cn(
-              "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1",
+              "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1 relative",
               error && "border-red-500"
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
             {closeAll}
+            {hasSelection && clearable && onClear && (
+              <div className="absolute right-6 flex items-center pointer-events-auto z-10">
+                <ClearButton onClick={onClear} />
+              </div>
+            )}
             <motion.div
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3 }}
@@ -113,6 +124,12 @@ export function ComboboxBase<T extends string>({
           <CommandBase
             className="dark:text-white hover:bg-rsecondary"
             data-testid={testIds.command ?? "combobox-command"}
+            filter={(value, search) => {
+              const label =
+                items.find((item) => item.value === value)?.label || value;
+              if (label.toLowerCase().includes(search.toLowerCase())) return 1;
+              return 0;
+            }}
           >
             <CommandInputBase
               tabIndex={-1}

@@ -2,11 +2,10 @@ import { useCallback, useMemo } from "react";
 import { ComboboxProps } from "./Combobox";
 import { ErrorMessageProps } from "@/components/ui/shared/ErrorMessage";
 import { ComboboxBase } from "./ComboboxBase";
-import { XIcon } from "@phosphor-icons/react";
 import LabelBase from "../form/LabelBase";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { ClearButton } from "../shared/ClearButton";
 export interface MultiComboboxTestIds {
   root?: string;
   label?: string;
@@ -62,21 +61,13 @@ export function MultiCombobox<T extends string>({
   );
   const closeAll =
     showClearAll && selectedItems.length > 0 ? (
-      <div className=" flex items-center">
-        <ButtonBase
-          variant="ghost"
-          data-testid={testIds.clearAll ?? "combobox-clear-all"}
-          size="icon"
-          disabled={disabled}
-          onClick={(e) => {
+      <div className="flex items-center pointer-events-auto z-10">
+        <ClearButton
+          onClick={() => {
             if (disabled) return;
-            e.stopPropagation();
             onChange([]);
           }}
-          className="text-xs  hover:bg-red-50 hover:text-red-500 transition-colors rounded-md mr-2"
-        >
-          <XIcon />
-        </ButtonBase>
+        />
       </div>
     ) : null;
   const renderSelected = useMemo(() => {
@@ -108,32 +99,20 @@ export function MultiCombobox<T extends string>({
                 stiffness: 500,
                 damping: 30,
               }}
-              className="flex items-center justify-between gap-2 my-1 rounded-md border p-1 max-w-full"
+              className="flex items-center justify-between my-1 rounded-md border max-w-full h-6"
               data-testid={
                 testIds.selectedItem?.(item.value) ??
                 `combobox-selected-${item.value}`
               }
             >
-              <span className="text-xs truncate">{item.label}</span>
-              <motion.span
-                role={disabled ? undefined : "button"}
-                tabIndex={disabled ? -1 : 0}
+              <span className="text-xs truncate px-2">{item.label}</span>
+              <ClearButton
                 onClick={(e) => {
                   if (disabled) return;
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   handleSelection(item.value);
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className={cn(
-                  "text-xs flex items-center justify-center transition-colors flex-shrink-0 rounded",
-                  !disabled
-                    ? "cursor-pointer hover:text-red-500 hover:bg-red-50"
-                    : "opacity-50 pointer-events-none"
-                )}
-              >
-                <XIcon size={14} />
-              </motion.span>
+              />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -142,7 +121,7 @@ export function MultiCombobox<T extends string>({
   }, [handleSelection, placeholder, selectedItems, testIds, disabled]);
   return (
     <div
-      className={cn("flex flex-col gap-1 w-full min-w-[150px]", className)}
+      className={cn("flex flex-col w-full min-w-[150px]", className)}
       data-testid={testIds.root ?? "multi-combobox-root"}
     >
       {label && (

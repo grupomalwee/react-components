@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 import {
   ComposedChart,
   Bar,
@@ -26,8 +19,15 @@ import {
   formatFieldName,
   detectDataFields,
   detectXAxis,
-  generateAdditionalColors,
-  niceCeil,
+  generateColorMap,
+  computeNiceMax,
+  getMaxDataValue,
+  getMinDataValue,
+  computeChartWidth,
+  adaptDataForTooltip as adaptData,
+  createValueFormatter,
+  createYTickFormatter,
+  computeYAxisTickWidth,
 } from "./utils/helpers";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -42,6 +42,12 @@ import {
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
 import NoData from "./NoData";
+import {
+  useChartHighlights,
+  useChartDimensions,
+  useChartTooltips,
+  useChartClick,
+} from "./hooks";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -108,6 +114,7 @@ interface ChartProps {
   showTooltipTotal?: boolean;
   maxTooltips?: number;
   formatBR?: boolean;
+  legendUppercase?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -141,6 +148,7 @@ const Chart: React.FC<ChartProps> = ({
   periodLabel = "Período",
   maxTooltips = 5,
   formatBR = false,
+  legendUppercase = false,
   chartMargin,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
@@ -181,46 +189,33 @@ const Chart: React.FC<ChartProps> = ({
 
   const { xAxisConfig, mapperConfig } = smartConfig;
 
-  type TooltipItem = {
-    id: string;
-    data: ChartData;
-    position: { top: number; left: number };
-  };
+  const {
+    highlightedSeries,
+    showOnlyHighlighted,
+    toggleHighlight,
+    setShowOnlyHighlighted,
+    clearHighlights,
+  } = useChartHighlights();
 
-  const [activeTooltips, setActiveTooltips] = useState<TooltipItem[]>([]);
+  const { wrapperRef, measuredWidth } = useChartDimensions();
 
-  const [highlightedSeries, setHighlightedSeries] = useState<Set<string>>(
-    new Set()
-  );
-  const [showOnlyHighlighted, setShowOnlyHighlighted] = useState(false);
+  const {
+    activeTooltips,
+    toggleTooltip,
+    onTooltipPositionChange,
+    setActiveTooltips,
+  } = useChartTooltips(maxTooltips);
 
   useEffect(() => {
     if (highlightedSeries.size === 0 && showOnlyHighlighted) {
       setShowOnlyHighlighted(false);
     }
-  }, [highlightedSeries, showOnlyHighlighted]);
+  }, [highlightedSeries, showOnlyHighlighted, setShowOnlyHighlighted]);
 
   const processedData = data.map((item) => ({
     ...item,
     name: String(item[xAxisConfig.dataKey] || "N/A"),
   }));
-
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
-  useLayoutEffect(() => {
-    const el = wrapperRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const r = entries[0];
-      if (r && typeof r.contentRect.width === "number") {
-        setMeasuredWidth(Math.round(r.contentRect.width));
-      }
-    });
-    ro.observe(el);
-
-    setMeasuredWidth(Math.round(el.getBoundingClientRect().width));
-    return () => ro.disconnect();
-  }, []);
 
   const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
   if (series) {
@@ -238,26 +233,9 @@ const Chart: React.FC<ChartProps> = ({
 
   const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
 
-  const generateColors = useCallback(
-    (dataKeys: string[]): Record<string, string> => {
-      const colorMap: Record<string, string> = {};
-      const allColors = generateAdditionalColors(colors, dataKeys.length);
-
-      dataKeys.forEach((key, index) => {
-        colorMap[key] =
-          mapperConfig[key]?.color ||
-          allColors[index] ||
-          colors[index % colors.length];
-      });
-
-      return colorMap;
-    },
-    [colors, mapperConfig]
-  );
-
   const finalColors = useMemo(
-    () => generateColors(allKeys),
-    [generateColors, allKeys]
+    () => generateColorMap(allKeys, colors, mapperConfig),
+    [allKeys, colors, mapperConfig]
   );
 
   const biaxialConfigNormalized = useMemo(() => {
@@ -289,343 +267,75 @@ const Chart: React.FC<ChartProps> = ({
     [allKeys, rightKeys]
   );
 
-  const adaptDataForTooltip = useCallback(
-    (universalData: ChartData) => ({
-      ...universalData,
-      name: String(universalData[xAxisConfig.dataKey] || "N/A"),
-    }),
-    [xAxisConfig.dataKey]
-  );
-
   const activePeriods = useMemo(
-    () => activeTooltips.map((t) => adaptDataForTooltip(t.data).name),
-    [activeTooltips, adaptDataForTooltip]
+    () =>
+      activeTooltips.map((t) => adaptData(t.data, xAxisConfig.dataKey).name),
+    [activeTooltips, xAxisConfig.dataKey]
   );
-
-  useEffect(() => {
-    window.dispatchEvent(new Event("recountTooltips"));
-  }, [activeTooltips.length]);
-
-  const toggleHighlight = useCallback((key: string) => {
-    setHighlightedSeries((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  }, []);
 
   const maxLeftDataValue = useMemo(() => {
-    let max = 0;
     const numericKeys = leftKeys.length > 0 ? leftKeys : allKeys;
-    for (const row of processedData) {
-      const r = row as Record<string, unknown>;
-      for (const key of numericKeys) {
-        const v = r[key];
-        if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
-      }
-    }
-    return max;
+    return getMaxDataValue(processedData, numericKeys);
   }, [processedData, leftKeys, allKeys]);
 
   const minLeftDataValue = useMemo(() => {
-    let min = 0;
     const numericKeys = leftKeys.length > 0 ? leftKeys : allKeys;
-    for (const row of processedData) {
-      const r = row as Record<string, unknown>;
-      for (const key of numericKeys) {
-        const v = r[key];
-        if (typeof v === "number" && Number.isFinite(v) && v < min)
-          min = v as number;
-      }
-    }
-    return min;
+    return getMinDataValue(processedData, numericKeys);
   }, [processedData, leftKeys, allKeys]);
 
   const maxRightDataValue = useMemo(() => {
-    let max = 0;
-    if (rightKeys.length === 0) return max;
-    for (const row of processedData) {
-      const r = row as Record<string, unknown>;
-      for (const key of rightKeys) {
-        const v = r[key];
-        if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
-      }
-    }
-    return max;
+    if (rightKeys.length === 0) return 0;
+    return getMaxDataValue(processedData, rightKeys);
   }, [processedData, rightKeys]);
 
   const minRightDataValue = useMemo(() => {
-    let min = 0;
-    if (rightKeys.length === 0) return min;
-    for (const row of processedData) {
-      const r = row as Record<string, unknown>;
-      for (const key of rightKeys) {
-        const v = r[key];
-        if (typeof v === "number" && Number.isFinite(v) && v < min)
-          min = v as number;
-      }
-    }
-    return min;
+    if (rightKeys.length === 0) return 0;
+    return getMinDataValue(processedData, rightKeys);
   }, [processedData, rightKeys]);
-
-  const computeNiceMax = useCallback((maxValue: number) => {
-    let padding = 0.08;
-    if (maxValue > 1_000_000) padding = 0.05;
-    if (maxValue > 10_000_000) padding = 0.03;
-    if (maxValue === 0) padding = 0.12;
-    const padded = maxValue * (1 + padding);
-    return niceCeil(padded);
-  }, []);
 
   const niceMaxLeft = useMemo(
     () => computeNiceMax(maxLeftDataValue),
-    [computeNiceMax, maxLeftDataValue]
+    [maxLeftDataValue]
   );
   const niceMaxRight = useMemo(
     () => computeNiceMax(maxRightDataValue),
-    [computeNiceMax, maxRightDataValue]
+    [maxRightDataValue]
   );
 
-  const computedWidth = useMemo(() => {
-    if (typeof width === "number") return width;
-
-    const points = Math.max(1, processedData.length);
-    const barCount = series?.bar?.length ?? 0;
-    const lineCount = series?.line?.length ?? 0;
-    const areaCount = series?.area?.length ?? 0;
-
-    // Base width calculation with better scaling
-    const basePerPoint = 60;
-    const perBarExtra = barCount > 0 ? Math.max(0, barCount - 1) * 8 : 0;
-    const perOtherExtra = (lineCount + areaCount) * 4;
-
-    // Size factor based on data magnitude (use the larger axis magnitude)
-    const overallNiceMax = Math.max(niceMaxLeft || 0, niceMaxRight || 0);
-    let sizeFactor = 1;
-    if (overallNiceMax > 100_000) sizeFactor = 1.1;
-    if (overallNiceMax > 1_000_000) sizeFactor = 1.2;
-    if (overallNiceMax > 10_000_000) sizeFactor = 1.3;
-
-    const perPoint = Math.round(
-      (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
-    );
-
-    // More conservative margins
-    const marginExtra = 120;
-    const calculated = points * perPoint + marginExtra;
-
-    // Improved bounds
-    const minWidth = 300;
-    const maxWidth = 1800;
-
-    return Math.max(minWidth, Math.min(maxWidth, calculated));
-  }, [
-    width,
-    processedData.length,
-    series?.bar?.length,
-    series?.line?.length,
-    series?.area?.length,
-    niceMaxLeft,
-    niceMaxRight,
-  ]);
-
-  const toggleTooltip = useCallback(
-    (
-      tooltipId: string,
-      data: ChartData,
-      basePosition: { top: number; left: number }
-    ) => {
-      const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
-
-      if (existingIndex !== -1) {
-        setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
-      } else {
-        if (activeTooltips.length >= maxTooltips) {
-          toast.warning(
-            `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`
-          );
-        }
-
-        const offsetIndex = activeTooltips.length;
-        const gap = 28;
-
-        const newTooltip = {
-          id: tooltipId,
-          data,
-          position: {
-            top: basePosition.top + offsetIndex * gap,
-            left: basePosition.left + offsetIndex * gap,
-          },
-        };
-
-        setActiveTooltips((prev) => {
-          const next = [...prev, newTooltip];
-          return next.length > maxTooltips ? next.slice(1) : next;
-        });
-      }
-    },
-    [activeTooltips, maxTooltips]
+  const computedWidth = useMemo(
+    () =>
+      computeChartWidth(
+        width,
+        processedData.length,
+        series,
+        niceMaxLeft,
+        niceMaxRight
+      ),
+    [width, processedData.length, series, niceMaxLeft, niceMaxRight]
   );
 
-  const handleChartClick = useCallback(
-    (e?: unknown) => {
-      if (!enableDraggableTooltips) return;
-
-      const ev = e as
-        | {
-            activePayload?: Array<{ payload: ChartData }>;
-            chartX?: number;
-            chartY?: number;
-          }
-        | undefined;
-
-      if (ev?.activePayload?.length) {
-        const clickedData = ev.activePayload[0].payload;
-        const xAxisValue =
-          clickedData[xAxisConfig.dataKey] || clickedData.name || "N/A";
-        const tooltipId = String(xAxisValue);
-
-        toggleTooltip(tooltipId, clickedData, {
-          top: (ev.chartY || 100) - 10,
-          left: (ev.chartX || 100) - 100,
-        });
-      } else {
-        setActiveTooltips([]);
-      }
-    },
-    [enableDraggableTooltips, xAxisConfig.dataKey, toggleTooltip]
-  );
-
-  const handleBarClick = useCallback(
-    (data: ChartData, index: number, event: React.MouseEvent) => {
-      if (!enableDraggableTooltips) return;
-
-      event.stopPropagation();
-      const xAxisValue = data[xAxisConfig.dataKey] || "N/A";
-      const tooltipId = String(xAxisValue);
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-
-      toggleTooltip(tooltipId, data, {
-        top: Math.max(8, rect.top - 10),
-        left: rect.right + 10,
-      });
-    },
-    [enableDraggableTooltips, xAxisConfig.dataKey, toggleTooltip]
-  );
-
-  const handleSeriesClick = useCallback(
-    (...args: unknown[]) => {
-      if (args.length >= 3) {
-        const [data, index, event] = args as [unknown, number, unknown];
-        handleBarClick(data as ChartData, index, event as React.MouseEvent);
-        return;
-      }
-      handleChartClick(args[0]);
-    },
-    [handleBarClick, handleChartClick]
-  );
-
-  const onTooltipPositionChange = useCallback(
-    (id: string, position: { top: number; left: number }) => {
-      setActiveTooltips((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, position } : t))
-      );
-    },
-    []
+  const { handleChartClick, handleBarClick, handleSeriesClick } = useChartClick(
+    {
+      enableDraggableTooltips,
+      xAxisDataKey: xAxisConfig.dataKey,
+      toggleTooltip,
+      setActiveTooltips,
+    }
   );
 
   const titleClassName = useMemo(
     () => "text-[1.4rem] font-semibold text-foreground mb-3",
     []
   );
-  const finalValueFormatter = useMemo(() => {
-    const nf = new Intl.NumberFormat("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+  const finalValueFormatter = useMemo(
+    () => createValueFormatter(valueFormatter, formatBR),
+    [valueFormatter, formatBR]
+  );
 
-    if (valueFormatter) {
-      if (formatBR) {
-        const wrapped: valueFormatter = (props) => {
-          const { value, formattedValue } = props as {
-            value: number | string | undefined;
-            formattedValue: string;
-            [key: string]: unknown;
-          };
-
-          let num: number = NaN;
-          if (typeof value === "number") num = value;
-          else if (typeof value === "string" && value.trim() !== "") {
-            const parsed = Number(value);
-            num = Number.isNaN(parsed) ? NaN : parsed;
-          }
-
-          const brFormatted = !Number.isNaN(num)
-            ? nf.format(num)
-            : String(formattedValue ?? value ?? "");
-
-          return valueFormatter({
-            ...(props as object),
-            formattedValue: brFormatted,
-            value: undefined,
-          });
-        };
-        return wrapped;
-      }
-
-      return valueFormatter;
-    }
-
-    if (!formatBR) return undefined;
-
-    const builtIn: valueFormatter = (props) => {
-      const { value, formattedValue } = props as {
-        value: number | string | undefined;
-        formattedValue: string;
-        [key: string]: unknown;
-      };
-
-      let num: number = NaN;
-      if (typeof value === "number") num = value;
-      else if (typeof value === "string" && value.trim() !== "") {
-        const parsed = Number(value);
-        num = Number.isNaN(parsed) ? NaN : parsed;
-      }
-
-      if (!Number.isNaN(num)) return nf.format(num);
-
-      return String(formattedValue ?? value ?? "");
-    };
-
-    return builtIn;
-  }, [valueFormatter, formatBR]);
-
-  const yTickFormatter = useMemo(() => {
-    const nf = new Intl.NumberFormat("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
-    const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");
-
-    if (finalValueFormatter) {
-      return (v: number | string) => {
-        const num = Number(String(v));
-        const formatted = Number.isNaN(num) ? String(v ?? "") : nf.format(num);
-        const out = finalValueFormatter({
-          value: v as number | string,
-          formattedValue: formatted,
-        });
-        return stripCurrency(String(out));
-      };
-    }
-
-    return (value: number | string) => {
-      const num = Number(String(value));
-      return Number.isNaN(num) ? String(value ?? "") : nf.format(num);
-    };
-  }, [finalValueFormatter]);
+  const yTickFormatter = useMemo(
+    () => createYTickFormatter(finalValueFormatter),
+    [finalValueFormatter]
+  );
   const finalEnableHighlights = enableHighlights;
   const finalEnableShowOnly = enableShowOnly;
   const finalEnablePeriodsDropdown =
@@ -643,28 +353,24 @@ const Chart: React.FC<ChartProps> = ({
   const finalChartLeftMargin =
     chartMargin?.left ??
     (yAxisLabel ? axisLabelMargin : defaultChartLeftMargin);
-  const yAxisTickWidth = useMemo(() => {
-    if (typeof chartMargin?.left === "number") return chartMargin.left;
-
-    if (yAxisLabel) return axisLabelMargin;
-    const samples = [
+  const yAxisTickWidth = useMemo(
+    () =>
+      computeYAxisTickWidth(
+        chartMargin?.left,
+        yAxisLabel,
+        axisLabelMargin,
+        yTickFormatter,
+        minLeftDataValue,
+        niceMaxLeft
+      ),
+    [
+      chartMargin?.left,
+      yAxisLabel,
+      yTickFormatter,
       minLeftDataValue,
       niceMaxLeft,
-      Math.round((minLeftDataValue + niceMaxLeft) / 2),
-      0,
-    ];
-    const formatted = samples.map((v) => String(yTickFormatter(v)));
-    const maxLen = formatted.reduce((m, s) => Math.max(m, s.length), 0);
-
-    const estimated = Math.max(48, Math.min(220, maxLen * 8 + 24));
-    return estimated;
-  }, [
-    chartMargin?.left,
-    yAxisLabel,
-    yTickFormatter,
-    minLeftDataValue,
-    niceMaxLeft,
-  ]);
+    ]
+  );
 
   const composedChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
   const composedChartRightMargin =
@@ -735,27 +441,14 @@ const Chart: React.FC<ChartProps> = ({
       measuredInner,
       computedWidth,
       maxTooltips,
+      setActiveTooltips,
     ]
   );
 
   if (!data) return null;
 
   if (Array.isArray(data) && data.length === 0) {
-    return (
-      <div
-        className={cn(
-          "rounded-lg bg-card p-4 relative w-full text-muted-foreground"
-        )}
-      >
-        <div
-          style={{
-            paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
-          }}
-        >
-          <NoData title={title} />
-        </div>
-      </div>
-    );
+    return <NoData title={title} />;
   }
 
   return (
@@ -818,9 +511,13 @@ const Chart: React.FC<ChartProps> = ({
               {finalEnableShowOnly && (
                 <ShowOnly
                   showOnlyHighlighted={showOnlyHighlighted}
-                  setShowOnlyHighlighted={setShowOnlyHighlighted}
+                  setShowOnlyHighlighted={
+                    setShowOnlyHighlighted as React.Dispatch<
+                      React.SetStateAction<boolean>
+                    >
+                  }
                   highlightedSeriesSize={highlightedSeries.size}
-                  clearHighlights={() => setHighlightedSeries(new Set())}
+                  clearHighlights={clearHighlights}
                 />
               )}
 
@@ -878,6 +575,27 @@ const Chart: React.FC<ChartProps> = ({
             }}
             onClick={handleChartClick}
           >
+            <defs>
+              {seriesOrder
+                .filter((s) => s.type === "area")
+                .map((s) => {
+                  const key = s.key;
+                  const color = finalColors[key];
+                  return (
+                    <linearGradient
+                      key={`gradient-${key}`}
+                      id={`gradient-${key}`}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="0.8"
+                    >
+                      <stop offset="0%" stopColor={color} stopOpacity={0.8} />
+                      <stop offset="90%" stopColor={color} stopOpacity={0.1} />
+                    </linearGradient>
+                  );
+                })}
+            </defs>
             {showGrid && (
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -1057,6 +775,20 @@ const Chart: React.FC<ChartProps> = ({
                   color: "hsl(var(--foreground))",
                   fontSize: "14px",
                   paddingTop: "8px",
+                  letterSpacing: 0,
+                }}
+                formatter={(value) => {
+                  const key = String(value);
+                  const label =
+                    mapperConfig[key]?.label ??
+                    labelMap?.[key] ??
+                    formatFieldName(key);
+                  const displayLabel = legendUppercase
+                    ? label.toUpperCase()
+                    : label;
+                  return (
+                    <span style={{ letterSpacing: 0 }}>{displayLabel}</span>
+                  );
                 }}
               />
             )}
@@ -1166,12 +898,13 @@ const Chart: React.FC<ChartProps> = ({
                 return (
                   <Area
                     key={`area-${key}`}
+                    type="monotone"
                     dataKey={key}
                     yAxisId={rightKeys.includes(key) ? "right" : "left"}
                     name={label}
                     stroke={color}
-                    fill={color}
-                    fillOpacity={0.35}
+                    fill={`url(#gradient-${key})`}
+                    fillOpacity={1}
                     strokeWidth={2}
                     onClick={handleSeriesClick}
                     style={{
@@ -1183,6 +916,12 @@ const Chart: React.FC<ChartProps> = ({
                             ? 1
                             : 0.25
                           : 1,
+                    }}
+                    activeDot={{
+                      r: 6,
+                      fill: color,
+                      stroke: "hsl(var(--background))",
+                      strokeWidth: 2,
                     }}
                   >
                     {(showLabels && highlightedSeries.size === 0) ||
@@ -1213,7 +952,7 @@ const Chart: React.FC<ChartProps> = ({
             <DraggableTooltip
               key={tooltip.id}
               id={tooltip.id}
-              data={adaptDataForTooltip(tooltip.data)}
+              data={adaptData(tooltip.data, xAxisConfig.dataKey)}
               position={tooltip.position}
               title={title}
               dataKeys={allKeys}

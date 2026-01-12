@@ -77,6 +77,10 @@ export function Combobox<T extends string>({
     [selected, onChange]
   );
 
+  const handleClear = useCallback(() => {
+    onChange(null);
+  }, [onChange]);
+
   return (
     <div className={cn("flex flex-col w-full min-w-[150px]", className)}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
@@ -91,6 +95,8 @@ export function Combobox<T extends string>({
         empty={empty}
         error={error}
         testIds={testIds}
+        clearable={true}
+        onClear={handleClear}
       />
     </div>
   );

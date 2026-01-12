@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 
 const sampleData = [
-  { periodo: "Q1/24", receita: 1000, despesas: 400, churn: 180 },
+  { periodo: "Q1/24", RECEITA: 1000, despesas: 400, churn: 180 },
   { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
   { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
   { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },
@@ -59,18 +59,104 @@ export default function Example() {
     layout: "centered",
   },
   argTypes: {
-    height: { control: { type: "number", min: 200, max: 600, step: 50 } },
-    series: { control: "object" },
-    labelMap: { control: "object" },
-    xAxis: { control: "text" },
-    data: { control: "object" },
-    colors: { control: "object" },
-
-    showLegend: { control: "boolean" },
-    showGrid: { control: "boolean" },
+    data: { control: "object", description: "Dados do gráfico" },
+    series: {
+      control: "object",
+      description: "Configuração das séries (bar, line, area)",
+    },
+    className: { control: "text", description: "Classes CSS adicionais" },
+    chartMargin: {
+      control: "object",
+      description: "Margens do gráfico (top, right, bottom, left)",
+    },
+    height: {
+      control: { type: "number", min: 200, max: 600, step: 50 },
+      description: "Altura do gráfico em pixels",
+    },
+    width: {
+      control: "text",
+      description: "Largura do gráfico (número ou string)",
+    },
+    colors: {
+      control: "object",
+      description: "Array de cores para as séries",
+    },
+    gridColor: { control: "color", description: "Cor da grade" },
+    showGrid: { control: "boolean", description: "Mostrar grade" },
+    showTooltip: { control: "boolean", description: "Mostrar tooltip" },
+    showLegend: { control: "boolean", description: "Mostrar legenda" },
+    title: { control: "text", description: "Título do gráfico" },
+    titlePosition: {
+      control: "select",
+      options: ["left", "center", "right"],
+      description: "Posição do título",
+    },
+    showLabels: {
+      control: "boolean",
+      description: "Mostrar labels nos dados",
+    },
+    labelMap: {
+      control: "object",
+      description: "Mapeamento de labels customizados",
+    },
+    valueFormatter: {
+      control: "object",
+      description: "Função customizada para formatar valores",
+    },
+    categoryFormatter: {
+      control: "object",
+      description: "Função para formatar categorias",
+    },
+    periodLabel: {
+      control: "text",
+      description: "Label para o período no tooltip",
+    },
+    xAxisLabel: { control: "text", description: "Label do eixo X" },
+    yAxisLabel: { control: "text", description: "Label do eixo Y" },
+    xAxis: {
+      control: "object",
+      description: "Configuração do eixo X (string ou XAxisConfig)",
+    },
+    biaxial: {
+      control: "object",
+      description: "Configuração de eixo Y duplo",
+    },
+    enableHighlights: {
+      control: "boolean",
+      description: "Habilitar destaque de séries",
+    },
+    enableShowOnly: {
+      control: "boolean",
+      description: "Habilitar mostrar apenas série selecionada",
+    },
+    enablePeriodsDropdown: {
+      control: "boolean",
+      description: "Habilitar dropdown de períodos",
+    },
+    enableDraggableTooltips: {
+      control: "boolean",
+      description: "Habilitar tooltips arrastáveis",
+    },
+    showTooltipTotal: {
+      control: "boolean",
+      description: "Mostrar total no tooltip",
+    },
+    maxTooltips: {
+      control: { type: "number", min: 1, max: 10 },
+      description: "Número máximo de tooltips arrastáveis",
+    },
+    formatBR: {
+      control: "boolean",
+      description: "Formatar valores no padrão brasileiro (pt-BR)",
+    },
+    legendUppercase: {
+      control: "boolean",
+      description: "Legendas em maiúsculas",
+    },
   },
   args: {
     data: sampleData,
+    xAxis: "periodo",
   },
 };
 
@@ -78,7 +164,7 @@ export default meta;
 type Story = StoryObj<typeof Chart>;
 
 const Template = (args: React.ComponentProps<typeof Chart>) => (
-  <div style={{ width: "900px", height: "420px" }}>
+  <div style={{ width: "900px", height: "350px" }}>
     <Chart {...args} />
   </div>
 );
@@ -115,7 +201,7 @@ export default function Default() {
 export const FormatBR: Story = {
   name: "Formato pt-BR",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={360}
@@ -139,7 +225,7 @@ export const FormatBR: Story = {
 export const Combined: Story = {
   name: "Combinado",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -186,15 +272,15 @@ export default function Combined() {
 
 export const Biaxial: Story = {
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={360}
         xAxis="periodo"
-        series={{ bar: ["receita", "despesas"], line: ["churn"] }}
+        series={{ bar: ["receita", "despesas"], area: ["churn"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
         yAxisLabel="Valor (R$)"
-        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true ,}}
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
       />
     </div>
   ),
@@ -240,7 +326,7 @@ export default function BiaxialExample() {
 export const NegativeValues: Story = {
   name: "Com Negativos",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         data={negativeData}
@@ -276,7 +362,6 @@ export default function NegativeValues() {
       },
     },
   },
- 
 };
 
 export const LargeData: Story = {
@@ -290,7 +375,7 @@ export const LargeData: Story = {
     }));
 
     return (
-      <div style={{ width: "900px", height: "420px" }}>
+      <div style={{ width: "900px",  height: "350px"  }}>
         <Chart
           {...args}
           data={largeData}
@@ -331,13 +416,12 @@ export default function LargeDataset() {
       },
     },
   },
- 
 };
 
 export const CustomFormatter: Story = {
   name: "Formatador Custom",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -394,7 +478,7 @@ export default function Customformatter() {
 export const AdvancedFormatter: Story = {
   name: "Formatador Avançado",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -472,7 +556,7 @@ export const Empty: Story = {
   name: "Vazio",
   render: (args) => (
     <div
-      style={{ width: "900px", height: "420px" }}
+      style={{ width: "900px",  height: "350px"  }}
       data-testid="empty-chart-wrapper"
     >
       <Chart
@@ -508,13 +592,12 @@ export default function EmptyData() {
       },
     },
   },
- 
 };
 
 export const SinglePoint: Story = {
   name: "Único Ponto",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         data={[{ periodo: "Q1/24", receita: 5000, despesas: 3000, churn: 120 }]}
@@ -555,7 +638,7 @@ export const SinglePoint: Story = {
 export const Minimal: Story = {
   name: "Minimalista",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -643,7 +726,7 @@ export const TallChart: Story = {
 export const AllBars: Story = {
   name: "Só Barras",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -687,7 +770,7 @@ export const AllBars: Story = {
 export const AllLines: Story = {
   name: "Só Linhas",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -731,7 +814,7 @@ export const AllLines: Story = {
 export const AllAreas: Story = {
   name: "Só Áreas",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}
@@ -783,7 +866,7 @@ export const Extremes: Story = {
     ];
 
     return (
-      <div style={{ width: "900px", height: "420px" }}>
+      <div style={{ width: "900px",  height: "350px"  }}>
         <Chart
           {...args}
           data={extremeData}
@@ -825,7 +908,7 @@ export const MixedValues: Story = {
     ];
 
     return (
-      <div style={{ width: "900px", height: "420px" }}>
+      <div style={{ width: "900px",  height: "350px"  }}>
         <Chart
           {...args}
           data={mixedData}
@@ -857,7 +940,7 @@ export const MixedValues: Story = {
 export const CustomColors: Story = {
   name: "Cores Custom",
   render: (args) => (
-    <div style={{ width: "900px", height: "420px" }}>
+    <div style={{ width: "900px",  height: "350px"  }}>
       <Chart
         {...args}
         height={350}

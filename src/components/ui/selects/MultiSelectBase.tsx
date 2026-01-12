@@ -22,6 +22,7 @@ import ErrorMessage from "@/components/ui/shared/ErrorMessage";
 import { motion } from "framer-motion";
 import { ButtonBase } from "../form/ButtonBase";
 import { Badge } from "../data/Badge";
+import LabelBase from "../form/LabelBase";
 import {
   CommandBase,
   CommandEmptyBase,
@@ -120,10 +121,14 @@ export function MultiSelectTriggerBase({
   className,
   children,
   error: propError,
+  label,
+  labelClassname,
   ...props
 }: {
   className?: string;
   children?: ReactNode;
+  label?: string;
+  labelClassname?: string;
 } & ComponentPropsWithoutRef<typeof ButtonBase> &
   ErrorMessageProps) {
   const { open, disabled, error: contextError } = useMultiSelectContext();
@@ -131,6 +136,7 @@ export function MultiSelectTriggerBase({
 
   return (
     <div className={cn("w-full", error && "mb-0")}>
+      {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
       <PopoverTriggerBase asChild>
         <ButtonBase
           {...props}
@@ -311,7 +317,7 @@ export function MultiSelectContentBase({
   children: ReactNode;
 } & Omit<ComponentPropsWithoutRef<typeof CommandBase>, "children">) {
   const canSearch = typeof search === "object" ? true : search;
-  const { emptyMessage } = useMultiSelectContext();
+  const { emptyMessage, items } = useMultiSelectContext();
 
   return (
     <>
@@ -323,7 +329,16 @@ export function MultiSelectContentBase({
           transition={{ duration: 0.2 }}
         >
           <div className={cn(" ")}>
-            <CommandBase {...props}>
+            <CommandBase
+              {...props}
+              filter={(value, search) => {
+                const labelNode = items.get(value);
+                const label = typeof labelNode === "string" ? labelNode : value;
+                if (label.toLowerCase().includes(search.toLowerCase()))
+                  return 1;
+                return 0;
+              }}
+            >
               {canSearch ? (
                 <CommandInputBase
                   placeholder={
@@ -376,9 +391,7 @@ export function MultiSelectItemBase({
         onSelect?.(value);
       }}
     >
-      <motion.div
-        transition={{ duration: 0.1 }}
-      >
+      <motion.div transition={{ duration: 0.1 }}>
         <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
           <motion.div
             initial={{ scale: 0 }}
