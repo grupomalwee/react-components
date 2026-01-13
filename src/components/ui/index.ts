@@ -21,3 +21,4 @@ export * from "./selects/MultiSelect";
 export * from "./charts";
 export * from "./shared/ClearButton";
 export * from "./picker/TimeScrollPicker";
+export * from "./LeaderBoard";

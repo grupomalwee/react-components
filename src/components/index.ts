@@ -66,3 +66,5 @@ export * from "./ui/selects/MultiSelectBase";
 export * from "./ui/selects/Select";
 
 export * from "./ui/charts";
+
+export * from "./ui/LeaderBoard";
