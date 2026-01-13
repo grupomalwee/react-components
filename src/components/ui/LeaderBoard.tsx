@@ -52,10 +52,10 @@ export function Leaderboard({
       className={`border rounded-xl flex flex-col max-h-80 w-96 ${className}`}
     >
       <div className="flex items-center justify-between p-4 border-b flex-shrink-0 gap-3">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold px-1">{title}</h2>
         <ButtonBase
           size="icon"
-          variant="outline"
+          variant="ghost"
           onClick={() => setOrder(order === "desc" ? "asc" : "desc")}
         >
           <CaretUpDownIcon />
