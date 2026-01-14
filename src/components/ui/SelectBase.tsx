@@ -18,10 +18,8 @@ const SelectValueBase = SelectPrimitive.Value;
 const SelectTriggerBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    ErrorMessageProps & {
-      open?: boolean;
-    }
->(({ className, children, open, error, ...props }, ref) => (
+    ErrorMessageProps 
+>(({ className, children, error, ...props }, ref) => (
   <div className={cn("w-full", error && "mb-0")}>
     <SelectPrimitive.Trigger
       ref={ref}
@@ -35,13 +33,6 @@ const SelectTriggerBase = React.forwardRef<
       {...props}
     >
       {children}
-      <motion.span
-        animate={{ rotate: open ? 180 : 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex items-center"
-      >
-        <CaretDownIcon className="h-4 w-4 opacity-50" />
-      </motion.span>
     </SelectPrimitive.Trigger>
     {error ? <ErrorMessage error={error} /> : null}
   </div>

@@ -106,7 +106,7 @@ const NoData: React.FC<NoDataProps> = ({
               y={0}
               width={900}
               height={svgHeight}
-              fill="hsl(var(--muted)/0.2)"
+              fill="hsl(var(--muted)/0.00000002)"
               rx={8}
             />
 

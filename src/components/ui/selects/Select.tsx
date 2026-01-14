@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import {
+  CaretDownIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+} from "@phosphor-icons/react";
 import {
   SelectBase,
   SelectContentBase,
@@ -11,13 +15,14 @@ import {
   SelectTriggerBase,
   SelectValueBase,
 } from "@/components/ui/SelectBase";
-import { ClearButton } from "@/components/ui/shared/ClearButton";
 import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
 import ErrorMessage, {
   ErrorMessageProps,
 } from "@/components/ui/shared/ErrorMessage";
 import { cn } from "@/lib/utils";
 import LabelBase from "../form/LabelBase";
+import { motion } from "framer-motion";
+import { ClearButton } from "../shared/ClearButton";
 
 export interface SelectItem<T extends string> {
   label: string;
@@ -85,10 +90,10 @@ export function Select<T extends string>({
   labelClassname,
   className,
   pagination,
-  clearable = true,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const groupCount = groupItems ? Object.keys(groupItems).length : 0;
   useEffect(() => {
@@ -156,6 +161,8 @@ export function Select<T extends string>({
         value={selected ?? undefined}
         onValueChange={(v: T) => onChange(v)}
         data-testid={testIds.base ?? "select-base"}
+        open={open}
+        onOpenChange={setOpen}
       >
         <SelectTriggerBase
           className={cn(
@@ -170,15 +177,24 @@ export function Select<T extends string>({
             placeholder={placeholder}
             data-testid={testIds.value ?? "select-value"}
           />
-          {selected && clearable && (
-            <div className="absolute right-6 flex items-center pointer-events-auto z-10">
-              <ClearButton
-                onClick={() => {
-                  onChange("" as T);
-                }}
-              />
+          <motion.span className="flex items-center">
+            <div className="flex flex-row gap-0 items-center ">
+              {selected && (
+                    <ClearButton
+                      onClick={() => {
+                        onChange("" as T);
+                      }}
+                    />
+                  )}
+              <motion.div
+                animate={{ rotate: open ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CaretDownIcon className="h-4 w-4" />
+              </motion.div>
             </div>
-          )}
+              
+          </motion.span>
         </SelectTriggerBase>
 
         <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>

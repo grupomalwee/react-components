@@ -81,14 +81,6 @@ export default function Example() {
       control: "text",
       description: "Mensagem ou componente exibido quando não há resultados",
     },
-    keepOpen: {
-      control: "boolean",
-      description: "Mantém o dropdown aberto após seleção",
-    },
-    showClearAll: {
-      control: "boolean",
-      description: "Exibe botão para limpar todas as seleções",
-    },
     onChange: { action: "onChange" },
   },
 };
@@ -511,7 +503,6 @@ export const Disabled: Story = {
             onChange={setSelected}
             label="Frutas (disabled)"
             placeholder="Não é possível alterar"
-            showClearAll
             disabled
           />
         </div>

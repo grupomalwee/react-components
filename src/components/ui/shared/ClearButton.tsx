@@ -34,9 +34,17 @@ export function ClearButton({
       variant={variant}
       size={size}
       aria-label={ariaLabel}
+      tabIndex={-1}
+      onPointerDown={(e) => {
+        // Prevent Radix (or parent) from opening the trigger on pointer interactions
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onMouseDown={(e) => {
+        e.preventDefault();
+      }}
       onClick={(e) => {
         e.stopPropagation();
-        e.preventDefault();
         onClick?.(e);
       }}
       className={cn(
@@ -44,7 +52,7 @@ export function ClearButton({
         className
       )}
     >
-      <XIcon className="w-4 h-4" />
+      <XIcon className={`w-4 h-4 ${className}`} />
     </ButtonBase>
   );
 }

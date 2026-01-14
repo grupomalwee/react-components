@@ -93,7 +93,6 @@ function ComparisonRowGrid({
             placeholder="Escolha os cargos"
             searchPlaceholder="Buscar cargo..."
             label="Cargos (MultiCombobox)"
-            showClearAll
           />
         </div>
 
@@ -191,7 +190,6 @@ function ComparisonRowFlex({
             placeholder="Escolha os cargos"
             searchPlaceholder="Buscar cargo..."
             label="Cargos (MultiCombobox)"
-            showClearAll
           />
         </div>
 

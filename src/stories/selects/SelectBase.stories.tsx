@@ -145,9 +145,7 @@ export default function Default() {
     },
   },
   render: (args: SelectStoryArgs) => {
-    const [open, setOpen] = React.useState<boolean>(!!args.open);
     const [value, setValue] = React.useState<string>(args.value || "");
-    React.useEffect(() => setOpen(!!args.open), [args.open]);
     React.useEffect(() => setValue(args.value || ""), [args.value]);
 
     const widthClass = `w-[${args.width || "180px"}]`;
@@ -163,9 +161,8 @@ export default function Default() {
         }}
       >
         <SelectBase
-          open={open}
+         
           onOpenChange={(v) => {
-            setOpen(v);
             args.onOpenChange?.(v);
           }}
           value={value}
@@ -175,7 +172,6 @@ export default function Default() {
           }}
         >
           <SelectTriggerBase
-            open={open}
             className={widthClass}
             disabled={args.disabled}
             error={args.error}
@@ -242,8 +238,6 @@ export default function WithError() {
     },
   },
   render: (args: SelectStoryArgs) => {
-    const [open, setOpen] = React.useState<boolean>(!!args.open);
-    React.useEffect(() => setOpen(!!args.open), [args.open]);
     const widthClass = `w-[${args.width || "180px"}]`;
 
     return (
@@ -257,14 +251,13 @@ export default function WithError() {
         }}
       >
         <SelectBase
-          open={open}
+         
           onOpenChange={(v) => {
-            setOpen(v);
             args.onOpenChange?.(v);
           }}
         >
           <SelectTriggerBase
-            open={open}
+           
             className={widthClass}
             error={args.error || "Você deve selecionar uma opção"}
           >
@@ -347,8 +340,6 @@ export default PaginatedExample;
   },
   render: (args: SelectStoryArgs) => {
     const items = Array.from({ length: 50 }).map((_, i) => `Item ${i + 1}`);
-    const [open, setOpen] = React.useState<boolean>(!!args.open);
-    React.useEffect(() => setOpen(!!args.open), [args.open]);
     const [page, setPage] = React.useState<number>(1);
     const pageSize = 8;
     const start = (page - 1) * pageSize;
@@ -364,8 +355,8 @@ export default PaginatedExample;
           padding: "32px 0",
         }}
       >
-        <SelectBase open={open} onOpenChange={(v) => setOpen(v)}>
-          <SelectTriggerBase open={open} className="w-[200px]">
+        <SelectBase>
+          <SelectTriggerBase className="w-[200px]">
             <SelectValueBase
               placeholder={args.placeholder || "Select an item"}
             />
