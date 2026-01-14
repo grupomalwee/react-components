@@ -38,6 +38,7 @@ export interface ComboboxTestIds {
   group?: string;
   option?: string;
   check?: string;
+  hiddenClean?: boolean;
 }
 
 export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
@@ -53,6 +54,9 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   clearable?: boolean;
   onClear?: () => void;
   testIds?: ComboboxTestIds;
+  isMulti?: boolean;
+  hasSelected?: boolean;
+  hiddenClean?: (node: ReactNode) => ReactNode;
 }
 
 export function ComboboxBase<T extends string>({
@@ -62,16 +66,15 @@ export function ComboboxBase<T extends string>({
   checkIsSelected,
   disabled = false,
   keepOpen = false,
-  closeAll,
   searchPlaceholder,
   empty = "Nenhum dado encontrado",
-  clearable = true,
-  onClear,
   error,
   testIds = {},
+  onClear,
+  hasSelected = false,
+  hiddenClean = (node: ReactNode) => node,
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
-  const hasSelection = items.some((item) => checkIsSelected(item.value));
 
   return (
     <div
@@ -95,25 +98,37 @@ export function ComboboxBase<T extends string>({
             aria-disabled={disabled || undefined}
             disabled={disabled}
             className={cn(
-              "flex items-center gap-2 justify-between h-auto [&>div]:line-clamp-1 [&>span]:line-clamp-1 relative",
+              `flex items-center gap-2 justify-between [&>div]:line-clamp-1 relative h-9`,
               error && "border-red-500"
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
             {renderSelected}
-            {closeAll}
-            {hasSelection && clearable && onClear && (
-              <div className="absolute right-6 flex items-center pointer-events-auto z-10">
-                <ClearButton onClick={onClear} />
+
+            <motion.span className="flex items-center">
+              <div className="flex flex-row gap-0 items-center ">
+                {hasSelected &&
+                  onClear &&
+                  !disabled &&
+                  hiddenClean(
+                    <ClearButton
+                      onClick={(e?: React.MouseEvent) => {
+                        if (e) e.stopPropagation();
+                        if (onClear && !disabled) {
+                          onClear();
+                          if (!keepOpen) setOpen(false);
+                        }
+                      }}
+                    />
+                  )}
+                <motion.div
+                  animate={{ rotate: open ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CaretDownIcon className="h-4 w-4" />
+                </motion.div>
               </div>
-            )}
-            <motion.div
-              animate={{ rotate: open ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="flex"
-            >
-              <CaretDownIcon className=" flex-shrink-0" />
-            </motion.div>
+            </motion.span>
           </ButtonBase>
         </PopoverTriggerBase>
 

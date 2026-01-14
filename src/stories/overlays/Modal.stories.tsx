@@ -107,7 +107,6 @@ export const Default: Story = {
                 data-testid="select-base"
               >
                 <SelectTriggerBase
-                  open={selectOpen}
                   data-testid="select-trigger"
                 >
                   <SelectValueBase

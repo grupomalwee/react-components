@@ -95,8 +95,9 @@ export function Combobox<T extends string>({
         empty={empty}
         error={error}
         testIds={testIds}
-        clearable={true}
         onClear={handleClear}
+        isMulti={false}
+        hasSelected={!!selectedItem}
       />
     </div>
   );

@@ -71,7 +71,7 @@ import LoadingPage from "@/pages/Loading";
 import { PopoverPage } from "@/pages/Popover";
 import { ProgressPage } from "@/pages/Progress";
 import { ScrollareaPage } from "@/pages/Scrollarea";
-import { SelectPage } from "@/pages/Select";
+// import { SelectPage } from "@/pages/Select";
 import { SeparatorPage } from "@/pages/Separator";
 import { SheetPage } from "@/pages/Sheet";
 import { SkeletonPage } from "@/pages/Skeleton";
@@ -234,7 +234,7 @@ export function AppSidebar() {
           <Route path="/popover" element={<PopoverPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/scrollarea" element={<ScrollareaPage />} />
-          <Route path="/select" element={<SelectPage />} />
+          {/* <Route path="/select" element={<SelectPage />} /> */}
           <Route path="/separator" element={<SeparatorPage />} />
           <Route path="/sheet" element={<SheetPage />} />
           <Route path="/skeleton" element={<SkeletonPage />} />

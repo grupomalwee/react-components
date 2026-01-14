@@ -348,7 +348,6 @@ export const FixedMiddleMouseScroll: Story = {
                 onChange={setMultiSelected}
                 label="Frutas (disabled)"
                 placeholder="Não é possível alterar"
-                showClearAll
               />
             </div>
           </DialogContentBase>

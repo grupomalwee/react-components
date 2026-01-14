@@ -6,6 +6,7 @@ import { CalendarBase } from "@/components/ui/picker/calendar";
 import { cn } from "../../../lib/utils";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   PopoverBase,
   PopoverTriggerBase,
@@ -119,19 +120,25 @@ export function DateTimePicker({
           ? format(date, getDisplayFormat(), { locale: ptBR })
           : "Selecione uma data"}
       </span>
-      {date && (
-        <ClearButton
-          className="-mr-3"
-          onClick={(e) => {
-            e?.stopPropagation();
-            setInternalDate(null);
-            onChange?.(null);
-            onConfirm?.(null);
-          }}
-        />
-      )}
 
-      <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
+      <motion.span className="flex items-center">
+        <div className="flex flex-row gap-0 items-center ">
+          <ClearButton
+            onClick={(e) => {
+              e?.stopPropagation();
+              setInternalDate(null);
+              onChange?.(null);
+              onConfirm?.(null);
+            }}
+          />
+          <motion.div
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <CalendarBlankIcon className="h-4 w-4" />
+          </motion.div>
+        </div>
+      </motion.span>
     </ButtonBase>
   );
 
@@ -186,7 +193,7 @@ export function DateTimePicker({
           </div>
         )}
       </div>
-      <div className="flex rounded-md -mt-4">
+      <div className="flex rounded-md">
         <div className="grid grid-cols-2 w-full">
           <ButtonBase
             className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b border-l hover:bg-muted/50 overflow-y-hidden rounded-tl-none"
@@ -200,7 +207,7 @@ export function DateTimePicker({
               internalDate
                 ? "hover:bg-emerald-700"
                 : "opacity-50 cursor-not-allowed",
-              isMobile ? "rounded-md-md" : "rounded-none"
+              isMobile ? "" : "rounded-br-md"
             )}
             disabled={!internalDate}
             onClick={() => {

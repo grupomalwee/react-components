@@ -35,6 +35,19 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29)
 
+## 1.8.1 — 2026-01-14
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- Selects: refatorada style e props.
+
+### Fixed
+
+- Chart: arrumado formatador de Legenda e Area gradiente.
+
+---
 ## 1.8.0 — 2026-01-12
 
 **Author:** Gabriel Glatz

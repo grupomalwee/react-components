@@ -11,6 +11,22 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.1",
+    author: "Gabriel Glatz",
+    date: "2026-01-14",
+    shortTitle: "Selects",
+
+    changed: [
+      "Selects: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
+      "MultiCombobox: adicionada a prop `searchPlaceholder` para permitir customização do placeholder do campo de busca.",
+      "Tipos e props: revisada tipagem para evitar conflitos (ex.: duplicação de `searchPlaceholder`) e melhorar inferência em TypeScript.",
+    ],
+    fixed: [
+      "Selects: corrigidos problemas de props e nomes duplicados que causavam warnings de compilação e comportamento inesperado.",
+      "MultiSelect / MultiCombobox: preservado `emptyMessage` ao mesclar opções de busca e corrigido fallback quando `search` é false.",
+    ],
+  },
+  {
     version: "1.8.0",
     author: "Gabriel Glatz",
     date: "2026-01-12",
