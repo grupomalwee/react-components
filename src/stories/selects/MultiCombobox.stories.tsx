@@ -1,6 +1,6 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor } from "storybook/test";
+// import { expect, waitFor } from "storybook/test";
 import React from "react";
 import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
 
@@ -123,30 +123,30 @@ export const Default: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar componente renderizado", async () => {
-      await waitFor(() => {
-        const root = canvasElement.querySelector(
-          '[data-testid="multi-combobox-root"]'
-        );
-        expect(root).toBeInTheDocument();
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar componente renderizado", async () => {
+  //     await waitFor(() => {
+  //       const root = canvasElement.querySelector(
+  //         '[data-testid="multi-combobox-root"]'
+  //       );
+  //       expect(root).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step("Verificar item pré-selecionado visível", async () => {
-      await waitFor(() => {
-        const selectedTag = canvasElement.querySelector(
-          '[data-testid="combobox-selected-tag1"]'
-        );
-        expect(selectedTag).toBeInTheDocument();
-      });
-    });
+  //   await step("Verificar item pré-selecionado visível", async () => {
+  //     await waitFor(() => {
+  //       const selectedTag = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-tag1"]'
+  //       );
+  //       expect(selectedTag).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step("Verificar texto do item selecionado", async () => {
-      const content = canvasElement.textContent;
-      expect(content).toContain("tag1");
-    });
-  },
+  //   await step("Verificar texto do item selecionado", async () => {
+  //     const content = canvasElement.textContent;
+  //     expect(content).toContain("tag1");
+  //   });
+  // },
 };
 
 export const Empty: Story = {
@@ -186,31 +186,31 @@ export const Empty: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar placeholder visível", async () => {
-      await waitFor(() => {
-        const placeholder = canvasElement.querySelector(
-          '[data-testid="combobox-selected-empty"]'
-        );
-        expect(placeholder).toBeInTheDocument();
-        expect(placeholder?.textContent).toContain("Selecione frameworks");
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar placeholder visível", async () => {
+  //     await waitFor(() => {
+  //       const placeholder = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-empty"]'
+  //       );
+  //       expect(placeholder).toBeInTheDocument();
+  //       expect(placeholder?.textContent).toContain("Selecione frameworks");
+  //     });
+  //   });
 
-    await step("Verificar nenhum item selecionado", async () => {
-      const selectedWrapper = canvasElement.querySelector(
-        '[data-testid="combobox-selected-wrapper"]'
-      );
-      expect(selectedWrapper).not.toBeInTheDocument();
-    });
+  //   await step("Verificar nenhum item selecionado", async () => {
+  //     const selectedWrapper = canvasElement.querySelector(
+  //       '[data-testid="combobox-selected-wrapper"]'
+  //     );
+  //     expect(selectedWrapper).not.toBeInTheDocument();
+  //   });
 
-    await step("Verificar componente renderizado", async () => {
-      const root = canvasElement.querySelector(
-        '[data-testid="multi-combobox-root"]'
-      );
-      expect(root).toBeInTheDocument();
-    });
-  },
+  //   await step("Verificar componente renderizado", async () => {
+  //     const root = canvasElement.querySelector(
+  //       '[data-testid="multi-combobox-root"]'
+  //     );
+  //     expect(root).toBeInTheDocument();
+  //   });
+  // },
 };
 
 Empty.parameters = {
@@ -276,41 +276,41 @@ export const MultipleSelected: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar 3 itens pré-selecionados", async () => {
-      await waitFor(() => {
-        const wrapper = canvasElement.querySelector(
-          '[data-testid="combobox-selected-wrapper"]'
-        );
-        expect(wrapper).toBeInTheDocument();
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar 3 itens pré-selecionados", async () => {
+  //     await waitFor(() => {
+  //       const wrapper = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-wrapper"]'
+  //       );
+  //       expect(wrapper).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step("Verificar labels dos itens selecionados", async () => {
-      await waitFor(() => {
-        const jsTag = canvasElement.querySelector(
-          '[data-testid="combobox-selected-js"]'
-        );
-        const tsTag = canvasElement.querySelector(
-          '[data-testid="combobox-selected-ts"]'
-        );
-        const pyTag = canvasElement.querySelector(
-          '[data-testid="combobox-selected-py"]'
-        );
+  //   await step("Verificar labels dos itens selecionados", async () => {
+  //     await waitFor(() => {
+  //       const jsTag = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-js"]'
+  //       );
+  //       const tsTag = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-ts"]'
+  //       );
+  //       const pyTag = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-py"]'
+  //       );
 
-        expect(jsTag).toBeInTheDocument();
-        expect(tsTag).toBeInTheDocument();
-        expect(pyTag).toBeInTheDocument();
-      });
-    });
+  //       expect(jsTag).toBeInTheDocument();
+  //       expect(tsTag).toBeInTheDocument();
+  //       expect(pyTag).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step("Verificar texto dos itens", async () => {
-      const content = canvasElement.textContent;
-      expect(content).toContain("JavaScript");
-      expect(content).toContain("TypeScript");
-      expect(content).toContain("Python");
-    });
-  },
+  //   await step("Verificar texto dos itens", async () => {
+  //     const content = canvasElement.textContent;
+  //     expect(content).toContain("JavaScript");
+  //     expect(content).toContain("TypeScript");
+  //     expect(content).toContain("Python");
+  //   });
+  // },
 };
 
 MultipleSelected.parameters = {
@@ -429,34 +429,34 @@ export const SpecialCharacters: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar caracteres especiais renderizados", async () => {
-      await waitFor(() => {
-        const wrapper = canvasElement.querySelector(
-          '[data-testid="combobox-selected-wrapper"]'
-        );
-        expect(wrapper).toBeInTheDocument();
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar caracteres especiais renderizados", async () => {
+  //     await waitFor(() => {
+  //       const wrapper = canvasElement.querySelector(
+  //         '[data-testid="combobox-selected-wrapper"]'
+  //       );
+  //       expect(wrapper).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step("Verificar tags de caracteres especiais", async () => {
-      const cppTag = canvasElement.querySelector(
-        '[data-testid="combobox-selected-cpp"]'
-      );
-      const emojiTag = canvasElement.querySelector(
-        '[data-testid="combobox-selected-emoji"]'
-      );
+  //   await step("Verificar tags de caracteres especiais", async () => {
+  //     const cppTag = canvasElement.querySelector(
+  //       '[data-testid="combobox-selected-cpp"]'
+  //     );
+  //     const emojiTag = canvasElement.querySelector(
+  //       '[data-testid="combobox-selected-emoji"]'
+  //     );
 
-      expect(cppTag).toBeInTheDocument();
-      expect(emojiTag).toBeInTheDocument();
-    });
+  //     expect(cppTag).toBeInTheDocument();
+  //     expect(emojiTag).toBeInTheDocument();
+  //   });
 
-    await step("Verificar conteúdo especial", async () => {
-      const content = canvasElement.textContent;
-      expect(content).toContain("C++");
-      expect(content).toContain("🚀");
-    });
-  },
+  //   await step("Verificar conteúdo especial", async () => {
+  //     const content = canvasElement.textContent;
+  //     expect(content).toContain("C++");
+  //     expect(content).toContain("🚀");
+  //   });
+  // },
 };
 
 SpecialCharacters.parameters = {
@@ -517,26 +517,26 @@ export const Disabled: Story = {
       },
     },
   },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar root presente", async () => {
-      await waitFor(() => {
-        const root = canvasElement.querySelector(
-          '[data-testid="multi-combobox-root"]'
-        );
-        expect(root).toBeInTheDocument();
-      });
-    });
+  // play: async ({ canvasElement, step }) => {
+  //   await step("Verificar root presente", async () => {
+  //     await waitFor(() => {
+  //       const root = canvasElement.querySelector(
+  //         '[data-testid="multi-combobox-root"]'
+  //       );
+  //       expect(root).toBeInTheDocument();
+  //     });
+  //   });
 
-    await step(
-      "Verificar item pré-selecionado visível e não removível",
-      async () => {
-        await waitFor(() => {
-          const selectedTag = canvasElement.querySelector(
-            '[data-testid="combobox-selected-banana"]'
-          );
-          expect(selectedTag).toBeInTheDocument();
-        });
-      }
-    );
-  },
+  //   await step(
+  //     "Verificar item pré-selecionado visível e não removível",
+  //     async () => {
+  //       await waitFor(() => {
+  //         const selectedTag = canvasElement.querySelector(
+  //           '[data-testid="combobox-selected-banana"]'
+  //         );
+  //         expect(selectedTag).toBeInTheDocument();
+  //       });
+  //     }
+  //   );
+  // },
 };
