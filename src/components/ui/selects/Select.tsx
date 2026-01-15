@@ -90,6 +90,7 @@ export function Select<T extends string>({
   labelClassname,
   className,
   pagination,
+  clearable = true,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -179,13 +180,13 @@ export function Select<T extends string>({
           />
           <motion.span className="flex items-center">
             <div className="flex flex-row gap-0 items-center ">
-              {selected && (
-                    <ClearButton
-                      onClick={() => {
-                        onChange("" as T);
-                      }}
-                    />
-                  )}
+              {selected && clearable && (
+                <ClearButton
+                  onClick={() => {
+                    onChange("" as T);
+                  }}
+                />
+              )}
               <motion.div
                 animate={{ rotate: open ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
@@ -193,7 +194,6 @@ export function Select<T extends string>({
                 <CaretDownIcon className="h-4 w-4" />
               </motion.div>
             </div>
-              
           </motion.span>
         </SelectTriggerBase>
 

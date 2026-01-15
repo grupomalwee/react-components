@@ -252,14 +252,20 @@ export function MultiSelectValueBase({
     [checkOverflow]
   );
 
-  // Only show placeholder when there are no visible selected items.
-  const visibleSelected = [...selectedValues].filter((value) =>
-    items.has(value)
-  );
+  const visibleSelected = [...selectedValues]
+    .filter((value) => items.has(value))
+    .sort((a, b) => {
+      const aNode = items.get(a);
+      const bNode = items.get(b);
+      const aLabel = typeof aNode === "string" ? aNode : a;
+      const bLabel = typeof bNode === "string" ? bNode : b;
+      if (aLabel.length !== bLabel.length) return aLabel.length - bLabel.length;
+      return String(aLabel).localeCompare(String(bLabel));
+    });
 
   if (visibleSelected.length === 0 && placeholder) {
     return (
-      <span className="min-w-0 overflow-hidden font-normal text-muted-foreground ">
+      <span className="min-w-0 overflow-hidden font-normal text-muted-foreground truncate">
         {placeholder}
       </span>
     );

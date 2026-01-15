@@ -63,6 +63,7 @@ export * from "./ui/selects/AvatarCombobox";
 export * from "./ui/selects/Combobox";
 export * from "./ui/selects/MultiCombobox";
 export * from "./ui/selects/MultiSelectBase";
+export * from "./ui/selects/MultiSelect";
 export * from "./ui/selects/Select";
 
 export * from "./ui/charts";

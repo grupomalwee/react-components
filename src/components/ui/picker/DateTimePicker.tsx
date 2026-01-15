@@ -18,7 +18,7 @@ import {
   DialogContentBase,
 } from "../feedback/DialogBase";
 import LabelBase from "../form/LabelBase";
-import { CalendarBlankIcon } from "@phosphor-icons/react";
+import { CalendarBlankIcon, CalendarDotIcon } from "@phosphor-icons/react";
 import ErrorMessage, { ErrorMessageProps } from "../shared/ErrorMessage";
 import { ClearButton } from "../shared/ClearButton";
 import { TimeScrollPicker } from "./TimeScrollPicker";
@@ -38,6 +38,7 @@ interface DateTimePickerProps extends ErrorMessageProps {
   disabled?: boolean;
   className?: string;
   error?: string;
+  clearable?: boolean;
 }
 
 export function DateTimePicker({
@@ -53,6 +54,7 @@ export function DateTimePicker({
   disabled,
   className,
   error,
+  clearable = true,
 }: DateTimePickerProps) {
   const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
@@ -123,17 +125,20 @@ export function DateTimePicker({
 
       <motion.span className="flex items-center">
         <div className="flex flex-row gap-0 items-center ">
-          <ClearButton
-            onClick={(e) => {
-              e?.stopPropagation();
-              setInternalDate(null);
-              onChange?.(null);
-              onConfirm?.(null);
-            }}
-          />
+          {clearable && (date || internalDate) && (
+            <ClearButton
+              onClick={(e) => {
+                e?.stopPropagation();
+                setInternalDate(null);
+                onChange?.(null);
+                onConfirm?.(null);
+              }}
+            />
+          )}
+
           <motion.div
-            animate={{ rotate: open ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            animate={{ rotate: open ? 15 : 0 }}
+            transition={{ duration: 0.03 }}
           >
             <CalendarBlankIcon className="h-4 w-4" />
           </motion.div>
@@ -143,7 +148,7 @@ export function DateTimePicker({
   );
 
   const renderPickerContent = () => (
-    <>
+    <div className="p-3 border rounded-md">
       <div
         ref={contentRef}
         className="flex sm:flex-row max-h-auto overflow-y-auto border-none rounded-md"
@@ -166,7 +171,7 @@ export function DateTimePicker({
               }
             : {})}
           className={cn(
-            "w-max rounded-none",
+            "w-max rounded-none border-none",
             !hideTime && "sm:rounded-r-none rounded-b-none",
             isMobile ? "border-b-transparent w-full" : ""
           )}
@@ -176,9 +181,7 @@ export function DateTimePicker({
           <div
             className={cn(
               "flex flex-col items-center justify-center",
-              isMobile
-                ? "border-none"
-                : " border border-t-0 sm:border-t sm:border-b sm:border-r rounded-b-md sm:rounded-b-none sm:rounded-r-md"
+              isMobile ? "border-none" : "border-l"
             )}
           >
             <div className="text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left">
@@ -193,21 +196,32 @@ export function DateTimePicker({
           </div>
         )}
       </div>
-      <div className="flex rounded-md">
-        <div className="grid grid-cols-2 w-full">
-          <ButtonBase
-            className="no-active-animation rounded-none rounded-bl-md bg-background text-gray-800 border-b border-l hover:bg-muted/50 overflow-y-hidden rounded-tl-none"
-            onClick={() => setOpen(false)}
-          >
-            Cancelar
-          </ButtonBase>
+      <div className="flex rounded-md p-1.5">
+        <div className="grid grid-cols-2 w-full gap-12">
+          <div className="flex items-center gap-2">
+            <ButtonBase
+              variant={"outline"}
+              size={"icon"}
+              className="no-active-animation"
+              onClick={() => (setInternalDate(new Date()))}
+            >
+              <CalendarDotIcon className="h-4 w-4" />
+            </ButtonBase>
+            <ButtonBase
+              className="no-active-animation rounded-md bg-background text-gray-800 border hover:bg-muted/50 overflow-y-hidden w-full"
+              onClick={() => setOpen(false)}
+            >
+              Cancelar
+            </ButtonBase>
+          </div>
+
           <ButtonBase
             className={cn(
               "no-active-animation rounded-none bg-emerald-600",
               internalDate
                 ? "hover:bg-emerald-700"
                 : "opacity-50 cursor-not-allowed",
-              isMobile ? "" : "rounded-br-md"
+              isMobile ? "" : "rounded-md"
             )}
             disabled={!internalDate}
             onClick={() => {
@@ -220,7 +234,7 @@ export function DateTimePicker({
           </ButtonBase>
         </div>
       </div>
-    </>
+    </div>
   );
 
   return (

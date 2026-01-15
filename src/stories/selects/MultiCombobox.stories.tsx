@@ -92,9 +92,11 @@ export const Default: Story = {
   name: "Padrão",
   render: () => {
     const items = [
-      { label: "tag1", value: "tag1" },
-      { label: "tag2", value: "tag2" },
-      { label: "tag3", value: "tag3" },
+      { label: "MM_CAMPO", value: "tag1" },
+      { label: "MM_SHOWROOM", value: "tag2" },
+      { label: "GRANDES_REDES", value: "tag3" },
+      { label: "AQUI_TEM_MALWEE", value: "tag4" },
+
     ];
     const [selected, setSelected] = React.useState<string[]>([items[0].value]);
     return (

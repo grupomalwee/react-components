@@ -80,6 +80,10 @@ export default function Example() {
       description:
         "Número de páginas para dividir os itens (0 desabilita paginação)",
     },
+    clearable: {
+      control: "boolean",
+      description: "Permite limpar a seleção",
+    },
     onChange: { action: "onChange" },
   },
 };
@@ -153,6 +157,7 @@ export default function Default() {
           selected={selected}
           onChange={setSelected}
           placeholder="Select an option"
+          clearable={false}
         />
       </div>
     );
