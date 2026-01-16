@@ -10,12 +10,12 @@ import {
 } from "../feedback/TooltipBase";
 
 export interface TextAreaBaseProps extends React.ComponentProps<"textarea"> {
-  clearable?: boolean;
+  hideClear?: boolean;
   onClear?: () => void;
 }
 
 const TextAreaBase = React.forwardRef<HTMLTextAreaElement, TextAreaBaseProps>(
-  ({ className, clearable = false, onClear, ...props }, ref) => {
+  ({ className, hideClear = false, onClear, ...props }, ref) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [hasContent, setHasContent] = React.useState(
       !!props.value || !!props.defaultValue
@@ -87,7 +87,7 @@ const TextAreaBase = React.forwardRef<HTMLTextAreaElement, TextAreaBaseProps>(
             "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted/30",
             "resize",
             "md:text-sm",
-            clearable && hasContent && "pr-10",
+            hideClear && hasContent && "pr-10",
             className
           )}
           ref={textareaRef}
@@ -97,7 +97,7 @@ const TextAreaBase = React.forwardRef<HTMLTextAreaElement, TextAreaBaseProps>(
           {...props}
         />
 
-        {clearable && hasContent && (
+        {hideClear && hasContent && (
           <TooltipProviderBase>
             <TooltipBase
               open={showConfirmTooltip}

@@ -38,7 +38,7 @@ interface DateTimePickerProps extends ErrorMessageProps {
   disabled?: boolean;
   className?: string;
   error?: string;
-  clearable?: boolean;
+  hideClear?: boolean;
 }
 
 export function DateTimePicker({
@@ -54,7 +54,7 @@ export function DateTimePicker({
   disabled,
   className,
   error,
-  clearable = true,
+  hideClear = true,
 }: DateTimePickerProps) {
   const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
@@ -125,7 +125,7 @@ export function DateTimePicker({
 
       <motion.span className="flex items-center">
         <div className="flex flex-row gap-0 items-center ">
-          {clearable && (date || internalDate) && (
+          {hideClear && (date || internalDate) && (
             <ClearButton
               onClick={(e) => {
                 e?.stopPropagation();
@@ -203,7 +203,23 @@ export function DateTimePicker({
               variant={"outline"}
               size={"icon"}
               className="no-active-animation"
-              onClick={() => (setInternalDate(new Date()))}
+              onClick={() => {
+                const now = new Date();
+                const selected = hideTime
+                  ? new Date(
+                      now.getFullYear(),
+                      now.getMonth(),
+                      now.getDate(),
+                      0,
+                      0,
+                      0,
+                      0
+                    )
+                  : now;
+                setInternalDate(selected);
+                onChange?.(selected);
+                onConfirm?.(selected);
+              }}
             >
               <CalendarDotIcon className="h-4 w-4" />
             </ButtonBase>

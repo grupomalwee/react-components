@@ -115,6 +115,7 @@ interface ChartProps {
   maxTooltips?: number;
   formatBR?: boolean;
   legendUppercase?: boolean;
+  isLoading?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -150,6 +151,7 @@ const Chart: React.FC<ChartProps> = ({
   formatBR = false,
   legendUppercase = false,
   chartMargin,
+  isLoading = false,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -445,10 +447,30 @@ const Chart: React.FC<ChartProps> = ({
     ]
   );
 
-  if (!data) return null;
+  if (!data && !isLoading) return null;
+
+  if (isLoading) {
+    return (
+      <NoData
+        title={title}
+        isLoading
+        loadingMessage={
+          typeof title === "string" ? `${title} — Carregando` : "Carregando"
+        }
+        paddingLeft={containerPaddingLeft + finalChartLeftMargin}
+        height={height}
+      />
+    );
+  }
 
   if (Array.isArray(data) && data.length === 0) {
-    return <NoData title={title} />;
+    return (
+      <NoData
+        title={title}
+        paddingLeft={containerPaddingLeft + finalChartLeftMargin}
+        height={height}
+      />
+    );
   }
 
   return (
@@ -840,13 +862,48 @@ const Chart: React.FC<ChartProps> = ({
                     highlightedSeries.has(key) ? (
                       <LabelList
                         dataKey={key}
-                        position="insideTop"
-                        content={
-                          renderInsideBarLabel(
+                        /* Use a custom content renderer so that very small bars
+                         * (in width or height) will show their label above the bar
+                         * instead of being hidden inside the bar. We still reuse
+                         * the existing `renderInsideBarLabel` for normal-sized bars.
+                         */
+                        content={(props) => {
+                          const p = props as {
+                            height?: number | string;
+                            width?: number | string;
+                            x?: number | string;
+                            y?: number | string;
+                            value?: number | string;
+                            payload?: Record<string, unknown>;
+                          };
+
+                          const barHeight =
+                            typeof p.height === "number"
+                              ? p.height
+                              : typeof p.height === "string"
+                              ? Number(p.height)
+                              : 0;
+                          const barWidth =
+                            typeof p.width === "number"
+                              ? p.width
+                              : typeof p.width === "string"
+                              ? Number(p.width)
+                              : 0;
+                          const smallThreshold = 14;
+
+                          const needsOutside =
+                            (barHeight > 0 && barHeight < smallThreshold) ||
+                            (barWidth > 0 && barWidth < smallThreshold);
+
+                          if (needsOutside) {
+                            return null;
+                          }
+                          const inside = renderInsideBarLabel(
                             color,
                             finalValueFormatter
-                          ) as LabelListContent
-                        }
+                          ) as LabelListContent;
+                          return inside(props as unknown);
+                        }}
                         offset={0}
                       />
                     ) : null}

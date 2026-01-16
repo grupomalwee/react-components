@@ -10,6 +10,8 @@ import {
   DialogFooterBase,
   DialogCloseBase,
 } from "@/components/ui/feedback/DialogBase";
+import React, { useState } from "react";
+import { DateTimePicker } from "@/components/ui/picker/DateTimePicker";
 import { InputBase } from "@/components/ui/form/InputBase";
 import LabelBase from "@/components/ui/form/LabelBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
@@ -209,6 +211,60 @@ export const ConfirmDialog: Story = {
     docs: {
       source: {
         code: `import React from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase } from '@mlw-packages/react-components';\nimport { WarningIcon, TrashIcon } from '@phosphor-icons/react';\n\nexport default function ConfirmDialog() {\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase variant='destructive'>Delete</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase><WarningIcon /> Confirm deletion</DialogTitleBase>\n          <DialogDescriptionBase>This action cannot be undone.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='outline'>Cancel</ButtonBase>\n          </DialogCloseBase>\n          <ButtonBase variant='destructive'><TrashIcon /> Delete</ButtonBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}`,
+      },
+    },
+  },
+};
+
+export const DateTimeDialog: Story = {
+  render: () => {
+    const Wrapper: React.FC = () => {
+      const [date, setDate] = useState<Date | null>(new Date());
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "32px 0",
+          }}
+        >
+          <DialogBase>
+            <DialogTriggerBase asChild>
+              <ButtonBase variant="default">Schedule</ButtonBase>
+            </DialogTriggerBase>
+            <DialogContentBase className="sm:max-w-md">
+              <DialogHeaderBase>
+                <DialogTitleBase>Schedule event</DialogTitleBase>
+                <DialogDescriptionBase>
+                  Choose date and time for your event.
+                </DialogDescriptionBase>
+              </DialogHeaderBase>
+              <div className="py-4">
+                <DateTimePicker date={date} onChange={setDate} />
+              </div>
+              <DialogFooterBase>
+                <DialogCloseBase asChild>
+                  <ButtonBase variant="outline">Cancel</ButtonBase>
+                </DialogCloseBase>
+                <ButtonBase
+                  onClick={() => console.log("Confirmed date:", date)}
+                >
+                  Confirm
+                </ButtonBase>
+              </DialogFooterBase>
+            </DialogContentBase>
+          </DialogBase>
+        </div>
+      );
+    };
+
+    return <Wrapper />;
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';\nimport { DialogBase, DialogTriggerBase, DialogContentBase, DialogHeaderBase, DialogTitleBase, DialogDescriptionBase, DialogFooterBase, DialogCloseBase } from '@mlw-packages/react-components';\nimport { ButtonBase } from '@mlw-packages/react-components';\nimport { DateTimePicker } from '@mlw-packages/react-components';\n\nexport default function DateTimeDialog() {\n  const [date, setDate] = useState(new Date());\n  return (\n    <DialogBase>\n      <DialogTriggerBase asChild>\n        <ButtonBase>Schedule</ButtonBase>\n      </DialogTriggerBase>\n      <DialogContentBase>\n        <DialogHeaderBase>\n          <DialogTitleBase>Schedule event</DialogTitleBase>\n          <DialogDescriptionBase>Choose date and time for your event.</DialogDescriptionBase>\n        </DialogHeaderBase>\n        <DateTimePicker date={date} onChange={setDate} />\n        <DialogFooterBase>\n          <DialogCloseBase asChild>\n            <ButtonBase variant='outline'>Cancel</ButtonBase>\n          </DialogCloseBase>\n          <ButtonBase>Confirm</ButtonBase>\n        </DialogFooterBase>\n      </DialogContentBase>\n    </DialogBase>\n  );\n}\n`,
       },
     },
   },

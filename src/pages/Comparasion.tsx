@@ -9,7 +9,8 @@ import { DateTimePicker } from "@/components/ui/picker/DateTimePicker";
 import React from "react";
 import { Select } from "@/components/ui/selects/Select";
 import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
-import { MultiSelect } from "@/components/ui";
+import { DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import { MultiSelect } from "@/components/ui/selects/MultiSelect";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -103,7 +104,7 @@ function ComparisonRowGrid({
             onChange={setSelectValue}
             placeholder="Selecione um cargo"
             label="Cargo (Select)"
-            clearable
+            hideClear
           />
         </div>
 
@@ -192,6 +193,34 @@ function ComparisonRowFlex({
             label="Cargos (MultiCombobox)"
           />
         </div>
+        <div className="">
+          <DialogBase>
+            <DialogTriggerBase asChild>
+              <ButtonBase variant="default">Schedule</ButtonBase>
+            </DialogTriggerBase>
+            <DialogContentBase className="sm:max-w-md">
+              <DialogHeaderBase>
+                <DialogTitleBase>Schedule event</DialogTitleBase>
+                <DialogDescriptionBase>
+                  Choose date and time for your event.
+                </DialogDescriptionBase>
+              </DialogHeaderBase>
+              <div className="py-4">
+                <DateTimePicker date={date} onChange={setDate} />
+              </div>
+              <DialogFooterBase>
+                <DialogCloseBase asChild>
+                  <ButtonBase variant="outline">Cancel</ButtonBase>
+                </DialogCloseBase>
+                <ButtonBase
+                  onClick={() => console.log("Confirmed date:", date)}
+                >
+                  Confirm
+                </ButtonBase>
+              </DialogFooterBase>
+            </DialogContentBase>
+          </DialogBase>
+        </div>
 
         <div className="flex-1 min-w-[250px]">
           <Select
@@ -200,7 +229,7 @@ function ComparisonRowFlex({
             onChange={setSelectValue}
             placeholder="Selecione um cargo"
             label="Cargo (Select)"
-            clearable
+            hideClear={false}
           />
         </div>
 

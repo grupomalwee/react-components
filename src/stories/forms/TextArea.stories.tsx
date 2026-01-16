@@ -18,7 +18,7 @@ TextArea para entrada de texto, comentários e formulários.
 import { TextAreaBase } from '@mlw-packages/react-components';
 
 export default function Example() {
-  return <TextAreaBase placeholder="Digite algo..." maxLength={200} clearable />;
+  return <TextAreaBase placeholder="Digite algo..." maxLength={200} hideClear />;
 }`,
       },
     },
@@ -32,7 +32,7 @@ export default function Example() {
     layout: "centered",
   },
   argTypes: {
-    clearable: {
+    hideClear: {
       control: "boolean",
       description:
         "Habilita o botão de limpar conteúdo com confirmação via tooltip",

@@ -10,6 +10,7 @@ import {
   SelectLabelBase,
 } from "@/components/ui/SelectBase";
 import * as React from "react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 
 type SelectStoryArgs = {
   open?: boolean;
@@ -179,6 +180,8 @@ export default function Default() {
             <SelectValueBase
               placeholder={args.placeholder || "Select a fruit"}
             />
+
+            <CaretDownIcon />
           </SelectTriggerBase>
           <SelectContentBase>
             <SelectGroupBase>

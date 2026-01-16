@@ -196,17 +196,17 @@ export const Changelog: React.FC<{ data?: ChangeItem[] }> = ({ data = [] }) => {
                     const visibleAdded =
                       activeFilters.length === 0 ||
                       activeFilters.includes("added")
-                        ? it.added ?? []
+                        ? (it.added ?? [])
                         : [];
                     const visibleChanged =
                       activeFilters.length === 0 ||
                       activeFilters.includes("changed")
-                        ? it.changed ?? []
+                        ? (it.changed ?? [])
                         : [];
                     const visibleFixed =
                       activeFilters.length === 0 ||
                       activeFilters.includes("fixed")
-                        ? it.fixed ?? []
+                        ? (it.fixed ?? [])
                         : [];
 
                     return (
@@ -221,6 +221,11 @@ export const Changelog: React.FC<{ data?: ChangeItem[] }> = ({ data = [] }) => {
                           {it.shortTitle && (
                             <p className="mt-1 text-lg text-slate-600 dark:text-slate-400">
                               {it.shortTitle}
+                            </p>
+                          )}
+                          {it.author && (
+                            <p className="mt-1 text-sm text-slate-500 dark:text-slate-500">
+                              por {it.author}
                             </p>
                           )}
                         </div>

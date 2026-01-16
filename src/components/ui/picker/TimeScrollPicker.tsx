@@ -1,7 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import useScrollControl from "./hooks/useScrollControl";
-import { visualForItem } from "./utils/pickerUtils";
 
 interface TimeScrollPickerProps {
   date: Date | null;
@@ -32,23 +31,84 @@ function ScrollColumn({
   hideSeconds,
 }: ScrollColumnProps) {
   const isMobile = useIsMobile();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const items = Array.from({ length: max }, (_, i) => i);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT;
   const centerIndex = isMobile ? CENTER_INDEX_MOBILE : CENTER_INDEX;
   const visibleItems = isMobile ? VISIBLE_ITEMS_MOBILE : VISIBLE_ITEMS;
   const containerHeight = visibleItems * itemHeight;
-  const items = Array.from({ length: max }, (_, i) => i);
 
-  const {
-    containerRef,
-    isDragging,
-    handleScroll,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-    handleItemClick,
-  } = useScrollControl({ value, onChange, max, itemHeight });
+  useEffect(() => {
+    if (containerRef.current && !isDragging) {
+      requestAnimationFrame(() => {
+        if (containerRef.current) {
+          const scrollPosition = value * itemHeight;
+          containerRef.current.scrollTop = scrollPosition;
+        }
+      });
+    }
+  }, [value, isDragging, itemHeight]);
 
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleScroll = () => {
+    if (!containerRef.current || isDragging) return;
+
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (!containerRef.current) return;
+
+      const newValue = Math.round(containerRef.current.scrollTop / itemHeight);
+
+      if (newValue >= 0 && newValue < max) {
+        containerRef.current.scrollTop = newValue * itemHeight;
+        if (newValue !== value) onChange(newValue);
+      }
+    }, 100);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    setIsDragging(true);
+    setStartY(e.pageY);
+    setScrollTop(containerRef.current.scrollTop);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    containerRef.current.scrollTop = scrollTop + (startY - e.pageY) * 2;
+  };
+
+  const handleMouseUp = () => {
+    if (!containerRef.current) return;
+    setIsDragging(false);
+
+    requestAnimationFrame(() => {
+      if (!containerRef.current) return;
+      const newValue = Math.round(containerRef.current.scrollTop / itemHeight);
+      if (newValue >= 0 && newValue < max) {
+        containerRef.current.scrollTop = newValue * itemHeight;
+        onChange(newValue);
+      }
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) handleMouseUp();
+  };
   const containerWidth = isMobile ? (hideSeconds ? "w-16" : "w-8") : "w-16";
 
   return (
@@ -74,23 +134,18 @@ function ScrollColumn({
         >
           {items.map((item) => {
             const isSelected = item === value;
-            const { scale, opacity, translateY } = visualForItem(item, value);
             return (
               <div
                 key={item}
                 className={cn(
-                  "flex items-center justify-center select-none font-semibold tabular-nums transition-all duration-150",
+                  "flex items-center justify-center select-none font-semibold tabular-nums",
                   isDragging ? "cursor-grabbing" : "",
                   isSelected
                     ? "sm:text-lg text-md text-foreground"
                     : "sm:text-sm text-xs text-muted-foreground"
                 )}
-                style={{
-                  height: `${itemHeight}px`,
-                  transform: `translateY(${translateY}px) scale(${scale})`,
-                  opacity,
-                }}
-                onClick={() => handleItemClick(item)}
+                style={{ height: `${itemHeight}px` }}
+                onClick={() => !isDragging && onChange(item)}
               >
                 {item.toString().padStart(2, "0")}
               </div>

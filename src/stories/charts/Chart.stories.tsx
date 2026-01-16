@@ -426,7 +426,7 @@ export const CustomFormatter: Story = {
         {...args}
         height={350}
         series={{
-          bar: ["receita", "despesas"],
+          bar: ["receita", "despesas", "churn"],
         }}
         labelMap={{
           receita: "Receita",
@@ -576,6 +576,48 @@ export const Empty: Story = {
     docs: {
       description: {
         story: "Gráfico sem dados para testar estado vazio.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function EmptyData() {
+  return (
+    <div style={{ width: 900, height: 420 }}>
+      <Chart data={[]} xAxis="periodo" series={{ bar: ['receita'] }} labelMap={{ receita: 'Receita' }} height={350} />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+};
+export const Loading: Story = {
+  name: "Loading Estado",
+  render: (args) => (
+    <div
+      style={{ width: "900px",  height: "350px"  }}
+      data-testid="empty-chart-wrapper"
+    >
+      <Chart
+        {...args}
+        data={[]}
+        height={350}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+        isLoading={true}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico em estado de carregamento.",
       },
       source: {
         code: `import React from 'react';

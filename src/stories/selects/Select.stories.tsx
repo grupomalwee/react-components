@@ -80,7 +80,7 @@ export default function Example() {
       description:
         "Número de páginas para dividir os itens (0 desabilita paginação)",
     },
-    clearable: {
+    hideClear: {
       control: "boolean",
       description: "Permite limpar a seleção",
     },
@@ -157,7 +157,7 @@ export default function Default() {
           selected={selected}
           onChange={setSelected}
           placeholder="Select an option"
-          clearable={false}
+          hideClear={false}
         />
       </div>
     );

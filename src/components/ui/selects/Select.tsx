@@ -54,7 +54,7 @@ export interface DefaultSelectProps<T extends string>
   label?: string;
   labelClassname?: string;
   pagination?: number;
-  clearable?: boolean;
+  hideClear?: boolean;
 }
 
 export interface SelectPropsWithItems<T extends string>
@@ -90,7 +90,7 @@ export function Select<T extends string>({
   labelClassname,
   className,
   pagination,
-  clearable = true,
+  hideClear = true,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -180,7 +180,7 @@ export function Select<T extends string>({
           />
           <motion.span className="flex items-center">
             <div className="flex flex-row gap-0 items-center ">
-              {selected && clearable && (
+              {hideClear && selected && (
                 <ClearButton
                   onClick={() => {
                     onChange("" as T);

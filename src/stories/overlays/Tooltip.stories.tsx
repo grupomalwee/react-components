@@ -6,6 +6,7 @@ import {
   TooltipContentBase,
   TooltipProviderBase,
 } from "@/components/ui/feedback/TooltipBase";
+import {InfoIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof TooltipBase> = {
   title: "feedback/Tooltip",
@@ -64,6 +65,27 @@ export const Default: Story = {
             <button className="px-4 py-2 bg-primary text-white rounded">
               Passe o mouse
             </button>
+          </TooltipTriggerBase>
+          <TooltipContentBase sideOffset={8}>Dica!</TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    </div>
+  ),
+};
+export const Click: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild button>
+              <InfoIcon className="w-5 h-5" />
           </TooltipTriggerBase>
           <TooltipContentBase sideOffset={8}>Dica!</TooltipContentBase>
         </TooltipBase>

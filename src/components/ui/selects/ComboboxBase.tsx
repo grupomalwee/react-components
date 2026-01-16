@@ -51,7 +51,7 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   closeAll?: ReactNode;
   searchPlaceholder?: string;
   empty?: ReactNode;
-  clearable?: boolean;
+  hideClear?: boolean;
   onClear?: () => void;
   testIds?: ComboboxTestIds;
   isMulti?: boolean;

@@ -11,7 +11,7 @@
 
 > Histórico de alterações do pacote `@mlw-packages/react-components` — formato inspirado em "Keep a Changelog" e SemVer.
 
-## Índice
+<!-- ## Índice
 
 - [1.7.21 — 2025-12-22](#171721---2025-12-22)
 - [1.7.20 — 2025-12-18](#171720---2025-12-18)
@@ -33,8 +33,24 @@
 - [1.7.4 — 2025-11-10](#17174---2025-11-10)
 - [1.7.3 — 2025-11-04](#17173---2025-11-04)
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
-- [1.7.1 — 2025-10-29](#17171---2025-10-29)
+- [1.7.1 — 2025-10-29](#17171---2025-10-29) -->
 
+## 1.8.2 — 2026-01-16
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- Selects: posicao do X clean e implementado nova Prop.
+- DateTimePicker: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.
+- Dialog: ajustado bug de scroll.
+
+### Added
+
+- TooltipBase: adicionado novo comportamento.
+- Chart: arrumado label negativo, title width, periodLabel and LabelPosition e Criado tela de Loading.
+
+---
 ## 1.8.1 — 2026-01-14
 
 **Author:** Gabriel Glatz
