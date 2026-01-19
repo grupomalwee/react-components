@@ -50,7 +50,7 @@ export const Default: Story = {
       }}
     >
       <ThemeProviderBase>
-        <ModeToggleBase themes={["light", "dark", "system"]} />
+        <ModeToggleBase themes={["light", "dark", "system", "light-purple", "dark-purple", "light-blue", "dark-blue", "light-green", "dark-green"]} />
       </ThemeProviderBase>
     </div>
   ),
@@ -61,12 +61,12 @@ export const Default: Story = {
       },
       source: {
         code: `import React from 'react';
-import { ThemeProviderBase, ModeToggleBase } from '@mlw-packages/react-components';
+import { ThemeProviderBase, ModeToggleBase } from '@mlw-packages/react-components'; 
 
 export default function Example() {
   return (
     <ThemeProviderBase>
-      <ModeToggleBase themes={["light", "dark", "system"]} />
+      <ModeToggleBase themes={["light", "dark", "system", "light-purple", "dark-purple", "light-blue", "dark-blue", "light-green", "dark-green"]} />
     </ThemeProviderBase>
   );
 }`,

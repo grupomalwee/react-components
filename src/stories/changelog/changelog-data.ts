@@ -18,14 +18,10 @@ export const changelogData: ChangeItem[] = [
     added: [
       "Chart: adiconado tela de Loading e Ajustado label em ocassioes de barras muito pequenas",
       "Tooltip: adiconado novo comportamento",
-    ],  
+    ],
     changed: [
       "Selects: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
       "Date Time Picker: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
-    ],
-    fixed: [
-      "Selects: corrigido bug crítico do formatador de legenda que não aplicava corretamente a função customizada de formatação, resultando em exibição incorreta de labels no eixo e tooltips interativos, afetando principalmente gráficos com valores monetários e percentuais.",
-      "Selects: corrigido bug crítico do formatador de legenda que não aplicava corretamente a função customizada de formatação, resultando em exibição incorreta de labels no eixo e tooltips interativos, afetando principalmente gráficos com valores monetários e percentuais.",
     ],
   },
   {

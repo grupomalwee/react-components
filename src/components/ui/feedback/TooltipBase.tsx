@@ -6,7 +6,7 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cn } from "../../../lib/utils";
 import { useIsMobile } from "@/hooks";
 
-const TOOLTIP_DELAY_DURATION = 200;
+const TOOLTIP_DELAY_DURATION = 600;
 const TOOLTIP_SIDE_OFFSET = 8;
 const TOOLTIP_MOBILE_DELAY = Infinity;
 

@@ -1,4 +1,5 @@
 import { CheckIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { useRef } from "react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   DropDownMenuBase,
@@ -28,18 +29,80 @@ export function ModeToggleBase({
   themes = ["light", "dark", "system"],
 }: ModeToggleBaseProps) {
   const { setTheme, theme: currentTheme } = useTheme();
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Verifica se é um tema dark ou system com preferência dark
   const isDark =
     currentTheme?.includes("dark") ||
     (currentTheme === "system" &&
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
+  const toggleTheme = async (newTheme: Theme) => {
+    if (!buttonRef.current || !document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+
+    const button = buttonRef.current;
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+
+    const styleId = "theme-transition-styles";
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.textContent = `
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+          mix-blend-mode: normal;
+        }
+        
+        ::view-transition-old(root) {
+          z-index: 1;
+        }
+        
+        ::view-transition-new(root) {
+          z-index: 2;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const transition = document.startViewTransition(async () => {
+      setTheme(newTheme);
+    });
+
+    await transition.ready;
+
+    document.documentElement.animate(
+      [
+        {
+          clipPath: `circle(0% at ${x}px ${y}px)`,
+        },
+        {
+          clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)`,
+        },
+      ],
+      {
+        duration: 600,
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      },
+    );
+  };
+
   return (
     <DropDownMenuBase>
       <DropDownMenuTriggerBase asChild>
         <ButtonBase
+          ref={buttonRef}
           variant="ghost"
           size="icon"
           className="relative overflow-hidden border-transparent"
@@ -66,7 +129,7 @@ export function ModeToggleBase({
         {themes.map((theme) => (
           <DropDownMenuItemBase
             key={theme}
-            onClick={() => setTheme(theme)}
+            onClick={() => toggleTheme(theme)}
             className="flex items-center justify-between hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
           >
             {themeLabels[theme]}

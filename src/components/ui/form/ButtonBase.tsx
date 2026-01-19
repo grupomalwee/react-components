@@ -5,6 +5,12 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../../lib/utils";
 import { CircleNotchIcon } from "@phosphor-icons/react";
+import {
+  TooltipBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+  TooltipTriggerBase,
+} from "../feedback";
 
 const buttonVariantsBase = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive [&:not(.no-active-animation)]:active:scale-95",
@@ -41,11 +47,13 @@ const buttonVariantsBase = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariantsBase> {
   asChild?: boolean;
   testid?: string;
   isLoading?: boolean;
+  tooltip?: string;
 }
 
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -57,6 +65,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       testid = `button-${variant ?? "default"}`,
       isLoading = false,
+      tooltip,
       children,
       ...props
     },
@@ -67,7 +76,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const isActivelyLoading = isLoading && !props.disabled;
 
-    return (
+    const buttonContent = (
       <Comp
         className={cn(
           buttonVariantsBase({ variant, size, className }),
@@ -79,7 +88,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={mergedDisabled}
         {...props}
       >
-          {children}
+        {children}
 
         {isActivelyLoading && (
           <span className="absolute inset-0 flex items-center justify-center pointer-events-none rounded-md">
@@ -92,6 +101,21 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </Comp>
     );
+
+    if (tooltip) {
+      return (
+        <TooltipProviderBase>
+          <TooltipBase>
+            <TooltipTriggerBase asChild>{buttonContent}</TooltipTriggerBase>
+            <TooltipContentBase>
+              <p>{tooltip}</p>
+            </TooltipContentBase>
+          </TooltipBase>
+        </TooltipProviderBase>
+      );
+    }
+
+    return buttonContent;
   }
 );
 ButtonBase.displayName = "Button";

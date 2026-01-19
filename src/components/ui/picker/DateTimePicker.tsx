@@ -203,6 +203,7 @@ export function DateTimePicker({
               variant={"outline"}
               size={"icon"}
               className="no-active-animation"
+              tooltip="Hoje"
               onClick={() => {
                 const now = new Date();
                 const selected = hideTime

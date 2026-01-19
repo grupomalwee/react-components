@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import LabelBase from "../form/LabelBase";
 import { motion } from "framer-motion";
 import { ClearButton } from "../shared/ClearButton";
+import { ButtonBase } from "../form/ButtonBase";
 
 export interface SelectItem<T extends string> {
   label: string;
@@ -255,8 +256,9 @@ export function Select<T extends string>({
 
                 {paged && paged.totalPages > 1 && (
                   <div className="px-2 py-2 flex items-center justify-between">
-                    <button
-                      type="button"
+                    <ButtonBase
+                      variant="ghost"
+                      tooltip="Previous page"
                       onClick={goPrev}
                       disabled={page <= 1}
                       data-testid={
@@ -266,7 +268,7 @@ export function Select<T extends string>({
                       className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
                     >
                       <CaretLeftIcon className="h-4 w-4 opacity-80" />
-                    </button>
+                    </ButtonBase>
 
                     <div className=" flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-xs">
@@ -274,8 +276,9 @@ export function Select<T extends string>({
                       </span>
                     </div>
 
-                    <button
-                      type="button"
+                    <ButtonBase
+                      variant="ghost"
+                      tooltip="Next page"
                       onClick={goNext}
                       disabled={page >= paged.totalPages}
                       data-testid={
@@ -285,7 +288,7 @@ export function Select<T extends string>({
                       className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
                     >
                       <CaretRightIcon className="h-4 w-4 opacity-80" />
-                    </button>
+                    </ButtonBase>
                   </div>
                 )}
               </>

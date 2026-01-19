@@ -25,7 +25,6 @@ import {
   UploadButton,
   VisibilityButton,
 } from "@/components/ui/form/SmallButtons";
-import { MagnifyingGlassIcon, MapPinLineIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof ButtonBase> = {
   title: "forms/Button",
@@ -96,7 +95,6 @@ export default function Example() {
 
 export default meta;
 type Story = StoryObj<typeof ButtonBase>;
-type AnyStory = StoryObj<typeof ButtonBase>;
 
 export const Default: Story = {
   parameters: {
@@ -286,77 +284,6 @@ export default function Sizes() {
     });
   },
 };
-
-export const WithIcons = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  render: (args: any) => {
-    const iconFor = (key: string) =>
-      key === "map" ? (
-        <MapPinLineIcon size={16} />
-      ) : key === "search" ? (
-        <MagnifyingGlassIcon size={16} />
-      ) : null;
-
-    const children = args.children ?? "Buscar";
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-        }}
-      >
-        <ButtonBase
-          {...args}
-          leftIcon={iconFor(args.left)}
-          rightIcon={iconFor(args.right)}
-          data-testid="btn-icons"
-        >
-          {children}
-        </ButtonBase>
-      </div>
-    );
-  },
-  argTypes: {
-    left: {
-      control: { type: "select" },
-      options: ["none", "map", "search"],
-    },
-    right: {
-      control: { type: "select" },
-      options: ["none", "map", "search"],
-    },
-    children: { control: "text" },
-  },
-  args: {
-    left: "none",
-    right: "search",
-    children: "Buscar",
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `import React from 'react';
-import { ButtonBase } from '@mlw-packages/react-components';
-import { MapPinLineIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
-
-export default function WithIcons() {
-  return (
-    <div>
-      <ButtonBase leftIcon={<MapPinLineIcon size={16} />} rightIcon={<MagnifyingGlassIcon size={16} />}>
-        Buscar
-      </ButtonBase>
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-} as unknown as AnyStory;
 
 export const Disabled: Story = {
   parameters: {
@@ -592,6 +519,56 @@ export default function Small() {
         <VisibilityButton />
         <FavoriteButton />
       </div>
+    </div>
+  ),
+};
+export const Tooltip: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EditButton, SaveButton, ChangeButton, AddButton } from '@mlw-packages/react-components';
+
+export default function Small() {
+  return (
+    <div>
+     <EditButton />
+      <SaveButton />
+      <ChangeButton />
+      <AddButton />
+      <CloseButton />       
+      <DownloadButton />
+      <UploadButton />
+      <CopyButton />
+      <RefreshButton />
+      <SearchButton />
+      <BackButton />
+      <SettingsButton />
+      <NotificationButton />
+      <MoreButton />
+      <CheckButton />
+      <FilterButton />
+      <LikeButton />
+      <LockButton />
+      <VisibilityButton />
+      <FavoriteButton />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <ButtonBase tooltip="">Hover me</ButtonBase>
     </div>
   ),
 };

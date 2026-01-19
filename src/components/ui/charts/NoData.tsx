@@ -94,10 +94,6 @@ const NoData: React.FC<NoDataProps> = ({
     { x: 700, w: 100, h: h * 0.3 },
   ];
 
-  const coords = bars.map((b) => ({ x: b.x + b.w / 2, y: baseY - b.h }));
-  const path = coords.map((c, i) => `${i ? "L" : "M"} ${c.x} ${c.y}`).join(" ");
-  const area = `${path} L ${coords[5].x} ${baseY} L ${coords[0].x} ${baseY} Z`;
-
   return (
     <div
       className={cn(
@@ -206,61 +202,6 @@ const NoData: React.FC<NoDataProps> = ({
                 i={i}
                 loading={isLoading}
               />
-            ))}
-            <motion.path
-              d={path}
-              stroke="hsl(var(--primary)/0.2)"
-              strokeWidth={3}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 2, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.8 }}
-              transition={{
-                pathLength: { duration: 1.2, delay: 0.3, ease: "easeInOut" },
-                opacity: { duration: 0.6, delay: 0.3 },
-              }}
-            />
-            <motion.path
-              d={area}
-              fill="hsl(var(--primary))"
-              opacity={0.1}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            />
-            {coords.map((c, i) => (
-              <g key={i}>
-                <motion.circle
-                  cx={c.x}
-                  cy={c.y}
-                  r={6}
-                  fill="hsl(var(--card))"
-                  stroke="hsl(var(--primary)/0.4)"
-                  strokeWidth={3}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    delay: 0.5 + i * 0.08,
-                    duration: 0.4,
-                    type: "spring",
-                    stiffness: 200,
-                  }}
-                />
-                <motion.circle
-                  cx={c.x}
-                  cy={c.y}
-                  r={3}
-                  fill="hsl(var(--primary)/0.4)"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{
-                    delay: 0.5 + i * 0.08,
-                    duration: 0.4,
-                    type: "spring",
-                  }}
-                />
-              </g>
             ))}
           </svg>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none h-[var(--svg-h)]">
