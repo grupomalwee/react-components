@@ -35,6 +35,22 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29) -->
 
+## 1.8.3 — 2026-01-19
+
+**Author:** Gabriel Glatz
+
+### Fixed
+
+- Chart: adjusted no Data screen.
+
+### Added
+
+- ButtonBase: new prop Tooltip.
+- TooltipBase: new interval set.
+- Selects: added tooltip to pagination buttons.
+- DateTimePicker: added tooltip to buttons.
+=
+---
 ## 1.8.2 — 2026-01-16
 
 **Author:** Gabriel Glatz

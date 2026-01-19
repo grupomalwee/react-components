@@ -11,6 +11,20 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.3",
+    author: "Gabriel Glatz",
+    date: "2026-01-16",
+    shortTitle: "ButtonBase e Tooltips",
+    added: [
+      "ButtonBase: adicionado suporte nativo à prop Tooltip para exibir dicas contextuais ao passar o mouse sobre botões, melhorando a descoberta de funcionalidades e acessibilidade ao fornecer informações adicionais sem ocupar espaço visual permanente.",
+    ],
+    fixed: [
+      "TooltipBase: ajustado intervalo de exibição do tooltip para garantir tempo adequado de leitura antes de desaparecer, com delay de entrada configurável para evitar tooltips intrusivos durante navegação rápida do mouse.",
+      "Selects: implementados tooltips informativos nos botões de paginação (anterior/próximo/primeira/última página) para clarificar ações disponíveis, especialmente útil para novos usuários e conformidade com padrões de acessibilidade.",
+      "DateTimePicker: adicionados tooltips descritivos em todos os botões de ação para melhorar usabilidade e reduzir curva de aprendizado ao interagir com o componente pela primeira vez.",
+    ],
+  },
+  {
     version: "1.8.2",
     author: "Gabriel Glatz",
     date: "2026-01-16",
