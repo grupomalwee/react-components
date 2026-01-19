@@ -5,5 +5,5 @@ export * from "./CardBase";
 
 export * from "./StatusIndicator";
 export * from "./Banner";
-export * from "./Price";
+// export * from "./Price";
 export * from "./utils";
