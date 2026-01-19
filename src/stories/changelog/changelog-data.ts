@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.4",
+    author: "Gabriel Glatz",
+    date: "2026-01-19",
+    shortTitle: "TimeScrollPicker",
+    added: [
+      "Price: componente de visualizacao monetaria",
+    ],
+    changed: [
+      "TimeScrollPicker: modificado visual do componente para melhorar a experiência do usuário.",
+    ],
+  },
+  {
     version: "1.8.3",
     author: "Gabriel Glatz",
     date: "2026-01-16",

@@ -568,7 +568,7 @@ export default function Small() {
         padding: "32px 0",
       }}
     >
-      <ButtonBase tooltip="">Hover me</ButtonBase>
+      <ButtonBase tooltip="tooltip">Hover me</ButtonBase>
     </div>
   ),
 };

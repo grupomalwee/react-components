@@ -4,5 +4,6 @@ export * from "./CalendarBase";
 export * from "./CardBase";
 
 export * from "./StatusIndicator";
-export * from "./Banner"
+export * from "./Banner";
+export * from "./Price";
 export * from "./utils";

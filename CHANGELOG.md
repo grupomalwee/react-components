@@ -35,6 +35,18 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29) -->
 
+## 1.8.4 — 2026-01-19
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- Price: componente de visualizacao monetaria
+
+### Changed
+
+- TimeScrollPicker: modificado visual do componente para melhorar a experiência do usuário.
+
 ## 1.8.3 — 2026-01-19
 
 **Author:** Gabriel Glatz
