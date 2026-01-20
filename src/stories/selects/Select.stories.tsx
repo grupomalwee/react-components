@@ -2,6 +2,8 @@ import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Select } from "@/components/ui/selects/Select";
 import { useState } from "react";
+import { DialogBase, DialogContentBase, DialogDescriptionBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const meta: Meta<typeof Select> = {
   title: "selects/Select",
@@ -522,6 +524,77 @@ export default function PreSelected() {
           placeholder="Select an option"
           label="Pre-selected Value"
         />
+      </div>
+    );
+  },
+};
+export const FixedMiddleMouseScroll: Story = {
+  name: "Dentro do Dialog", 
+  parameters: {
+    docs: {
+      description: {
+        story: "Exemplo com valor pré-selecionado",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+import { Select } from '@mlw-packages/react-components';
+
+export default function PreSelected() {
+  const [selected, setSelected] = useState<string | null>("b");
+
+  return (
+    <Select
+      items={simpleItems}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Select an option"
+      label="Pre-selected Value"
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(
+      simpleItems[0].value
+    );
+
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <DialogBase>
+          <DialogTriggerBase asChild>
+            <ButtonBase variant="outline">Abrir dialog</ButtonBase>
+          </DialogTriggerBase>
+          <DialogContentBase className="sm:max-w-md">
+            <DialogHeaderBase>
+              <DialogTitleBase>Combobox dentro do Dialog</DialogTitleBase>
+              <DialogDescriptionBase>
+                Abra o combobox e use a rolagem (mouse wheel ou mouse3).
+              </DialogDescriptionBase>
+            </DialogHeaderBase>
+
+            <div className="mt-4" style={{ width: 360 }}>
+              <Select
+                items={simpleItems}
+                selected={selected}
+                onChange={setSelected}
+                placeholder="Select an option"
+                label="Pre-selected Value"
+          
+              />
+            </div>
+          </DialogContentBase>
+        </DialogBase>
       </div>
     );
   },

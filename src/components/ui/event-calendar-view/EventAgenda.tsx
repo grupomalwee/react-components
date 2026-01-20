@@ -209,6 +209,7 @@ export function EventAgenda({
               items={selectItems as SelectItem<CalendarViewAgenda>[]}
               className="gap-2 px-3 py-1.5 max-[479px]:h-8"
               placeholder={viewLabel(view)}
+              hideClear={false}
             />
           </div>
         </div>

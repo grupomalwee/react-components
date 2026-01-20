@@ -84,7 +84,7 @@ export function ComboboxBase<T extends string>({
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}
-        modal={true}
+        modal={false}
       >
         <PopoverTriggerBase
           asChild
@@ -99,7 +99,7 @@ export function ComboboxBase<T extends string>({
             disabled={disabled}
             className={cn(
               `flex items-center gap-2 justify-between [&>div]:line-clamp-1 relative h-9`,
-              error && "border-red-500"
+              error && "border-red-500",
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
@@ -119,7 +119,7 @@ export function ComboboxBase<T extends string>({
                           if (!keepOpen) setOpen(false);
                         }
                       }}
-                    />
+                    />,
                   )}
                 <motion.div
                   animate={{ rotate: open ? 180 : 0 }}
@@ -186,11 +186,11 @@ export function ComboboxBase<T extends string>({
                         <CheckIcon
                           className={cn(
                             "ml-auto",
-                            isSelected ? "opacity-100" : "opacity-0"
+                            isSelected ? "opacity-100" : "opacity-0",
                           )}
                           data-testid={
                             isSelected
-                              ? testIds.check ?? "combobox-option-check"
+                              ? (testIds.check ?? "combobox-option-check")
                               : undefined
                           }
                         />

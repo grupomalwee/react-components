@@ -2,11 +2,12 @@ import { ThemeProviderBase } from "./components/theme/theme-provider";
 
 import "./style/global.css";
 
-import { ModeToggleBase } from "./components/theme/mode-toggle";
+// import { ModeToggleBase } from "./components/theme/mode-toggle";
 
 import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
 import { Toaster } from "./components/ui/feedback/SonnerBase";
 // import { AppSidebar } from "./components/sidebar/AppSidebar";
+import ThemeColorTest from "./pages/ThemeColorTest";
 
 function App() {
   return (
@@ -26,11 +27,13 @@ function App() {
       <ThemeProviderBase defaultTheme="light-purple" storageKey="app-ui-theme">
         <div className="flex">
           <SidebarProviderBase>
-            {/* <AppSidebar />
-            <main></main> */}
+            {/* <AppSidebar /> */}
+            <main className="flex-1">
+              <ThemeColorTest />
+            </main>
           </SidebarProviderBase>
 
-          <div className="mt-3 mr-5  inline-block rounded-md h-10">
+          {/* <div className="fixed top-3 right-5 z-50">
             <ModeToggleBase
               themes={[
                 "light",
@@ -43,7 +46,7 @@ function App() {
                 "dark-green",
               ]}
             />
-          </div>
+          </div> */}
         </div>
       </ThemeProviderBase>
       <Toaster />

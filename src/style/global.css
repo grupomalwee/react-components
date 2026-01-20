@@ -34,8 +34,7 @@
   --destructive-foreground: 210 40% 98%;
   --ring: 215 20.2% 65.1%;
 
-  --tick-color: #000; 
-
+  --tick-color: #000;
 }
 
 .dark,
@@ -57,8 +56,7 @@
   --destructive: 0 100% 60%;
   --destructive-foreground: 231 15% 19%;
   --ring: 216 34% 17%;
-  --tick-color: #fff; 
-
+  --tick-color: #fff;
 }
 
 .dark {
@@ -225,10 +223,29 @@
 }
 
 @keyframes pulse-soft {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
     opacity: 0.5;
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+[data-theme-transition="true"]::view-transition-new(root) {
+  animation: none;
 }
