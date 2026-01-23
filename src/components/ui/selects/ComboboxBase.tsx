@@ -38,7 +38,7 @@ export interface ComboboxTestIds {
   group?: string;
   option?: string;
   check?: string;
-  hiddenClean?: boolean;
+  hideClear?: boolean;
 }
 
 export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
@@ -56,7 +56,6 @@ export interface ComboboxBaseProps<T extends string> extends ErrorMessageProps {
   testIds?: ComboboxTestIds;
   isMulti?: boolean;
   hasSelected?: boolean;
-  hiddenClean?: (node: ReactNode) => ReactNode;
 }
 
 export function ComboboxBase<T extends string>({
@@ -72,7 +71,7 @@ export function ComboboxBase<T extends string>({
   testIds = {},
   onClear,
   hasSelected = false,
-  hiddenClean = (node: ReactNode) => node,
+  hideClear = false,
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
 
@@ -84,11 +83,11 @@ export function ComboboxBase<T extends string>({
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}
-        modal={true}
+        modal={false}
       >
         <PopoverTriggerBase
           asChild
-          className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)]"
+          className="flex w-full justify-between dark:bg-[hsl(231,15%,19%)] p-3"
         >
           <ButtonBase
             variant="select"
@@ -99,7 +98,7 @@ export function ComboboxBase<T extends string>({
             disabled={disabled}
             className={cn(
               `flex items-center gap-2 justify-between [&>div]:line-clamp-1 relative h-9`,
-              error && "border-red-500"
+              error && "border-red-500",
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
@@ -107,20 +106,17 @@ export function ComboboxBase<T extends string>({
 
             <motion.span className="flex items-center">
               <div className="flex flex-row gap-0 items-center ">
-                {hasSelected &&
-                  onClear &&
-                  !disabled &&
-                  hiddenClean(
-                    <ClearButton
-                      onClick={(e?: React.MouseEvent) => {
-                        if (e) e.stopPropagation();
-                        if (onClear && !disabled) {
-                          onClear();
-                          if (!keepOpen) setOpen(false);
-                        }
-                      }}
-                    />
-                  )}
+                {hasSelected && onClear && !disabled && !hideClear && (
+                  <ClearButton
+                    onClick={(e?: React.MouseEvent) => {
+                      if (e) e.stopPropagation();
+                      if (onClear && !disabled) {
+                        onClear();
+                        if (!keepOpen) setOpen(false);
+                      }
+                    }}
+                  />
+                )}
                 <motion.div
                   animate={{ rotate: open ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
@@ -186,11 +182,11 @@ export function ComboboxBase<T extends string>({
                         <CheckIcon
                           className={cn(
                             "ml-auto",
-                            isSelected ? "opacity-100" : "opacity-0"
+                            isSelected ? "opacity-100" : "opacity-0",
                           )}
                           data-testid={
                             isSelected
-                              ? testIds.check ?? "combobox-option-check"
+                              ? (testIds.check ?? "combobox-option-check")
                               : undefined
                           }
                         />

@@ -91,7 +91,7 @@ export function Select<T extends string>({
   labelClassname,
   className,
   pagination,
-  hideClear = true,
+  hideClear = false,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -181,7 +181,7 @@ export function Select<T extends string>({
           />
           <motion.span className="flex items-center">
             <div className="flex flex-row gap-0 items-center ">
-              {hideClear && selected && (
+              {!hideClear && selected && (
                 <ClearButton
                   onClick={() => {
                     onChange("" as T);

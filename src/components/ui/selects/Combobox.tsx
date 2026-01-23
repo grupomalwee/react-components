@@ -32,6 +32,7 @@ export interface ComboboxProps<T extends string> extends ErrorMessageProps {
   labelClassname?: string;
   testIds?: ComboboxTestIds;
   disabled?: boolean;
+  hideClear?: boolean;
 }
 
 export function Combobox<T extends string>({
@@ -47,6 +48,7 @@ export function Combobox<T extends string>({
   labelClassname,
   testIds,
   error,
+  hideClear = false,
 }: ComboboxProps<T>) {
   const selectedItem = items.find((item) => item.value === selected);
 
@@ -57,7 +59,7 @@ export function Combobox<T extends string>({
         className={cn(
           "truncate",
           disabled && "opacity-60 cursor-not-allowed",
-          !selectedItem && "text-gray-500"
+          !selectedItem && "text-gray-500",
         )}
       >
         {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}
@@ -67,14 +69,14 @@ export function Combobox<T extends string>({
 
   const checkIsSelected = useCallback(
     (value: T) => (selected == null ? false : selected == value),
-    [selected]
+    [selected],
   );
 
   const handleSelection = useCallback(
     (value: T) => {
       onChange(value === selected ? null : value);
     },
-    [selected, onChange]
+    [selected, onChange],
   );
 
   const handleClear = useCallback(() => {
@@ -98,6 +100,7 @@ export function Combobox<T extends string>({
         onClear={handleClear}
         isMulti={false}
         hasSelected={!!selectedItem}
+        hideClear={hideClear}
       />
     </div>
   );

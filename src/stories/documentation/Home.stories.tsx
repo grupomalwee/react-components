@@ -1,4 +1,3 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";

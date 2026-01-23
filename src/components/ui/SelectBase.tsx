@@ -18,7 +18,7 @@ const SelectValueBase = SelectPrimitive.Value;
 const SelectTriggerBase = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    ErrorMessageProps 
+    ErrorMessageProps
 >(({ className, children, error, ...props }, ref) => (
   <div className={cn("w-full", error && "mb-0")}>
     <SelectPrimitive.Trigger
@@ -28,7 +28,7 @@ const SelectTriggerBase = React.forwardRef<
         error
           ? "border-destructive focus:ring-1 focus:ring-destructive"
           : "border-input focus:ring-1 focus:ring-ring",
-        className
+        className,
       )}
       {...props}
     >
@@ -48,7 +48,7 @@ const SelectScrollUpButtonBase = React.forwardRef<
     ref={ref}
     className={cn(
       "flex cursor-default items-center justify-center py-1",
-      className
+      className,
     )}
     {...props}
   >
@@ -66,7 +66,7 @@ const SelectScrollDownButtonBase = React.forwardRef<
     ref={ref}
     className={cn(
       "flex cursor-default items-center justify-center py-1",
-      className
+      className,
     )}
     {...props}
   >
@@ -90,7 +90,7 @@ const SelectContentBase = React.forwardRef<
       testid: dataTestId = "select-content",
       ...props
     },
-    ref
+    ref,
   ) => (
     <SelectPrimitive.Portal>
       <AnimatePresence>
@@ -98,10 +98,15 @@ const SelectContentBase = React.forwardRef<
           ref={ref}
           className={cn(
             "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
-            className
+            className,
           )}
           position={position}
           data-testid={dataTestId}
+          onPointerDownOutside={(event) => {
+            props.onPointerDownOutside?.(event);
+            if (event.defaultPrevented) return;
+            event.stopPropagation();
+          }}
           {...props}
           asChild
         >
@@ -117,7 +122,7 @@ const SelectContentBase = React.forwardRef<
                 className={cn(
                   "p-1",
                   position === "popper" &&
-                    "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+                    "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
                 )}
               >
                 {children}
@@ -128,7 +133,7 @@ const SelectContentBase = React.forwardRef<
         </SelectPrimitive.Content>
       </AnimatePresence>
     </SelectPrimitive.Portal>
-  )
+  ),
 );
 SelectContentBase.displayName = SelectPrimitive.Content.displayName;
 
@@ -152,7 +157,7 @@ const SelectItemBase = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 hover:bg-accent focus:bg-accent data-[highlighted]:bg-accent text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:text-primary data-[disabled=true]:opacity-50",
-      className
+      className,
     )}
     {...props}
     asChild

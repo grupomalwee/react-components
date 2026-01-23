@@ -163,7 +163,7 @@ export function EventAgenda({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 px-6 py-2",
+        "flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 px-6 py-2 border-border",
         className
       )}
       style={
@@ -209,6 +209,7 @@ export function EventAgenda({
               items={selectItems as SelectItem<CalendarViewAgenda>[]}
               className="gap-2 px-3 py-1.5 max-[479px]:h-8"
               placeholder={viewLabel(view)}
+              hideClear={true}
             />
           </div>
         </div>

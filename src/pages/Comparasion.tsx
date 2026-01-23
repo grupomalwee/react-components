@@ -6,11 +6,20 @@ import { InputBase } from "@/components/ui/form/InputBase";
 import { Combobox } from "@/components/ui/selects/Combobox";
 import { MultiCombobox } from "@/components/ui/selects/MultiCombobox";
 import { DateTimePicker } from "@/components/ui/picker/DateTimePicker";
-import React from "react";
 import { Select } from "@/components/ui/selects/Select";
 import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
-import { DialogBase, DialogCloseBase, DialogContentBase, DialogDescriptionBase, DialogFooterBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import {
+  DialogBase,
+  DialogCloseBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogFooterBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
 import { MultiSelect } from "@/components/ui/selects/MultiSelect";
+import { RangePicker } from "@/components/ui/picker/RangePicker";
 
 const cargos = [
   { label: "Desenvolvedor", value: "dev" },
@@ -132,6 +141,11 @@ function ComparisonRowGrid({
             date={date}
             onChange={setDate}
             hideSeconds
+            label="Data e Hora"
+          />
+          <RangePicker
+            value={date ? { from: date, to: date } : undefined}
+            onChange={(range) => setDate(range?.from ?? null)}
             label="Data e Hora"
           />
         </div>

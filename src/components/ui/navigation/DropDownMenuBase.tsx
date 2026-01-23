@@ -85,7 +85,7 @@ const DropDownMenuContentBase = React.forwardRef<
             exit={{ opacity: 0, scale: 0.95, y: 5 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={cn(
-              "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+              "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md border-border",
               className
             )}
           >

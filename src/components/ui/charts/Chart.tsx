@@ -229,7 +229,7 @@ const Chart: React.FC<ChartProps> = ({
       series.area.forEach((k) => seriesOrder.push({ type: "area", key: k }));
   } else {
     Object.keys(mapperConfig).forEach((k) =>
-      seriesOrder.push({ type: "bar", key: k })
+      seriesOrder.push({ type: "bar", key: k }),
     );
   }
 
@@ -237,15 +237,15 @@ const Chart: React.FC<ChartProps> = ({
 
   const finalColors = useMemo(
     () => generateColorMap(allKeys, colors, mapperConfig),
-    [allKeys, colors, mapperConfig]
+    [allKeys, colors, mapperConfig],
   );
 
   const biaxialConfigNormalized = useMemo(() => {
     if (!biaxial) return null;
-    if (typeof biaxial === "string") return { key: [biaxial] } as BiaxialConfig;
-    if (Array.isArray(biaxial)) return { key: biaxial } as BiaxialConfig;
-    return biaxial as BiaxialConfig;
-  }, [biaxial]);
+    if (typeof biaxial === "string") return { key: [biaxial] };
+    if (Array.isArray(biaxial)) return { key: biaxial };
+    return biaxial;
+  }, [biaxial]) as BiaxialConfig | null;
 
   useMemo(() => {
     if (!biaxialConfigNormalized) return;
@@ -255,24 +255,24 @@ const Chart: React.FC<ChartProps> = ({
       String(biaxialConfigNormalized.label).trim() === "";
     if (leftLabelMissing || rightLabelMissing) {
       throw new Error(
-        "When using `biaxial`, you must provide both `yAxisLabel` (left axis) and `biaxial.label` (right axis)."
+        "When using `biaxial`, you must provide both `yAxisLabel` (left axis) and `biaxial.label` (right axis).",
       );
     }
   }, [biaxialConfigNormalized, yAxisLabel]);
 
   const rightKeys = useMemo(
     () => biaxialConfigNormalized?.key ?? [],
-    [biaxialConfigNormalized]
+    [biaxialConfigNormalized],
   );
   const leftKeys = useMemo(
     () => allKeys.filter((k) => !rightKeys.includes(k)),
-    [allKeys, rightKeys]
+    [allKeys, rightKeys],
   );
 
   const activePeriods = useMemo(
     () =>
       activeTooltips.map((t) => adaptData(t.data, xAxisConfig.dataKey).name),
-    [activeTooltips, xAxisConfig.dataKey]
+    [activeTooltips, xAxisConfig.dataKey],
   );
 
   const maxLeftDataValue = useMemo(() => {
@@ -297,11 +297,11 @@ const Chart: React.FC<ChartProps> = ({
 
   const niceMaxLeft = useMemo(
     () => computeNiceMax(maxLeftDataValue),
-    [maxLeftDataValue]
+    [maxLeftDataValue],
   );
   const niceMaxRight = useMemo(
     () => computeNiceMax(maxRightDataValue),
-    [maxRightDataValue]
+    [maxRightDataValue],
   );
 
   const computedWidth = useMemo(
@@ -311,9 +311,9 @@ const Chart: React.FC<ChartProps> = ({
         processedData.length,
         series,
         niceMaxLeft,
-        niceMaxRight
+        niceMaxRight,
       ),
-    [width, processedData.length, series, niceMaxLeft, niceMaxRight]
+    [width, processedData.length, series, niceMaxLeft, niceMaxRight],
   );
 
   const { handleChartClick, handleBarClick, handleSeriesClick } = useChartClick(
@@ -322,48 +322,45 @@ const Chart: React.FC<ChartProps> = ({
       xAxisDataKey: xAxisConfig.dataKey,
       toggleTooltip,
       setActiveTooltips,
-    }
+    },
   );
 
-  const titleClassName = useMemo(
-    () => "text-[1.4rem] font-semibold text-foreground mb-3",
-    []
+  const getSeriesOpacity = useCallback(
+    (key: string) => {
+      return highlightedSeries.size > 0
+        ? highlightedSeries.has(key)
+          ? 1
+          : 0.25
+        : 1;
+    },
+    [highlightedSeries],
   );
   const finalValueFormatter = useMemo(
     () => createValueFormatter(valueFormatter, formatBR),
-    [valueFormatter, formatBR]
+    [valueFormatter, formatBR],
   );
 
   const yTickFormatter = useMemo(
     () => createYTickFormatter(finalValueFormatter),
-    [finalValueFormatter]
+    [finalValueFormatter],
   );
-  const finalEnableHighlights = enableHighlights;
-  const finalEnableShowOnly = enableShowOnly;
-  const finalEnablePeriodsDropdown =
-    enablePeriodsDropdown && enableDraggableTooltips;
 
-  const defaultChartRightMargin = 30;
-  const defaultChartLeftMargin = 0;
-  const axisLabelMargin = 56;
-
-  const containerPaddingLeft = -6;
+  const AXIS_LABEL_MARGIN = 56;
+  const CONTAINER_PADDING_LEFT = -6;
 
   const finalChartRightMargin =
-    chartMargin?.right ??
-    (rightKeys.length > 0 ? axisLabelMargin : defaultChartRightMargin);
+    chartMargin?.right ?? (rightKeys.length > 0 ? AXIS_LABEL_MARGIN : 30);
   const finalChartLeftMargin =
-    chartMargin?.left ??
-    (yAxisLabel ? axisLabelMargin : defaultChartLeftMargin);
+    chartMargin?.left ?? (yAxisLabel ? AXIS_LABEL_MARGIN : 0);
   const yAxisTickWidth = useMemo(
     () =>
       computeYAxisTickWidth(
         chartMargin?.left,
         yAxisLabel,
-        axisLabelMargin,
+        AXIS_LABEL_MARGIN,
         yTickFormatter,
         minLeftDataValue,
-        niceMaxLeft
+        niceMaxLeft,
       ),
     [
       chartMargin?.left,
@@ -371,25 +368,20 @@ const Chart: React.FC<ChartProps> = ({
       yTickFormatter,
       minLeftDataValue,
       niceMaxLeft,
-    ]
+    ],
   );
 
-  const composedChartLeftMargin = chartMargin?.left ?? defaultChartLeftMargin;
-  const composedChartRightMargin =
-    chartMargin?.right ?? defaultChartRightMargin;
   const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
-  const baseBottom = chartMargin?.bottom ?? 5;
-  const extraForXAxisLabel = xAxisLabel ? 22 : 0;
-  const extraForLegend = showLegend ? 36 : 0;
   const finalChartBottomMargin =
-    baseBottom + extraForXAxisLabel + extraForLegend;
-  const measuredInner = measuredWidth
-    ? Math.max(0, measuredWidth - 32)
-    : undefined;
+    (chartMargin?.bottom ?? 5) + (xAxisLabel ? 22 : 0) + (showLegend ? 36 : 0);
   const effectiveChartWidth =
-    typeof width === "number" ? width : measuredInner ?? computedWidth;
+    typeof width === "number"
+      ? width
+      : measuredWidth
+        ? Math.max(0, measuredWidth - 32)
+        : computedWidth;
   const chartInnerWidth =
-    effectiveChartWidth - composedChartLeftMargin - composedChartRightMargin;
+    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
 
   const leftYAxisLabelDx = -Math.max(12, Math.round(yAxisTickWidth / 2));
   const rightYAxisLabelDx = Math.max(12, Math.round(finalChartRightMargin / 2));
@@ -411,13 +403,12 @@ const Chart: React.FC<ChartProps> = ({
 
       if (activeTooltips.length >= maxTooltips) {
         toast.warning(
-          `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`
+          `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`,
         );
       }
 
       const offsetIndex = activeTooltips.length;
-      const availableWidth =
-        typeof width === "number" ? width : measuredInner ?? computedWidth;
+      const availableWidth = effectiveChartWidth;
       const gap = 28;
       const leftGap = 28;
 
@@ -439,12 +430,10 @@ const Chart: React.FC<ChartProps> = ({
       enableDraggableTooltips,
       processedData,
       activeTooltips,
-      width,
-      measuredInner,
-      computedWidth,
+      effectiveChartWidth,
       maxTooltips,
       setActiveTooltips,
-    ]
+    ],
   );
 
   if (!data && !isLoading) return null;
@@ -457,7 +446,7 @@ const Chart: React.FC<ChartProps> = ({
         loadingMessage={
           typeof title === "string" ? `${title} — Carregando` : "Carregando"
         }
-        paddingLeft={containerPaddingLeft + finalChartLeftMargin}
+        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
         height={height}
       />
     );
@@ -467,114 +456,83 @@ const Chart: React.FC<ChartProps> = ({
     return (
       <NoData
         title={title}
-        paddingLeft={containerPaddingLeft + finalChartLeftMargin}
+        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
         height={height}
       />
     );
   }
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        width: "100%",
-        overflowX: "hidden",
-        overflowY: "hidden",
-        minWidth: 0,
-      }}
-    >
+    <div ref={wrapperRef} className="w-full overflow-hidden min-w-0">
       <div
-        className={cn("rounded-lg bg-card relative", className)}
-        style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}
+        className={cn(
+          "rounded-lg bg-card relative w-full max-w-full min-w-0",
+          className,
+        )}
       >
         {title && (
           <div
-            style={{
-              paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
-              width: "100%",
-              display: "flex",
-              justifyContent:
-                titlePosition === "center"
-                  ? "center"
-                  : titlePosition === "right"
-                  ? "flex-end"
-                  : "flex-start",
-              alignItems: "center",
-              marginTop: "19px",
-            }}
+            className={cn(
+              "w-full flex items-center mt-[19px] ml-[90px]",
+              titlePosition === "center" && "justify-center",
+              titlePosition === "right" && "justify-end",
+              titlePosition === "left" && "justify-start",
+            )}
           >
-            <div className={titleClassName}>{title}</div>
+            <div className="text-[1.4rem] font-semibold text-foreground mb-3">
+              {title}
+            </div>
           </div>
         )}
 
-        {allKeys.length > 0 &&
-          (finalEnableHighlights || finalEnableShowOnly) && (
-            <div
-              className="flex items-center w-full"
-              style={{
-                paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
-                width: "98%",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              {finalEnableHighlights && (
-                <Highlights
-                  allKeys={allKeys}
-                  mapperConfig={mapperConfig}
-                  finalColors={finalColors}
-                  highlightedSeries={highlightedSeries}
-                  toggleHighlight={toggleHighlight}
-                  containerWidth={chartInnerWidth}
+        {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
+          <div className="flex items-center w-[98%] ml-[90px] gap-2">
+            {enableHighlights && (
+              <Highlights
+                allKeys={allKeys}
+                mapperConfig={mapperConfig}
+                finalColors={finalColors}
+                highlightedSeries={highlightedSeries}
+                toggleHighlight={toggleHighlight}
+                containerWidth={chartInnerWidth}
+              />
+            )}
+
+            {enableShowOnly && (
+              <ShowOnly
+                showOnlyHighlighted={showOnlyHighlighted}
+                setShowOnlyHighlighted={
+                  setShowOnlyHighlighted as React.Dispatch<
+                    React.SetStateAction<boolean>
+                  >
+                }
+                highlightedSeriesSize={highlightedSeries.size}
+                clearHighlights={clearHighlights}
+              />
+            )}
+
+            {enablePeriodsDropdown && enableDraggableTooltips && (
+              <div className="ml-auto flex items-center">
+                <PeriodsDropdown
+                  processedData={processedData}
+                  onOpenPeriod={openTooltipForPeriod}
+                  rightOffset={finalChartRightMargin}
+                  activePeriods={activePeriods}
                 />
-              )}
+              </div>
+            )}
+          </div>
+        )}
 
-              {finalEnableShowOnly && (
-                <ShowOnly
-                  showOnlyHighlighted={showOnlyHighlighted}
-                  setShowOnlyHighlighted={
-                    setShowOnlyHighlighted as React.Dispatch<
-                      React.SetStateAction<boolean>
-                    >
-                  }
-                  highlightedSeriesSize={highlightedSeries.size}
-                  clearHighlights={clearHighlights}
-                />
-              )}
-
-              {finalEnablePeriodsDropdown && (
-                <div
-                  style={{
-                    marginLeft: "auto",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <PeriodsDropdown
-                    processedData={processedData}
-                    onOpenPeriod={openTooltipForPeriod}
-                    rightOffset={finalChartRightMargin}
-                    activePeriods={activePeriods}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
-        {!(
-          allKeys.length > 0 &&
-          (finalEnableHighlights || finalEnableShowOnly)
-        ) &&
-          finalEnablePeriodsDropdown && (
+        {!(allKeys.length > 0 && (enableHighlights || enableShowOnly)) &&
+          enablePeriodsDropdown &&
+          enableDraggableTooltips && (
             <div
+              className="w-full flex justify-end"
               style={{
-                paddingLeft: `${containerPaddingLeft + finalChartLeftMargin}px`,
+                paddingLeft: `${CONTAINER_PADDING_LEFT + finalChartLeftMargin}px`,
                 paddingRight: `${finalChartRightMargin}px`,
-                width: "100%",
                 maxWidth: `${chartInnerWidth}px`,
-                display: "flex",
-                justifyContent: "flex-end",
               }}
             >
               <PeriodsDropdown
@@ -808,9 +766,7 @@ const Chart: React.FC<ChartProps> = ({
                   const displayLabel = legendUppercase
                     ? label.toUpperCase()
                     : label;
-                  return (
-                    <span style={{ letterSpacing: 0 }}>{displayLabel}</span>
-                  );
+                  return <span className="tracking-[0]">{displayLabel}</span>;
                 }}
               />
             )}
@@ -840,15 +796,8 @@ const Chart: React.FC<ChartProps> = ({
                     fill={color}
                     radius={[4, 4, 0, 0]}
                     onClick={handleBarClick}
-                    style={{
-                      cursor: "pointer",
-                      opacity:
-                        highlightedSeries.size > 0
-                          ? highlightedSeries.has(key)
-                            ? 1
-                            : 0.25
-                          : 1,
-                    }}
+                    className="cursor-pointer"
+                    style={{ opacity: getSeriesOpacity(key) }}
                     activeBar={
                       <Rectangle
                         fill={color}
@@ -881,14 +830,14 @@ const Chart: React.FC<ChartProps> = ({
                             typeof p.height === "number"
                               ? p.height
                               : typeof p.height === "string"
-                              ? Number(p.height)
-                              : 0;
+                                ? Number(p.height)
+                                : 0;
                           const barWidth =
                             typeof p.width === "number"
                               ? p.width
                               : typeof p.width === "string"
-                              ? Number(p.width)
-                              : 0;
+                                ? Number(p.width)
+                                : 0;
                           const smallThreshold = 14;
 
                           const needsOutside =
@@ -900,7 +849,7 @@ const Chart: React.FC<ChartProps> = ({
                           }
                           const inside = renderInsideBarLabel(
                             color,
-                            finalValueFormatter
+                            finalValueFormatter,
                           ) as LabelListContent;
                           return inside(props as unknown);
                         }}
@@ -922,16 +871,8 @@ const Chart: React.FC<ChartProps> = ({
                     dot={{ r: 3 }}
                     activeDot={{ r: 6 }}
                     onClick={handleSeriesClick}
-                    style={{
-                      cursor: "pointer",
-                      pointerEvents: "all",
-                      opacity:
-                        highlightedSeries.size > 0
-                          ? highlightedSeries.has(key)
-                            ? 1
-                            : 0.25
-                          : 1,
-                    }}
+                    className="cursor-pointer pointer-events-auto"
+                    style={{ opacity: getSeriesOpacity(key) }}
                   >
                     {(showLabels && highlightedSeries.size === 0) ||
                     highlightedSeries.has(key) ? (
@@ -942,7 +883,7 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "filled",
-                            finalValueFormatter
+                            finalValueFormatter,
                           ) as LabelListContent
                         }
                         offset={14}
@@ -964,16 +905,8 @@ const Chart: React.FC<ChartProps> = ({
                     fillOpacity={1}
                     strokeWidth={2}
                     onClick={handleSeriesClick}
-                    style={{
-                      cursor: "pointer",
-                      pointerEvents: "all",
-                      opacity:
-                        highlightedSeries.size > 0
-                          ? highlightedSeries.has(key)
-                            ? 1
-                            : 0.25
-                          : 1,
-                    }}
+                    className="cursor-pointer pointer-events-auto"
+                    style={{ opacity: getSeriesOpacity(key) }}
                     activeDot={{
                       r: 6,
                       fill: color,
@@ -990,7 +923,7 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "soft",
-                            finalValueFormatter
+                            finalValueFormatter,
                           ) as LabelListContent
                         }
                         offset={12}

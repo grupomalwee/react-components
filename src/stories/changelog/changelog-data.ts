@@ -11,15 +11,28 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.5",
+    author: "Gabriel Glatz",
+    date: "2026-01-23",
+    shortTitle: "ThemeColorTest, MultiSelect, Chart, Dialog e Selects",
+    added: [
+      "ThemeColorTest: nova página dedicada para visualização e validação de tokens de cores do design system, permitindo testes rápidos de contraste e consistência em diferentes temas.",
+    ],
+    changed: [
+      "MultiSelect: corrigido o comportamento do Trigger para garantir que os valores exibidos estejam sempre sincronizados com o estado interno da seleção, evitando inconsistências visuais após limpezas rápidas.",
+      "Chart, Dialog e Selects: padronização das cores de borda para alinhar com as diretrizes atualizadas do design system, garantindo harmonia visual entre componentes complexos.",
+    ],
+  },
+  {
     version: "1.8.4",
     author: "Gabriel Glatz",
     date: "2026-01-19",
-    shortTitle: "TimeScrollPicker",
+    shortTitle: "TimeScrollPicker e Price",
     added: [
-      "Price: componente de visualizacao monetaria",
+      "Price: novo componente especializado para exibição de valores monetários, com suporte a localização automática, prefixos/sufixos customizáveis e formatação de decimais otimizada para leitura financeira.",
     ],
     changed: [
-      "TimeScrollPicker: modificado visual do componente para melhorar a experiência do usuário.",
+      "TimeScrollPicker: redesign da interface de rolagem para melhorar a precisão da seleção e a experiência do usuário em dispositivos touch e desktop.",
     ],
   },
   {
@@ -40,30 +53,30 @@ export const changelogData: ChangeItem[] = [
     version: "1.8.2",
     author: "Gabriel Glatz",
     date: "2026-01-16",
-    shortTitle: "Chart",
+    shortTitle: "Chart, Selects e Tooltip",
     added: [
-      "Chart: adiconado tela de Loading e Ajustado label em ocassioes de barras muito pequenas",
-      "Tooltip: adiconado novo comportamento",
+      "Chart: implementada tela de loading integrada para feedback visual durante o processamento de grandes volumes de dados e ajuste automático de labels em barras de tamanho reduzido para evitar sobreposição.",
+      "Tooltip: implementado novo comportamento de posicionamento inteligente para evitar que o tooltip saia dos limites da viewport em telas pequenas.",
     ],
     changed: [
-      "Selects: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
-      "Date Time Picker: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
+      "Selects: refatoração profunda do sistema de estilos e ícones para garantir paridade visual e funcional entre os componentes Select, Combobox e MultiSelect.",
+      "DateTimePicker: atualizado o sistema de temas para utilizar os mesmos tokens dos selects, fortalecendo a consistência visual do pacote de formulários.",
     ],
   },
   {
     version: "1.8.1",
     author: "Gabriel Glatz",
     date: "2026-01-14",
-    shortTitle: "Selects",
+    shortTitle: "Selects e MultiCombobox",
 
     changed: [
-      "Selects: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.",
-      "MultiCombobox: adicionada a prop `searchPlaceholder` para permitir customização do placeholder do campo de busca.",
-      "Tipos e props: revisada tipagem para evitar conflitos (ex.: duplicação de `searchPlaceholder`) e melhorar inferência em TypeScript.",
+      "Selects: padronização dos ícones de busca e chevron em toda a família de seletores, utilizando a biblioteca Phosphor para maior consistência estética.",
+      "MultiCombobox: adicionada a propriedade `searchPlaceholder`, permitindo a customização do texto de dica no campo de pesquisa interna.",
+      "Tipos e props: revisão completa da tipagem TypeScript para eliminar redundâncias e melhorar o suporte a IntelliSense em IDEs, especialmente em props genéricas.",
     ],
     fixed: [
-      "Selects: corrigidos problemas de props e nomes duplicados que causavam warnings de compilação e comportamento inesperado.",
-      "MultiSelect / MultiCombobox: preservado `emptyMessage` ao mesclar opções de busca e corrigido fallback quando `search` é false.",
+      "Selects: resolvidos conflitos de nomenclatura de propriedades que causavam avisos de compilação e instabilidade em formulários controlados.",
+      "MultiSelect / MultiCombobox: corrigido fallback de renderização quando a busca é desativada, garantindo que o `emptyMessage` seja respeitado em todos os cenários.",
     ],
   },
   {

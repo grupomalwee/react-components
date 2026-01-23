@@ -24,6 +24,12 @@ import { ClearButton } from "../shared/ClearButton";
 import { TimeScrollPicker } from "./TimeScrollPicker";
 import useAutoCenter from "@/hooks/use-auto-center";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  TabsBase,
+  TabsListBase,
+  TabsTriggerBase,
+  TabsContentBase,
+} from "../layout/TabsBase";
 
 interface DateTimePickerProps extends ErrorMessageProps {
   label?: string;
@@ -58,13 +64,18 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("calendar");
   const isMobile = useIsMobile();
 
   const handleSelect = (newDay: Date | null) => {
     if (!newDay) return;
     if (!internalDate) {
       const now = new Date();
-      newDay.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+      newDay.setUTCHours(
+        now.getUTCHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds(),
+      );
       setInternalDate(newDay);
       onChange?.(newDay);
       return;
@@ -78,7 +89,6 @@ export function DateTimePicker({
 
   const handleTimeChange = (newDate: Date | null) => {
     setInternalDate(newDate);
-    onChange?.(newDate);
   };
 
   const getTimeFormat = () => {
@@ -100,6 +110,9 @@ export function DateTimePicker({
 
   useEffect(() => {
     setInternalDate(date);
+    if (open) {
+      setActiveTab("calendar");
+    }
   }, [date, open]);
 
   const { ref: contentRef, center } = useAutoCenter(open);
@@ -114,7 +127,7 @@ export function DateTimePicker({
       disabled={disabled}
       className={cn(
         "w-full justify-start text-left min-w-0 overflow-hidden",
-        !date && "text-muted-foreground"
+        !date && "text-muted-foreground",
       )}
     >
       <span className={cn("truncate flex-1", !date && "text-muted-foreground")}>
@@ -148,97 +161,151 @@ export function DateTimePicker({
   );
 
   const renderPickerContent = () => (
-    <div className="p-3 border rounded-md">
-      <div
-        ref={contentRef}
-        className="flex sm:flex-row max-h-auto overflow-y-auto border-none rounded-md"
-      >
-        <CalendarBase
-          mode="single"
-          locale={ptBR}
-          selected={internalDate ?? undefined}
-          onSelect={(d) => handleSelect(d ?? null)}
-          autoFocus
-          defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
-          {...(fromDate && { startMonth: fromDate })}
-          {...(toDate && { endMonth: toDate })}
-          {...(fromDate || toDate
-            ? {
-                hidden: [
-                  ...(fromDate ? [{ before: fromDate }] : []),
-                  ...(toDate ? [{ after: toDate }] : []),
-                ],
-              }
-            : {})}
-          className={cn(
-            "w-max rounded-none border-none",
-            !hideTime && "sm:rounded-r-none rounded-b-none",
-            isMobile ? "border-b-transparent w-full" : ""
-          )}
-        />
-
-        {!hideTime && (
-          <div
-            className={cn(
-              "flex flex-col items-center justify-center",
-              isMobile ? "border-none" : "border-l"
-            )}
-          >
-            <div className="text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left">
-              Horário
+    <div className="p-2 sm:p-3 border border-border rounded-md">
+      {isMobile && !hideTime ? (
+        <div className="min-h-[380px] max-h-[calc(400px)]">
+          {internalDate && (
+            <div className="flex  items-center gap-3 px-4 py-3 rounded-lg ">
+              <span className="text-md font-semibold">
+                {format(internalDate, "dd 'de' MMMM 'de' yyyy", {
+                  locale: ptBR,
+                })}{" "}
+                - {format(internalDate, hideSeconds ? "HH:mm" : "HH:mm:ss")}
+              </span>
             </div>
+          )}
+          <TabsBase value={activeTab} onValueChange={setActiveTab}>
+            <TabsListBase className="">
+              <TabsTriggerBase value="calendar" className="flex-1">
+                Data
+              </TabsTriggerBase>
+              <TabsTriggerBase value="time" className="flex-1">
+                Horário
+              </TabsTriggerBase>
+            </TabsListBase>
 
-            <TimeScrollPicker
-              setDate={(d) => handleTimeChange(d ?? null)}
-              date={internalDate}
-              hideSeconds={hideSeconds}
-            />
-          </div>
-        )}
-      </div>
-      <div className="flex rounded-md p-1.5">
-        <div className="grid grid-cols-2 w-full gap-12">
-          <div className="flex items-center gap-2">
-            <ButtonBase
-              variant={"outline"}
-              size={"icon"}
-              className="no-active-animation"
-              tooltip="Hoje"
-              onClick={() => {
-                const now = new Date();
-                const selected = hideTime
-                  ? new Date(
-                      now.getFullYear(),
-                      now.getMonth(),
-                      now.getDate(),
-                      0,
-                      0,
-                      0,
-                      0
-                    )
-                  : now;
-                setInternalDate(selected);
-                onChange?.(selected);
-                onConfirm?.(selected);
-              }}
-            >
-              <CalendarDotIcon className="h-4 w-4" />
-            </ButtonBase>
-            <ButtonBase
-              className="no-active-animation rounded-md bg-background text-gray-800 border hover:bg-muted/50 overflow-y-hidden w-full"
-              onClick={() => setOpen(false)}
-            >
-              Cancelar
-            </ButtonBase>
-          </div>
+            <TabsContentBase value="calendar" className="mt-0">
+              <CalendarBase
+                mode="single"
+                locale={ptBR}
+                selected={internalDate ?? undefined}
+                onSelect={(d) => handleSelect(d ?? null)}
+                autoFocus
+                defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
+                {...(fromDate && { startMonth: fromDate })}
+                {...(toDate && { endMonth: toDate })}
+                {...(fromDate || toDate
+                  ? {
+                      disabled: [
+                        ...(fromDate ? [{ before: fromDate }] : []),
+                        ...(toDate ? [{ after: toDate }] : []),
+                      ],
+                    }
+                  : {})}
+                className={cn("w-full rounded-none border-none")}
+              />
+            </TabsContentBase>
 
+            <TabsContentBase value="time" className="mt-0">
+              <div className="flex flex-col items-center justify-center gap-4 py-2 min-h-[330px]">
+                <TimeScrollPicker
+                  setDate={(d) => handleTimeChange(d ?? null)}
+                  date={internalDate}
+                  hideSeconds={hideSeconds}
+                />
+              </div>
+            </TabsContentBase>
+          </TabsBase>
+        </div>
+      ) : (
+        <div
+          ref={contentRef}
+          className="flex flex-col sm:flex-row max-h-auto overflow-y-auto border-none rounded-md"
+        >
+          <CalendarBase
+            mode="single"
+            locale={ptBR}
+            selected={internalDate ?? undefined}
+            onSelect={(d) => handleSelect(d ?? null)}
+            autoFocus
+            defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
+            {...(fromDate && { startMonth: fromDate })}
+            {...(toDate && { endMonth: toDate })}
+            {...(fromDate || toDate
+              ? {
+                  disabled: [
+                    ...(fromDate ? [{ before: fromDate }] : []),
+                    ...(toDate ? [{ after: toDate }] : []),
+                  ],
+                }
+              : {})}
+            className={cn(
+              "w-max rounded-none border-none",
+              !hideTime && "sm:rounded-r-none",
+            )}
+          />
+
+          {!hideTime && (
+            <div
+              className={cn(
+                "flex flex-col items-center justify-center",
+                "border-l",
+              )}
+            >
+              <div className="text-[clamp(0.85rem,1.4vw,1.125rem)] sm:text-[clamp(0.9rem,1.6vw,1.125rem)] font-semibold capitalize text-left">
+                Horário
+              </div>
+
+              <TimeScrollPicker
+                setDate={(d) => handleTimeChange(d ?? null)}
+                date={internalDate}
+                hideSeconds={hideSeconds}
+              />
+            </div>
+          )}
+        </div>
+      )}
+      <div className="flex rounded-md p-1.5 gap-2">
+        <ButtonBase
+          variant={"outline"}
+          className="no-active-animation"
+          tooltip="Hoje"
+          size="icon"
+          onClick={() => {
+            const now = new Date();
+            const selected = hideTime
+              ? new Date(
+                  Date.UTC(
+                    now.getUTCFullYear(),
+                    now.getUTCMonth(),
+                    now.getUTCDate(),
+                    0,
+                    0,
+                    0,
+                    0,
+                  ),
+                )
+              : now;
+            setInternalDate(selected);
+            onChange?.(selected);
+            onConfirm?.(selected);
+          }}
+        >
+          <CalendarDotIcon className="h-4 w-4" />
+        </ButtonBase>
+        <div className="grid grid-cols-2 sm:flex-row w-full gap-2">
+          <ButtonBase
+            className="no-active-animation rounded-md bg-background text-primary border hover:bg-muted/50 overflow-hidden flex-1 min-w-0 border-border"
+            onClick={() => setOpen(false)}
+          >
+            Cancelar
+          </ButtonBase>
           <ButtonBase
             className={cn(
-              "no-active-animation rounded-none bg-emerald-600",
+              "no-active-animation rounded-md bg-emerald-600",
               internalDate
                 ? "hover:bg-emerald-700"
                 : "opacity-50 cursor-not-allowed",
-              isMobile ? "" : "rounded-md"
             )}
             disabled={!internalDate}
             onClick={() => {
@@ -270,7 +337,7 @@ export function DateTimePicker({
 
           <ErrorMessage error={error} />
 
-          <DialogContentBase className="p-0 max-w-[min(95vw,450px)] max-h-[90vh] overflow-hidden">
+          <DialogContentBase className="p-0 max-w-[min(95vw,450px)] max-h-[95vh] overflow-y-auto">
             {renderPickerContent()}
           </DialogContentBase>
         </DialogBase>

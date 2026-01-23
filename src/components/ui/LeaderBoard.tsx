@@ -5,48 +5,68 @@ import { ButtonBase } from "./form/ButtonBase";
 import { motion } from "framer-motion";
 import { SkeletonBase } from "./feedback/SkeletonBase";
 
-interface LeaderboardItem {
+export interface LeaderboardItem<T extends string> {
   name: string;
-  percentage: number;
+  value: number | string | T;
 }
-
-interface LeaderboardProps {
-  items?: LeaderboardItem[];
+  
+export interface LeaderboardProps<T extends string> {
+  items?: LeaderboardItem<T>[];
   order?: "asc" | "desc";
   title?: string;
   className?: string;
   isLoading?: boolean;
+  legend?: [string, string][];
 }
 
-export function Leaderboard({
+export function Leaderboard<T extends string>({
   items,
   order: initialOrder = "desc",
   title = "LeaderBoard",
   className,
   isLoading = false,
-}: LeaderboardProps) {
+  legend,
+}: LeaderboardProps<T>) {
   const [order, setOrder] = useState<"asc" | "desc">(initialOrder);
   const mockData = [
-    { name: "Ana", percentage: 92 },
-    { name: "Bruno", percentage: 81 },
-    { name: "Carla", percentage: 74 },
-    { name: "Daniel", percentage: 68 },
-    { name: "Eduardo", percentage: 55 },
-    { name: "Fernanda", percentage: 44 },
-    { name: "Gabriela", percentage: 33 },
-    { name: "Heitor", percentage: 28 },
-    { name: "Isabela", percentage: 22 },
-    { name: "João", percentage: 18 },
+    { name: "Ana", value: 92 },
+    { name: "Bruno", value: 81 },
+    { name: "Carla", value: 74 },
+    { name: "Daniel", value: 68 },
+    { name: "Eduardo", value: 55 },
+    { name: "Fernanda", value: 44 },
+    { name: "Gabriela", value: 33 },
+    { name: "Heitor", value: 28 },
+    { name: "Isabela", value: 22 },
+    { name: "João", value: 18 },
   ];
 
   const data = items ?? mockData;
-  const sortedData = [...data].sort((a, b) =>
-    order === "desc" ? b.percentage - a.percentage : a.percentage - b.percentage
-  );
+  const sortedData = [...data].sort((a, b) => {
+    const aValue =
+      typeof a.value === "string" ? parseFloat(a.value) || a.value : a.value;
+    const bValue =
+      typeof b.value === "string" ? parseFloat(b.value) || b.value : b.value;
 
-  const getBadgeColor = (pct: number) => {
-    if (pct >= 75) return "red";
-    if (pct >= 25) return "yellow";
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return order === "desc" ? bValue - aValue : aValue - bValue;
+    }
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return order === "desc"
+        ? bValue.localeCompare(aValue)
+        : aValue.localeCompare(bValue);
+    }
+
+    if (typeof aValue === "number") return order === "desc" ? -1 : 1;
+    return order === "desc" ? 1 : -1;
+  });
+
+  const getBadgeColor = (value: number | string) => {
+    const numValue = typeof value === "string" ? parseFloat(value) : value;
+    if (isNaN(numValue)) return "green";
+    if (numValue >= 75) return "red";
+    if (numValue >= 25) return "yellow";
     return "green";
   };
 
@@ -54,7 +74,7 @@ export function Leaderboard({
     <div
       className={`border rounded-xl flex flex-col max-h-80 w-96 ${className}`}
     >
-      <div className="flex items-center justify-between p-4 border-b flex-shrink-0 gap-3">
+      <div className="flex items-center justify-between py-2 px-4 border-b flex-shrink-0 gap-3">
         <h2 className="text-lg font-semibold px-1">{title}</h2>
         <ButtonBase
           size="icon"
@@ -86,32 +106,42 @@ export function Leaderboard({
             </p>
           </div>
         ) : (
-          <ul>
-            {sortedData.map((item, idx) => (
-              <motion.span
-                key={idx}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.005 }}
-              >
-                <li className="flex items-center justify-between py-3 border-b last:border-b-0 hover:bg-muted transition-colors px-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-400 w-6 h-6 border rounded-full text-center bg-muted/50">
-                      {idx + 1}
-                    </span>
-                    <span className="font-medium">{item.name}</span>
-                  </div>
-                  <Badge
-                    color={getBadgeColor(item.percentage)}
-                    size="md"
-                    className="font-bold"
-                  >
-                    {item.percentage}%
-                  </Badge>
-                </li>
-              </motion.span>
-            ))}
-          </ul>
+          <div>
+            <div className="flex items-center justify-between py-2.5 px-4 border-b flex-shrink-0 gap-3 sticky top-0 bg-background">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider pl-1">
+                {legend?.[0]?.[0] ?? "Participante"}
+              </div>
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                {legend?.[0]?.[1] ?? "Pontuação"}
+              </div>
+            </div>
+            <ul>
+              {sortedData.map((item, idx) => (
+                <motion.span
+                  key={idx}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.005 }}
+                >
+                  <li className="flex items-center justify-between py-3 border-b last:border-b-0 hover:bg-muted transition-colors px-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-400 w-6 h-6 border rounded-full text-center bg-muted/50">
+                        {idx + 1}
+                      </span>
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    <Badge
+                      color={getBadgeColor(item.value)}
+                      size="md"
+                      className="font-bold"
+                    >
+                      {item.value}
+                    </Badge>
+                  </li>
+                </motion.span>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

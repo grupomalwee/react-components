@@ -35,74 +35,89 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29) -->
 
+## 1.8.5 — 2026-01-23
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- **ThemeColorTest:** nova página dedicada para visualização e validação de tokens de cores do design system, permitindo testes rápidos de contraste e consistência em diferentes temas.
+
+### Changed
+
+- **MultiSelect:** corrigido o comportamento do Trigger para garantir que os valores exibidos estejam sempre sincronizados com o estado interno da seleção, evitando inconsistências visuais após limpezas rápidas.
+- **Chart, Dialog e Selects:** padronização das cores de borda para alinhar com as diretrizes atualizadas do design system, garantindo harmonia visual entre componentes complexos.
+
+---
+
 ## 1.8.4 — 2026-01-19
 
 **Author:** Gabriel Glatz
 
 ### Added
 
-- Price: componente de visualizacao monetaria
+- **Price:** novo componente especializado para exibição de valores monetários, com suporte a localização automática, prefixos/sufixos customizáveis e formatação de decimais otimizada para leitura financeira.
 
 ### Changed
 
-- TimeScrollPicker: modificado visual do componente para melhorar a experiência do usuário.
+- **TimeScrollPicker:** redesign da interface de rolagem para melhorar a precisão da seleção e a experiência do usuário em dispositivos touch e desktop.
 
-## 1.8.3 — 2026-01-19
+## 1.8.3 — 2026-01-16
 
 **Author:** Gabriel Glatz
 
 ### Fixed
 
-- Chart: adjusted no Data screen.
+- **Chart:** ajustada a tela de "No Data" para exibir mensagens mais claras e amigáveis quando não há dados para renderizar.
 
 ### Added
 
-- ButtonBase: new prop Tooltip.
-- TooltipBase: new interval set.
-- Selects: added tooltip to pagination buttons.
-- DateTimePicker: added tooltip to buttons.
-=
+- **ButtonBase:** adicionado suporte nativo à prop `Tooltip` para exibir dicas contextuais ao passar o mouse, melhorando a acessibilidade.
+- **TooltipBase:** novos ajustes de intervalo e delay para evitar disparos acidentais durante a navegação rápida.
+- **Selects:** implementados tooltips informativos nos botões de paginação (anterior/próximo/primeira/última página) para clarificar ações disponíveis.
+- **DateTimePicker:** adicionados tooltips descritivos em todos os botões de ação para melhorar a usabilidade geral.
+
 ---
+
 ## 1.8.2 — 2026-01-16
 
 **Author:** Gabriel Glatz
 
-### Fixed
-
-- Selects: posicao do X clean e implementado nova Prop.
-- DateTimePicker: refatorado sistema de estilos e ícones para manter consistência visual entre Select, Combobox e MultiSelect.
-- Dialog: ajustado bug de scroll.
-
 ### Added
 
-- TooltipBase: adicionado novo comportamento.
-- Chart: arrumado label negativo, title width, periodLabel and LabelPosition e Criado tela de Loading.
+- **Chart:** implementada tela de loading integrada e ajuste automático de labels em barras de tamanho reduzido para evitar sobreposição.
+- **TooltipBase:** implementado novo comportamento de posicionamento inteligente para melhor visibilidade em telas pequenas.
+
+### Fixed
+
+- **Selects:** corrigida a posição do ícone de limpeza (X) e implementada nova propriedade para controle de visibilidade do mesmo.
+- **DateTimePicker:** refatoração profunda do sistema de estilos e ícones para manter consistência absoluta com o Select e Combobox.
+- **Dialog:** resolvido bug crítico de bloqueio de scroll que persistia após o fechamento do modal em cenários específicos.
 
 ---
+
 ## 1.8.1 — 2026-01-14
 
 **Author:** Gabriel Glatz
 
 ### Fixed
 
-- Selects: refatorada style e props.
-
-### Fixed
-
-- Chart: arrumado formatador de Legenda e Area gradiente.
+- **Selects:** refatoração de estilos e propriedades para simplificar a API e melhorar a performance de renderização.
+- **Chart:** correções no formatador de legenda e na renderização de áreas com gradiente, corrigindo falhas de preenchimento visual.
 
 ---
+
 ## 1.8.0 — 2026-01-12
 
 **Author:** Gabriel Glatz
 
 ### Added
 
-- Selects: adicionado Clear Button.
+- **Selects:** adicionada funcionalidade de limpar seleção via ícone interativo, permitindo reset rápido do valor.
 
 ### Fixed
 
-- Chart: arrumado formatador de Legenda e Area gradiente.
+- **Chart:** corrigido bug no formatador de legenda que afetava a exibição de labels customizados e falha visual no gradiente de área.
 
 ---
 

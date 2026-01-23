@@ -43,8 +43,7 @@ export function ModeToggleBase({
       return;
     }
 
-    const button = buttonRef.current;
-    const rect = button.getBoundingClientRect();
+    const rect = buttonRef.current.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
 
@@ -52,28 +51,6 @@ export function ModeToggleBase({
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y),
     );
-
-    const styleId = "theme-transition-styles";
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement("style");
-      style.id = styleId;
-      style.textContent = `
-        ::view-transition-old(root),
-        ::view-transition-new(root) {
-          animation: none;
-          mix-blend-mode: normal;
-        }
-        
-        ::view-transition-old(root) {
-          z-index: 1;
-        }
-        
-        ::view-transition-new(root) {
-          z-index: 2;
-        }
-      `;
-      document.head.appendChild(style);
-    }
 
     const transition = document.startViewTransition(async () => {
       setTheme(newTheme);
@@ -84,14 +61,14 @@ export function ModeToggleBase({
     document.documentElement.animate(
       [
         {
-          clipPath: `circle(0% at ${x}px ${y}px)`,
+          clipPath: `circle(0px at ${x}px ${y}px)`,
         },
         {
           clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)`,
         },
       ],
       {
-        duration: 600,
+        duration: 400,
         easing: "cubic-bezier(0.4, 0, 0.2, 1)",
         pseudoElement: "::view-transition-new(root)",
       },

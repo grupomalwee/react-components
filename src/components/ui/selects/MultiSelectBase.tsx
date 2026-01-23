@@ -54,6 +54,7 @@ export function MultiSelectBase({
   disabled,
   empty,
   error,
+  initialItems,
 }: {
   children: ReactNode;
   values?: string[];
@@ -62,13 +63,18 @@ export function MultiSelectBase({
   disabled?: boolean;
   empty?: ReactNode;
   error?: string;
+  initialItems?: Map<string, ReactNode> | { value: string; label: ReactNode }[];
 }) {
   const [open, setOpen] = useState(false);
   const [internalValues, setInternalValues] = useState(
-    new Set<string>(values ?? defaultValues)
+    new Set<string>(values ?? defaultValues),
   );
   const selectedValues = values ? new Set(values) : internalValues;
-  const [items, setItems] = useState<Map<string, ReactNode>>(new Map());
+  const [items, setItems] = useState<Map<string, ReactNode>>(() => {
+    if (!initialItems) return new Map();
+    if (initialItems instanceof Map) return new Map(initialItems);
+    return new Map(initialItems.map((it) => [it.value, it.label]));
+  });
 
   function toggleValue(value: string) {
     if (disabled) return;
@@ -150,7 +156,7 @@ export function MultiSelectTriggerBase({
             error
               ? "border-destructive focus:ring-1 focus:ring-destructive"
               : "border-input focus:ring-1 focus:ring-ring",
-            className
+            className,
           )}
         >
           {children}
@@ -190,7 +196,7 @@ export function MultiSelectValueBase({
     const containerElement = valueRef.current;
     const overflowElement = overflowRef.current;
     const items = containerElement.querySelectorAll<HTMLElement>(
-      "[data-selected-item]"
+      "[data-selected-item]",
     );
 
     if (overflowElement != null) overflowElement.style.display = "none";
@@ -249,7 +255,7 @@ export function MultiSelectValueBase({
 
       checkOverflow();
     },
-    [checkOverflow]
+    [checkOverflow],
   );
 
   const visibleSelected = [...selectedValues]
@@ -278,7 +284,7 @@ export function MultiSelectValueBase({
       className={cn(
         "flex w-full gap-1.5 overflow-hidden",
         shouldWrap && "h-full flex-wrap",
-        className
+        className,
       )}
     >
       {visibleSelected.map((value) => (
@@ -323,16 +329,19 @@ export function MultiSelectContentBase({
   children: ReactNode;
 } & Omit<ComponentPropsWithoutRef<typeof CommandBase>, "children">) {
   const canSearch = typeof search === "object" ? true : search;
-  const { emptyMessage, items } = useMultiSelectContext();
+  const { emptyMessage, items, open } = useMultiSelectContext();
 
   return (
     <>
-      <PopoverContentBase className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0">
+      <PopoverContentBase
+        forceMount
+        className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.95 }}
           transition={{ duration: 0.2 }}
+          style={{ pointerEvents: open ? "auto" : "none" }}
         >
           <div className={cn(" ")}>
             <CommandBase
@@ -358,7 +367,7 @@ export function MultiSelectContentBase({
                 {canSearch && (
                   <CommandEmptyBase>
                     {typeof search === "object"
-                      ? search.emptyMessage ?? emptyMessage
+                      ? (search.emptyMessage ?? emptyMessage)
                       : emptyMessage}
                   </CommandEmptyBase>
                 )}
@@ -414,13 +423,13 @@ export function MultiSelectItemBase({
 }
 
 export function MultiSelectGroupBase(
-  props: ComponentPropsWithoutRef<typeof CommandGroupBase>
+  props: ComponentPropsWithoutRef<typeof CommandGroupBase>,
 ) {
   return <CommandGroupBase {...props} />;
 }
 
 export function MultiSelectSeparatorBase(
-  props: ComponentPropsWithoutRef<typeof CommandSeparatorBase>
+  props: ComponentPropsWithoutRef<typeof CommandSeparatorBase>,
 ) {
   return <CommandSeparatorBase {...props} />;
 }
@@ -429,7 +438,7 @@ function useMultiSelectContext() {
   const context = useContext(MultiSelectContext);
   if (context == null) {
     throw new Error(
-      "useMultiSelectContext must be used within a MultiSelectContext"
+      "useMultiSelectContext must be used within a MultiSelectContext",
     );
   }
   return context;
@@ -437,7 +446,7 @@ function useMultiSelectContext() {
 
 function debounce<T extends (...args: never[]) => void>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout> | null = null;
   return function (this: unknown, ...args: Parameters<T>) {

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TimeScrollPickerProps {
   date: Date | null;
@@ -8,12 +7,9 @@ interface TimeScrollPickerProps {
   hideSeconds?: boolean;
 }
 
-const ITEM_HEIGHT = 39;
-const ITEM_HEIGHT_MOBILE = 32;
+const ITEM_HEIGHT = 38.5; 
 const VISIBLE_ITEMS = 5;
-const VISIBLE_ITEMS_MOBILE = 3;
 const CENTER_INDEX = Math.floor(VISIBLE_ITEMS / 2);
-const CENTER_INDEX_MOBILE = Math.floor(VISIBLE_ITEMS_MOBILE / 2);
 
 interface ScrollColumnProps {
   value: number;
@@ -23,14 +19,7 @@ interface ScrollColumnProps {
   hideSeconds?: boolean;
 }
 
-function ScrollColumn({
-  value,
-  onChange,
-  max,
-  label,
-  hideSeconds,
-}: ScrollColumnProps) {
-  const isMobile = useIsMobile();
+function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = Array.from({ length: max }, (_, i) => i);
   const [isDragging, setIsDragging] = useState(false);
@@ -38,9 +27,9 @@ function ScrollColumn({
   const [scrollTop, setScrollTop] = useState(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT;
-  const centerIndex = isMobile ? CENTER_INDEX_MOBILE : CENTER_INDEX;
-  const visibleItems = isMobile ? VISIBLE_ITEMS_MOBILE : VISIBLE_ITEMS;
+  const itemHeight = ITEM_HEIGHT;
+  const centerIndex = CENTER_INDEX;
+  const visibleItems = VISIBLE_ITEMS;
   const containerHeight = visibleItems * itemHeight;
 
   useEffect(() => {
@@ -62,7 +51,10 @@ function ScrollColumn({
     };
   }, []);
 
-  const handleScroll = () => {
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
     if (!containerRef.current || isDragging) return;
 
     if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
@@ -109,18 +101,22 @@ function ScrollColumn({
   const handleMouseLeave = () => {
     if (isDragging) handleMouseUp();
   };
-  const containerWidth = isMobile ? (hideSeconds ? "w-16" : "w-8") : "w-16";
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.stopPropagation();
+  };
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <span className="text-muted-foreground rounded-md font-semibold text-[clamp(0.575rem,1.2vw,0.75rem)] sm:text-[clamp(0.65rem,1.1vw,0.825rem)] text-center pb-1 uppercase tracking-wider">
+    <div className="flex flex-col items-center">
+      <span className="text-muted-foreground rounded-md font-semibold text-sm sm:text-sm text-center pb-2 uppercase tracking-wider">
         {label}
       </span>
-      <div className={cn("relative", containerWidth)}>
+      <div className={cn("relative w-20 sm:w-16")}>
         <div
           ref={containerRef}
-          className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] touch-action-pan-y"
           onScroll={handleScroll}
+          onWheel={handleWheel}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -138,11 +134,11 @@ function ScrollColumn({
               <div
                 key={item}
                 className={cn(
-                  "flex items-center justify-center select-none font-semibold tabular-nums",
+                  "flex items-center justify-center select-none font-semibold tabular-nums transition-all duration-150",
                   isDragging ? "cursor-grabbing" : "",
                   isSelected
-                    ? "sm:text-lg text-md text-foreground"
-                    : "sm:text-sm text-xs text-muted-foreground"
+                    ? "text-lg sm:text-xl text-foreground scale-110"
+                    : "text-sm sm:text-base text-muted-foreground opacity-60",
                 )}
                 style={{ height: `${itemHeight}px` }}
                 onClick={() => !isDragging && onChange(item)}
@@ -162,15 +158,14 @@ export function TimeScrollPicker({
   setDate,
   hideSeconds = false,
 }: TimeScrollPickerProps) {
-  const isMobile = useIsMobile();
   const currentDate = date || new Date();
 
-  const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT;
-  const centerIndex = isMobile ? CENTER_INDEX_MOBILE : CENTER_INDEX;
+  const itemHeight = ITEM_HEIGHT;
+  const centerIndex = CENTER_INDEX;
 
   const handleTimeChange = (
     type: "hours" | "minutes" | "seconds",
-    value: number
+    value: number,
   ) => {
     const newDate = new Date(currentDate);
     if (type === "hours") newDate.setHours(value);
@@ -180,12 +175,12 @@ export function TimeScrollPicker({
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 p-3">
-      <div className={cn("relative flex gap-2")}>
+    <div className="flex items-center justify-center gap-2 p-3 sm:p-4">
+      <div className={cn("relative flex gap-4 sm:gap-3")}>
         <div
-          className="absolute left-0 right-0  pointer-events-none z-10 rounded-md bg-primary/5"
+          className="absolute left-0 right-0 pointer-events-none z-10 rounded-lg bg-primary/10 border border-primary/20"
           style={{
-            top: `calc(1.75rem + ${centerIndex * itemHeight}px)`,
+            top: `calc(1.85rem + ${centerIndex * itemHeight}px)`,
             height: `${itemHeight}px`,
           }}
         />

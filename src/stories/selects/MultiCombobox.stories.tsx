@@ -108,7 +108,7 @@ export const Default: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10 w-64">
           <MultiCombobox
             items={items}
             selected={selected}

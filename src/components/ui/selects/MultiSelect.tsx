@@ -36,8 +36,9 @@ export interface MultiSelectTestIds {
   paginationPage?: (page: number) => string;
 }
 
-export interface DefaultMultiSelectProps<T extends string>
-  extends ErrorMessageProps {
+export interface DefaultMultiSelectProps<
+  T extends string,
+> extends ErrorMessageProps {
   selected?: T[];
   defaultSelected?: T[];
   onChange?: (values: T[]) => void;
@@ -53,15 +54,17 @@ export interface DefaultMultiSelectProps<T extends string>
   overflowBehavior?: "wrap" | "wrap-when-open" | "cutoff";
 }
 
-export interface MultiSelectPropsWithItems<T extends string>
-  extends DefaultMultiSelectProps<T> {
+export interface MultiSelectPropsWithItems<
+  T extends string,
+> extends DefaultMultiSelectProps<T> {
   items: MultiSelectItem<T>[];
   groupItems?: never;
   testIds?: MultiSelectTestIds;
 }
 
-export interface MultiSelectPropsWithGroupItems<T extends string>
-  extends DefaultMultiSelectProps<T> {
+export interface MultiSelectPropsWithGroupItems<
+  T extends string,
+> extends DefaultMultiSelectProps<T> {
   items?: never;
   groupItems: {
     [key: string]: MultiSelectItem<T>[];
@@ -117,7 +120,7 @@ export function MultiSelect<T extends string>({
     if (groupItems) {
       type Flat = MultiSelectItem<T> & { group: string };
       const flattened: Flat[] = Object.keys(groupItems).flatMap((g) =>
-        groupItems[g].map((it) => ({ ...it, group: g }))
+        groupItems[g].map((it) => ({ ...it, group: g })),
       );
       const total = flattened.length;
 
@@ -157,6 +160,13 @@ export function MultiSelect<T extends string>({
     return () => clearTimeout(id);
   }, [page, pagination]);
 
+  const initialItems = useMemo(() => {
+    if (groupItems) {
+      return Object.values(groupItems).flat();
+    }
+    return items ?? [];
+  }, [items, groupItems]);
+
   return (
     <div data-testid={testIds.root ?? "multiselect-root"}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
@@ -168,12 +178,13 @@ export function MultiSelect<T extends string>({
         disabled={disabled}
         empty={empty}
         error={error}
+        initialItems={initialItems}
       >
         <MultiSelectTriggerBase
           className={cn(
             "flex items-center gap-2 justify-between",
             error && "border-red-500",
-            className
+            className,
           )}
           data-testid={testIds.trigger ?? "multiselect-trigger"}
         >
