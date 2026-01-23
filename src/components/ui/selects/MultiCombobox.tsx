@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MultiSelectBase,
   MultiSelectTriggerBase,
@@ -8,7 +7,7 @@ import {
   MultiSelectItemBase,
 } from "./MultiSelectBase";
 import LabelBase from "../form/LabelBase";
-import ErrorMessage, {
+import {
   ErrorMessageProps,
 } from "@/components/ui/shared/ErrorMessage";
 
@@ -117,7 +116,6 @@ export function MultiCombobox<T extends string>({
           </MultiSelectGroupBase>
         </MultiSelectContentBase>
       </MultiSelectBase>
-      <ErrorMessage error={error} />
     </div>
   );
 }

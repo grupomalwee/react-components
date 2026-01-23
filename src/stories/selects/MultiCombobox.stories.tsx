@@ -214,24 +214,43 @@ export const Empty: Story = {
   //   });
   // },
 };
+export const Error: Story = {
+  name: "Erro",
+  render: () => {
+    const items = [
+      { label: "React", value: "react" },
+      { label: "Vue", value: "vue" },
+      { label: "Angular", value: "angular" },
+      { label: "Svelte", value: "svelte" },
+    ];
+    const [selected, setSelected] = React.useState<string[]>([]);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-10">
+          <MultiCombobox
+            items={items}
+            selected={selected}
+            onChange={setSelected}
+            placeholder="Selecione frameworks..."
+            error="Erro"
+          />
 
-Empty.parameters = {
-  ...Empty.parameters,
-  docs: {
-    ...Empty.parameters?.docs,
-    source: {
-      code: `import React from 'react';
-import { MultiComboboxBase } from '@mlw-packages/react-components';
-
-export const Empty = () => {
-  const items = [
-    { label: 'React', value: 'react' },
-    { label: 'Vue', value: 'vue' },
-    { label: 'Angular', value: 'angular' },
-  ];
-  const [selected, setSelected] = React.useState([]);
-  return <MultiComboboxBase items={items} selected={selected} onChange={setSelected} placeholder="Selecione frameworks..." />;
-};`,
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "MultiCombobox com erro.",
+      },
     },
   },
 };
