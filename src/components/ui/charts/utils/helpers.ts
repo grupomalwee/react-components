@@ -3,7 +3,7 @@ export const formatFieldName = (fieldName: string): string => {
     .split(/[/_-]/)
     .filter(Boolean)
     .map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(" ")
     .trim();
@@ -11,12 +11,12 @@ export const formatFieldName = (fieldName: string): string => {
 
 export const detectDataFields = (
   data: Record<string, unknown>[],
-  xAxisKey: string
+  xAxisKey: string,
 ): string[] => {
   if (!data || data.length === 0) return [];
   const firstItem = data[0];
   return Object.keys(firstItem).filter(
-    (key) => key !== xAxisKey && typeof firstItem[key] === "number"
+    (key) => key !== xAxisKey && typeof firstItem[key] === "number",
   );
 };
 
@@ -26,14 +26,15 @@ export const detectXAxis = (data: Record<string, unknown>[]): string => {
   const stringFields = Object.keys(firstItem).filter(
     (key) =>
       typeof firstItem[key] === "string" ||
-      (typeof firstItem[key] === "number" && String(firstItem[key]).length <= 4)
+      (typeof firstItem[key] === "number" &&
+        String(firstItem[key]).length <= 4),
   );
   return stringFields[0] || Object.keys(firstItem)[0] || "name";
 };
 
 export const generateAdditionalColors = (
   baseColors: string[],
-  count: number
+  count: number,
 ): string[] => {
   const hexToRgb = (hex: string) => {
     const clean = hex.replace("#", "");
@@ -44,7 +45,7 @@ export const generateAdditionalColors = (
             .map((c) => c + c)
             .join("")
         : clean,
-      16
+      16,
     );
     return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
   };
@@ -155,7 +156,7 @@ export type Margins = Partial<{
 export const resolveContainerPaddingLeft = (
   padding?: Padding,
   containerPaddingLeft?: number,
-  defaultLeft = 16
+  defaultLeft = 16,
 ): number => {
   if (typeof padding === "number") return padding;
   if (padding && typeof padding === "object" && padding.left != null)
@@ -167,7 +168,7 @@ export const resolveContainerPaddingLeft = (
 export const resolveChartMargins = (
   margins?: Margins,
   chartMargins?: Margins,
-  showLabels?: boolean
+  showLabels?: boolean,
 ): { top: number; right: number; left: number; bottom: number } => {
   const defaultRight = 30;
   const defaultLeft = 20;
@@ -185,7 +186,7 @@ export const resolveChartMargins = (
 export const generateColorMap = (
   dataKeys: string[],
   baseColors: string[],
-  mapperConfig: Record<string, { color?: string }>
+  mapperConfig: Record<string, { color?: string }>,
 ): Record<string, string> => {
   const colorMap: Record<string, string> = {};
   const allColors = generateAdditionalColors(baseColors, dataKeys.length);
@@ -211,7 +212,7 @@ export const computeNiceMax = (maxValue: number): number => {
 
 export const getMaxDataValue = (
   data: Record<string, unknown>[],
-  keys: string[]
+  keys: string[],
 ): number => {
   let max = 0;
   for (const row of data) {
@@ -225,7 +226,7 @@ export const getMaxDataValue = (
 
 export const getMinDataValue = (
   data: Record<string, unknown>[],
-  keys: string[]
+  keys: string[],
 ): number => {
   let min = 0;
   for (const row of data) {
@@ -249,7 +250,7 @@ export const computeChartWidth = (
   dataLength: number,
   series: SeriesConfig | undefined,
   niceMaxLeft: number,
-  niceMaxRight: number
+  niceMaxRight: number,
 ): number => {
   if (typeof width === "number") return width;
 
@@ -269,7 +270,7 @@ export const computeChartWidth = (
   if (overallNiceMax > 10_000_000) sizeFactor = 1.3;
 
   const perPoint = Math.round(
-    (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor
+    (basePerPoint + perBarExtra + perOtherExtra) * sizeFactor,
   );
 
   const marginExtra = 120;
@@ -283,7 +284,7 @@ export const computeChartWidth = (
 
 export const adaptDataForTooltip = <T extends Record<string, unknown>>(
   data: T,
-  xAxisKey: string
+  xAxisKey: string,
 ): { name: string; [key: string]: string | number } => {
   const result: { name: string; [key: string]: string | number } = {
     name: String(data[xAxisKey] || "N/A"),
@@ -309,7 +310,7 @@ export type ValueFormatterType = (props: {
 
 export const createValueFormatter = (
   customFormatter: ValueFormatterType | undefined,
-  formatBR: boolean
+  formatBR: boolean,
 ): ValueFormatterType | undefined => {
   const nf = new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 2,
@@ -373,7 +374,7 @@ export const createValueFormatter = (
 };
 
 export const createYTickFormatter = (
-  finalValueFormatter: ValueFormatterType | undefined
+  finalValueFormatter: ValueFormatterType | undefined,
 ): ((value: number | string) => string) => {
   const nf = new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 2,
@@ -406,7 +407,7 @@ export const computeYAxisTickWidth = (
   axisLabelMargin: number,
   yTickFormatter: (value: number | string) => string,
   minValue: number,
-  maxValue: number
+  maxValue: number,
 ): number => {
   if (typeof chartMarginLeft === "number") return chartMarginLeft;
 
