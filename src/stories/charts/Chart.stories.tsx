@@ -201,7 +201,7 @@ export default function Default() {
 export const FormatBR: Story = {
   name: "Formato pt-BR",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={360}
@@ -225,7 +225,7 @@ export const FormatBR: Story = {
 export const Combined: Story = {
   name: "Combinado",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -272,7 +272,7 @@ export default function Combined() {
 
 export const Biaxial: Story = {
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={360}
@@ -326,7 +326,7 @@ export default function BiaxialExample() {
 export const NegativeValues: Story = {
   name: "Com Negativos",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         data={negativeData}
@@ -375,7 +375,7 @@ export const LargeData: Story = {
     }));
 
     return (
-      <div style={{ width: "900px",  height: "350px"  }}>
+      <div style={{ width: "900px", height: "350px" }}>
         <Chart
           {...args}
           data={largeData}
@@ -421,7 +421,7 @@ export default function LargeDataset() {
 export const CustomFormatter: Story = {
   name: "Formatador Custom",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -478,7 +478,7 @@ export default function Customformatter() {
 export const AdvancedFormatter: Story = {
   name: "Formatador Avançado",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -556,7 +556,7 @@ export const Empty: Story = {
   name: "Vazio",
   render: (args) => (
     <div
-      style={{ width: "900px",  height: "350px"  }}
+      style={{ width: "900px", height: "350px" }}
       data-testid="empty-chart-wrapper"
     >
       <Chart
@@ -597,7 +597,7 @@ export const Loading: Story = {
   name: "Loading Estado",
   render: (args) => (
     <div
-      style={{ width: "900px",  height: "350px"  }}
+      style={{ width: "900px", height: "350px" }}
       data-testid="empty-chart-wrapper"
     >
       <Chart
@@ -639,7 +639,7 @@ export default function EmptyData() {
 export const SinglePoint: Story = {
   name: "Único Ponto",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         data={[{ periodo: "Q1/24", receita: 5000, despesas: 3000, churn: 120 }]}
@@ -680,7 +680,7 @@ export const SinglePoint: Story = {
 export const Minimal: Story = {
   name: "Minimalista",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -768,7 +768,7 @@ export const TallChart: Story = {
 export const AllBars: Story = {
   name: "Só Barras",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -812,7 +812,7 @@ export const AllBars: Story = {
 export const AllLines: Story = {
   name: "Só Linhas",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -856,7 +856,7 @@ export const AllLines: Story = {
 export const AllAreas: Story = {
   name: "Só Áreas",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -908,7 +908,7 @@ export const Extremes: Story = {
     ];
 
     return (
-      <div style={{ width: "900px",  height: "350px"  }}>
+      <div style={{ width: "900px", height: "350px" }}>
         <Chart
           {...args}
           data={extremeData}
@@ -950,7 +950,7 @@ export const MixedValues: Story = {
     ];
 
     return (
-      <div style={{ width: "900px",  height: "350px"  }}>
+      <div style={{ width: "900px", height: "350px" }}>
         <Chart
           {...args}
           data={mixedData}
@@ -982,7 +982,7 @@ export const MixedValues: Story = {
 export const CustomColors: Story = {
   name: "Cores Custom",
   render: (args) => (
-    <div style={{ width: "900px",  height: "350px"  }}>
+    <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
         height={350}
@@ -1011,7 +1011,7 @@ export const CustomColors: Story = {
     await step("Verificar cores customizadas aplicadas", async () => {
       await waitFor(() => {
         const coloredElements = canvasElement.querySelectorAll(
-          '[fill="#ff0080"], [fill="#00ff80"], [fill="#0080ff"], [stroke="#ff0080"], [stroke="#00ff80"], [stroke="#0080ff"]'
+          '[fill="#ff0080"], [fill="#00ff80"], [fill="#0080ff"], [stroke="#ff0080"], [stroke="#00ff80"], [stroke="#0080ff"]',
         );
         expect(coloredElements.length).toBeGreaterThan(0);
       });
@@ -1026,5 +1026,220 @@ export const CustomColors: Story = {
       expect(lines.length).toBeGreaterThan(0);
       expect(areas.length).toBeGreaterThan(0);
     });
+  },
+};
+
+// Generate sample time series data for TimeSeries stories
+const generateTimeSeriesData = (months: number) => {
+  const data = [];
+  const startDate = new Date(2023, 0, 1);
+
+  for (let i = 0; i < months; i++) {
+    const date = new Date(startDate);
+    date.setMonth(startDate.getMonth() + i);
+
+    const monthStr = date.toLocaleDateString("pt-BR", {
+      month: "short",
+      year: "2-digit",
+    });
+
+    data.push({
+      periodo: monthStr,
+      receita: Math.round(5000 + Math.random() * 5000 + i * 200),
+      despesas: Math.round(3000 + Math.random() * 3000 + i * 100),
+      lucro: Math.round(1000 + Math.random() * 2000 + i * 50),
+      churn: Math.round(50 + Math.random() * 100),
+    });
+  }
+
+  return data;
+};
+
+const timeSeriesData = generateTimeSeriesData(24);
+
+export const TimeSeriesEnabled: Story = {
+  name: "TimeSeries Habilitado",
+  render: (args) => (
+    <div style={{ width: "900px" }}>
+      <Chart
+        {...args}
+        data={timeSeriesData}
+        xAxis="periodo"
+        series={{ bar: ["receita", "despesas"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        height={350}
+        timeSeries={{
+          enabled: true,
+          defaultStartIndex: 0,
+          defaultEndIndex: 11,
+          brushHeight: 80,
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = generateTimeSeriesData(24);
+
+export default function TimeSeriesExample() {
+  return (
+    <Chart
+      data={data}
+      xAxis="periodo"
+      series={{ bar: ['receita', 'despesas'] }}
+      labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
+      height={350}
+      timeSeries={{
+        enabled: true,
+        defaultStartIndex: 0,
+        defaultEndIndex: 11,
+        brushHeight: 80,
+      }}
+    />
+  );
+}`,
+      },
+    },
+  },
+};
+
+export const TimeSeriesCustomRange: Story = {
+  name: "TimeSeries com Intervalo Customizado",
+  render: (args) => (
+    <div style={{ width: "900px" }}>
+      <Chart
+        {...args}
+        data={timeSeriesData}
+        xAxis="periodo"
+        series={{ line: ["receita", "despesas", "lucro"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
+        colors={["#22c55e", "#ef4444", "#3b82f6"]}
+        height={350}
+        timeSeries={{
+          enabled: true,
+          defaultStartIndex: 6,
+          defaultEndIndex: 18,
+          brushHeight: 100,
+          brushColor: "#8b5cf6",
+          brushStroke: "#8b5cf6",
+          miniChartOpacity: 0.5,
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "TimeSeries com intervalo inicial customizado (meses 7-19) e estilo de brush personalizado.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function TimeSeriesCustomRange() {
+  return (
+    <Chart
+      data={data}
+      xAxis="periodo"
+      series={{ line: ['receita', 'despesas', 'lucro'] }}
+      labelMap={{ receita: 'Receita', despesas: 'Despesas', lucro: 'Lucro' }}
+      colors={["#22c55e", "#ef4444", "#3b82f6"]}
+      height={350}
+      timeSeries={{
+        enabled: true,
+        defaultStartIndex: 6,
+        defaultEndIndex: 18,
+        brushHeight: 100,
+        brushColor: "#8b5cf6",
+        brushStroke: "#8b5cf6",
+        miniChartOpacity: 0.5,
+      }}
+    />
+  );
+}`,
+      },
+    },
+  },
+};
+
+export const TimeSeriesInteractive: Story = {
+  name: "TimeSeries Interativo com Callback",
+  render: (args) => {
+    const [rangeInfo, setRangeInfo] = React.useState({ start: 0, end: 11 });
+
+    return (
+      <div style={{ width: "900px" }}>
+        <div className="mb-4 p-4 bg-muted rounded-lg">
+          <p className="text-sm font-medium">
+            Intervalo selecionado: {rangeInfo.start} - {rangeInfo.end}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Arraste as alças ou a área central para ajustar o intervalo
+          </p>
+        </div>
+        <Chart
+          {...args}
+          data={timeSeriesData}
+          xAxis="periodo"
+          series={{ bar: ["receita", "despesas"] }}
+          labelMap={{ receita: "Receita", despesas: "Despesas" }}
+          height={350}
+          timeSeries={{
+            enabled: true,
+            defaultStartIndex: 0,
+            defaultEndIndex: 11,
+            brushHeight: 80,
+            onRangeChange: (start, end) => setRangeInfo({ start, end }),
+          }}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo com callback onRangeChange para capturar mudanças no intervalo do brush.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function TimeSeriesInteractive() {
+  const [rangeInfo, setRangeInfo] = React.useState({ start: 0, end: 11 });
+
+  return (
+    <div>
+      <div className="mb-4 p-4 bg-muted rounded-lg">
+        <p>Intervalo selecionado: {rangeInfo.start} - {rangeInfo.end}</p>
+      </div>
+      <Chart
+        data={data}
+        xAxis="periodo"
+        series={{ bar: ['receita', 'despesas'] }}
+        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
+        height={350}
+        timeSeries={{
+          enabled: true,
+          defaultStartIndex: 0,
+          defaultEndIndex: 11,
+          brushHeight: 80,
+          onRangeChange: (start, end) => setRangeInfo({ start, end }),
+        }}
+      />
+    </div>
+  );
+}`,
+      },
+    },
   },
 };
