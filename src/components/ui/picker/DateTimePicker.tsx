@@ -161,7 +161,7 @@ export function DateTimePicker({
   );
 
   const renderPickerContent = () => (
-    <div className="p-2 sm:p-3 border rounded-md">
+    <div className="p-2 sm:p-3 border border-border rounded-md">
       {isMobile && !hideTime ? (
         <div className="min-h-[380px] max-h-[calc(400px)]">
           {internalDate && (
@@ -196,7 +196,7 @@ export function DateTimePicker({
                 {...(toDate && { endMonth: toDate })}
                 {...(fromDate || toDate
                   ? {
-                      hidden: [
+                      disabled: [
                         ...(fromDate ? [{ before: fromDate }] : []),
                         ...(toDate ? [{ after: toDate }] : []),
                       ],
@@ -233,7 +233,7 @@ export function DateTimePicker({
             {...(toDate && { endMonth: toDate })}
             {...(fromDate || toDate
               ? {
-                  hidden: [
+                  disabled: [
                     ...(fromDate ? [{ before: fromDate }] : []),
                     ...(toDate ? [{ after: toDate }] : []),
                   ],
@@ -242,7 +242,6 @@ export function DateTimePicker({
             className={cn(
               "w-max rounded-none border-none",
               !hideTime && "sm:rounded-r-none",
-              isMobile ? "w-full" : "",
             )}
           />
 
@@ -266,12 +265,44 @@ export function DateTimePicker({
           )}
         </div>
       )}
-      <div className="flex rounded-md p-1.5">
-        <div className="flex flex-col sm:flex-row w-full gap-2">
+      <div className="flex rounded-md p-1.5 gap-2">
+        <ButtonBase
+          variant={"outline"}
+          className="no-active-animation"
+          tooltip="Hoje"
+          size="icon"
+          onClick={() => {
+            const now = new Date();
+            const selected = hideTime
+              ? new Date(
+                  Date.UTC(
+                    now.getUTCFullYear(),
+                    now.getUTCMonth(),
+                    now.getUTCDate(),
+                    0,
+                    0,
+                    0,
+                    0,
+                  ),
+                )
+              : now;
+            setInternalDate(selected);
+            onChange?.(selected);
+            onConfirm?.(selected);
+          }}
+        >
+          <CalendarDotIcon className="h-4 w-4" />
+        </ButtonBase>
+        <div className="grid grid-cols-2 sm:flex-row w-full gap-2">
+          <ButtonBase
+            className="no-active-animation rounded-md bg-background text-primary border hover:bg-muted/50 overflow-hidden flex-1 min-w-0 border-border"
+            onClick={() => setOpen(false)}
+          >
+            Cancelar
+          </ButtonBase>
           <ButtonBase
             className={cn(
-              "no-active-animation rounded-md bg-emerald-600 sm:w-64",
-              "order-1 sm:order-3",
+              "no-active-animation rounded-md bg-emerald-600",
               internalDate
                 ? "hover:bg-emerald-700"
                 : "opacity-50 cursor-not-allowed",
@@ -285,43 +316,6 @@ export function DateTimePicker({
           >
             Confirmar
           </ButtonBase>
-
-          <div className="flex flex-row gap-2 order-2 sm:contents">
-            <ButtonBase
-              variant={"outline"}
-              size={"icon"}
-              className="no-active-animation"
-              tooltip="Hoje"
-              onClick={() => {
-                const now = new Date();
-                const selected = hideTime
-                  ? new Date(
-                      Date.UTC(
-                        now.getUTCFullYear(),
-                        now.getUTCMonth(),
-                        now.getUTCDate(),
-                        0,
-                        0,
-                        0,
-                        0,
-                      ),
-                    )
-                  : now;
-                setInternalDate(selected);
-                onChange?.(selected);
-                onConfirm?.(selected);
-              }}
-            >
-              <CalendarDotIcon className="h-4 w-4" />
-            </ButtonBase>
-
-            <ButtonBase
-              className="no-active-animation rounded-md bg-background text-gray-800 border hover:bg-muted/50 overflow-hidden flex-1 min-w-0"
-              onClick={() => setOpen(false)}
-            >
-              Cancelar
-            </ButtonBase>
-          </div>
         </div>
       </div>
     </div>

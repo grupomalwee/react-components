@@ -5,11 +5,11 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import LabelBase from "../form/LabelBase";
 import { cn } from "@/lib/utils";
 
-
 export type ProgressType = "bar" | "segments" | "panels" | "circles";
 
-export interface ProgressBaseProps
-  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+export interface ProgressBaseProps extends React.ComponentPropsWithoutRef<
+  typeof ProgressPrimitive.Root
+> {
   variant?: ProgressType;
   label?: string;
   leftIcon?: React.ReactNode;
@@ -44,7 +44,7 @@ const ProgressBase = React.forwardRef<
       plusIndicator,
       ...props
     },
-    ref
+    ref,
   ) => {
     const value = Number(rawValue || 0);
     const indicatorWidth = Math.min(value, 100);
@@ -83,7 +83,7 @@ const ProgressBase = React.forwardRef<
           <div className="flex flex-col gap-1 w-full min-w-[150px]">
             {label && <LabelBase className="py-2">{label}</LabelBase>}
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2">
               {showValue && valuePosition === "left" && (
                 <div className="w-12 text-sm text-right font-extrabold">
                   {Math.round(value || 0)}%
@@ -99,7 +99,7 @@ const ProgressBase = React.forwardRef<
                 ref={ref}
                 className={cn(
                   " relative h-3 w-full overflow-visible rounded-full bg-muted/80 shadow-inner transition-all ",
-                  className
+                  className,
                 )}
                 value={value}
                 {...props}
@@ -109,7 +109,7 @@ const ProgressBase = React.forwardRef<
                     "h-full transition-all duration-500 ease-in-out rounded-lg",
                     autocolor && autocolor.length >= 2
                       ? "bg-transparent"
-                      : "bg-primary"
+                      : "bg-primary",
                   )}
                   style={{ width: `${indicatorWidth}%` }}
                 />
@@ -120,7 +120,7 @@ const ProgressBase = React.forwardRef<
                   (() => {
                     const [t1Raw, t2Raw] = autocolor;
                     const [t1, t2] = [Number(t1Raw), Number(t2Raw)].sort(
-                      (a, b) => a - b
+                      (a, b) => a - b,
                     );
                     const v = Number(value || 0);
                     let colorClass = "bg-red-500";
@@ -137,7 +137,7 @@ const ProgressBase = React.forwardRef<
                         aria-hidden
                         className={cn(
                           "absolute top-0 left-0 h-full transition-all duration-500 ease-in-out rounded-lg",
-                          colorClass
+                          colorClass,
                         )}
                         style={{ width: `${indicatorWidth}%` }}
                       />
@@ -148,11 +148,11 @@ const ProgressBase = React.forwardRef<
                   <div
                     aria-hidden="true"
                     className="absolute top-0 bottom-0 w-0.5 bg-black/70 transition-all duration-500 ease-in-out pointer-events-none"
-                    style={{left: `${(100 / value) * 100}%`, }}
+                    style={{ left: `${(100 / value) * 100}%` }}
                   >
                     {value > 120 && (
                       <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 text-xs whitespace-nowrap font-extrabold">{`+${Math.round(
-                        value - 100
+                        value - 100,
                       )}%`}</div>
                     )}
                   </div>
@@ -182,7 +182,7 @@ const ProgressBase = React.forwardRef<
           </div>
         );
     }
-  }
+  },
 );
 
 ProgressBase.displayName = "ProgressBase";
@@ -210,7 +210,7 @@ const ProgressSegmentsBase = ({
             key={idx}
             className={cn(
               "h-2 flex-1 rounded-full transition-all duration-300",
-              idx < filled ? "bg-primary" : "bg-zinc-300 hover:bg-zinc-400"
+              idx < filled ? "bg-primary" : "bg-zinc-300 hover:bg-zinc-400",
             )}
           />
         ))}
@@ -262,7 +262,7 @@ const ProgressPanelsBase = ({
                   "aspect-[5/1] min-w-[90px] px-4",
                   isActive
                     ? "bg-primary/20 border-2 border-primary shadow-lg font-semibold"
-                    : "border-zinc-300"
+                    : "border-zinc-300",
                 )}
                 style={{ flex: "1 1 0" }}
               >
@@ -331,7 +331,7 @@ const ProgressCirclesBase = ({
                   "w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 cursor-pointer select-none",
                   isActive
                     ? "bg-primary text-white dark:text-black shadow-md"
-                    : "bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-500 dark:text-black"
+                    : "bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-500 dark:text-black",
                 )}
               >
                 {idx + 1}

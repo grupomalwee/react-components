@@ -22,8 +22,9 @@ export interface MultiComboboxTestIds {
   item?: (value: string) => string;
 }
 
-export interface MultiComboboxProps<T extends string>
-  extends ErrorMessageProps {
+export interface MultiComboboxProps<
+  T extends string,
+> extends ErrorMessageProps {
   items: { label: string; value: T }[];
   selected: T[];
   onChange: (value: T[]) => void;
@@ -61,8 +62,8 @@ export function MultiCombobox<T extends string>({
     typeof search === "object"
       ? { ...search, placeholder: searchPlaceholder ?? search.placeholder }
       : search
-      ? { placeholder: searchPlaceholder }
-      : false;
+        ? { placeholder: searchPlaceholder }
+        : false;
   return (
     <div
       className={"w-full min-w-[150px] " + (className ?? "")}
@@ -82,6 +83,7 @@ export function MultiCombobox<T extends string>({
         disabled={disabled}
         empty={empty}
         error={error}
+        initialItems={items}
       >
         <MultiSelectTriggerBase
           data-testid={testIds.trigger ?? "multi-combobox-trigger"}

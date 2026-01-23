@@ -1,9 +1,8 @@
 import type { Preview } from "@storybook/react-vite";
+import "../src/style/global.css";
 
 const preview: Preview = {
   parameters: {
-    // Ordena as stories no sidebar do Storybook
-    // Coloca 'Home' como a primeira entrada e mantém o restante com '*'
     options: {
       storySort: {
         order: ["Home", "*"],
@@ -16,6 +15,53 @@ const preview: Preview = {
       },
     },
   },
+  globalTypes: {
+    theme: {
+      name: "Theme",
+      description: "Global theme for components",
+      defaultValue: "light-purple",
+      toolbar: {
+        icon: "paintbrush",
+        items: [
+          { value: "light", icon: "sun", title: "Light" },
+          { value: "dark", icon: "moon", title: "Dark" },
+          { value: "light-purple", icon: "sun", title: "Light Purple" },
+          { value: "light-blue", icon: "moon", title: "Light Blue" },
+          { value: "light-green", icon: "sun", title: "Light Green" },
+          { value: "dark-purple", icon: "moon", title: "Dark Purple" },
+          { value: "dark-blue", icon: "sun", title: "Dark Blue" },
+          { value: "dark-green", icon: "moon", title: "Dark Green" },
+        ],
+        showName: true,
+      },
+    },
+  },
+  decorators: [
+    (Story, context) => {
+      const theme = context.globals.theme || "light-purple";
+
+      const html = window.document.documentElement;
+      const themes = [
+        "light",
+        "dark",
+        "light-purple",
+        "light-blue",
+        "light-green",
+        "dark-purple",
+        "dark-blue",
+        "dark-green",
+      ];
+
+      html.classList.remove(...themes);
+      html.classList.add(theme);
+
+      if (theme.includes("dark")) {
+        html.classList.add("dark");
+      }
+
+      return Story();
+    },
+  ],
 };
 
 export default preview;

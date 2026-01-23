@@ -2,7 +2,14 @@ import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Select } from "@/components/ui/selects/Select";
 import { useState } from "react";
-import { DialogBase, DialogContentBase, DialogDescriptionBase, DialogHeaderBase, DialogTitleBase, DialogTriggerBase } from "@/components/ui/feedback/DialogBase";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const meta: Meta<typeof Select> = {
@@ -84,7 +91,7 @@ export default function Example() {
     },
     hideClear: {
       control: "boolean",
-      description: "Permite limpar a seleção",
+      description: "Esconde o botão de limpar seleção",
     },
     onChange: { action: "onChange" },
   },
@@ -150,16 +157,25 @@ export default function Default() {
       },
     },
   },
-  render: () => {
+  render: (args) => {
     const [selected, setSelected] = useState<string | null>(null);
     return (
       <div className="w-[300px]">
         <Select
           items={simpleItems}
           selected={selected}
-          onChange={setSelected}
-          placeholder="Select an option"
-          hideClear={false}
+          onChange={(value) => {
+            setSelected(value);
+            args.onChange?.(value);
+          }}
+          placeholder={args.placeholder ?? "Select an option"}
+          disabled={args.disabled}
+          hideClear={args.hideClear ?? false}
+          error={args.error}
+          label={args.label}
+          labelClassname={args.labelClassname}
+          className={args.className}
+          pagination={args.pagination}
         />
       </div>
     );
@@ -529,7 +545,7 @@ export default function PreSelected() {
   },
 };
 export const FixedMiddleMouseScroll: Story = {
-  name: "Dentro do Dialog", 
+  name: "Dentro do Dialog",
   parameters: {
     docs: {
       description: {
@@ -558,9 +574,8 @@ export default function PreSelected() {
   },
   render: () => {
     const [selected, setSelected] = useState<string | null>(
-      simpleItems[0].value
+      simpleItems[0].value,
     );
-
 
     return (
       <div
@@ -590,7 +605,6 @@ export default function PreSelected() {
                 onChange={setSelected}
                 placeholder="Select an option"
                 label="Pre-selected Value"
-          
               />
             </div>
           </DialogContentBase>

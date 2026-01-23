@@ -37,8 +37,8 @@ export function CalendarBase({
   return (
     <div
       className={cn(
-        "rounded-md border bg-background p-3 overflow-hidden flex flex-col",
-        className
+        "rounded-md border p-3 overflow-hidden flex flex-col",
+        className,
       )}
     >
       <div className="relative flex-1 flex flex-col min-h-0">
@@ -62,12 +62,12 @@ export function CalendarBase({
             button_previous: cn(
               buttonVariantsBase({ variant: "outline" }),
               "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10",
-              isMobile ? "mr-8" : ""
+              isMobile ? "" : "",
             ),
             button_next: cn(
               buttonVariantsBase({ variant: "outline" }),
               "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10",
-              isMobile ? "mr-8" : ""
+              isMobile ? "" : "",
             ),
 
             month_grid: "w-full min-w-0 flex-1 grid grid-rows-[auto_1fr] gap-2",
@@ -83,13 +83,13 @@ export function CalendarBase({
               "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
               "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
               "[&:has([aria-selected].day-outside)]:bg-muted/50",
-              "[&:has([aria-selected])]:bg-muted"
+              "[&:has([aria-selected])]:bg-muted",
             ),
 
             day_button: cn(
               buttonVariantsBase({ variant: "ghost" }),
               "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
-              "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95"
+              "aria-selected:opacity-100 hover:bg-muted transition-all duration-150 ease-out active:scale-95",
             ),
 
             selected:
@@ -97,8 +97,9 @@ export function CalendarBase({
             today:
               "bg-muted text-foreground font-bold ring-2 ring-primary/30 ring-inset rounded-md",
             outside:
-              "text-muted-foreground/40 opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
-            disabled: "text-muted-foreground/30 opacity-40 cursor-not-allowed",
+              "text-muted-foreground opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
+            disabled:
+              "text-muted-foreground cursor-not-allowed line-through decoration-2",
             range_middle:
               "aria-selected:bg-muted aria-selected:text-foreground",
             hidden: "invisible",
@@ -135,7 +136,7 @@ export const CalendarPopover = ({
           aria-label="Abrir calendário"
           className={cn(
             buttonVariantsBase({ variant: "outline" }),
-            "flex items-center gap-2 transition-all duration-200 hover:shadow-md active:scale-95"
+            "flex items-center gap-2 transition-all duration-200 hover:shadow-md active:scale-95",
           )}
           type="button"
         >

@@ -5,13 +5,13 @@ import { ButtonBase } from "./form/ButtonBase";
 import { motion } from "framer-motion";
 import { SkeletonBase } from "./feedback/SkeletonBase";
 
-export interface LeaderboardItem {
+export interface LeaderboardItem<T extends string> {
   name: string;
-  value: number | string;
+  value: number | string | T;
 }
-
-export interface LeaderboardProps {
-  items?: LeaderboardItem[];
+  
+export interface LeaderboardProps<T extends string> {
+  items?: LeaderboardItem<T>[];
   order?: "asc" | "desc";
   title?: string;
   className?: string;
@@ -19,14 +19,14 @@ export interface LeaderboardProps {
   legend?: [string, string][];
 }
 
-export function Leaderboard({
+export function Leaderboard<T extends string>({
   items,
   order: initialOrder = "desc",
   title = "LeaderBoard",
   className,
   isLoading = false,
   legend,
-}: LeaderboardProps) {
+}: LeaderboardProps<T>) {
   const [order, setOrder] = useState<"asc" | "desc">(initialOrder);
   const mockData = [
     { name: "Ana", value: 92 },
@@ -135,7 +135,7 @@ export function Leaderboard({
                       size="md"
                       className="font-bold"
                     >
-                      {item.value}%
+                      {item.value}
                     </Badge>
                   </li>
                 </motion.span>

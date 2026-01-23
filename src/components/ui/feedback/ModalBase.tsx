@@ -96,7 +96,7 @@ const ModalContentBase = React.forwardRef<
           ref={ref}
           className={cn(
             "fixed z-50 grid w-full gap-4 border bg-background p-6 shadow-lg sm:rounded-lg max-h-[90dvh] overflow-auto",
-            "data-[state=open]:animate-modal-in data-[state=closed]:animate-modal-out",
+            "data-[state=open]:animate-modal-in data-[state=closed]:animate-modal-out border-border",
             positionClass,
             sizeClass,
             className

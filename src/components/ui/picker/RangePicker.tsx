@@ -82,27 +82,27 @@ export function RangePicker({
     "w-auto max-w-[calc(100vw-16px)] p-0 border shadow-none fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50";
 
   return (
-    <div className={cn("w-full sm:w-auto", className)}>
+    <div className={cn("w-full sm:w-auto ", className)}>
       {label && <LabelBase>{label}</LabelBase>}
 
       <PopoverBase open={open} onOpenChange={setOpen}>
         <PopoverTriggerBase
           disabled={disabled}
           asChild
-          className={cn(error && "border-red-500")}
+          className={cn(error && "border-red-500 ")}
         >
           <ButtonBase
             variant="outline"
             disabled={disabled}
             className={cn(
               "w-full justify-start text-left min-w-0 overflow-hidden",
-              !range && "text-muted-foreground"
+              !range && "text-muted-foreground",
             )}
           >
             <span
               className={cn(
                 "truncate flex-1",
-                !range && "text-muted-foreground"
+                !range && "text-muted-foreground",
               )}
             >
               {range?.from && range?.to
@@ -111,17 +111,26 @@ export function RangePicker({
                   })} - ${format(range.to, "P", { locale: dateFnsLocale })}`
                 : "Selecione um intervalo"}
             </span>
-            {range && (
-              <ClearButton
-                className="-mr-3"
-                onClick={(e) => {
-                  e?.stopPropagation();
-                  handleClear();
-                }}
-              />
-            )}
 
-            <CalendarBlankIcon className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
+            <motion.span className="flex items-center">
+              <div className="flex flex-row gap-0 items-center ">
+                {range && (
+                  <ClearButton
+                    onClick={(e) => {
+                      e?.stopPropagation();
+                      handleClear();
+                    }}
+                  />
+                )}
+
+                <motion.div
+                  animate={{ rotate: open ? 15 : 0 }}
+                  transition={{ duration: 0.03 }}
+                >
+                  <CalendarBlankIcon className="h-4 w-4" />
+                </motion.div>
+              </div>
+            </motion.span>
           </ButtonBase>
         </PopoverTriggerBase>
 
@@ -135,6 +144,7 @@ export function RangePicker({
               side="top"
               align="center"
               sideOffset={-240}
+              
             >
               <motion.div
                 ref={contentRef}
@@ -142,7 +152,7 @@ export function RangePicker({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="border rounded-md shadow-xl "
+                className="border border-border rounded-md shadow-xl "
               >
                 <div className="p-4">
                   <motion.div
@@ -184,11 +194,11 @@ export function RangePicker({
 
                         button_previous: cn(
                           buttonVariantsBase({ variant: "outline" }),
-                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10"
+                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-11 top-0 z-10",
                         ),
                         button_next: cn(
                           buttonVariantsBase({ variant: "outline" }),
-                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10"
+                          "h-8 w-8 flex items-center justify-center p-0 rounded-md transition-transform duration-150 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/40 active:scale-95 absolute right-0 top-0 z-10",
                         ),
 
                         month_grid:
@@ -205,13 +215,13 @@ export function RangePicker({
                           "[&:has([aria-selected].range-end)]:rounded-r-lg",
                           "[&:has([aria-selected].range-start)]:rounded-l-lg",
                           "[&:has([aria-selected].day-outside)]:bg-muted/50",
-                          "[&:has([aria-selected])]:bg-muted"
+                          "[&:has([aria-selected])]:bg-muted",
                         ),
 
                         day_button: cn(
                           buttonVariantsBase({ variant: "ghost" }),
                           "w-full h-full p-0 m-0 flex items-center justify-center text-[clamp(0.775rem,1.2vw,0.95rem)] sm:text-sm",
-                          "aria-selected:opacity-100  transition-all duration-150 ease-out active:scale-95 hover:bg-background/20 hover:text-primary/90 rounded-none "
+                          "aria-selected:opacity-100  transition-all duration-150 ease-out active:scale-95 hover:bg-background/20 hover:text-primary/90 rounded-none ",
                         ),
 
                         selected:
@@ -285,7 +295,7 @@ export function RangePicker({
                           "font-semibold w-full text-center",
                           range?.from && range?.to
                             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                            : "opacity-50 cursor-not-allowed"
+                            : "opacity-50 cursor-not-allowed",
                         )}
                         disabled={!range?.from || !range?.to}
                         onClick={() => {

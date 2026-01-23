@@ -54,6 +54,7 @@ export function MultiSelectBase({
   disabled,
   empty,
   error,
+  initialItems,
 }: {
   children: ReactNode;
   values?: string[];
@@ -62,13 +63,18 @@ export function MultiSelectBase({
   disabled?: boolean;
   empty?: ReactNode;
   error?: string;
+  initialItems?: Map<string, ReactNode> | { value: string; label: ReactNode }[];
 }) {
   const [open, setOpen] = useState(false);
   const [internalValues, setInternalValues] = useState(
     new Set<string>(values ?? defaultValues),
   );
   const selectedValues = values ? new Set(values) : internalValues;
-  const [items, setItems] = useState<Map<string, ReactNode>>(new Map());
+  const [items, setItems] = useState<Map<string, ReactNode>>(() => {
+    if (!initialItems) return new Map();
+    if (initialItems instanceof Map) return new Map(initialItems);
+    return new Map(initialItems.map((it) => [it.value, it.label]));
+  });
 
   function toggleValue(value: string) {
     if (disabled) return;
@@ -109,7 +115,7 @@ export function MultiSelectBase({
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}
-        modal={false}
+        modal={true}
       >
         {children}
       </PopoverBase>
@@ -323,16 +329,19 @@ export function MultiSelectContentBase({
   children: ReactNode;
 } & Omit<ComponentPropsWithoutRef<typeof CommandBase>, "children">) {
   const canSearch = typeof search === "object" ? true : search;
-  const { emptyMessage, items } = useMultiSelectContext();
+  const { emptyMessage, items, open } = useMultiSelectContext();
 
   return (
     <>
-      <PopoverContentBase className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0">
+      <PopoverContentBase
+        forceMount
+        className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.95 }}
           transition={{ duration: 0.2 }}
+          style={{ pointerEvents: open ? "auto" : "none" }}
         >
           <div className={cn(" ")}>
             <CommandBase

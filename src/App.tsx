@@ -2,11 +2,11 @@ import { ThemeProviderBase } from "./components/theme/theme-provider";
 
 import "./style/global.css";
 
-// import { ModeToggleBase } from "./components/theme/mode-toggle";
 
 import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
 import { Toaster } from "./components/ui/feedback/SonnerBase";
 // import { AppSidebar } from "./components/sidebar/AppSidebar";
+import { ModeToggleBase } from "./components/theme/mode-toggle";
 import ThemeColorTest from "./pages/ThemeColorTest";
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
             </main>
           </SidebarProviderBase>
 
-          {/* <div className="fixed top-3 right-5 z-50">
+      <div className="fixed top-3 right-5 z-50">
             <ModeToggleBase
               themes={[
                 "light",
@@ -46,7 +46,7 @@ function App() {
                 "dark-green",
               ]}
             />
-          </div> */}
+          </div> 
         </div>
       </ThemeProviderBase>
       <Toaster />

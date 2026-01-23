@@ -1,4 +1,3 @@
-import { ModeToggleBase } from "@/components/theme/mode-toggle";
 
 export default function ThemeColorTest() {
   const colorVariables = [
@@ -53,7 +52,6 @@ export default function ThemeColorTest() {
 
   return (
     <div className="min-h-screen bg-background p-8">
-      {/* Header with Theme Toggle */}
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -64,22 +62,9 @@ export default function ThemeColorTest() {
               Teste todas as cores do sistema em diferentes temas
             </p>
           </div>
-          <ModeToggleBase
-            themes={[
-              "light",
-              "light-purple",
-              "light-blue",
-              "light-green",
-              "dark",
-              "dark-blue",
-              "dark-purple",
-              "dark-green",
-            ]}
-          />
         </div>
       </div>
 
-      {/* Color Swatches Grid */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {colorVariables.map((color) => (
@@ -87,7 +72,6 @@ export default function ThemeColorTest() {
               key={color.var}
               className="border border-border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
             >
-              {/* Color Preview */}
               <div className={`h-32 ${color.className} relative`}>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="bg-background/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-border">

@@ -67,6 +67,10 @@ function Example() {
       control: "boolean",
       description: "Desabilita o combobox",
     },
+    hideClear: {
+      control: "boolean",
+      description: "Esconde o botão de limpar seleção",
+    },
     error: {
       control: "text",
       description: "Mensagem de erro a ser exibida",
@@ -92,7 +96,7 @@ export const Default: Story = {
       { label: "Java", value: "java" },
     ];
     const [selected, setSelected] = React.useState<string>(
-      (args.selected as string) || items[0].value
+      (args.selected as string) || items[0].value,
     );
     const label = args.label || "Linguagem de Programação";
     const placeholder = args.placeholder || undefined;
@@ -118,6 +122,11 @@ export const Default: Story = {
             }}
             label={label}
             placeholder={placeholder}
+            disabled={args.disabled}
+            hideClear={args.hideClear ?? false}
+            error={args.error}
+            searchPlaceholder={args.searchPlaceholder}
+            empty={args.empty}
           />
         </div>
       </div>
@@ -147,14 +156,14 @@ function Padrão() {
   play: async ({ canvasElement, step }) => {
     await step("Verificar componente renderizado", async () => {
       const root = canvasElement.querySelector(
-        '[data-testid="combobox-base-root"]'
+        '[data-testid="combobox-base-root"]',
       );
       expect(root).toBeInTheDocument();
     });
 
     await step("Verificar opção pré-selecionada", async () => {
       const selected = canvasElement.querySelector(
-        '[data-testid="combobox-selected"]'
+        '[data-testid="combobox-selected"]',
       );
       expect(selected).toBeInTheDocument();
       expect(selected?.textContent).toContain("JavaScript");
@@ -162,7 +171,7 @@ function Padrão() {
 
     await step("Verificar trigger presente", async () => {
       const trigger = canvasElement.querySelector(
-        '[data-testid="combobox-trigger"]'
+        '[data-testid="combobox-trigger"]',
       );
       expect(trigger).toBeInTheDocument();
     });
@@ -233,7 +242,7 @@ export const Empty: Story = {
       { label: "Python", value: "py" },
     ];
     const [selected, setSelected] = React.useState<string | null>(
-      (args.selected as string) || null
+      (args.selected as string) || null,
     );
     const placeholder = args.placeholder || "Escolha uma linguagem...";
 
@@ -281,14 +290,14 @@ function Vazio() {
   play: async ({ canvasElement, step }) => {
     await step("Verificar componente renderizado", async () => {
       const root = canvasElement.querySelector(
-        '[data-testid="combobox-base-root"]'
+        '[data-testid="combobox-base-root"]',
       );
       expect(root).toBeInTheDocument();
     });
 
     await step("Verificar placeholder customizado", async () => {
       const selected = canvasElement.querySelector(
-        '[data-testid="combobox-selected"]'
+        '[data-testid="combobox-selected"]',
       );
       expect(selected).toBeInTheDocument();
       expect(selected?.textContent).toContain("Escolha uma linguagem");
@@ -345,14 +354,14 @@ function LargeList() {
   play: async ({ canvasElement, step }) => {
     await step("Verificar componente renderizado", async () => {
       const root = canvasElement.querySelector(
-        '[data-testid="combobox-base-root"]'
+        '[data-testid="combobox-base-root"]',
       );
       expect(root).toBeInTheDocument();
     });
 
     await step("Verificar item 50 selecionado", async () => {
       const selected = canvasElement.querySelector(
-        '[data-testid="combobox-selected"]'
+        '[data-testid="combobox-selected"]',
       );
       expect(selected?.textContent).toContain("Item 50");
     });
@@ -415,7 +424,7 @@ function SpecialCharacters() {
   play: async ({ canvasElement, step }) => {
     await step("Verificar caracteres especiais renderizados", async () => {
       const selected = canvasElement.querySelector(
-        '[data-testid="combobox-selected"]'
+        '[data-testid="combobox-selected"]',
       );
       expect(selected).toBeInTheDocument();
     });
