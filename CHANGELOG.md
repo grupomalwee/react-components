@@ -35,6 +35,19 @@
 - [1.7.2 — 2025-10-31](#17172---2025-10-31)
 - [1.7.1 — 2025-10-29](#17171---2025-10-29) -->
 
+## 1.8.6 — 2026-01-26
+
+**Author:** Gabriel Glatz
+
+### Added
+
+- **  Time Series:** nova propriedade `timeSeries` para visualização de intervalos de tempo no gráfico.
+
+### Changed
+
+- **Sonner:** corrigido o style inconsistente.
+
+---
 ## 1.8.5 — 2026-01-23
 
 **Author:** Gabriel Glatz

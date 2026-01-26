@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.6",
+    author: "Gabriel Glatz",  
+    date: "2026-01-26",
+    shortTitle: "TimeSeries, Leaderboard e Sonner",
+    added: [
+      "TimeSeries: nova propriedade `timeSeries` para visualização de intervalos de tempo no gráfico.",
+    ],
+    changed: [
+      "Sonner: corrigido o style inconsistente.",
+    ],
+  },
+  {
     version: "1.8.5",
     author: "Gabriel Glatz",
     date: "2026-01-23",
