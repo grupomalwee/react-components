@@ -38,6 +38,7 @@ import {
   DraggableTooltip,
   CloseAllButton,
   PeriodsDropdown,
+  Brush,
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
@@ -47,6 +48,7 @@ import {
   useChartDimensions,
   useChartTooltips,
   useChartClick,
+  useTimeSeriesRange,
 } from "./hooks";
 
 interface ChartData {
@@ -74,12 +76,11 @@ interface BiaxialConfig {
   decimals?: number;
   stroke?: string | Record<string, string>;
 }
-interface TimeSeriesConfig {
-  enabled: boolean;
-  defaultStartIndex?: number;
-  defaultEndIndex?: number;
+export interface TimeSeriesConfig {
+  start?: number;
+  end?: number;
   onRangeChange?: (startIndex: number, endIndex: number) => void;
-  brushHeight?: number;
+  height?: number;
   brushColor?: string;
   brushStroke?: string;
   miniChartOpacity?: number;
@@ -127,7 +128,7 @@ interface ChartProps {
   formatBR?: boolean;
   legendUppercase?: boolean;
   isLoading?: boolean;
-  timeSeries?: TimeSeriesConfig;
+  timeSeries?: boolean | TimeSeriesConfig;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -227,120 +228,24 @@ const Chart: React.FC<ChartProps> = ({
     }
   }, [highlightedSeries, showOnlyHighlighted, setShowOnlyHighlighted]);
 
-  // TimeSeries state management
-  const [startIndex, setStartIndex] = React.useState(
-    timeSeries?.defaultStartIndex ?? 0,
-  );
-  const [endIndex, setEndIndex] = React.useState(
-    timeSeries?.defaultEndIndex ?? data.length - 1,
-  );
-  const [isDragging, setIsDragging] = React.useState<
-    "start" | "end" | "middle" | null
-  >(null);
-  const [dragStartX, setDragStartX] = React.useState(0);
-  const [initialStartIndex, setInitialStartIndex] = React.useState(0);
-  const [initialEndIndex, setInitialEndIndex] = React.useState(0);
-  const brushRef = React.useRef<HTMLDivElement>(null);
-
-  // Update endIndex when data length changes
-  React.useEffect(() => {
-    if (timeSeries?.enabled) {
-      const newEndIndex = timeSeries.defaultEndIndex ?? data.length - 1;
-      setEndIndex(newEndIndex);
+  const timeSeriesConfig = useMemo(() => {
+    if (typeof timeSeries === "boolean") {
+      return timeSeries ? {} : undefined;
     }
-  }, [data.length, timeSeries?.enabled, timeSeries?.defaultEndIndex]);
+    return timeSeries;
+  }, [timeSeries]);
 
-  const handleRangeChange = useCallback(
-    (newStart: number, newEnd: number) => {
-      const clampedStart = Math.max(0, Math.min(newStart, data.length - 1));
-      const clampedEnd = Math.max(
-        clampedStart,
-        Math.min(newEnd, data.length - 1),
-      );
-
-      setStartIndex(clampedStart);
-      setEndIndex(clampedEnd);
-
-      if (timeSeries?.onRangeChange) {
-        timeSeries.onRangeChange(clampedStart, clampedEnd);
-      }
-    },
-    [data.length, timeSeries],
-  );
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent, type: "start" | "end" | "middle") => {
-      e.preventDefault();
-      setIsDragging(type);
-      setDragStartX(e.clientX);
-      setInitialStartIndex(startIndex);
-      setInitialEndIndex(endIndex);
-    },
-    [startIndex, endIndex],
-  );
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDragging || !brushRef.current) return;
-
-      const brushWidth = brushRef.current.offsetWidth;
-      const deltaX = e.clientX - dragStartX;
-      const indexDelta = Math.round((deltaX / brushWidth) * data.length);
-
-      if (isDragging === "start") {
-        const newStart = Math.max(
-          0,
-          Math.min(initialStartIndex + indexDelta, endIndex - 1),
-        );
-        handleRangeChange(newStart, endIndex);
-      } else if (isDragging === "end") {
-        const newEnd = Math.max(
-          startIndex + 1,
-          Math.min(initialEndIndex + indexDelta, data.length - 1),
-        );
-        handleRangeChange(startIndex, newEnd);
-      } else if (isDragging === "middle") {
-        const rangeSize = initialEndIndex - initialStartIndex;
-        let newStart = initialStartIndex + indexDelta;
-        let newEnd = initialEndIndex + indexDelta;
-
-        if (newStart < 0) {
-          newStart = 0;
-          newEnd = rangeSize;
-        } else if (newEnd >= data.length) {
-          newEnd = data.length - 1;
-          newStart = newEnd - rangeSize;
-        }
-
-        handleRangeChange(newStart, newEnd);
-      }
-    },
-    [
-      isDragging,
-      dragStartX,
-      data.length,
-      startIndex,
-      endIndex,
-      initialStartIndex,
-      initialEndIndex,
-      handleRangeChange,
-    ],
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(null);
-  }, []);
-
-  React.useEffect(() => {
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  const {
+    startIndex,
+    endIndex,
+    brushRef,
+    handleMouseDown,
+  } = useTimeSeriesRange({
+    dataLength: data.length,
+    defaultStartIndex: timeSeriesConfig?.start,
+    defaultEndIndex: timeSeriesConfig?.end,
+    onRangeChange: timeSeriesConfig?.onRangeChange,
+  });
 
   const processedData = useMemo(() => {
     const mapped = data.map((item) => ({
@@ -348,13 +253,12 @@ const Chart: React.FC<ChartProps> = ({
       name: String(item[xAxisConfig.dataKey] || "N/A"),
     }));
 
-    // Filter data based on timeSeries range if enabled
-    if (timeSeries?.enabled) {
+    if (timeSeriesConfig) {
       return mapped.slice(startIndex, endIndex + 1);
     }
 
     return mapped;
-  }, [data, xAxisConfig.dataKey, timeSeries?.enabled, startIndex, endIndex]);
+  }, [data, xAxisConfig.dataKey, timeSeriesConfig, startIndex, endIndex]);
 
   const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
   if (series) {
@@ -1115,179 +1019,26 @@ const Chart: React.FC<ChartProps> = ({
           />
         )}
 
-        {/* TimeSeries Brush/Range Selector */}
-        {timeSeries?.enabled && (
-          <div className="w-full px-4 pb-4">
-            <div
-              className="relative"
-              style={{ height: timeSeries.brushHeight ?? 80 }}
-            >
-              {/* Mini Chart Background */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ opacity: timeSeries.miniChartOpacity ?? 0.3 }}
-              >
-                <ResponsiveContainer
-                  width="100%"
-                  height={timeSeries.brushHeight ?? 80}
-                >
-                  <ComposedChart
-                    data={data.map((item) => ({
-                      ...item,
-                      name: String(item[xAxisConfig.dataKey] || "N/A"),
-                    }))}
-                    height={timeSeries.brushHeight ?? 80}
-                    margin={{
-                      top: 5,
-                      right: finalChartRightMargin,
-                      left: finalChartLeftMargin,
-                      bottom: 5,
-                    }}
-                  >
-                    {showGrid && (
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke={gridColor || "hsl(var(--muted-foreground))"}
-                        opacity={0.5}
-                      />
-                    )}
-                    <XAxis
-                      dataKey={xAxisConfig.dataKey}
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      hide
-                    />
-                    <YAxis
-                      yAxisId="left"
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      hide
-                    />
-                    {seriesOrder.map((s) => {
-                      const key = s.key;
-                      const color = finalColors[key];
-                      if (s.type === "bar") {
-                        return (
-                          <Bar
-                            key={`brush-bar-${key}`}
-                            dataKey={key}
-                            yAxisId="left"
-                            fill={color}
-                            radius={[2, 2, 0, 0]}
-                          />
-                        );
-                      }
-                      if (s.type === "line") {
-                        return (
-                          <Line
-                            key={`brush-line-${key}`}
-                            type="monotone"
-                            dataKey={key}
-                            yAxisId="left"
-                            stroke={color}
-                            strokeWidth={1.5}
-                            dot={false}
-                          />
-                        );
-                      }
-                      if (s.type === "area") {
-                        return (
-                          <Area
-                            key={`brush-area-${key}`}
-                            type="monotone"
-                            dataKey={key}
-                            yAxisId="left"
-                            stroke={color}
-                            fill={`url(#gradient-${key})`}
-                            strokeWidth={1.5}
-                          />
-                        );
-                      }
-                      return null;
-                    })}
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Brush Overlay */}
-              <div
-                ref={brushRef}
-                className="absolute inset-0 cursor-move"
-                style={{ userSelect: "none" }}
-              >
-                {/* Left Overlay (outside selection) */}
-                <div
-                  className="absolute top-0 bottom-0 left-0 bg-muted/60 pointer-events-none"
-                  style={{
-                    width: `${(startIndex / (data.length - 1)) * 100}%`,
-                  }}
-                />
-
-                {/* Right Overlay (outside selection) */}
-                <div
-                  className="absolute top-0 bottom-0 right-0 bg-muted/60 pointer-events-none"
-                  style={{
-                    width: `${((data.length - 1 - endIndex) / (data.length - 1)) * 100}%`,
-                  }}
-                />
-
-                {/* Selection Area */}
-                <div
-                  className="absolute top-0 bottom-0 border-t-2 border-b-2 cursor-move"
-                  style={{
-                    left: `${(startIndex / (data.length - 1)) * 100}%`,
-                    right: `${((data.length - 1 - endIndex) / (data.length - 1)) * 100}%`,
-                    borderColor:
-                      timeSeries.brushStroke ?? "hsl(var(--primary))",
-                  }}
-                  onMouseDown={(e) => handleMouseDown(e, "middle")}
-                >
-                  {/* Left Handle */}
-                  <div
-                    className="absolute top-0 bottom-0 w-2 -left-1 cursor-ew-resize hover:bg-primary/20 transition-colors"
-                    style={{
-                      backgroundColor:
-                        timeSeries.brushColor ?? "hsl(var(--primary))",
-                      opacity: 0.8,
-                    }}
-                    onMouseDown={(e) => {
-                      e.stopPropagation();
-                      handleMouseDown(e, "start");
-                    }}
-                  />
-
-                  {/* Right Handle */}
-                  <div
-                    className="absolute top-0 bottom-0 w-2 -right-1 cursor-ew-resize hover:bg-primary/20 transition-colors"
-                    style={{
-                      backgroundColor:
-                        timeSeries.brushColor ?? "hsl(var(--primary))",
-                      opacity: 0.8,
-                    }}
-                    onMouseDown={(e) => {
-                      e.stopPropagation();
-                      handleMouseDown(e, "end");
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Range Info */}
-            <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
-              <span>
-                {data[startIndex]?.[xAxisConfig.dataKey]} -{" "}
-                {data[endIndex]?.[xAxisConfig.dataKey]}
-              </span>
-              <span>
-                {endIndex - startIndex + 1} de {data.length} períodos
-              </span>
-            </div>
-          </div>
+        {timeSeriesConfig && (
+          <Brush
+            data={data}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            onMouseDown={handleMouseDown}
+            brushRef={brushRef}
+            xAxisKey={xAxisConfig.dataKey}
+            seriesOrder={seriesOrder}
+            finalColors={finalColors}
+            brushHeight={timeSeriesConfig.height}
+            brushColor={timeSeriesConfig.brushColor}
+            miniChartOpacity={timeSeriesConfig.miniChartOpacity}
+            showGrid={showGrid}
+            gridColor={gridColor}
+            margin={{
+              left: finalChartLeftMargin,
+              right: finalChartRightMargin,
+            }}
+          />
         )}
       </div>
     </div>

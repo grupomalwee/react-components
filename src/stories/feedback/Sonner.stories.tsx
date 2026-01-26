@@ -140,3 +140,79 @@ export const Loading: Story = {
     </div>
   ),
 };
+export const ComDescricao: Story = {
+  name: "Notificação com Descrição",
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <div className="p-6">
+        <ButtonBase
+          onClick={() =>
+            toast.success(
+              "Arquivos enviados",
+              "Todos os 12 arquivos foram processados com sucesso.",
+            )
+          }
+        >
+          Com Descrição
+        </ButtonBase>
+        <Toaster />
+      </div>
+    </div>
+  ),
+};
+export const All: Story = {
+  name: "Todos os tipos",
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <div className="grid grid-cols-6 gap-2">
+        <ButtonBase
+          className="bg-gray-500 text-white"
+          onClick={() =>
+            toast.loading("Loading: baixando  C: /System/system32.")
+          }
+        >
+          Loading
+        </ButtonBase>
+        <ButtonBase
+          className="bg-emerald-500 text-white"
+          onClick={() => toast.success("Operação concluída com sucesso!")}
+        >
+          Success
+        </ButtonBase>
+        <ButtonBase
+          className="bg-red-500 text-white"
+          onClick={() => toast.error("Opa! Algo deu errado.")}
+        >
+          Error
+        </ButtonBase>
+        <ButtonBase
+          className="bg-yellow-500 text-white"
+          onClick={() => toast.warning("Atenção! Confira os dados.")}
+        >
+          Warning
+        </ButtonBase>
+        <ButtonBase
+          className="bg-blue-500 text-white"
+          onClick={() => toast.info("Informação: nada demais, só avisando.")}
+        >
+          Info
+        </ButtonBase>
+        <Toaster />
+      </div>
+    </div>
+  ),
+};

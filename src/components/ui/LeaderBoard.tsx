@@ -7,9 +7,10 @@ import { SkeletonBase } from "./feedback/SkeletonBase";
 
 export interface LeaderboardItem<T extends string> {
   name: string;
-  value: number | string | T;
+  value?: number | string | T;
+  percentage?: number | string | T;
 }
-  
+
 export interface LeaderboardProps<T extends string> {
   items?: LeaderboardItem<T>[];
   order?: "asc" | "desc";
@@ -28,25 +29,34 @@ export function Leaderboard<T extends string>({
   legend,
 }: LeaderboardProps<T>) {
   const [order, setOrder] = useState<"asc" | "desc">(initialOrder);
-  const mockData = [
-    { name: "Ana", value: 92 },
-    { name: "Bruno", value: 81 },
-    { name: "Carla", value: 74 },
-    { name: "Daniel", value: 68 },
-    { name: "Eduardo", value: 55 },
-    { name: "Fernanda", value: 44 },
-    { name: "Gabriela", value: 33 },
-    { name: "Heitor", value: 28 },
-    { name: "Isabela", value: 22 },
-    { name: "João", value: 18 },
+  const mockData: LeaderboardItem<T>[] = [
+    { name: "Ana", value: "92%" },
+    { name: "Bruno", value: "81%" },
+    { name: "Carla", value: "74%" },
+    { name: "Daniel", value: "68%" },
+    { name: "Eduardo", value: "55%" },
+    { name: "Fernanda", value: "44%" },
+    { name: "Gabriela", value: "33%" },
+    { name: "Heitor", value: "28%" },
+    { name: "Isabela", value: "22%" },
+    { name: "João", value: "18%" },
   ];
 
   const data = items ?? mockData;
   const sortedData = [...data].sort((a, b) => {
-    const aValue =
-      typeof a.value === "string" ? parseFloat(a.value) || a.value : a.value;
-    const bValue =
-      typeof b.value === "string" ? parseFloat(b.value) || b.value : b.value;
+    const aRaw = a.value ?? a.percentage ?? 0;
+    const bRaw = b.value ?? b.percentage ?? 0;
+
+    const parseVal = (val: typeof aRaw) => {
+      if (typeof val === "string") {
+        const parsed = parseFloat(val);
+        return isNaN(parsed) ? val : parsed;
+      }
+      return val;
+    };
+
+    const aValue = parseVal(aRaw);
+    const bValue = parseVal(bRaw);
 
     if (typeof aValue === "number" && typeof bValue === "number") {
       return order === "desc" ? bValue - aValue : aValue - bValue;
@@ -63,7 +73,13 @@ export function Leaderboard<T extends string>({
   });
 
   const getBadgeColor = (value: number | string) => {
-    const numValue = typeof value === "string" ? parseFloat(value) : value;
+    let numValue: number;
+    if (typeof value === "string") {
+      numValue = parseFloat(value);
+    } else {
+      numValue = value;
+    }
+
     if (isNaN(numValue)) return "green";
     if (numValue >= 75) return "red";
     if (numValue >= 25) return "yellow";
@@ -131,11 +147,11 @@ export function Leaderboard<T extends string>({
                       <span className="font-medium">{item.name}</span>
                     </div>
                     <Badge
-                      color={getBadgeColor(item.value)}
+                      color={getBadgeColor(item.value ?? item.percentage ?? 0)}
                       size="md"
                       className="font-bold"
                     >
-                      {item.value}
+                      {item.value ?? item.percentage}
                     </Badge>
                   </li>
                 </motion.span>

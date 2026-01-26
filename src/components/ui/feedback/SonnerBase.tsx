@@ -5,53 +5,63 @@ import {
   XCircleIcon,
   InfoIcon,
   WarningIcon,
-  SpinnerIcon,
+  CircleNotchIcon,
 } from "@phosphor-icons/react";
 import { Toaster as Sonner, toast as sonnertoast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner> & {
-  testId?: string; // só um data-testid no root do Toaster
+  testId?: string;
 };
 
-const iconBaseClass = "w-5 h-auto";
+const iconBaseClass = "w-5 h-5";
 
 const Toaster = ({ testId, ...props }: ToasterProps) => {
   return (
     <Sonner
       className="toaster group"
       position="top-center"
+      duration={4000}
       toastOptions={{
+        style: {
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+        },
         classNames: {
           toast: `
             group toast
-            bg-background
+            bg-background/95
             text-foreground
-            shadow-lg rounded-md
+            shadow-xl rounded-lg
             border-l-4
             border-border
             flex items-center gap-3
-            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50 data-[type=success]:text-green-800 data-[type=success]:border-green-500
-            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50 data-[type=error]:text-red-800 data-[type=error]:border-red-500
-            data-[type=WarningIcon]:border-l-yellow-500 data-[type=WarningIcon]:bg-yellow-50 data-[type=WarningIcon]:text-yellow-800 data-[type=WarningIcon]:border-yellow-500
-            data-[type=InfoIcon]:border-l-blue-500 data-[type=InfoIcon]:bg-blue-50 data-[type=InfoIcon]:text-blue-800 data-[type=InfoIcon]:border-blue-500
+            transition-all duration-300
+            hover:scale-[1.02] hover:shadow-2xl
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50/95 data-[type=success]:text-green-800 data-[type=success]:border-green-500
+            data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50/95 data-[type=error]:text-red-800 data-[type=error]:border-red-500
+            data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50/95 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50/95 data-[type=info]:text-blue-800 data-[type=info]:border-blue-500
           `,
           description: `
-            text-sm
+            text-xs
+            font-semibold
             group-[.toast]:text-neutral-600
           `,
           actionButton: `
             ml-auto
             rounded-md px-3 py-1 text-sm font-semibold
             bg-neutral-800 text-white
-            hover:bg-neutral-700
-            transition-colors duration-200
+            hover:bg-neutral-700 hover:scale-105
+            transition-all duration-200
+            active:scale-95
           `,
           cancelButton: `
             ml-2
             rounded-md px-3 py-1 text-sm font-semibold
             bg-neutral-100 text-neutral-700
-            hover:bg-neutral-200
-            transition-colors duration-200
+            hover:bg-neutral-200 hover:scale-105
+            transition-all duration-200
+            active:scale-95
           `,
         },
       }}
@@ -62,29 +72,55 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
 };
 
 const toast = {
-  success: (message: string) =>
+  success: (message: string, description?: string) =>
     sonnertoast.success(message, {
-      icon: <CheckCircleIcon className={`${iconBaseClass} text-green-600`} weight="fill" />,
+      description,
+      icon: (
+        <CheckCircleIcon
+          className={`${iconBaseClass} text-green-600`}
+          weight="fill"
+        />
+      ),
       className: "sonner-success",
     }),
-  error: (message: string) =>
+  error: (message: string, description?: string) =>
     sonnertoast.error(message, {
-      icon: <XCircleIcon className={`${iconBaseClass} text-red-600`} weight="fill" />,
+      description,
+      icon: (
+        <XCircleIcon
+          className={`${iconBaseClass} text-red-600`}
+          weight="fill"
+        />
+      ),
       className: "sonner-error",
     }),
-  warning: (message: string) =>
+  warning: (message: string, description?: string) =>
     sonnertoast.warning(message, {
-      icon: <WarningIcon className={`${iconBaseClass} text-yellow-600`} weight="fill" />,
-      className: "sonner-WarningIcon",
+      description,
+      icon: (
+        <WarningIcon
+          className={`${iconBaseClass} text-yellow-600`}
+          weight="fill"
+        />
+      ),
+      className: "sonner-warning",
     }),
-  info: (message: string) =>
+  info: (message: string, description?: string) =>
     sonnertoast.info(message, {
-      icon: <InfoIcon className={`${iconBaseClass} text-blue-600`} weight="fill" />,
-      className: "sonner-InfoIcon",
+      description,
+      icon: (
+        <InfoIcon className={`${iconBaseClass} text-blue-600`} weight="fill" />
+      ),
+      className: "sonner-info",
     }),
-  loading: (message: string) =>
+  loading: (message: string, description?: string) =>
     sonnertoast(message, {
-      icon: <SpinnerIcon className={`${iconBaseClass} animate-spin text-neutral-500`} weight="fill" />,
+      description,
+      icon: (
+        <CircleNotchIcon
+          className={`${iconBaseClass} animate-spin text-gray-600`}
+        />
+      ),
       className: "sonner-loading",
     }),
 };

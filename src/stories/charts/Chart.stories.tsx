@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 
 const sampleData = [
-  { periodo: "Q1/24", receita_AA: 1000, despesas: 400, churn: 180 },
+  { periodo: "Q1/24", receita: 1000, despesas: 400, churn: 180 },
   { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
   { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
   { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },
@@ -1058,21 +1058,20 @@ const generateTimeSeriesData = (months: number) => {
 const timeSeriesData = generateTimeSeriesData(24);
 
 export const TimeSeriesEnabled: Story = {
-  name: "TimeSeries Habilitado",
+  name: "Time Series",
   render: (args) => (
     <div style={{ width: "900px" }}>
       <Chart
         {...args}
         data={timeSeriesData}
         xAxis="periodo"
-        series={{ bar: ["receita", "despesas"] }}
+        series={{ bar: ["receita", "despesas"], area: ["lucro"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas" }}
         height={350}
         timeSeries={{
-          enabled: true,
-          defaultStartIndex: 0,
-          defaultEndIndex: 11,
-          brushHeight: 80,
+          start: 0,
+          end: 11,
+          height: 40,
         }}
       />
     </div>
@@ -1098,145 +1097,11 @@ export default function TimeSeriesExample() {
       labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
       height={350}
       timeSeries={{
-        enabled: true,
-        defaultStartIndex: 0,
-        defaultEndIndex: 11,
-        brushHeight: 80,
+        start: 0,
+        end: 11,
+        height: 80,
       }}
     />
-  );
-}`,
-      },
-    },
-  },
-};
-
-export const TimeSeriesCustomRange: Story = {
-  name: "TimeSeries com Intervalo Customizado",
-  render: (args) => (
-    <div style={{ width: "900px" }}>
-      <Chart
-        {...args}
-        data={timeSeriesData}
-        xAxis="periodo"
-        series={{ line: ["receita", "despesas", "lucro"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
-        colors={["#22c55e", "#ef4444", "#3b82f6"]}
-        height={350}
-        timeSeries={{
-          enabled: true,
-          defaultStartIndex: 6,
-          defaultEndIndex: 18,
-          brushHeight: 100,
-          brushColor: "#8b5cf6",
-          brushStroke: "#8b5cf6",
-          miniChartOpacity: 0.5,
-        }}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "TimeSeries com intervalo inicial customizado (meses 7-19) e estilo de brush personalizado.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function TimeSeriesCustomRange() {
-  return (
-    <Chart
-      data={data}
-      xAxis="periodo"
-      series={{ line: ['receita', 'despesas', 'lucro'] }}
-      labelMap={{ receita: 'Receita', despesas: 'Despesas', lucro: 'Lucro' }}
-      colors={["#22c55e", "#ef4444", "#3b82f6"]}
-      height={350}
-      timeSeries={{
-        enabled: true,
-        defaultStartIndex: 6,
-        defaultEndIndex: 18,
-        brushHeight: 100,
-        brushColor: "#8b5cf6",
-        brushStroke: "#8b5cf6",
-        miniChartOpacity: 0.5,
-      }}
-    />
-  );
-}`,
-      },
-    },
-  },
-};
-
-export const TimeSeriesInteractive: Story = {
-  name: "TimeSeries Interativo com Callback",
-  render: (args) => {
-    const [rangeInfo, setRangeInfo] = React.useState({ start: 0, end: 11 });
-
-    return (
-      <div style={{ width: "900px" }}>
-        <div className="mb-4 p-4 bg-muted rounded-lg">
-          <p className="text-sm font-medium">
-            Intervalo selecionado: {rangeInfo.start} - {rangeInfo.end}
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Arraste as alças ou a área central para ajustar o intervalo
-          </p>
-        </div>
-        <Chart
-          {...args}
-          data={timeSeriesData}
-          xAxis="periodo"
-          series={{ bar: ["receita", "despesas"] }}
-          labelMap={{ receita: "Receita", despesas: "Despesas" }}
-          height={350}
-          timeSeries={{
-            enabled: true,
-            defaultStartIndex: 0,
-            defaultEndIndex: 11,
-            brushHeight: 80,
-            onRangeChange: (start, end) => setRangeInfo({ start, end }),
-          }}
-        />
-      </div>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo com callback onRangeChange para capturar mudanças no intervalo do brush.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function TimeSeriesInteractive() {
-  const [rangeInfo, setRangeInfo] = React.useState({ start: 0, end: 11 });
-
-  return (
-    <div>
-      <div className="mb-4 p-4 bg-muted rounded-lg">
-        <p>Intervalo selecionado: {rangeInfo.start} - {rangeInfo.end}</p>
-      </div>
-      <Chart
-        data={data}
-        xAxis="periodo"
-        series={{ bar: ['receita', 'despesas'] }}
-        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
-        height={350}
-        timeSeries={{
-          enabled: true,
-          defaultStartIndex: 0,
-          defaultEndIndex: 11,
-          brushHeight: 80,
-          onRangeChange: (start, end) => setRangeInfo({ start, end }),
-        }}
-      />
-    </div>
   );
 }`,
       },

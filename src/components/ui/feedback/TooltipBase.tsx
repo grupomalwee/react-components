@@ -85,11 +85,21 @@ const TooltipTriggerBase = React.forwardRef<
     [onPointerDown]
   );
 
+  const onClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (onPointerDown) {
+        onPointerDown(e as React.PointerEvent<HTMLButtonElement>);
+      }
+    },
+    [onPointerDown]
+  );
+
   return (
     <TooltipPrimitive.Trigger
       ref={ref}
       tabIndex={-1}
       onPointerDown={onPointerDown ? handlePointerDown : undefined}
+      onClick={onClick}
       data-tooltip-trigger
       aria-describedby="tooltip-content"
       {...props}

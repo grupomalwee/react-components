@@ -99,7 +99,7 @@ export function CalendarBase({
             outside:
               "text-muted-foreground opacity-60 aria-selected:bg-muted/50 aria-selected:text-foreground",
             disabled:
-              "text-muted-foreground cursor-not-allowed line-through decoration-2",
+              "text-muted-foreground cursor-not-allowed",
             range_middle:
               "aria-selected:bg-muted aria-selected:text-foreground",
             hidden: "invisible",
