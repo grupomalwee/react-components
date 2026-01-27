@@ -11,6 +11,19 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.7",
+    author: "Gabriel Glatz",  
+    date: "2026-01-27",
+    shortTitle: "AvatarCombobox e Leaderboard ",
+    added: [
+      "AvatarCombobox: nova funcionalidade de Image.",
+      "Leaderboard: ordenação, visual e pesquisa.",
+    ],
+    changed: [
+      "Sonner: corrigido o style inconsistente.",
+    ],
+  },
+  {
     version: "1.8.6",
     author: "Gabriel Glatz",  
     date: "2026-01-26",

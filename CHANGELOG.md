@@ -41,6 +41,19 @@
 
 ### Added
 
+- **AvatarCombobox:** nova funcionalidade de Image.
+
+### Changed
+
+- **LeaderBoard:** ordenação, visual e pesquisa.
+
+---
+## 1.8.6 — 2026-01-26
+
+**Author:** Gabriel Glatz
+
+### Added
+
 - **  Time Series:** nova propriedade `timeSeries` para visualização de intervalos de tempo no gráfico.
 
 ### Changed
