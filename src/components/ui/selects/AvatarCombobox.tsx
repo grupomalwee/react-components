@@ -20,6 +20,7 @@ import ErrorMessage, {
   ErrorMessageProps,
 } from "@/components/ui/shared/ErrorMessage";
 import { cn } from "@/lib/utils";
+import logo from "../../../../public/pwa-512x512.png";
 
 const DEFAULT_COLORS = [
   "bg-purple-100 text-purple-700",
@@ -60,6 +61,7 @@ export interface AvatarComboboxItem<T extends string> {
   value: T;
   avatar?: ReactNode;
   avatarClassName?: string;
+  img?: string
 }
 
 export interface AvatarComboboxTestIds {
@@ -128,12 +130,17 @@ export function AvatarCombobox<T extends string>({
   const selectedItem = allItems.find((item) => item.value === selected);
 
   const renderItem = (item: AvatarComboboxItem<T>) => {
-    const avatarContent = item.avatar ?? item.label.charAt(0).toUpperCase();
-    const colorClass = item.avatarClassName ?? getColor(item.value, colors);
+    let avatarContent;
+    let colorClass;
+
+    if(!item.img){
+      avatarContent = item.avatar ?? item.label.charAt(0).toUpperCase();
+      colorClass = item.avatarClassName ?? getColor(item.value, colors);
+    }
 
     return (
       <>
-        <Square className={colorClass}>{avatarContent}</Square>
+        <Square className={colorClass}>{!avatarContent ? <img src={logo}/> : avatarContent}</Square>
         <span className="truncate">{item.label}</span>
       </>
     );

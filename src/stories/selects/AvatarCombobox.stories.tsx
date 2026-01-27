@@ -87,7 +87,7 @@ export default function Example() {
       description: "Array de classes de cores para avatares (cicla entre elas)",
     },
     onChange: { action: "onChange" },
-  },
+  }
 };
 
 export default meta;
@@ -153,6 +153,34 @@ const groupedUsers = {
     },
   ],
 };
+
+const usersWithImages = [
+  {
+    label: "Gabriel Glatz",
+    value: "1",
+    img: '/img/logo.jpg'
+  },
+  {
+    label: "Eduardo Ronchi",
+    value: "2",
+    img: '/img/logo.jpg'
+  },
+  {
+    label: "Anne Kelley",
+    value: "3",
+    img: '/img/logo.jpg'
+  },
+  {
+    label: "Michael Chen",
+    value: "4",
+    img: '/img/logo.jpg'
+  },
+  {
+    label: "Sofia Martinez",
+    value: "5",
+    img: '/img/logo.jpg'
+  },
+]
 
 export const Interactive: Story = {
   parameters: {
@@ -264,10 +292,12 @@ export default function WithLabel() {
     {
       label: "Gabriel Glatz",
       value: "1",
+      img: '/img/logo.jpg'
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
+      img: ''
     },
   ];
 
@@ -304,10 +334,12 @@ export default function WithPlaceholder() {
     {
       label: "Gabriel Glatz",
       value: "1",
+      img: '/img/logo.jpg'
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
+      img: ''
     },
   ];
 
@@ -345,7 +377,8 @@ export default function Grouped() {
       {
         label: "Xavier Guerra",
         value: "1",
-      },
+        img: ''
+        },
       {
         label: "Maria Silva",
         value: "2",
@@ -544,7 +577,7 @@ export default function WithCustomAvatar() {
           value: "2",
           avatar: "👑",
           avatarClassName: "bg-purple-400/20 text-purple-600",
-        },
+          },
         {
           label: "New User",
           value: "3",
@@ -568,19 +601,19 @@ export default function WithCustomAvatar() {
         label: "Premium User",
         value: "1",
         avatar: "⭐",
-        avatarClassName: "bg-yellow-400/20 text-yellow-600",
+        avatarClassName: "bg-yellow-400/20 text-yellow-600"
       },
       {
         label: "VIP User",
         value: "2",
         avatar: "👑",
-        avatarClassName: "bg-purple-400/20 text-purple-600",
+        avatarClassName: "bg-purple-400/20 text-purple-600"
       },
       {
         label: "New User",
         value: "3",
         avatar: "🆕",
-        avatarClassName: "bg-blue-400/20 text-blue-600",
+        avatarClassName: "bg-blue-400/20 text-blue-600"
       },
     ],
     onChange: (v: string) => console.log("changed", v),
@@ -686,7 +719,7 @@ export default function CitiesExample() {
   const cityItems = [
     { label: 'Florianópolis, SC', value: 'florianopolis-sc', avatar: 'SC', avatarClassName: 'bg-blue-100 text-blue-700' },
     { label: 'Joinville, SC', value: 'joinville-sc', avatar: 'SC', avatarClassName: 'bg-green-100 text-green-700' },
-    { label: 'Blumenau, SC', value: 'blumenau-sc', avatar: 'SC', avatarClassName: 'bg-purple-100 text-purple-700' },
+    { label: 'Blumenau, SC', value: 'blumenau-sc', avatar: 'SC', avatarClassName: 'bg-purple-100 text-purple-700'},
     { label: 'São Paulo, SP', value: 'sao-paulo-sp', avatar: 'SP', avatarClassName: 'bg-gray-100 text-gray-800' },
     { label: 'Rio de Janeiro, RJ', value: 'rio-de-janeiro-rj', avatar: 'RJ', avatarClassName: 'bg-red-100 text-red-700' },
     { label: 'Belo Horizonte, MG', value: 'belo-horizonte-mg', avatar: 'MG', avatarClassName: 'bg-amber-100 text-amber-700' },
@@ -801,3 +834,57 @@ export default function CitiesExample() {
     label: "Cidades (UF)",
   },
 };
+
+
+export const avatarWithImages: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarCombobox } from '@mlw-packages/react-components';
+
+export default function UsersWithImages() {
+  const usersWithImages = [
+    {
+      label: "Gabriel Glatz",
+      value: "1",
+      img: '/img/logo.jpg'
+    },
+    {
+      label: "Eduardo Ronchi",
+      value: "2",
+      img: '/img/logo.jpg'
+    },
+  ];
+
+  return (
+   <div className="w-[300px] space-y-4">
+      <AvatarCombobox
+        items={usersWithImages}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Select a user"
+        label="User Selection"
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>("1");
+    return (
+      <div className="w-[300px] space-y-4">
+        <AvatarCombobox
+          items={usersWithImages}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select a user"
+          label="User Selection"
+        />
+      </div>
+    );
+  },
+}

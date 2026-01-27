@@ -138,7 +138,7 @@ export function Leaderboard<T extends string>({
               <div key={idx} className="flex items-center justify-between p-1">
                 <div className="flex items-center gap-3 flex-1">
                   <SkeletonBase className="w-8 h-8 rounded-full" />
-                  <SkeletonBase className="h-4 w-36" />
+                  <SkeletonBase className="h-4 w-36 rounded-full" />
                 </div>
                 <SkeletonBase className="h-6 w-12 rounded-full" />
               </div>
