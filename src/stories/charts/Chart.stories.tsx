@@ -5,12 +5,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 
 const sampleData = [
-  { periodo: "Q1/24", receita: 1000, despesas: 400, churn: 180 },
-  { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
-  { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
-  { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },
-  { periodo: "Q1/25", receita: 8200, despesas: 4600, churn: 95 },
-  { periodo: "Q2/25", receita: 9100, despesas: 5000, churn: 90 },
+  { periodo: "Q1/24", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Q2/24", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Q3/24", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Q4/24", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Q1/25", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Q2/25", receita: 6000, despesas: 6000, churn: 6000 },
 ];
 
 const negativeData = [
@@ -165,7 +165,7 @@ type Story = StoryObj<typeof Chart>;
 
 const Template = (args: React.ComponentProps<typeof Chart>) => (
   <div style={{ width: "900px", height: "350px" }}>
-    <Chart {...args} />
+    <Chart {...args} colors={["#0d1136", "#F4B340", "#5e71a6"]} />
   </div>
 );
 

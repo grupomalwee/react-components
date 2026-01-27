@@ -1,7 +1,10 @@
+/**
+ * Eduardo Ronchi de Araujo
+ * Desenvolvidor de Sistemas Junio
+ */
 import { ThemeProviderBase } from "./components/theme/theme-provider";
 
 import "./style/global.css";
-
 
 import { SidebarProviderBase } from "./components/ui/navigation/SidebarBase";
 import { Toaster } from "./components/ui/feedback/SonnerBase";
@@ -33,7 +36,7 @@ function App() {
             </main>
           </SidebarProviderBase>
 
-      <div className="fixed top-3 right-5 z-50">
+          <div className="fixed top-3 right-5 z-50">
             <ModeToggleBase
               themes={[
                 "light",
@@ -46,10 +49,11 @@ function App() {
                 "dark-green",
               ]}
             />
-          </div> 
+          </div>
         </div>
       </ThemeProviderBase>
       <Toaster />
+     
     </div>
   );
 }

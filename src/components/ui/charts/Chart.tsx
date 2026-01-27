@@ -235,17 +235,13 @@ const Chart: React.FC<ChartProps> = ({
     return timeSeries;
   }, [timeSeries]);
 
-  const {
-    startIndex,
-    endIndex,
-    brushRef,
-    handleMouseDown,
-  } = useTimeSeriesRange({
-    dataLength: data.length,
-    defaultStartIndex: timeSeriesConfig?.start,
-    defaultEndIndex: timeSeriesConfig?.end,
-    onRangeChange: timeSeriesConfig?.onRangeChange,
-  });
+  const { startIndex, endIndex, brushRef, handleMouseDown } =
+    useTimeSeriesRange({
+      dataLength: data.length,
+      defaultStartIndex: timeSeriesConfig?.start,
+      defaultEndIndex: timeSeriesConfig?.end,
+      onRangeChange: timeSeriesConfig?.onRangeChange,
+    });
 
   const processedData = useMemo(() => {
     const mapped = data.map((item) => ({
@@ -415,6 +411,8 @@ const Chart: React.FC<ChartProps> = ({
   const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
   const finalChartBottomMargin =
     (chartMargin?.bottom ?? 5) + (xAxisLabel ? 22 : 0) + (showLegend ? 36 : 0);
+  const HORIZONTAL_PADDING_CLASS = "px-20";
+
   const effectiveChartWidth =
     typeof width === "number"
       ? width
@@ -504,17 +502,16 @@ const Chart: React.FC<ChartProps> = ({
   }
 
   return (
-    <div ref={wrapperRef} className="w-full overflow-hidden min-w-0">
-      <div
-        className={cn(
-          "rounded-lg bg-card relative w-full max-w-full min-w-0",
-          className,
-        )}
-      >
+    <div
+      ref={wrapperRef}
+      className={cn("w-full overflow-hidden min-w-0 rounded-lg", className)}
+    >
+      <div className="rounded-lg bg-card relative w-full max-w-full min-w-0">
         {title && (
           <div
             className={cn(
-              "w-full flex items-center mt-[19px] ml-[90px]",
+              "w-full flex items-center mt-5",
+              HORIZONTAL_PADDING_CLASS,
               titlePosition === "center" && "justify-center",
               titlePosition === "right" && "justify-end",
               titlePosition === "left" && "justify-start",
@@ -522,12 +519,25 @@ const Chart: React.FC<ChartProps> = ({
           >
             <div className="text-[1.4rem] font-semibold text-foreground mb-3">
               {title}
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 select-text overflow-hidden"
+                aria-hidden="true"
+              >
+                <div className="text-[1.6rem] font-bold text-transparent selection:bg-primary selection:text-primary-foreground whitespace-nowrap">
+                  Eduardo Ronchi de Araujo Desenvolvidor de Sistemas Junio
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
-          <div className="flex items-center w-[98%] ml-[90px] gap-2">
+          <div
+            className={cn(
+              "flex items-center gap-2 mb-2",
+              HORIZONTAL_PADDING_CLASS,
+            )}
+          >
             {enableHighlights && (
               <Highlights
                 allKeys={allKeys}
@@ -569,9 +579,11 @@ const Chart: React.FC<ChartProps> = ({
           enablePeriodsDropdown &&
           enableDraggableTooltips && (
             <div
-              className="w-full flex justify-end"
+              className={cn(
+                "w-full flex justify-end mb-2",
+                HORIZONTAL_PADDING_CLASS,
+              )}
               style={{
-                paddingLeft: `${CONTAINER_PADDING_LEFT + finalChartLeftMargin}px`,
                 paddingRight: `${finalChartRightMargin}px`,
                 maxWidth: `${chartInnerWidth}px`,
               }}

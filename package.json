@@ -1,5 +1,6 @@
 {
   "name": "@mlw-packages/react-components",
+  "developer": "Eduardo Ronchi de Araujo - Desenvolvidor de Sistemas Junio",
   "publishConfig": {
     "access": "public"
   },

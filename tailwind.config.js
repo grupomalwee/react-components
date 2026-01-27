@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// Eduardo Ronchi de Araujo - Desenvolvidor de Sistemas Junio
 export default {
   darkMode: ["class"],
   content: [
@@ -10,7 +11,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        syne: ['Syne', 'sans-serif'], 
+        syne: ["Syne", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,10 +56,16 @@ export default {
       keyframes: {
         "collapsible-down": {
           from: { height: "0", opacity: "0" },
-          to: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+          to: {
+            height: "var(--radix-collapsible-content-height)",
+            opacity: "1",
+          },
         },
         "collapsible-up": {
-          from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+          from: {
+            height: "var(--radix-collapsible-content-height)",
+            opacity: "1",
+          },
           to: { height: "0", opacity: "0" },
         },
         "loading-spin": {
@@ -77,9 +84,11 @@ export default {
         },
       },
       animation: {
-        "collapsible-down": "collapsible-down 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
+        "collapsible-down":
+          "collapsible-down 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
         "collapsible-up": "collapsible-up 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
-        "loading-spin": "loading-spin 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "loading-spin":
+          "loading-spin 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "loading-glow": "loading-glow 2s ease-in-out infinite",
         "loading-fade": "loading-fade 0.5s ease-out",
       },

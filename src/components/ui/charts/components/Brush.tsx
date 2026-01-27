@@ -127,56 +127,56 @@ const Brush: React.FC<BrushProps> = ({
           style={{ userSelect: "none" }}
         >
           <div
-            className="absolute top-0 bottom-0 left-0 bg-muted/60 pointer-events-none rounded-md"
+            className="absolute top-0 bottom-0 left-0 bg-background/80 backdrop-blur-[1px] pointer-events-none rounded-l-md border-r border-border/50"
             style={{
               width: `${(startIndex / (dataLength - 1)) * 100}%`,
             }}
           />
 
           <div
-            className="absolute top-0 bottom-0 right-0 bg-muted/60 pointer-events-none rounded-md"
+            className="absolute top-0 bottom-0 right-0 bg-background/80 backdrop-blur-[1px] pointer-events-none rounded-r-md border-l border-border/50"
             style={{
               width: `${((dataLength - 1 - endIndex) / (dataLength - 1)) * 100}%`,
             }}
           />
 
           <div
-            className="absolute top-0 bottom-0 border cursor-move group rounded-md border-primary/30"
+            className="absolute top-0 bottom-0 border-x-2 border-y border-primary/50 cursor-move group hover:bg-primary/5 rounded-md"
             style={{
               left: `${(startIndex / (dataLength - 1)) * 100}%`,
               right: `${((dataLength - 1 - endIndex) / (dataLength - 1)) * 100}%`,
-              backgroundColor: "hsl(var(--primary) / 0.03)",
+              backgroundColor: "transparent",
             }}
             onMouseDown={(e) => onMouseDown(e, "middle")}
           >
             <div
-              className="absolute top-1/2 -translate-y-1/2 -left-3 w-6 h-10 flex items-center justify-center cursor-ew-resize active:scale-95 transition-all"
+              className="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle"
               onMouseDown={(e) => {
                 e.stopPropagation();
                 onMouseDown(e, "start");
               }}
             >
               <div
-                className="w-2 h-7 rounded-full shadow-md ring-2 ring-background flex flex-col items-center justify-center gap-0.5"
+                className="w-1.5 h-6 rounded-sm flex flex-col items-center justify-center gap-1 border border-primary/20"
                 style={{
-                  backgroundColor: brushColor ?? "hsl(var(--primary) / 0.7)",
+                  backgroundColor: brushColor ?? "hsl(var(--primary))",
                 }}
-              />
+              ></div>
             </div>
 
             <div
-              className="absolute top-1/2 -translate-y-1/2 -right-3 w-6 h-10 flex items-center justify-center cursor-ew-resize active:scale-95 transition-all"
+              className="absolute top-1/2 -translate-y-1/2 -right-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle"
               onMouseDown={(e) => {
                 e.stopPropagation();
                 onMouseDown(e, "end");
               }}
             >
               <div
-                className="w-2 h-7 rounded-full shadow-md ring-2 ring-background flex flex-col items-center justify-center gap-0.5"
+                className="w-1.5 h-6 rounded-sm flex flex-col items-center justify-center gap-1 border border-primary/20"
                 style={{
-                  backgroundColor: brushColor ?? "hsl(var(--primary) / 0.7)",
+                  backgroundColor: brushColor ?? "hsl(var(--primary))",
                 }}
-              />
+              ></div>
             </div>
           </div>
         </div>
