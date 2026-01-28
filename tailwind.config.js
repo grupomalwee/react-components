@@ -82,6 +82,11 @@ export default {
           "0%": { opacity: "0", transform: "translateY(4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
       },
       animation: {
         "collapsible-down":
@@ -91,6 +96,7 @@ export default {
           "loading-spin 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "loading-glow": "loading-glow 2s ease-in-out infinite",
         "loading-fade": "loading-fade 0.5s ease-out",
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

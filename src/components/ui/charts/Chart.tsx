@@ -519,14 +519,14 @@ const Chart: React.FC<ChartProps> = ({
           >
             <div className="text-[1.4rem] font-semibold text-foreground mb-3">
               {title}
-              <div
+              {/* <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 select-text overflow-hidden"
                 aria-hidden="true"
               >
                 <div className="text-[1.6rem] font-bold text-transparent selection:bg-primary selection:text-primary-foreground whitespace-nowrap">
                   Eduardo Ronchi de Araujo Desenvolvidor de Sistemas Junio
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         )}

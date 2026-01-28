@@ -19,7 +19,6 @@ export interface LeaderboardProps<T extends string> {
   isLoading?: boolean;
   legend?: string[];
   best?: boolean;
-  worst?: boolean;
 }
 
 export function Leaderboard<T extends string>({
@@ -30,7 +29,6 @@ export function Leaderboard<T extends string>({
   isLoading = false,
   legend,
   best = false,
-  worst = false,
 }: LeaderboardProps<T>) {
   const [order, setOrder] = useState<"asc" | "desc">(initialOrder);
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,17 +76,12 @@ export function Leaderboard<T extends string>({
     index: number,
     total: number,
   ) => {
-    if (best || worst) {
+    if (best) {
       const third = total / 3;
       if (best) {
         if (index < third) return "green";
         if (index < 2 * third) return "yellow";
         return "red";
-      }
-      if (worst) {
-        if (index < third) return "red";
-        if (index < 2 * third) return "yellow";
-        return "green";
       }
     }
 
