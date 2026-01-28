@@ -1,4 +1,3 @@
-
 export type Primitive = string | number | boolean | null | undefined;
 
 export interface ChartData {
@@ -15,7 +14,7 @@ export interface XAxisConfig {
 
 export type ValueFormatter = (value: string | number) => string | number;
 export type FinalValueFormatter = (
-  value: number | string | null | undefined
+  value: number | string | null | undefined,
 ) => string;
 
 export type SeriesProp = {
@@ -58,6 +57,17 @@ export type TooltipAdaptedRow = Record<string, string | number> & {
   name: string;
 };
 
+export interface TimeSeriesConfig {
+  start?: number;
+  end?: number;
+  onRangeChange?: (startIndex: number, endIndex: number) => void;
+  height?: number;
+  brushColor?: string;
+  brushStroke?: string;
+  miniChartOpacity?: number;
+  chartHeight?: number;
+}
+
 export interface ChartHooksArgs {
   width?: number | string;
   measuredWidth?: number | null;
@@ -73,6 +83,19 @@ export interface ChartHooksArgs {
     bottom: number;
   }>;
   showLabels?: boolean;
-  showLegend?: boolean;
-  xAxisLabel?: string;
+  timeSeries?: boolean | TimeSeriesConfig;
+  timeSeriesLegend?: string;
+  customLegend?: boolean;
+}
+
+export interface LegendItem {
+  label: string;
+  value: string | number;
+  color?: string;
+  trend?: {
+    value?: number;
+    label?: string;
+    positive?: boolean;
+    neutral?: boolean;
+  };
 }

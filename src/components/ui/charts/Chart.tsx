@@ -40,6 +40,7 @@ import {
   PeriodsDropdown,
   Brush,
 } from "./components";
+import ChartTotalLegend from "./components/ChartTotalLegend";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
 import NoData from "./NoData";
@@ -50,6 +51,7 @@ import {
   useChartClick,
   useTimeSeriesRange,
 } from "./hooks";
+import { TimeSeriesConfig } from "./types";
 
 interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
@@ -76,16 +78,7 @@ interface BiaxialConfig {
   decimals?: number;
   stroke?: string | Record<string, string>;
 }
-export interface TimeSeriesConfig {
-  start?: number;
-  end?: number;
-  onRangeChange?: (startIndex: number, endIndex: number) => void;
-  height?: number;
-  brushColor?: string;
-  brushStroke?: string;
-  miniChartOpacity?: number;
-  chartHeight?: number;
-}
+
 type SeriesProp = {
   bar?: string[];
   line?: string[];
@@ -135,6 +128,7 @@ interface ChartProps {
   isLoading?: boolean;
   timeSeries?: boolean | TimeSeriesConfig;
   timeSeriesLegend?: string;
+  customLegend?: boolean;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -174,6 +168,7 @@ const Chart: React.FC<ChartProps> = ({
   isLoading = false,
   timeSeries,
   timeSeriesLegend,
+  customLegend,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -516,7 +511,7 @@ const Chart: React.FC<ChartProps> = ({
         {title && (
           <div
             className={cn(
-              "w-full flex items-center mt-5",
+              "w-full flex items-center mt-5 mb-2",
               HORIZONTAL_PADDING_CLASS,
               titlePosition === "center" && "justify-center",
               titlePosition === "right" && "justify-end",
@@ -525,15 +520,45 @@ const Chart: React.FC<ChartProps> = ({
           >
             <div className="text-[1.4rem] font-semibold text-foreground">
               {title}
-              {/* <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 select-text overflow-hidden"
-                aria-hidden="true"
-              >
-                <div className="text-[1.6rem] font-bold text-transparent selection:bg-primary selection:text-primary-foreground whitespace-nowrap">
-                  Eduardo Ronchi de Araujo Desenvolvidor de Sistemas Junio
-                </div>
-              </div> */}
             </div>
+          </div>
+        )}
+
+        {customLegend && !!data.length && (
+          <div className={cn("px-6 mb-2", HORIZONTAL_PADDING_CLASS)}>
+            <ChartTotalLegend
+              items={allKeys.map((key) => {
+                const values = processedData.map((d) =>
+                  Number((d as ChartData)[key] || 0),
+                );
+                const total = values.reduce((a, b) => a + b, 0);
+                const first = values[0] || 0;
+                const last = values[values.length - 1] || 0;
+
+                const trendValue =
+                  first !== 0 ? Math.round(((last - first) / first) * 100) : 0;
+
+                const formattedTotal = finalValueFormatter
+                  ? finalValueFormatter({
+                      value: total,
+                      formattedValue: String(total),
+                    })
+                  : new Intl.NumberFormat(formatBR ? "pt-BR" : "en-US").format(
+                      total,
+                    );
+
+                return {
+                  label: mapperConfig[key]?.label || key,
+                  value: formattedTotal,
+                  color: finalColors[key],
+                  trend: {
+                    value: Math.abs(trendValue),
+                    positive: trendValue >= 0,
+                    neutral: trendValue === 0,
+                  },
+                };
+              })}
+            />
           </div>
         )}
 
