@@ -15,6 +15,7 @@ interface ChartData {
 
 interface BrushProps {
   data: ChartData[];
+  legend?: string;
   startIndex: number;
   endIndex: number;
   onMouseDown: (e: React.MouseEvent, type: "start" | "end" | "middle") => void;
@@ -35,6 +36,7 @@ interface BrushProps {
 
 const Brush: React.FC<BrushProps> = ({
   data,
+  legend,
   startIndex,
   endIndex,
   onMouseDown,
@@ -51,6 +53,13 @@ const Brush: React.FC<BrushProps> = ({
 
   return (
     <div className="w-full px-8 pb-4">
+      {legend && (
+        <div className="flex items-center justify-left p-2">
+          <span className="text-sm font-medium text-foreground">
+            {legend}
+          </span>
+        </div>
+      )}
       <div
         className="relative rounded-md border bg-muted/5 shadow-inner"
         style={{ height: brushHeight }}

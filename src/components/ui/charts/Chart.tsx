@@ -129,6 +129,7 @@ interface ChartProps {
   legendUppercase?: boolean;
   isLoading?: boolean;
   timeSeries?: boolean | TimeSeriesConfig;
+  timeSeriesLegend?: string;
 }
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
@@ -166,6 +167,7 @@ const Chart: React.FC<ChartProps> = ({
   chartMargin,
   isLoading = false,
   timeSeries,
+  timeSeriesLegend,
 }) => {
   type LabelListContent = (props: unknown) => React.ReactNode;
   const smartConfig = useMemo(() => {
@@ -1033,6 +1035,7 @@ const Chart: React.FC<ChartProps> = ({
 
         {timeSeriesConfig && (
           <Brush
+            legend={timeSeriesLegend}
             data={data}
             startIndex={startIndex}
             endIndex={endIndex}
