@@ -5,19 +5,16 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 
 const sampleData = [
-  { periodo: "Q1/24", receita: 6000, despesas: 6000, churn: 6000 },
-  { periodo: "Q2/24", receita: 6000, despesas: 6000, churn: 6000 },
-  { periodo: "Q3/24", receita: 6000, despesas: 6000, churn: 6000 },
-  { periodo: "Q4/24", receita: 6000, despesas: 6000, churn: 6000 },
-  { periodo: "Q1/25", receita: 6000, despesas: 6000, churn: 6000 },
-  { periodo: "Q2/25", receita: 6000, despesas: 6000, churn: 6000 },
+  { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
+  { periodo: "Fev/24", receita: 5100, despesas: 3200, churn: 165 },
+  { periodo: "Mar/24", receita: 6800, despesas: 3900, churn: 142 },
+  { periodo: "Abr/24", receita: 7500, despesas: 4300, churn: 128 },
 ];
 
 const negativeData = [
   { periodo: "Q1/24", receita: -2000, despesas: 1800, churn: 200 },
-  { periodo: "Q2/24", receita: 3000, despesas: -800, churn: 180 },
-  { periodo: "Q3/24", receita: 5500, despesas: 3200, churn: 150 },
-  { periodo: "Q4/24", receita: 6800, despesas: 4100, churn: 120 },
+  { periodo: "Q2/24", receita: 3500, despesas: -1200, churn: 170 },
+  { periodo: "Q3/24", receita: 5800, despesas: 3400, churn: 140 },
 ];
 
 const meta: Meta<typeof Chart> = {
@@ -35,8 +32,8 @@ const meta: Meta<typeof Chart> = {
 import Chart from '@mlw-packages/react-components';
 
 const sampleData = [
-  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
+  { periodo: 'Jan/24', receita: 4200, despesas: 2800, churn: 180 },
+  { periodo: 'Fev/24', receita: 5100, despesas: 3200, churn: 165 },
 ];
 
 export default function Example() {
@@ -165,7 +162,7 @@ type Story = StoryObj<typeof Chart>;
 
 const Template = (args: React.ComponentProps<typeof Chart>) => (
   <div style={{ width: "900px", height: "350px" }}>
-    <Chart {...args} colors={["#0d1136", "#F4B340", "#5e71a6"]} />
+    <Chart {...args} />
   </div>
 );
 
@@ -179,10 +176,10 @@ export const Default: Story = {
 import Chart from '@mlw-packages/react-components';
 
 const sampleData = [
-  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
-  { periodo: 'Q3/24', receita: 6800, despesas: 3800, churn: 120 },
-  { periodo: 'Q4/24', receita: 7500, despesas: 4200, churn: 100 },
+  { periodo: 'Jan/24', receita: 4200, despesas: 2800, churn: 180 },
+  { periodo: 'Fev/24', receita: 5100, despesas: 3200, churn: 165 },
+  { periodo: 'Mar/24', receita: 6800, despesas: 3900, churn: 142 },
+  { periodo: 'Abr/24', receita: 7500, despesas: 4300, churn: 128 },
 ];
 
 export default function Default() {
@@ -193,30 +190,6 @@ export default function Default() {
   );
 }
 `,
-      },
-    },
-  },
-};
-
-export const FormatBR: Story = {
-  name: "Formato pt-BR",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        height={360}
-        series={{ bar: ["receita", "despesas"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas" }}
-        xAxis="periodo"
-        formatBR
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo que ativa a prop `formatBR` para formatar valores no padrão pt-BR (ex.: 12.345,67)",
       },
     },
   },
@@ -248,29 +221,12 @@ export const Combined: Story = {
       description: {
         story: "Combina barras, áreas e linhas em um único gráfico.",
       },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const data = [
-  { periodo: 'Q1/24', receita: 4000, despesas: 2400, churn: 180 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
-];
-
-export default function Combined() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={data} xAxis="periodo" series={{ bar: ['despesas'], area: ['receita'], line: ['churn'] }} labelMap={{ despesas: 'Despesas', receita: 'Receita', churn: 'Churn' }} colors={["#ef4444","#22c55e","#6366f1"]} height={350} />
-    </div>
-  );
-}
-`,
-      },
     },
   },
 };
 
 export const Biaxial: Story = {
+  name: "Eixo Duplo",
   render: (args) => (
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
@@ -289,35 +245,6 @@ export const Biaxial: Story = {
       description: {
         story:
           "Exemplo demonstrando o uso de `biaxial` para mapear `churn` ao eixo direito (com sufixo `%`).",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const data = [
-  { periodo: 'Q1/24', receita: 1000, despesas: 400, churn: 180 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100, churn: 150 },
-  { periodo: 'Q3/24', receita: 6800, despesas: 3800, churn: 120 },
-  { periodo: 'Q4/24', receita: 7500, despesas: 4200, churn: 100 },
-];
-
-export default function BiaxialExample() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart
-        data={data}
-        xAxis="periodo"
-        height={360}
-        series={{ bar: ['receita', 'despesas'], line: ['churn'] }}
-        labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }}
-        yAxisLabel="Valor (R$)"
-        colors={["#3b82f6", "#ef4444", "#f59e0b"]}
-        biaxial={{ keys: ['churn'], label: 'Churn (%)', percentage: true }}
-      />
-    </div>
-  );
-}
-`,
       },
     },
   },
@@ -342,77 +269,29 @@ export const NegativeValues: Story = {
       description: {
         story: "Exemplo com valores negativos para mostrar perdas e ajustes.",
       },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const negativeData = [
-  { periodo: 'Q1/24', receita: -2000, despesas: 1800 },
-  { periodo: 'Q2/24', receita: 3000, despesas: -800 },
-];
-
-export default function NegativeValues() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={negativeData} xAxis="periodo" series={{ bar: ['despesas'] }} labelMap={{ receitas: 'Receita', despesas: 'Despesas' }} colors={["#06b6d4","#ef4444"]} height={360} />
-    </div>
-  );
-}
-`,
-      },
     },
   },
 };
 
-export const LargeData: Story = {
-  name: "Dados Grandes",
-  render: (args) => {
-    const largeData = Array.from({ length: 24 }, (_, i) => ({
-      periodo: `M${i + 1}`,
-      receita: Math.round(3000 + Math.random() * 7000),
-      despesas: Math.round(2000 + Math.random() * 5000),
-      churn: Math.round(80 + Math.random() * 140),
-    }));
-
-    return (
-      <div style={{ width: "900px", height: "350px" }}>
-        <Chart
-          {...args}
-          data={largeData}
-          height={350}
-          series={{
-            bar: ["despesas"],
-            line: ["receita", "churn"],
-          }}
-          labelMap={{
-            receita: "Receita",
-            despesas: "Despesas",
-            churn: "Churn",
-          }}
-          colors={["#f59e0b", "#3b82f6", "#8b5cf6"]}
-        />
-      </div>
-    );
-  },
+export const FormatBR: Story = {
+  name: "Formato pt-BR",
+  render: (args) => (
+    <div style={{ width: "900px", height: "350px" }}>
+      <Chart
+        {...args}
+        height={360}
+        series={{ bar: ["receita", "despesas"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        xAxis="periodo"
+        formatBR
+      />
+    </div>
+  ),
   parameters: {
     docs: {
       description: {
-        story: "Gráfico com 24 pontos de dados mensais.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const largeData = Array.from({ length: 24 }, (_, i) => ({ periodo: 'M' + (i+1), receita: Math.round(3000 + Math.random()*7000), despesas: Math.round(2000 + Math.random()*5000), churn: Math.round(80 + Math.random()*140) }));
-
-export default function LargeDataset() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={largeData} xAxis="periodo" series={{ bar: ['despesas'], line: ['receita','churn'] }} labelMap={{ receita: 'Receita', despesas: 'Despesas', churn: 'Churn' }} colors={["#f59e0b","#3b82f6","#8b5cf6"]} height={350} />
-    </div>
-  );
-}
-`,
+        story:
+          "Exemplo que ativa a prop `formatBR` para formatar valores no padrão pt-BR (ex.: 12.345,67)",
       },
     },
   },
@@ -426,7 +305,7 @@ export const CustomFormatter: Story = {
         {...args}
         height={350}
         series={{
-          bar: ["receita", "despesas", "churn"],
+          bar: ["receita", "despesas"],
         }}
         labelMap={{
           receita: "Receita",
@@ -444,324 +323,7 @@ export const CustomFormatter: Story = {
         story:
           "Exemplo de como usar valueFormatter para adicionar símbolos customizados aos labels dos dados (R$, %, €, etc).",
       },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const data = [
-  { periodo: 'Q1/24', receita: 4000, despesas: 2400 },
-  { periodo: 'Q2/24', receita: 5200, despesas: 3100 },
-];
-
-export default function Customformatter() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart 
-        data={data} 
-        xAxis="periodo" 
-        series={{ bar: ['receita', 'despesas'] }} 
-        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
-        showLabels={true}
-        valueFormatter={(props) => \`R$ \${props.formattedValue}\`}
-        colors={["#10b981", "#ef4444"]}
-        height={350} 
-      />
-    </div>
-  );
-}
-`,
-      },
     },
-  },
-};
-
-export const AdvancedFormatter: Story = {
-  name: "Formatador Avançado",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita", "despesas"],
-          line: ["churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-          churn: "Churn",
-        }}
-        showLabels={true}
-        yAxisLabel="Valor"
-        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
-        valueFormatter={(props) => {
-          const numValue =
-            typeof props.value === "number"
-              ? props.value
-              : parseFloat(String(props.value || "0"));
-
-          if (numValue < 0) {
-            return `${props.formattedValue}`;
-          } else if (numValue > 5000) {
-            return `R$ ${props.formattedValue}`;
-          } else if (numValue < 200) {
-            return `${props.formattedValue}%`;
-          } else {
-            return `R$ ${props.formattedValue}`;
-          }
-        }}
-        colors={["#10b981", "#ef4444", "#f59e0b"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo avançado com formatação condicional baseada no valor dos dados.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function Advancedformatter() {
-  const data = [{ periodo: 'Q1', receita: 8000, despesas: 3000, churn: 120 }];
-  
-  return (
-    <Chart 
-      data={data} 
-      valueFormatter={(props) => {
-        const numValue = typeof props.value === 'number' ? props.value : parseFloat(String(props.value || '0'));
-        
-        if (numValue < 0) {
-          return \`⚠️ \${props.formattedValue}\`;
-        } else if (numValue > 5000) {
-          return \`🚀 R$ \${props.formattedValue}\`;
-        } else if (numValue < 200) {
-          return \`\${props.formattedValue}%\`;
-        } else {
-          return \`R$ \${props.formattedValue}\`;
-        }
-      }}
-    />
-  );
-}
-`,
-      },
-    },
-  },
-};
-
-export const Empty: Story = {
-  name: "Vazio",
-  render: (args) => (
-    <div
-      style={{ width: "900px", height: "350px" }}
-      data-testid="empty-chart-wrapper"
-    >
-      <Chart
-        {...args}
-        data={[]}
-        height={350}
-        series={{
-          bar: ["receita"],
-        }}
-        labelMap={{
-          receita: "Receita",
-        }}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico sem dados para testar estado vazio.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function EmptyData() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={[]} xAxis="periodo" series={{ bar: ['receita'] }} labelMap={{ receita: 'Receita' }} height={350} />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-};
-export const Loading: Story = {
-  name: "Loading Estado",
-  render: (args) => (
-    <div
-      style={{ width: "900px", height: "350px" }}
-      data-testid="empty-chart-wrapper"
-    >
-      <Chart
-        {...args}
-        data={[]}
-        height={350}
-        series={{
-          bar: ["receita"],
-        }}
-        labelMap={{
-          receita: "Receita",
-        }}
-        isLoading={true}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico em estado de carregamento.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-export default function EmptyData() {
-  return (
-    <div style={{ width: 900, height: 420 }}>
-      <Chart data={[]} xAxis="periodo" series={{ bar: ['receita'] }} labelMap={{ receita: 'Receita' }} height={350} />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-};
-
-export const SinglePoint: Story = {
-  name: "Único Ponto",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        data={[{ periodo: "Q1/24", receita: 5000, despesas: 3000, churn: 120 }]}
-        height={350}
-        series={{
-          bar: ["despesas"],
-          line: ["receita"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com apenas um ponto de dados.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar renderização com único ponto", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(1);
-      });
-    });
-
-    await step("Verificar linha com único ponto", async () => {
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      expect(lines.length).toBe(1);
-    });
-  },
-};
-
-export const Minimal: Story = {
-  name: "Minimalista",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita"],
-          line: ["despesas"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-        showGrid={false}
-        showLegend={false}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico minimalista sem grid e sem legenda.",
-      },
-    },
-  },
-  // play: async ({ canvasElement, step }) => {
-  //   await step("Verificar ausência de grid", async () => {
-  //     const grid = canvasElement.querySelector(".recharts-cartesian-grid");
-  //     expect(grid).not.toBeInTheDocument();
-  //   });
-
-  //   await step("Verificar ausência de legenda", async () => {
-  //     const legend = canvasElement.querySelector(".recharts-legend-wrapper");
-  //     expect(legend).not.toBeInTheDocument();
-  //   });
-
-  //   await step("Verificar dados ainda renderizados", async () => {
-  //     const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-  //     const lines = canvasElement.querySelectorAll(".recharts-line");
-
-  //     expect(bars.length).toBeGreaterThan(0);
-  //     expect(lines.length).toBeGreaterThan(0);
-  //   });
-  // },
-};
-
-export const TallChart: Story = {
-  name: "Altura Grande",
-  render: (args) => (
-    <div style={{ width: "900px", height: "620px" }}>
-      <Chart
-        {...args}
-        height={550}
-        series={{
-          area: ["receita", "despesas"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-        colors={["#22c55e", "#ef4444"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com altura customizada de 550px.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar altura customizada aplicada", async () => {
-      await waitFor(() => {
-        const surface = canvasElement.querySelector(".recharts-surface");
-        expect(surface).toBeInTheDocument();
-      });
-    });
-
-    await step("Verificar áreas renderizadas com altura maior", async () => {
-      const areas = canvasElement.querySelectorAll(".recharts-area");
-      expect(areas.length).toBe(2);
-    });
   },
 };
 
@@ -795,7 +357,7 @@ export const AllBars: Story = {
     await step("Verificar todas as barras renderizadas", async () => {
       await waitFor(() => {
         const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(18); // 3 séries × 6 pontos
+        expect(bars.length).toBe(12); // 3 séries × 4 pontos
       });
     });
 
@@ -897,139 +459,7 @@ export const AllAreas: Story = {
   },
 };
 
-export const Extremes: Story = {
-  name: "Extremos",
-  render: (args) => {
-    const extremeData = [
-      { periodo: "Q1", receita: 100000, despesas: 50, churn: 5 },
-      { periodo: "Q2", receita: 200, despesas: 99000, churn: 500 },
-      { periodo: "Q3", receita: 150000, despesas: 120000, churn: 1 },
-      { periodo: "Q4", receita: 500, despesas: 300, churn: 999 },
-    ];
-
-    return (
-      <div style={{ width: "900px", height: "350px" }}>
-        <Chart
-          {...args}
-          data={extremeData}
-          height={350}
-          series={{
-            bar: ["receita"],
-            line: ["despesas", "churn"],
-          }}
-          labelMap={{
-            receita: "Receita",
-            despesas: "Despesas",
-            churn: "Churn",
-          }}
-          colors={["#10b981", "#ef4444", "#f59e0b"]}
-        />
-      </div>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Gráfico com valores extremamente diferentes para testar escala.",
-      },
-    },
-  },
-};
-
-export const MixedValues: Story = {
-  name: "Valores Mistos",
-  render: (args) => {
-    const mixedData = [
-      { periodo: "Q1", receita: -5000, despesas: 3000, churn: -50 },
-      { periodo: "Q2", receita: 7000, despesas: -2000, churn: 100 },
-      { periodo: "Q3", receita: -3000, despesas: 4000, churn: -80 },
-      { periodo: "Q4", receita: 9000, despesas: -1000, churn: 150 },
-      { periodo: "Q5", receita: -2000, despesas: 5000, churn: -30 },
-      { periodo: "Q6", receita: 11000, despesas: -3000, churn: 200 },
-    ];
-
-    return (
-      <div style={{ width: "900px", height: "350px" }}>
-        <Chart
-          {...args}
-          data={mixedData}
-          height={360}
-          series={{
-            bar: ["receita", "despesas"],
-            line: ["churn"],
-          }}
-          labelMap={{
-            receita: "Receita",
-            despesas: "Despesas",
-            churn: "Variação",
-          }}
-          colors={["#3b82f6", "#ef4444", "#8b5cf6"]}
-        />
-      </div>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Gráfico complexo com valores positivos e negativos alternados em todas as séries.",
-      },
-    },
-  },
-};
-
-export const CustomColors: Story = {
-  name: "Cores Custom",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita"],
-          line: ["despesas"],
-          area: ["churn"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-          churn: "Churn",
-        }}
-        colors={["#ff0080", "#00ff80", "#0080ff"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Gráfico com paleta de cores vibrante e customizada.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar cores customizadas aplicadas", async () => {
-      await waitFor(() => {
-        const coloredElements = canvasElement.querySelectorAll(
-          '[fill="#ff0080"], [fill="#00ff80"], [fill="#0080ff"], [stroke="#ff0080"], [stroke="#00ff80"], [stroke="#0080ff"]',
-        );
-        expect(coloredElements.length).toBeGreaterThan(0);
-      });
-    });
-
-    await step("Verificar todas as séries com cores diferentes", async () => {
-      const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-      const lines = canvasElement.querySelectorAll(".recharts-line");
-      const areas = canvasElement.querySelectorAll(".recharts-area");
-
-      expect(bars.length).toBeGreaterThan(0);
-      expect(lines.length).toBeGreaterThan(0);
-      expect(areas.length).toBeGreaterThan(0);
-    });
-  },
-};
-
-// Generate sample time series data for TimeSeries stories
+// Generate sample time series data
 const generateTimeSeriesData = (months: number) => {
   const data = [];
   const startDate = new Date(2023, 0, 1);
@@ -1048,16 +478,15 @@ const generateTimeSeriesData = (months: number) => {
       receita: Math.round(5000 + Math.random() * 5000 + i * 200),
       despesas: Math.round(3000 + Math.random() * 3000 + i * 100),
       lucro: Math.round(1000 + Math.random() * 2000 + i * 50),
-      churn: Math.round(50 + Math.random() * 100),
     });
   }
 
   return data;
 };
 
-const timeSeriesData = generateTimeSeriesData(24);
+const timeSeriesData = generateTimeSeriesData(18);
 
-export const TimeSeriesEnabled: Story = {
+export const TimeSeries: Story = {
   name: "Time Series",
   render: (args) => (
     <div style={{ width: "900px" }}>
@@ -1066,13 +495,14 @@ export const TimeSeriesEnabled: Story = {
         data={timeSeriesData}
         xAxis="periodo"
         series={{ bar: ["receita", "despesas"], area: ["lucro"] }}
-        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
         height={350}
         timeSeries={{
           start: 0,
           end: 11,
           height: 40,
         }}
+        timeSeriesLegend="LucroLucroLucroLucroLucroLucroLucroLucroLucroLucroLucroLucro"
       />
     </div>
   ),
@@ -1082,28 +512,64 @@ export const TimeSeriesEnabled: Story = {
         story:
           "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
       },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
+    },
+  },
+};
 
-const data = generateTimeSeriesData(24);
+export const Empty: Story = {
+  name: "Vazio",
+  render: (args) => (
+    <div
+      style={{ width: "900px", height: "350px" }}
+      data-testid="empty-chart-wrapper"
+    >
+      <Chart
+        {...args}
+        data={[]}
+        height={350}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico sem dados para testar estado vazio.",
+      },
+    },
+  },
+};
 
-export default function TimeSeriesExample() {
-  return (
-    <Chart
-      data={data}
-      xAxis="periodo"
-      series={{ bar: ['receita', 'despesas'] }}
-      labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
-      height={350}
-      timeSeries={{
-        start: 0,
-        end: 11,
-        height: 80,
-      }}
-    />
-  );
-}`,
+export const Loading: Story = {
+  name: "Loading Estado",
+  render: (args) => (
+    <div
+      style={{ width: "900px", height: "350px" }}
+      data-testid="loading-chart-wrapper"
+    >
+      <Chart
+        {...args}
+        data={[]}
+        height={350}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+        isLoading={true}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Gráfico em estado de carregamento.",
       },
     },
   },

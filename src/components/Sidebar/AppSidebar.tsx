@@ -98,7 +98,7 @@ import DatePickerPage from "@/pages/DatePicker";
 import { FileUploaderPage } from "@/pages/FileUploader";
 import { DebounceInputPage } from "@/pages/DebounceInput";
 import ModalBasePage from "@/pages/Modal";
-import RangePickerPage from "@/pages/RangePicker";
+import RangePickerPage from "@/pages/RangePicker"
 
 const items = [
   { title: "Home", url: "/", icon: HouseIcon },

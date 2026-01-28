@@ -4,20 +4,23 @@ import path from "path";
 export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm", "cjs"],
-  dts: true,
+  dts: {
+    resolve: true,
+    compilerOptions: {
+      skipLibCheck: true,
+    },
+  },
   outDir: "dist",
   clean: true,
   sourcemap: false,
+  splitting: false, 
+  treeshake: true, 
+  minify: false, 
   banner: {
     js: `"use client";\nimport './index.css';`,
   },
 
-  external: [
-    "react",
-    "react-dom",
-    "@radix-ui/react-slot",
-    "@radix-ui/react-*",
-  ],
+  external: ["react", "react-dom", "@radix-ui/react-slot", "@radix-ui/react-*"],
   esbuildOptions(options) {
     options.platform = "browser";
     options.loader = {
@@ -28,5 +31,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     };
     options.resolveExtensions = [".tsx", ".ts", ".jsx", ".js"];
+  },
+
+  onSuccess: async () => {
+    console.log("✓ Build tsup concluído com sucesso");
   },
 });
