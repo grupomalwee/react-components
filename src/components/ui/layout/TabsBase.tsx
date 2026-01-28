@@ -45,7 +45,7 @@ const TabsTriggerBase = React.forwardRef<
       ? ""
       : animation === "scale"
       ? "transform transition-transform data-[state=active]:scale-105"
-      : "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:origin-left after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.34,1.56,0.64,1)] data-[state=active]:after:scale-x-100";
+      : "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:origin-left after:transition-transform after:duration-500 after:ease-ease-out-back data-[state=active]:after:scale-x-100";
 
   return (
     <TabsPrimitive.Trigger
