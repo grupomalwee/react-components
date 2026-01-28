@@ -160,7 +160,6 @@ export const BadValues: Story = {
       { name: "Sétimo", value: "Regular" },
       { name: "Oitavo", value: 50 },
     ],
-    worst: true,
   },
 };
 

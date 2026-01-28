@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DotsThreeIcon } from "@phosphor-icons/react/dist/ssr";
 import { Check } from "@phosphor-icons/react/dist/ssr";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 interface Props {
   processedData: Array<{ name: string }>;
@@ -71,9 +72,10 @@ function PeriodsDropdown({
 
   return (
     <div ref={wrapperRef} style={containerStyle} className="mr-4">
-      <button
-        className="relative p-2.5 rounded-md hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent/50 transition flex items-center justify-center"
+      <ButtonBase
         aria-expanded={open}
+        variant="ghost"
+        size="icon"
         aria-haspopup="menu"
         aria-controls="periods-menu"
         onClick={() => setOpen((v) => !v)}
@@ -86,7 +88,7 @@ function PeriodsDropdown({
         }}
         title={open ? "Fechar lista de períodos" : "Abrir lista de períodos"}
       >
-        <DotsThreeIcon size={18} />
+        <DotsThreeIcon size={18} className="rotate-90"/>
         <span className="sr-only">
           {open ? "Fechar períodos" : "Abrir períodos"}
         </span>
@@ -95,7 +97,7 @@ function PeriodsDropdown({
             {periods.length}
           </span>
         )}
-      </button>
+      </ButtonBase>
 
       <AnimatePresence>
         {open && (

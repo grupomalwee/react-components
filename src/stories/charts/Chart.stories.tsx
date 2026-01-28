@@ -92,6 +92,10 @@ export default function Example() {
       control: "boolean",
       description: "Mostrar labels nos dados",
     },
+    labelsVisibility: {
+      control: "object",
+      description: "Controlar quais tipos de label mostrar (bar, line, area)",
+    },
     labelMap: {
       control: "object",
       description: "Mapeamento de labels customizados",
@@ -494,7 +498,7 @@ export const TimeSeries: Story = {
         {...args}
         data={timeSeriesData}
         xAxis="periodo"
-        series={{ bar: ["receita", "despesas"], area: ["lucro"] }}
+        series={{ bar: ["receita", "despesas", "lucro"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
         height={350}
         timeSeries={{
@@ -502,7 +506,7 @@ export const TimeSeries: Story = {
           end: 11,
           height: 40,
         }}
-        timeSeriesLegend="LucroLucroLucroLucroLucroLucroLucroLucroLucroLucroLucroLucro"
+        timeSeriesLegend="Selecionar intervalo"
       />
     </div>
   ),
@@ -546,7 +550,7 @@ export const Empty: Story = {
 };
 
 export const Loading: Story = {
-  name: "Loading Estado",
+  name: "Loading",
   render: (args) => (
     <div
       style={{ width: "900px", height: "350px" }}
@@ -570,6 +574,120 @@ export const Loading: Story = {
     docs: {
       description: {
         story: "Gráfico em estado de carregamento.",
+      },
+    },
+  },
+};
+// export const lBarChart: Story = {
+//   name: "Gráfico de Barras Horizontal",
+//   render: (args) => (
+//     <div
+//       style={{ width: "900px" }}
+//       data-testid="horizontal-bar-chart-wrapper"
+//     >
+//       <Chart
+//         {...args}
+//         data={sampleData}
+//         series={{
+//           bar: ["receita", "despesas", "lucro"],
+//         }}
+//         labelMap={{
+//           receita: "Receita",
+//           despesas: "Despesas",
+//           lucro: "Lucro",
+//         }}
+//         vertical={true}
+//       />
+//     </div>
+//   ),
+//   parameters: {
+//     docs: {
+//       description: {
+//         story:
+//           "Gráfico de barras horizontal. Ideal para evitar sobrecarga de labels no eixo X quando há muitas categorias. Os eixos são invertidos: categorias ficam no eixo Y e valores no eixo X.",
+//       },
+//     },
+//   },
+// };
+
+export const AllThings: Story = {
+  args: {
+    data: [
+      {
+        periodo: "Jan/24",
+        receita: 4200,
+        despesas: 2800,
+        churn: 180,
+      },
+      {
+        periodo: "Fev/24",
+        receita: 5100,
+        despesas: 3200,
+        churn: 165,
+      },
+      {
+        periodo: "Mar/24",
+        receita: 6800,
+        despesas: 3900,
+        churn: 142,
+      },
+      {
+        periodo: "Abr/24",
+        receita: 7500,
+        despesas: 4300,
+        churn: 128,
+      },
+    ],
+
+    xAxis: "periodo",
+    className: "border",
+    title: "Nome bem grande para verem que ficam bom de verdade",
+    enableHighlights: true,
+    enableShowOnly: true,
+    enablePeriodsDropdown: true,
+    enableDraggableTooltips: true,
+    showTooltipTotal: true,
+  },
+
+  name: "All Things",
+
+  render: (args) => (
+    <div
+      style={{
+        width: "900px",
+      }}
+    >
+      <Chart
+        {...args}
+        data={timeSeriesData}
+        xAxis="periodo"
+        series={{
+          bar: ["receita", "despesas"],
+          line: ["lucro"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          lucro: "Lucro",
+        }}
+        height={350}
+        timeSeries={{
+          start: 0,
+          end: 11,
+          height: 40,
+        }}
+        timeSeriesLegend="Selecionar intervalo"
+        biaxial={{ key: ["lucro"], label: "Lucro", percentage: true }}
+        yAxisLabel="Lucro"
+      />
+    </div>
+  ),
+
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
       },
     },
   },

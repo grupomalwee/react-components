@@ -111,6 +111,11 @@ interface ChartProps {
   title?: string;
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
+  labelsVisibility?: {
+    bar?: boolean;
+    line?: boolean;
+    area?: boolean;
+  };
   labelMap?: Record<string, string>;
   valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
@@ -148,6 +153,7 @@ const Chart: React.FC<ChartProps> = ({
   title,
   titlePosition = "left",
   showLabels = false,
+  labelsVisibility = { bar: true, line: true, area: true },
   xAxis,
   biaxial,
   xAxisLabel,
@@ -410,10 +416,8 @@ const Chart: React.FC<ChartProps> = ({
     ],
   );
 
-  const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
-  const finalChartBottomMargin =
-    (chartMargin?.bottom ?? 5) + (xAxisLabel ? 22 : 0) + (showLegend ? 36 : 0);
-  const HORIZONTAL_PADDING_CLASS = "px-20";
+  const HORIZONTAL_PADDING_CLASS = "px-24";
+  const teste = "pl-24 pr-4";
 
   const effectiveChartWidth =
     typeof width === "number"
@@ -519,7 +523,7 @@ const Chart: React.FC<ChartProps> = ({
               titlePosition === "left" && "justify-start",
             )}
           >
-            <div className="text-[1.4rem] font-semibold text-foreground mb-3">
+            <div className="text-[1.4rem] font-semibold text-foreground">
               {title}
               {/* <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-50 select-text overflow-hidden"
@@ -534,12 +538,7 @@ const Chart: React.FC<ChartProps> = ({
         )}
 
         {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
-          <div
-            className={cn(
-              "flex items-center gap-2 mb-2",
-              HORIZONTAL_PADDING_CLASS,
-            )}
-          >
+          <div className={cn("flex items-center gap-2", teste)}>
             {enableHighlights && (
               <Highlights
                 allKeys={allKeys}
@@ -603,10 +602,10 @@ const Chart: React.FC<ChartProps> = ({
             data={processedData}
             height={height}
             margin={{
-              top: finalChartTopMargin,
+              top: 10,
               right: finalChartRightMargin,
               left: finalChartLeftMargin,
-              bottom: finalChartBottomMargin,
+              bottom: 10,
             }}
             onClick={handleChartClick}
           >
@@ -806,12 +805,7 @@ const Chart: React.FC<ChartProps> = ({
             )}
             {showLegend && (
               <Legend
-                wrapperStyle={{
-                  color: "hsl(var(--foreground))",
-                  fontSize: "14px",
-                  paddingTop: "8px",
-                  letterSpacing: 0,
-                }}
+                iconSize={12}
                 formatter={(value) => {
                   const key = String(value);
                   const label =
@@ -821,7 +815,19 @@ const Chart: React.FC<ChartProps> = ({
                   const displayLabel = legendUppercase
                     ? label.toUpperCase()
                     : label;
-                  return <span className="tracking-[0]">{displayLabel}</span>;
+                  return (
+                    <span
+                      className="inline-flex items-center gap-2 px-1 py-1.5"
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        letterSpacing: "0.01em",
+                        color: "hsl(var(--foreground))",
+                      }}
+                    >
+                      {displayLabel}
+                    </span>
+                  );
                 }}
               />
             )}
@@ -862,7 +868,9 @@ const Chart: React.FC<ChartProps> = ({
                       />
                     }
                   >
-                    {(showLabels && highlightedSeries.size === 0) ||
+                    {(showLabels &&
+                      labelsVisibility.bar !== false &&
+                      highlightedSeries.size === 0) ||
                     highlightedSeries.has(key) ? (
                       <LabelList
                         dataKey={key}
@@ -929,7 +937,9 @@ const Chart: React.FC<ChartProps> = ({
                     className="cursor-pointer pointer-events-auto"
                     style={{ opacity: getSeriesOpacity(key) }}
                   >
-                    {(showLabels && highlightedSeries.size === 0) ||
+                    {(showLabels &&
+                      labelsVisibility.line !== false &&
+                      highlightedSeries.size === 0) ||
                     highlightedSeries.has(key) ? (
                       <LabelList
                         dataKey={key}
@@ -969,7 +979,9 @@ const Chart: React.FC<ChartProps> = ({
                       strokeWidth: 2,
                     }}
                   >
-                    {(showLabels && highlightedSeries.size === 0) ||
+                    {(showLabels &&
+                      labelsVisibility.area !== false &&
+                      highlightedSeries.size === 0) ||
                     highlightedSeries.has(key) ? (
                       <LabelList
                         dataKey={key}

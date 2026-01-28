@@ -47,17 +47,14 @@ const Brush: React.FC<BrushProps> = ({
   brushHeight = 80,
   brushColor,
   miniChartOpacity = 0.3,
-  margin = { left: 0, right: 0 },
 }) => {
   const dataLength = data.length;
 
   return (
     <div className="w-full px-8 pb-4">
       {legend && (
-        <div className="flex items-center justify-left p-2">
-          <span className="text-sm font-medium text-foreground">
-            {legend}
-          </span>
+        <div className="flex items-center justify-left pb-1">
+          <span className="text-sm font-medium text-foreground">{legend}</span>
         </div>
       )}
       <div
@@ -77,8 +74,6 @@ const Brush: React.FC<BrushProps> = ({
               height={brushHeight}
               margin={{
                 top: 5,
-                right: margin.right ?? 30,
-                left: margin.left ?? 0,
                 bottom: 5,
               }}
             >
@@ -168,7 +163,7 @@ const Brush: React.FC<BrushProps> = ({
               <div
                 className="w-1.5 h-6 rounded-sm flex flex-col items-center justify-center gap-1 border border-primary/20"
                 style={{
-                  backgroundColor: brushColor ?? "hsl(var(--primary))",
+                  backgroundColor: brushColor ?? "hsl(var(--muted-foreground))",
                 }}
               ></div>
             </div>
@@ -183,7 +178,7 @@ const Brush: React.FC<BrushProps> = ({
               <div
                 className="w-1.5 h-6 rounded-sm flex flex-col items-center justify-center gap-1 border border-primary/20"
                 style={{
-                  backgroundColor: brushColor ?? "hsl(var(--primary))",
+                  backgroundColor: brushColor ?? "hsl(var(--muted-foreground))",
                 }}
               ></div>
             </div>
