@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.8",
+    date: "2026-01-29",
+    shortTitle: "ModeToggle",
+    changed: [
+      "ModeToggle: new variant prop, e novo style de Dropdown.",
+      "Chart: removido esapcos mortos, paddings e functions nao utilizadas.",
+    ],
+  },
+  {
     version: "1.8.7",
     author: "Gabriel Glatz",  
     date: "2026-01-27",
