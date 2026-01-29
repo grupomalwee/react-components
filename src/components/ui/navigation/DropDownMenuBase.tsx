@@ -24,27 +24,20 @@ const DropDownMenuSubTriggerBase = React.forwardRef<
     inset?: boolean;
   }
 >(({ className, inset, children, ...props }, ref) => (
-
-<DropdownMenuPrimitive.SubTrigger
-  
-  ref={ref}
-  {...props}
->
-  <motion.span 
-    className={cn(
+  <DropdownMenuPrimitive.SubTrigger ref={ref} {...props}>
+    <motion.span
+      className={cn(
         "flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         inset && "pl-8",
         className,
       )}
-    whileTap={{ scale: 0.95 }}
-    transition={{ type: "spring", stiffness: 400, damping: 17,}}
-  >
-    {children}
-    <CaretRightIcon className="ml-auto" />
-  </motion.span>
-</DropdownMenuPrimitive.SubTrigger>
-
-
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    >
+      {children}
+      <CaretRightIcon className="ml-auto" />
+    </motion.span>
+  </DropdownMenuPrimitive.SubTrigger>
 ));
 DropDownMenuSubTriggerBase.displayName =
   DropdownMenuPrimitive.SubTrigger.displayName;
@@ -82,7 +75,7 @@ const DropDownMenuContentBase = React.forwardRef<
         sideOffset={sideOffset}
         forceMount={true}
         ref={ref}
-        className={cn("z-[9999] p-0", className)}
+        className={cn("z-[9999] rounded-lg", className)}
         data-testid={dataTestId}
         {...props}
       >
@@ -93,7 +86,7 @@ const DropDownMenuContentBase = React.forwardRef<
             exit={{ opacity: 0, scale: 0.95, y: 5 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={cn(
-              "min-w-[10rem] overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-md border-border",
+              "min-w-[10rem] overflow-hidden rounded-lg border bg-popover p-1 text-popover-foreground shadow-md border-border",
               className,
             )}
           >
@@ -118,14 +111,12 @@ const DropDownMenuItemBase = React.forwardRef<
     ref={ref}
     {...props}
     className={cn(
-      "relative flex cursor-pointer select-none items-center justify-between rounded-sm p-1 m-1 text-sm outline-none transition-colors hover:bg-muted hover:text-foreground hover:scale-[1.05] active:opacity-80 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className,
     )}
   >
-    <div className="flex items-center gap-2">
-      {children}
-    </div>
+    <div className="flex items-center gap-2">{children}</div>
     {rightIcon && <span className="[&>svg]:size-4">{rightIcon}</span>}
   </DropdownMenuPrimitive.Item>
 ));

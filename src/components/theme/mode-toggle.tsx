@@ -1,4 +1,4 @@
-import { CheckIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { DesktopIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useRef } from "react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
@@ -8,9 +8,18 @@ import {
   DropDownMenuTriggerBase,
 } from "@/components/ui/navigation/DropDownMenuBase";
 import { useTheme, type Theme } from "@/components/theme/theme-provider";
+import { cn } from "@/lib/utils";
 
 type ModeToggleBaseProps = {
   themes?: Theme[];
+  className?: string;
+  variant?:
+    | "default"
+    | "outline"
+    | "link"
+    | "destructive"
+    | "secondary"
+    | "ghost";
 };
 
 const themeLabels: Record<Theme, string> = {
@@ -25,8 +34,42 @@ const themeLabels: Record<Theme, string> = {
   "dark-green": "Dark Green",
 };
 
+const ThemeIcon = ({ theme }: { theme: Theme }) => {
+  switch (theme) {
+    case "light":
+      return <SunIcon className="size-4" />;
+    case "dark":
+      return <MoonIcon className="size-4" />;
+    case "system":
+      return <DesktopIcon className="size-4" />;
+  }
+
+  const [mode, color] = theme.split("-") as [string, string];
+  const colorMap: Record<string, string> = {
+    purple: "#a855f7",
+    blue: "#3b82f6",
+    green: "#22c55e",
+  };
+
+  const leftColor = mode === "light" ? "#f8fafc" : "#0f172a";
+  const rightColor = colorMap[color] || "#cbd5e1";
+
+  return (
+    <div className="flex items-center justify-center size-4">
+      <div
+        className={cn("size-3 rounded-full border border-black")}
+        style={{
+          background: `linear-gradient(120deg, ${leftColor} 50%, ${rightColor} 50%)`,
+        }}
+      />
+    </div>
+  );
+};
+
 export function ModeToggleBase({
   themes = ["light", "dark", "system"],
+  className,
+  variant = "ghost",
 }: ModeToggleBaseProps) {
   const { setTheme, theme: currentTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -80,19 +123,26 @@ export function ModeToggleBase({
       <DropDownMenuTriggerBase asChild>
         <ButtonBase
           ref={buttonRef}
-          variant="ghost"
+          variant={variant}
           size="icon"
-          className="relative overflow-hidden border-transparent"
+          className={cn(
+            "relative overflow-hidden border-transparent group",
+            className,
+          )}
         >
           <>
             <SunIcon
-              className={`h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${
-                isDark ? "rotate-90 scale-0" : "rotate-0 scale-100"
+              className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+                isDark
+                  ? "rotate-90 scale-0 opacity-0"
+                  : "rotate-0 scale-100 opacity-100 group-hover:rotate-12"
               }`}
             />
             <MoonIcon
-              className={`absolute h-[1.2rem] w-[1.2rem] transition-transform duration-300 ${
-                isDark ? "rotate-0 scale-100" : "rotate-90 scale-0"
+              className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+                isDark
+                  ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
+                  : "rotate-90 scale-0 opacity-0"
               }`}
             />
           </>
@@ -101,20 +151,26 @@ export function ModeToggleBase({
       </DropDownMenuTriggerBase>
       <DropDownMenuContentBase
         align="end"
-        className="border-border bg-popover text-popover-foreground"
+        className="border-border bg-popover text-popover-foreground min-w-[140px]"
       >
-        {themes.map((theme) => (
-          <DropDownMenuItemBase
-            key={theme}
-            onClick={() => toggleTheme(theme)}
-            className="flex items-center justify-between hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-          >
-            {themeLabels[theme]}
-            {currentTheme === theme && (
-              <CheckIcon className="h-4 w-4 opacity-100" />
-            )}
-          </DropDownMenuItemBase>
-        ))}
+        {themes.map((theme) => {
+          const isActive = currentTheme === theme;
+          return (
+            <DropDownMenuItemBase
+              key={theme}
+              onClick={() => toggleTheme(theme)}
+              className={cn(
+                "gap-3 transition-all duration-200",
+                isActive
+                  ? "bg-accent/80 text-accent-foreground border-l-2 border-primary font-medium pl-1.5"
+                  : "hover:bg-accent hover:text-accent-foreground",
+              )}
+            >
+              <ThemeIcon theme={theme} />
+              {themeLabels[theme]}
+            </DropDownMenuItemBase>
+          );
+        })}
       </DropDownMenuContentBase>
     </DropDownMenuBase>
   );
