@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
 
 const sampleData = [
-  { periodo: "Q1/24", receita_AA: 1000, despesas: 400, churn: 180 },
+  { periodo: "Q1/24", receita: 1000, despesas: 400, churn: 180 },
   { periodo: "Q2/24", receita: 5200, despesas: 3100, churn: 150 },
   { periodo: "Q3/24", receita: 6800, despesas: 3800, churn: 120 },
   { periodo: "Q4/24", receita: 7500, despesas: 4200, churn: 100 },

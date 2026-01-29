@@ -1,3 +1,4 @@
+import { Margins, Padding, SeriesConfig, ValueFormatterType } from "../types/chart.types";
 export const formatFieldName = (fieldName: string): string => {
   return fieldName
     .split(/[/_-]/)
@@ -142,17 +143,6 @@ export const compactTick = (value: number) => {
   return String(value);
 };
 
-export type Padding =
-  | number
-  | Partial<{ left: number; right: number; top: number; bottom: number }>;
-
-export type Margins = Partial<{
-  top: number;
-  right: number;
-  left: number;
-  bottom: number;
-}>;
-
 export const resolveContainerPaddingLeft = (
   padding?: Padding,
   containerPaddingLeft?: number,
@@ -239,12 +229,6 @@ export const getMinDataValue = (
   return min;
 };
 
-interface SeriesConfig {
-  bar?: string[];
-  line?: string[];
-  area?: string[];
-}
-
 export const computeChartWidth = (
   width: number | string | undefined,
   dataLength: number,
@@ -301,12 +285,6 @@ export const adaptDataForTooltip = <T extends Record<string, unknown>>(
 
   return result;
 };
-
-export type ValueFormatterType = (props: {
-  value: number | string | undefined;
-  formattedValue: string;
-  [key: string]: unknown;
-}) => string;
 
 export const createValueFormatter = (
   customFormatter: ValueFormatterType | undefined,

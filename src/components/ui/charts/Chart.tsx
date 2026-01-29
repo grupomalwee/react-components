@@ -16,9 +16,6 @@ import {
 } from "recharts";
 
 import {
-  formatFieldName,
-  detectDataFields,
-  detectXAxis,
   generateColorMap,
   computeNiceMax,
   getMaxDataValue,
@@ -30,7 +27,6 @@ import {
   computeYAxisTickWidth,
 } from "./utils/helpers";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 import {
   Highlights,
   ShowOnly,
@@ -40,7 +36,7 @@ import {
   PeriodsDropdown,
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
-import { renderPillLabel, renderInsideBarLabel, valueFormatter } from "./utils";
+import { renderPillLabel, renderInsideBarLabel} from "./utils";
 import NoData from "./NoData";
 import {
   useChartHighlights,
@@ -48,75 +44,8 @@ import {
   useChartTooltips,
   useChartClick,
 } from "./hooks";
-
-interface ChartData {
-  [key: string]: string | number | boolean | null | undefined;
-}
-interface XAxisConfig {
-  dataKey: string;
-  label?: string;
-  valueFormatter?: (value: string | number) => string;
-  autoLabel?: boolean;
-}
-interface DataMapper {
-  [dataKey: string]: {
-    label?: string;
-    valueFormatter?: (value: string | number) => string | number;
-    color?: string;
-    type?: "number" | "string" | "auto";
-    visible?: boolean;
-  };
-}
-interface BiaxialConfig {
-  key: string[];
-  label?: string;
-  percentage?: boolean;
-  decimals?: number;
-  stroke?: string | Record<string, string>;
-}
-type SeriesProp = {
-  bar?: string[];
-  line?: string[];
-  area?: string[];
-};
-interface ChartProps {
-  data: ChartData[];
-  series?: SeriesProp;
-  className?: string;
-  chartMargin?: Partial<{
-    top: number;
-    right: number;
-    left: number;
-    bottom: number;
-  }>;
-  height?: number;
-  width?: number | string;
-  colors?: string[];
-  gridColor?: string;
-  showGrid?: boolean;
-  showTooltip?: boolean;
-  showLegend?: boolean;
-  title?: string;
-  titlePosition?: "left" | "center" | "right";
-  showLabels?: boolean;
-  labelMap?: Record<string, string>;
-  valueFormatter?: valueFormatter;
-  categoryFormatter?: (value: string | number) => string;
-  periodLabel?: string;
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  xAxis?: XAxisConfig | string;
-  biaxial?: BiaxialConfig | string | string[];
-  enableHighlights?: boolean;
-  enableShowOnly?: boolean;
-  enablePeriodsDropdown?: boolean;
-  enableDraggableTooltips?: boolean;
-  showTooltipTotal?: boolean;
-  maxTooltips?: number;
-  formatBR?: boolean;
-  legendUppercase?: boolean;
-  isLoading?: boolean;
-}
+import { BiaxialConfig, ChartProps, LabelListContent, PropsLabelList } from "./types/chart.types";
+import { filtersOrder, fnBuildConfigData, fnConfigRightKeys, fnContentLabelList, fnFormatterValueLegend, fnOpenTooltipForPeriod, fnSmartConfig } from "./utils/filters";
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
@@ -153,43 +82,9 @@ const Chart: React.FC<ChartProps> = ({
   chartMargin,
   isLoading = false,
 }) => {
-  type LabelListContent = (props: unknown) => React.ReactNode;
-  const smartConfig = useMemo(() => {
-    const resolvedXAxisKey =
-      typeof xAxis === "string"
-        ? xAxis
-        : (xAxis && (xAxis as XAxisConfig).dataKey) || detectXAxis(data);
-
-    const xAxisConfig: XAxisConfig =
-      typeof xAxis === "string"
-        ? {
-            dataKey: resolvedXAxisKey,
-            label: formatFieldName(resolvedXAxisKey),
-            autoLabel: true,
-          }
-        : {
-            dataKey: resolvedXAxisKey,
-            label:
-              (xAxis as XAxisConfig)?.label ??
-              formatFieldName(resolvedXAxisKey),
-            valueFormatter: (xAxis as XAxisConfig)?.valueFormatter,
-            autoLabel: (xAxis as XAxisConfig)?.autoLabel ?? true,
-          };
-
-    const detectedFields = detectDataFields(data, xAxisConfig.dataKey);
-    const mapperConfig = detectedFields.reduce((acc, field) => {
-      acc[field] = {
-        label: labelMap?.[field] ?? formatFieldName(field),
-        type: "number" as const,
-        visible: true,
-      };
-      return acc;
-    }, {} as DataMapper);
-
-    return { xAxisConfig, mapperConfig };
+  const { xAxisConfig, mapperConfig } = useMemo(() => {
+    return fnSmartConfig({xAxis, data, labelMap});
   }, [data, xAxis, labelMap]);
-
-  const { xAxisConfig, mapperConfig } = smartConfig;
 
   const {
     highlightedSeries,
@@ -219,19 +114,7 @@ const Chart: React.FC<ChartProps> = ({
     name: String(item[xAxisConfig.dataKey] || "N/A"),
   }));
 
-  const seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }> = [];
-  if (series) {
-    if (series.bar)
-      series.bar.forEach((k) => seriesOrder.push({ type: "bar", key: k }));
-    if (series.line)
-      series.line.forEach((k) => seriesOrder.push({ type: "line", key: k }));
-    if (series.area)
-      series.area.forEach((k) => seriesOrder.push({ type: "area", key: k }));
-  } else {
-    Object.keys(mapperConfig).forEach((k) =>
-      seriesOrder.push({ type: "bar", key: k }),
-    );
-  }
+  const seriesOrder = filtersOrder(mapperConfig, series!);
 
   const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
 
@@ -250,8 +133,7 @@ const Chart: React.FC<ChartProps> = ({
   useMemo(() => {
     if (!biaxialConfigNormalized) return;
     const leftLabelMissing = !yAxisLabel || String(yAxisLabel).trim() === "";
-    const rightLabelMissing =
-      !biaxialConfigNormalized.label ||
+    const rightLabelMissing = !biaxialConfigNormalized.label ||
       String(biaxialConfigNormalized.label).trim() === "";
     if (leftLabelMissing || rightLabelMissing) {
       throw new Error(
@@ -335,6 +217,7 @@ const Chart: React.FC<ChartProps> = ({
     },
     [highlightedSeries],
   );
+  
   const finalValueFormatter = useMemo(
     () => createValueFormatter(valueFormatter, formatBR),
     [valueFormatter, formatBR],
@@ -348,10 +231,9 @@ const Chart: React.FC<ChartProps> = ({
   const AXIS_LABEL_MARGIN = 56;
   const CONTAINER_PADDING_LEFT = -6;
 
-  const finalChartRightMargin =
-    chartMargin?.right ?? (rightKeys.length > 0 ? AXIS_LABEL_MARGIN : 30);
-  const finalChartLeftMargin =
-    chartMargin?.left ?? (yAxisLabel ? AXIS_LABEL_MARGIN : 0);
+  const finalChartRightMargin = chartMargin?.right ?? (rightKeys.length > 0 ? AXIS_LABEL_MARGIN : 30);
+  const finalChartLeftMargin = chartMargin?.left ?? (yAxisLabel ? AXIS_LABEL_MARGIN : 0);
+  
   const yAxisTickWidth = useMemo(
     () =>
       computeYAxisTickWidth(
@@ -372,59 +254,29 @@ const Chart: React.FC<ChartProps> = ({
   );
 
   const finalChartTopMargin = chartMargin?.top ?? (showLabels ? 48 : 20);
-  const finalChartBottomMargin =
-    (chartMargin?.bottom ?? 5) + (xAxisLabel ? 22 : 0) + (showLegend ? 36 : 0);
-  const effectiveChartWidth =
-    typeof width === "number"
-      ? width
-      : measuredWidth
-        ? Math.max(0, measuredWidth - 32)
-        : computedWidth;
-  const chartInnerWidth =
-    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
+  const finalChartBottomMargin = (chartMargin?.bottom ?? 5) + (xAxisLabel ? 22 : 0) + (showLegend ? 36 : 0);
+
+  const effectiveChartWidth = typeof width === "number"
+  ? width
+  : measuredWidth
+  ? Math.max(0, measuredWidth - 32)
+  : computedWidth;
+  const chartInnerWidth = effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
 
   const leftYAxisLabelDx = -Math.max(12, Math.round(yAxisTickWidth / 2));
   const rightYAxisLabelDx = Math.max(12, Math.round(finalChartRightMargin / 2));
 
   const openTooltipForPeriod = useCallback(
     (periodName: string) => {
-      if (!enableDraggableTooltips) return;
-
-      const row = processedData.find((r) => String(r.name) === periodName);
-      if (!row) return;
-
-      const tooltipId = String(periodName);
-      const existingIndex = activeTooltips.findIndex((t) => t.id === tooltipId);
-
-      if (existingIndex !== -1) {
-        setActiveTooltips((prev) => prev.filter((t) => t.id !== tooltipId));
-        return;
-      }
-
-      if (activeTooltips.length >= maxTooltips) {
-        toast.warning(
-          `Limite de ${maxTooltips} janelas de informação atingido. A mais antiga será substituída.`,
-        );
-      }
-
-      const offsetIndex = activeTooltips.length;
-      const availableWidth = effectiveChartWidth;
-      const gap = 28;
-      const leftGap = 28;
-
-      const newTooltip = {
-        id: tooltipId,
-        data: row,
-        position: {
-          top: 48 + offsetIndex * gap,
-          left: Math.max(120, availableWidth - 280 - offsetIndex * leftGap),
-        },
-      };
-
-      setActiveTooltips((prev) => {
-        const next = [...prev, newTooltip];
-        return next.length > maxTooltips ? next.slice(1) : next;
-      });
+      fnOpenTooltipForPeriod(
+        enableDraggableTooltips,
+        processedData,
+        periodName,
+        activeTooltips,
+        setActiveTooltips,
+        maxTooltips,
+        effectiveChartWidth
+      )
     },
     [
       enableDraggableTooltips,
@@ -650,51 +502,9 @@ const Chart: React.FC<ChartProps> = ({
 
             {rightKeys.length > 0 &&
               (() => {
-                const decimals =
-                  typeof biaxialConfigNormalized?.decimals === "number"
-                    ? Math.max(0, Math.floor(biaxialConfigNormalized!.decimals))
-                    : 2;
-
-                const rightTickFormatter = (v: number | string) => {
-                  if (biaxialConfigNormalized?.percentage) {
-                    const num = Number(String(v));
-                    const nf = new Intl.NumberFormat("pt-BR", {
-                      minimumFractionDigits: decimals,
-                      maximumFractionDigits: decimals,
-                    });
-                    const out = Number.isNaN(num)
-                      ? String(v ?? "")
-                      : nf.format(num);
-                    return `${out}%`;
-                  }
-
-                  return yTickFormatter(v);
-                };
-
-                const firstRightKey = (biaxialConfigNormalized?.key &&
-                  biaxialConfigNormalized.key[0]) as string | undefined;
-                const defaultRightColor =
-                  (firstRightKey && finalColors[firstRightKey]) ||
-                  "hsl(var(--muted-foreground))";
-
-                const rightAxisColor = (() => {
-                  if (!biaxialConfigNormalized) return defaultRightColor;
-                  if (typeof biaxialConfigNormalized.stroke === "string")
-                    return biaxialConfigNormalized.stroke;
-                  if (
-                    biaxialConfigNormalized.stroke &&
-                    firstRightKey &&
-                    typeof biaxialConfigNormalized.stroke === "object"
-                  )
-                    return (
-                      (
-                        biaxialConfigNormalized.stroke as Record<string, string>
-                      )[firstRightKey] || defaultRightColor
-                    );
-
-                  return defaultRightColor;
-                })();
-
+                const {rightAxisColor, rightTickFormatter} =
+                 fnConfigRightKeys(biaxialConfigNormalized, yTickFormatter, finalColors);
+                
                 return (
                   <YAxis
                     yAxisId="right"
@@ -727,6 +537,7 @@ const Chart: React.FC<ChartProps> = ({
                   />
                 );
               })()}
+
             {showTooltip && (
               <Tooltip
                 content={
@@ -758,34 +569,28 @@ const Chart: React.FC<ChartProps> = ({
                   letterSpacing: 0,
                 }}
                 formatter={(value) => {
-                  const key = String(value);
-                  const label =
-                    mapperConfig[key]?.label ??
-                    labelMap?.[key] ??
-                    formatFieldName(key);
-                  const displayLabel = legendUppercase
-                    ? label.toUpperCase()
-                    : label;
-                  return <span className="tracking-[0]">{displayLabel}</span>;
+                  return <span className="tracking-[0]">{fnFormatterValueLegend(
+                    value,
+                    mapperConfig,
+                    labelMap,
+                    legendUppercase
+                  )}</span>;
                 }}
               />
             )}
             {seriesOrder.map((s) => {
-              const key = s.key;
-              if (showOnlyHighlighted && !highlightedSeries.has(key))
+              if (showOnlyHighlighted && !highlightedSeries.has(s.key))
                 return null;
-              const label =
-                mapperConfig[key]?.label ??
-                labelMap?.[key] ??
-                formatFieldName(key);
-              let color = finalColors[key];
-              if (rightKeys.includes(key) && biaxialConfigNormalized?.stroke) {
-                if (typeof biaxialConfigNormalized.stroke === "string") {
-                  color = biaxialConfigNormalized.stroke;
-                } else {
-                  color = biaxialConfigNormalized.stroke[key] ?? color;
-                }
-              }
+
+              const {label, color, key} = fnBuildConfigData(
+                s,
+                mapperConfig,
+                labelMap,
+                finalColors,
+                rightKeys,
+                biaxialConfigNormalized,
+              );
+
               if (s.type === "bar") {
                 return (
                   <Bar
@@ -816,41 +621,15 @@ const Chart: React.FC<ChartProps> = ({
                          * instead of being hidden inside the bar. We still reuse
                          * the existing `renderInsideBarLabel` for normal-sized bars.
                          */
-                        content={(props) => {
-                          const p = props as {
-                            height?: number | string;
-                            width?: number | string;
-                            x?: number | string;
-                            y?: number | string;
-                            value?: number | string;
-                            payload?: Record<string, unknown>;
-                          };
-
-                          const barHeight =
-                            typeof p.height === "number"
-                              ? p.height
-                              : typeof p.height === "string"
-                                ? Number(p.height)
-                                : 0;
-                          const barWidth =
-                            typeof p.width === "number"
-                              ? p.width
-                              : typeof p.width === "string"
-                                ? Number(p.width)
-                                : 0;
-                          const smallThreshold = 14;
-
-                          const needsOutside =
-                            (barHeight > 0 && barHeight < smallThreshold) ||
-                            (barWidth > 0 && barWidth < smallThreshold);
-
-                          if (needsOutside) {
+                        content={(props:PropsLabelList) => {
+                          if(!fnContentLabelList(props))
                             return null;
-                          }
+                          
                           const inside = renderInsideBarLabel(
                             color,
                             finalValueFormatter,
                           ) as LabelListContent;
+
                           return inside(props as unknown);
                         }}
                         offset={0}
