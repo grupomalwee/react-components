@@ -87,7 +87,7 @@ export default function Example() {
       description: "Array de classes de cores para avatares (cicla entre elas)",
     },
     onChange: { action: "onChange" },
-  }
+  },
 };
 
 export default meta;
@@ -158,29 +158,29 @@ const usersWithImages = [
   {
     label: "Gabriel Glatz",
     value: "1",
-    img: '/img/logo.jpg'
+    img: "/img/logo.jpg",
   },
   {
     label: "Eduardo Ronchi",
     value: "2",
-    img: '/img/logo.jpg'
+    img: "/img/logo.jpg",
   },
   {
     label: "Anne Kelley",
     value: "3",
-    img: '/img/logo.jpg'
+    img: "/img/logo.jpg",
   },
   {
     label: "Michael Chen",
     value: "4",
-    img: '/img/logo.jpg'
+    img: "/img/logo.jpg",
   },
   {
     label: "Sofia Martinez",
     value: "5",
-    img: '/img/logo.jpg'
+    img: "/img/logo.jpg",
   },
-]
+];
 
 export const Interactive: Story = {
   parameters: {
@@ -601,19 +601,19 @@ export default function WithCustomAvatar() {
         label: "Premium User",
         value: "1",
         avatar: "⭐",
-        avatarClassName: "bg-yellow-400/20 text-yellow-600"
+        avatarClassName: "bg-yellow-400/20 text-yellow-600",
       },
       {
         label: "VIP User",
         value: "2",
         avatar: "👑",
-        avatarClassName: "bg-purple-400/20 text-purple-600"
+        avatarClassName: "bg-purple-400/20 text-purple-600",
       },
       {
         label: "New User",
         value: "3",
         avatar: "🆕",
-        avatarClassName: "bg-blue-400/20 text-blue-600"
+        avatarClassName: "bg-blue-400/20 text-blue-600",
       },
     ],
     onChange: (v: string) => console.log("changed", v),
@@ -835,8 +835,7 @@ export default function CitiesExample() {
   },
 };
 
-
-export const avatarWithImages: Story = {
+export const AvatarWithImages: Story = {
   parameters: {
     docs: {
       source: {
@@ -887,4 +886,4 @@ export default function UsersWithImages() {
       </div>
     );
   },
-}
+};

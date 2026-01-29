@@ -491,7 +491,6 @@ const generateTimeSeriesData = (months: number) => {
 const timeSeriesData = generateTimeSeriesData(18);
 
 export const TimeSeries: Story = {
-  name: "Time Series",
   render: (args) => (
     <div style={{ width: "900px" }}>
       <Chart
@@ -550,7 +549,6 @@ export const Empty: Story = {
 };
 
 export const Loading: Story = {
-  name: "Loading",
   render: (args) => (
     <div
       style={{ width: "900px", height: "350px" }}
@@ -648,8 +646,6 @@ export const AllThings: Story = {
     enableDraggableTooltips: true,
     showTooltipTotal: true,
   },
-
-  name: "All Things",
 
   render: (args) => (
     <div

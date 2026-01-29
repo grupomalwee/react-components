@@ -6,7 +6,8 @@ import {
   TooltipContentBase,
   TooltipProviderBase,
 } from "@/components/ui/feedback/TooltipBase";
-import {InfoIcon } from "@phosphor-icons/react";
+
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
 const meta: Meta<typeof TooltipBase> = {
   title: "feedback/Tooltip",
@@ -85,7 +86,7 @@ export const Click: Story = {
       <TooltipProviderBase>
         <TooltipBase>
           <TooltipTriggerBase asChild button>
-              <InfoIcon className="w-5 h-5" />
+            <ButtonBase>oioioi</ButtonBase>
           </TooltipTriggerBase>
           <TooltipContentBase sideOffset={8}>Dica!</TooltipContentBase>
         </TooltipBase>
