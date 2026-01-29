@@ -33,7 +33,7 @@ export const DropDownMenuPage = () => {
             <DropDownMenuItemBase rightIcon={<CheckIcon />}>
               Team
             </DropDownMenuItemBase>
-            <DropDownMenuItemBase leftIcon={<CheckIcon />}>
+            <DropDownMenuItemBase>
               Subscription
             </DropDownMenuItemBase>
           </DropDownMenuContentBase>
