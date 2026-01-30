@@ -390,3 +390,83 @@ export default function CompleteExample() {
     });
   },
 };
+
+export const Overview: Story = {
+  args: {
+    height: 360,
+    showGrid: true,
+    showTooltip: false,
+    showLegend: true,
+
+    data: [{
+      "trimestre": "Q1",
+      "receita": 4000,
+      "despesas": 2400,
+      "lucro": 1600,
+      "vendas": 3200
+    }, {
+      "trimestre": "Q2",
+      "receita": 5200,
+      "despesas": 3100,
+      "lucro": 2100,
+      "vendas": 4100
+    }, {
+      "trimestre": "Q3",
+      "receita": 6800,
+      "despesas": 3800,
+      "lucro": 3000,
+      "vendas": 5400
+    }, {
+      "trimestre": "Q4",
+      "receita": 7500,
+      "despesas": 4200,
+      "lucro": 3300,
+      "vendas": 6000
+    }],
+
+    xAxis: "trimestre",
+    title: "Gráfico Exemplo",
+    showLabels: true,
+    mapper: {},
+    autoDetect: true,
+    titlePosition: "left"
+  },
+
+  name: "Auto Detect (default)",
+  render: args => <BarChart {...args} autoDetect={true} />,
+
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import BarChart from '@mlw-packages/react-components';
+
+export default function AutoDetect() {
+  const data = [
+    { trimestre: 'Q1', receita: 4000, despesas: 2400, lucro: 1600 },
+    { trimestre: 'Q2', receita: 5200, despesas: 3100, lucro: 2100 },
+  ];
+
+  return <BarChart data={data} xAxis="trimestre" height={360} autoDetect />;
+}
+`
+      }
+    }
+  },
+
+  play: async (
+    {
+      canvasElement
+    }
+  ) => {
+    within(canvasElement);
+
+    await waitFor(() => {
+      const chartContainer = canvasElement.querySelector(".recharts-wrapper");
+      expect(chartContainer).toBeInTheDocument();
+    });
+
+    const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+    expect(bars.length).toBeGreaterThan(0);
+  }
+};

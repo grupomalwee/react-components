@@ -39,6 +39,13 @@ const meta: Meta<typeof ContextMenuBase> = {
     },
     layout: "centered",
   },
+  args:
+  {
+    
+  },
+  argTypes:{
+
+  }
 };
 
 export default meta;

@@ -169,5 +169,43 @@ export const Hover: Story = {
       </StatusIndicator>
     </div>
   ),
-  args: {},
+  args: {
+    
+  },
 };
+
+export const EmptyState: Story = {
+  args: {
+    color: "green",
+    size: "sm",
+    position: "top-right",
+    show: false
+  },
+
+  render: args => (<div className="flex gap-8 items-center justify-center" style={centerStyle}>
+    <StatusIndicator {...args}>
+      <div className="flex flex-col items-center gap-2 border rounded-md p-2">
+        <HoverCardBase>
+          <HoverCardTriggerBase asChild>
+            <BellIcon size={16} />
+          </HoverCardTriggerBase>
+          <HoverCardContentBase className="w-80">
+            <div className="flex justify-between gap-4">
+              <AvatarBase>
+                <AvatarImageBase src="https://github.com/grupomalwee.png" />
+                <AvatarFallbackBase>VC</AvatarFallbackBase>
+              </AvatarBase>
+              <div className="space-y-1">
+                <h4 className="text-sm font-semibold">@mlw-packages</h4>
+                <p className="text-sm">Não há notificações no momento.
+                                    </p>
+                <div className="text-xs text-muted-foreground">2025</div>
+              </div>
+            </div>
+          </HoverCardContentBase>
+        </HoverCardBase>
+      </div>
+    </StatusIndicator>
+  </div>)
+};
+

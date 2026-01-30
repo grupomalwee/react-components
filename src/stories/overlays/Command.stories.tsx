@@ -75,3 +75,95 @@ export const Exemplo: Story = {
     },
   },
 };
+
+export const ManyItems: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <CommandBase>
+        <CommandInputBase placeholder="Type a command or search..." />
+        <CommandListBase>
+          <CommandEmptyBase>No results found.</CommandEmptyBase>
+          <CommandGroupBase heading="Sugestões">
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+            <CommandItemBase>Calendar</CommandItemBase>
+            <CommandItemBase>Search Emoji</CommandItemBase>
+            <CommandItemBase>Calculator</CommandItemBase>
+          </CommandGroupBase>
+          <CommandSeparatorBase />
+          <CommandGroupBase heading="Configurações">
+            <CommandItemBase>Profile</CommandItemBase>
+            <CommandItemBase>Billing</CommandItemBase>
+            <CommandItemBase>Settings</CommandItemBase>
+          </CommandGroupBase>
+        </CommandListBase>
+      </CommandBase>
+    </div>
+  ),
+}; 
+
+export const NotFound: Story = {
+  render: () => (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+      <CommandBase>
+        <CommandInputBase 
+          placeholder="Type a command or search..." 
+          value="xyz123" 
+          readOnly 
+        />
+        <CommandListBase>
+          <CommandEmptyBase>
+            <div style={{ padding: "32px", textAlign: "center", color: "#64748b" }}>
+              <p>Nenhum resultado encontrado para "xyz123".</p>
+            </div>
+          </CommandEmptyBase>
+        </CommandListBase>
+      </CommandBase>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `// Exemplo visual de busca sem resultados`,
+      },
+    },
+  },
+};
