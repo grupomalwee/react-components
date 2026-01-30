@@ -1,3 +1,4 @@
+import { ModeToggleBase } from "@/components/theme/mode-toggle";
 
 export default function ThemeColorTest() {
   const colorVariables = [
@@ -51,21 +52,25 @@ export default function ThemeColorTest() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">
-              Theme Color Palette Test
-            </h1>
-            <p className="text-muted-foreground">
-              Teste todas as cores do sistema em diferentes temas
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-background p-8">     
       <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-center mb-6">
+          <p className="mr-2">Aperta -&gt;</p>
+          <ModeToggleBase
+            themes={[
+              "light",
+              "dark",
+              "system", 
+              "light-purple",
+              "dark-purple",
+              "light-blue",
+              "dark-blue",
+              "light-green",
+              "dark-green",
+            ]}
+            variant="outline"
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {colorVariables.map((color) => (
             <div

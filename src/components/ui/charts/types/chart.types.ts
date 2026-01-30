@@ -1,14 +1,14 @@
+import { TimeSeriesConfig } from "../types";
+import { valueFormatter } from "../utils";
 export interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
 }
-
 export interface XAxisConfig {
   dataKey: string;
   label?: string;
   valueFormatter?: (value: string | number) => string;
   autoLabel?: boolean;
 }
-
 export interface DataMapper {
   [dataKey: string]: {
     label?: string;
@@ -18,7 +18,6 @@ export interface DataMapper {
     visible?: boolean;
   };
 }
-
 export interface BiaxialConfig {
   key: string[];
   label?: string;
@@ -26,15 +25,11 @@ export interface BiaxialConfig {
   decimals?: number;
   stroke?: string | Record<string, string>;
 }
-
 export type SeriesProp = {
   bar?: string[];
   line?: string[];
   area?: string[];
 };
-
-export type valueFormatter = (value: string | number) => string | number;
-
 export interface ChartProps {
   data: ChartData[];
   series?: SeriesProp;
@@ -71,4 +66,48 @@ export interface ChartProps {
   maxTooltips?: number;
   formatBR?: boolean;
   legendUppercase?: boolean;
+  isLoading?: boolean;
+  timeSeries?: boolean | TimeSeriesConfig;
+  timeSeriesLegend?: string;
+  customLegend?: boolean;
+  labelsVisibility?: { bar: boolean; line: boolean; area: boolean };
 }
+
+export interface SeriesConfig {
+  bar?: string[];
+  line?: string[];
+  area?: string[];
+}
+
+export type SeriesOrder = {
+  type: "bar" | "line" | "area";
+  key: string
+}
+
+export type PropsLabelList = {
+  height?: number | string;
+  width?: number | string;
+  x?: number | string;
+  y?: number | string;
+  value?: number | string;
+  payload?: Record<string, unknown>;
+}
+
+export type ValueFormatterType = (props: {
+  value: number | string | undefined;
+  formattedValue: string;
+  [key: string]: unknown;
+}) => string;
+
+export type Padding =
+  | number
+  | Partial<{ left: number; right: number; top: number; bottom: number }>;
+
+export type Margins = Partial<{
+  top: number;
+  right: number;
+  left: number;
+  bottom: number;
+}>;
+
+export type LabelListContent = (props: unknown) => React.ReactNode;

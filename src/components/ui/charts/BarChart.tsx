@@ -13,8 +13,6 @@ import {
 } from "recharts";
 import { DraggableTooltip } from "./components";
 import {
-  Padding,
-  Margins,
   resolveContainerPaddingLeft,
   detectXAxis,
   detectDataFields,
@@ -24,6 +22,7 @@ import {
   resolveChartMargins,
   renderPillLabel,
 } from "./utils";
+import { Margins, Padding } from "./types/chart.types";
 
 // Interface universal para aceitar qualquer estrutura de dados JSON
 interface BarChartData {

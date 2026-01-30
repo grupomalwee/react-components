@@ -18,7 +18,6 @@ export interface LeaderboardProps<T extends string> {
   className?: string;
   isLoading?: boolean;
   legend?: string[];
-  best?: boolean;
 }
 
 export function Leaderboard<T extends string>({
@@ -28,7 +27,6 @@ export function Leaderboard<T extends string>({
   className,
   isLoading = false,
   legend,
-  best = false,
 }: LeaderboardProps<T>) {
   const [order, setOrder] = useState<"asc" | "desc">(initialOrder);
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,57 +69,50 @@ export function Leaderboard<T extends string>({
     return order === "desc" ? 1 : -1;
   });
 
-  const getBadgeColor = (
-    value: number | string,
-    index: number,
-    total: number,
-  ) => {
-    if (best) {
-      const third = total / 3;
-      if (best) {
-        if (index < third) return "green";
-        if (index < 2 * third) return "yellow";
-        return "red";
-      }
-    }
-
+  const getBadgeColor = (value: number | string) => {
     const numValue = typeof value === "string" ? parseFloat(value) : value;
     if (isNaN(numValue)) return "green";
-    if (numValue >= 75) return "red";
-    if (numValue >= 25) return "yellow";
-    return "green";
+    if (numValue > 100) return "green";
+    if (numValue >= 95) return "yellow";
+    return "red";
   };
 
   return (
     <div
-      className={`border rounded-xl flex flex-col max-h-80 w-96  ${className}`}
+      className={`border rounded-xl flex flex-col max-h-80 w-[52rem]  ${className}`}
     >
       <div className="flex items-center justify-between py-2 px-4 border-b flex-shrink-0 gap-3 ">
         <h2 className="text-lg font-semibold px-1 whitespace-nowrap">
           {title}
         </h2>
-        <div className="flex-1 max-w-[200px]">
+        <div className="flex items-center gap-2">
           <InputBase
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^[a-zA-Z0-9\s()À-ÿ~^´`]*$/.test(value)) {
+                setSearchTerm(value);
+              }
+            }}
             placeholder="Pesquisar..."
             leftIcon={<MagnifyingGlassIcon size={16} />}
-            className="h-8 py-1"
+            className="h-8 py-1 w-24"
           />
-        </div>
-        <ButtonBase
-          size="icon"
-          variant="outline"
-          onClick={() => setOrder(order === "desc" ? "asc" : "desc")}
-          disabled={isLoading || sortedData.length === 0}
-        >
-          <motion.div
-            animate={{ rotate: order === "asc" ? 180 : 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+
+          <ButtonBase
+            size="icon"
+            variant="outline"
+            onClick={() => setOrder(order === "desc" ? "asc" : "desc")}
+            disabled={isLoading || sortedData.length === 0}
           >
-            <CaretUpDownIcon />
-          </motion.div>
-        </ButtonBase>
+            <motion.div
+              animate={{ rotate: order === "asc" ? 180 : 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <CaretUpDownIcon />
+            </motion.div>
+          </ButtonBase>
+        </div>
       </div>
 
       <div className="overflow-y-auto flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
@@ -169,7 +160,7 @@ export function Leaderboard<T extends string>({
                       <span className="font-medium">{item.name}</span>
                     </div>
                     <Badge
-                      color={getBadgeColor(item.value, idx, sortedData.length)}
+                      color={getBadgeColor(item.value)}
                       size="md"
                       className="font-bold"
                     >

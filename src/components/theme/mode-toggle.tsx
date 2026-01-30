@@ -1,5 +1,5 @@
 import { DesktopIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import {
   DropDownMenuBase,
@@ -71,14 +71,20 @@ export function ModeToggleBase({
   className,
   variant = "ghost",
 }: ModeToggleBaseProps) {
+  const [mounted, setMounted] = useState(false);
   const { setTheme, theme: currentTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isDark =
-    currentTheme?.includes("dark") ||
-    (currentTheme === "system" &&
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+    mounted &&
+    (currentTheme?.includes("dark") ||
+      (currentTheme === "system" &&
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches));
 
   const toggleTheme = async (newTheme: Theme) => {
     if (!buttonRef.current || !document.startViewTransition) {
@@ -126,7 +132,7 @@ export function ModeToggleBase({
           variant={variant}
           size="icon"
           className={cn(
-            "relative overflow-hidden border-transparent group",
+            "relative overflow-hidden group",
             className,
           )}
         >

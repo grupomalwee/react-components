@@ -128,38 +128,3 @@ export const MixedValues: Story = {
   },
 };
 
-export const BestValues: Story = {
-  args: {
-    title: "Ranking Melhor",
-    legend: ["Participante", "Resultado"],
-    items: [
-      { name: "Campeão", value: 100 },
-      { name: "Vice", value: 95 },
-      { name: "Terceiro", value: "Excelente" },
-      { name: "Quarto", value: 85 },
-      { name: "Quinto", value: "Bom" },
-      { name: "Sexto", value: 70 },
-      { name: "Sétimo", value: "Regular" },
-      { name: "Oitavo", value: 50 },
-    ],
-    best: true,
-  },
-};
-
-export const BadValues: Story = {
-  args: {
-    title: "Ranking Pior",
-    legend: ["Participante", "Resultado"],
-    items: [
-      { name: "Campeão", value: 100 },
-      { name: "Vice", value: 95 },
-      { name: "Terceiro", value: "Excelente" },
-      { name: "Quarto", value: 85 },
-      { name: "Quinto", value: "Bom" },
-      { name: "Sexto", value: 70 },
-      { name: "Sétimo", value: "Regular" },
-      { name: "Oitavo", value: 50 },
-    ],
-  },
-};
-

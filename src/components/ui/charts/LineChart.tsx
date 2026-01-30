@@ -12,8 +12,6 @@ import {
 } from "recharts";
 import { DraggableTooltip } from "./components";
 import {
-  Padding,
-  Margins,
   resolveContainerPaddingLeft,
   generateAdditionalColors,
   niceCeil,
@@ -21,6 +19,7 @@ import {
   compactTick,
   renderPillLabel,
 } from "./utils";
+import { Margins, Padding } from "./types/chart.types";
 
 interface LineChartData {
   name: string;
