@@ -8,3 +8,5 @@ export * from "./hooks";
 export * from "./utils";
 export { default as NoData } from "./NoData";
 export * from "./types";
+export * from "./components/tooltips";  
+export { default as SystemTooltip } from "./components/tooltips/SystemTooltip";  

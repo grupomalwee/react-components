@@ -22,4 +22,5 @@ export * from "./charts";
 export * from "./shared/ClearButton";
 export * from "./picker/TimeScrollPicker";
 export * from "./LeaderBoard";
+export * from "./charts/components/tooltips/SystemTooltip";
 // export * from "./data/Price";

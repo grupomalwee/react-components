@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.9",
+    date: "2026-01-30",
+    shortTitle: "SystemTooltip",
+    added: [
+      "SystemTooltip: novo componente para exibição de tooltips com sistema de coordenadas.",
+    ],
+    changed: [
+      "LeaderBoard: removido o prop `best`. Ajustado sistema de ordenação. Adicionado Input Search.",
+      "ModeToggle: novo estilo de Dropdown.",
+    ],
+  },
+  {
     version: "1.8.8",
     date: "2026-01-29",
     shortTitle: "ModeToggle",
