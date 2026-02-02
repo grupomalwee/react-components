@@ -11,6 +11,12 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.11",
+    date: "2026-02-02",
+    shortTitle: "InputBase e DateTimePicker",
+    fixed: ["InputBase: keyboard numeric", "DateTimePicker: responsividade."],
+  },
+  {
     version: "1.8.10",
     date: "2026-02-02",
     shortTitle: "TimeScrollPicker",
