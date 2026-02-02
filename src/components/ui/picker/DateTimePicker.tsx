@@ -163,7 +163,7 @@ export function DateTimePicker({
   const renderPickerContent = () => (
     <div className="p-2 sm:p-3 border border-border rounded-md">
       {isMobile && !hideTime ? (
-        <div className="min-h-[380px] max-h-[calc(400px)]">
+        <div className="flex flex-col min-h-0">
           {internalDate && (
             <div className="flex  items-center gap-3 px-4 py-3 rounded-lg ">
               <span className="text-md font-semibold">
@@ -207,7 +207,7 @@ export function DateTimePicker({
             </TabsContentBase>
 
             <TabsContentBase value="time" className="mt-0">
-              <div className="flex flex-col items-center justify-center gap-4 py-2 min-h-[330px]">
+              <div className="flex flex-col items-center justify-center gap-4 py-2">
                 <TimeScrollPicker
                   setDate={(d) => handleTimeChange(d ?? null)}
                   date={internalDate}
@@ -337,8 +337,10 @@ export function DateTimePicker({
 
           <ErrorMessage error={error} />
 
-          <DialogContentBase className="p-0 max-w-[min(95vw,450px)] max-h-[95vh] overflow-y-auto">
-            {renderPickerContent()}
+          <DialogContentBase className="p-0 max-h-[65vh] w-[calc(100vw-24px)] sm:w-[calc(100vw-32px)] overflow-hidden flex flex-col">
+            <div className="overflow-y-auto flex-1">
+              {renderPickerContent()}
+            </div>
           </DialogContentBase>
         </DialogBase>
       ) : (

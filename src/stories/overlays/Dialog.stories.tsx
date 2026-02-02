@@ -241,7 +241,7 @@ export const DateTimeDialog: Story = {
                 </DialogDescriptionBase>
               </DialogHeaderBase>
               <div className="py-4">
-                <DateTimePicker date={date} onChange={setDate} />
+                <DateTimePicker date={date} onChange={setDate} hideSeconds />
               </div>
               <DialogFooterBase>
                 <DialogCloseBase asChild>

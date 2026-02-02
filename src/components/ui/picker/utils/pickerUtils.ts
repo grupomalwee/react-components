@@ -8,3 +8,11 @@ export function visualForItem(item: number, value: number) {
 }
 
 export default visualForItem;
+
+export const ITEM_HEIGHT = 38.5;
+export const VISIBLE_ITEMS = 5;
+export const CENTER_INDEX = Math.floor(VISIBLE_ITEMS / 2);
+
+export function getItems(max: number, step = 1) {
+  return Array.from({ length: Math.ceil(max / step) }, (_, i) => i * step);
+}
