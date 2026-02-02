@@ -19,7 +19,7 @@ const preview: Preview = {
     theme: {
       name: "Theme",
       description: "Global theme for components",
-      defaultValue: "light-purple",
+      defaultValue: "light",
       toolbar: {
         icon: "paintbrush",
         items: [
@@ -38,7 +38,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      const theme = context.globals.theme || "light-purple";
+      const theme = context.globals.theme || "light";
 
       const html = window.document.documentElement;
       const themes = [

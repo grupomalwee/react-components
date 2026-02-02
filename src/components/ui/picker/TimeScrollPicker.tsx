@@ -7,7 +7,7 @@ interface TimeScrollPickerProps {
   hideSeconds?: boolean;
 }
 
-const ITEM_HEIGHT = 38.5; 
+const ITEM_HEIGHT = 38.5;
 const VISIBLE_ITEMS = 5;
 const CENTER_INDEX = Math.floor(VISIBLE_ITEMS / 2);
 
@@ -71,20 +71,19 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
     }, 100);
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleStart = (pageY: number) => {
     if (!containerRef.current) return;
     setIsDragging(true);
-    setStartY(e.pageY);
+    setStartY(pageY);
     setScrollTop(containerRef.current.scrollTop);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMove = (pageY: number) => {
     if (!isDragging || !containerRef.current) return;
-    e.preventDefault();
-    containerRef.current.scrollTop = scrollTop + (startY - e.pageY) * 2;
+    containerRef.current.scrollTop = scrollTop + (startY - pageY) * 2;
   };
 
-  const handleMouseUp = () => {
+  const handleEnd = () => {
     if (!containerRef.current) return;
     setIsDragging(false);
 
@@ -98,8 +97,38 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
     });
   };
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    handleStart(e.pageY);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      e.preventDefault();
+      handleMove(e.pageY);
+    }
+  };
+
+  const handleMouseUp = () => {
+    handleEnd();
+  };
+
   const handleMouseLeave = () => {
-    if (isDragging) handleMouseUp();
+    if (isDragging) handleEnd();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    handleStart(e.touches[0].pageY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDragging) {
+      if (e.cancelable) e.preventDefault();
+      handleMove(e.touches[0].pageY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    handleEnd();
   };
 
   const handleWheel = (e: React.WheelEvent) => {
@@ -121,6 +150,9 @@ function ScrollColumn({ value, onChange, max, label }: ScrollColumnProps) {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           style={{
             height: `${containerHeight}px`,
             paddingTop: `${centerIndex * itemHeight}px`,

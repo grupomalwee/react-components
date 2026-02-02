@@ -157,7 +157,7 @@ export function ModeToggleBase({
       </DropDownMenuTriggerBase>
       <DropDownMenuContentBase
         align="end"
-        className="border-border bg-popover text-popover-foreground min-w-[140px]"
+        className="border-border bg-popover text-popover-foreground min-w-[140px] "
       >
         {themes.map((theme) => {
           const isActive = currentTheme === theme;
@@ -166,9 +166,9 @@ export function ModeToggleBase({
               key={theme}
               onClick={() => toggleTheme(theme)}
               className={cn(
-                "gap-3 transition-all duration-200",
+                "gap-2 transition-all duration-200",
                 isActive
-                  ? "bg-accent/80 text-accent-foreground border-l-2 border-primary font-medium pl-1.5"
+                  ? "bg-accent/80 text-accent-foreground border-l-2 border-primary font-medium pl-1.5 my-0.5"
                   : "hover:bg-accent hover:text-accent-foreground",
               )}
             >

@@ -169,7 +169,7 @@ const ProgressBase = React.forwardRef<
               </ProgressPrimitive.Root>
 
               {showValue && valuePosition === "right" && (
-                <div className="w-12 text-sm font-extrabold text-left">
+                <div className=" text-sm font-bold text-left">
                   {Math.round(value || 0)}%
                 </div>
               )}
