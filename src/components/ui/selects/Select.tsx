@@ -43,6 +43,7 @@ export interface SelectTestIds {
   paginationPrev?: string;
   paginationNext?: string;
   paginationPage?: (page: number) => string;
+  empty?:string
 }
 
 export interface DefaultSelectProps<T extends string>
@@ -63,15 +64,17 @@ export interface SelectPropsWithItems<T extends string>
   items: SelectItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
+  empty?: React.ReactNode;
 }
 
 export interface SelectPropsWithGroupItems<T extends string>
-  extends DefaultSelectProps<T> {
+extends DefaultSelectProps<T> {
   items?: never;
   groupItems: {
     [key: string]: SelectItem<T>[];
   };
   testIds?: SelectTestIds;
+  empty?: React.ReactNode;
 }
 
 export type NewSelectProps<T extends string> =
@@ -92,6 +95,7 @@ export function Select<T extends string>({
   className,
   pagination,
   hideClear = false,
+  empty
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -155,6 +159,7 @@ export function Select<T extends string>({
     return () => clearTimeout(id);
   }, [page, pagination]);
 
+
   return (
     <div data-testid={testIds.root ?? "select-root"}>
       {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
@@ -200,27 +205,51 @@ export function Select<T extends string>({
 
         <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>
           <SelectContentBase data-testid={testIds.content ?? "select-content"}>
-            {pagination && pagination > 0 ? (
+            {empty ? (
+              <div>
+                {empty}
+              </div>
+            ) : (
               <>
-                <div
-                  className={`transition-all duration-200 ${
-                    animating
-                      ? "opacity-0 -translate-y-1"
-                      : "opacity-100 translate-y-0"
-                  }`}
-                >
-                  {paged && "grouped" in paged ? (
-                    Object.keys(paged.grouped).map((key) => (
+              {pagination && pagination > 0 ? (
+                <>
+                  <div
+                    className={`transition-all duration-200 ${
+                      animating
+                        ? "opacity-0 -translate-y-1"
+                        : "opacity-100 translate-y-0"
+                    }`}
+                  >
+                    {paged && "grouped" in paged ? (
+                      Object.keys(paged.grouped).map((key) => (
+                        <SelectGroupBase
+                          key={key}
+                          data-testid={testIds.group ?? "select-group"}
+                        >
+                          <SelectLabelBase
+                            data-testid={testIds.label ?? "select-label"}
+                          >
+                            {key}
+                          </SelectLabelBase>
+                          {paged.grouped[key].map((item: SelectItem<T>) => (
+                            <SelectItemBase
+                              key={item.value}
+                              value={item.value}
+                              data-testid={
+                                testIds.item?.(String(item.value)) ??
+                                `select-item-${item.value}`
+                              }
+                            >
+                              {item.label}
+                            </SelectItemBase>
+                          ))}
+                        </SelectGroupBase>
+                      ))
+                    ) : paged ? (
                       <SelectGroupBase
-                        key={key}
                         data-testid={testIds.group ?? "select-group"}
                       >
-                        <SelectLabelBase
-                          data-testid={testIds.label ?? "select-label"}
-                        >
-                          {key}
-                        </SelectLabelBase>
-                        {paged.grouped[key].map((item: SelectItem<T>) => (
+                        {paged.pageItems.map((item: SelectItem<T>) => (
                           <SelectItemBase
                             key={item.value}
                             value={item.value}
@@ -233,12 +262,81 @@ export function Select<T extends string>({
                           </SelectItemBase>
                         ))}
                       </SelectGroupBase>
-                    ))
-                  ) : paged ? (
+                    ) : null}
+                  </div>
+
+                  {paged && paged.totalPages > 1 && (
+                    <div className="px-2 py-2 flex items-center justify-between">
+                      <ButtonBase
+                        variant="ghost"
+                        tooltip="Previous page"
+                        onClick={goPrev}
+                        disabled={page <= 1}
+                        data-testid={
+                          testIds.paginationPrev ?? "select-pagination-prev"
+                        }
+                        aria-label="Previous page"
+                        className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
+                      >
+                        <CaretLeftIcon className="h-4 w-4 opacity-80" />
+                      </ButtonBase>
+
+                      <div className=" flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-xs">
+                          {`${page} / ${paged.totalPages}`}
+                        </span>
+                      </div>
+
+                      <ButtonBase
+                        variant="ghost"
+                        tooltip="Next page"
+                        onClick={goNext}
+                        disabled={page >= paged.totalPages}
+                        data-testid={
+                          testIds.paginationNext ?? "select-pagination-next"
+                        }
+                        aria-label="Next page"
+                        className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
+                      >
+                        <CaretRightIcon className="h-4 w-4 opacity-80" />
+                      </ButtonBase>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {groupItems ? (
+                    <>
+                      {Object.keys(groupItems).map((key) => (
+                        <SelectGroupBase
+                          key={key}
+                          data-testid={testIds.group ?? "select-group"}
+                        >
+                          <SelectLabelBase
+                            data-testid={testIds.label ?? "select-label"}
+                          >
+                            {key}
+                          </SelectLabelBase>
+                          {groupItems[key].map((item) => (
+                            <SelectItemBase
+                              key={item.value}
+                              value={item.value}
+                              data-testid={
+                                testIds.item?.(String(item.value)) ??
+                                `select-item-${item.value}`
+                              }
+                            >
+                              {item.label}
+                            </SelectItemBase>
+                          ))}
+                        </SelectGroupBase>
+                      ))}
+                    </>
+                  ) : (
                     <SelectGroupBase
                       data-testid={testIds.group ?? "select-group"}
                     >
-                      {paged.pageItems.map((item: SelectItem<T>) => (
+                      {items!.map((item) => (
                         <SelectItemBase
                           key={item.value}
                           value={item.value}
@@ -251,96 +349,9 @@ export function Select<T extends string>({
                         </SelectItemBase>
                       ))}
                     </SelectGroupBase>
-                  ) : null}
-                </div>
-
-                {paged && paged.totalPages > 1 && (
-                  <div className="px-2 py-2 flex items-center justify-between">
-                    <ButtonBase
-                      variant="ghost"
-                      tooltip="Previous page"
-                      onClick={goPrev}
-                      disabled={page <= 1}
-                      data-testid={
-                        testIds.paginationPrev ?? "select-pagination-prev"
-                      }
-                      aria-label="Previous page"
-                      className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
-                    >
-                      <CaretLeftIcon className="h-4 w-4 opacity-80" />
-                    </ButtonBase>
-
-                    <div className=" flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-xs">
-                        {`${page} / ${paged.totalPages}`}
-                      </span>
-                    </div>
-
-                    <ButtonBase
-                      variant="ghost"
-                      tooltip="Next page"
-                      onClick={goNext}
-                      disabled={page >= paged.totalPages}
-                      data-testid={
-                        testIds.paginationNext ?? "select-pagination-next"
-                      }
-                      aria-label="Next page"
-                      className="text-xs px-2 py-1 rounded disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
-                    >
-                      <CaretRightIcon className="h-4 w-4 opacity-80" />
-                    </ButtonBase>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {groupItems ? (
-                  <>
-                    {Object.keys(groupItems).map((key) => (
-                      <SelectGroupBase
-                        key={key}
-                        data-testid={testIds.group ?? "select-group"}
-                      >
-                        <SelectLabelBase
-                          data-testid={testIds.label ?? "select-label"}
-                        >
-                          {key}
-                        </SelectLabelBase>
-                        {groupItems[key].map((item) => (
-                          <SelectItemBase
-                            key={item.value}
-                            value={item.value}
-                            data-testid={
-                              testIds.item?.(String(item.value)) ??
-                              `select-item-${item.value}`
-                            }
-                          >
-                            {item.label}
-                          </SelectItemBase>
-                        ))}
-                      </SelectGroupBase>
-                    ))}
-                  </>
-                ) : (
-                  <SelectGroupBase
-                    data-testid={testIds.group ?? "select-group"}
-                  >
-                    {items!.map((item) => (
-                      <SelectItemBase
-                        key={item.value}
-                        value={item.value}
-                        data-testid={
-                          testIds.item?.(String(item.value)) ??
-                          `select-item-${item.value}`
-                        }
-                      >
-                        {item.label}
-                      </SelectItemBase>
-                    ))}
-                  </SelectGroupBase>
-                )}
-              </>
-            )}
+                  )}
+                </>
+              )}</>)}
           </SelectContentBase>
         </ScrollAreaBase>
       </SelectBase>
