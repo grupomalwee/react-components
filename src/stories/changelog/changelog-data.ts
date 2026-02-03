@@ -11,6 +11,14 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.12",
+    date: "2026-02-03",
+    shortTitle: "Numeric Input",
+    added: [
+      "Numeric Input: componente de input numérico com validação de min/max, confirmação e suporte a loading/disabled.",
+    ],
+  },
+  {
     version: "1.8.11",
     date: "2026-02-02",
     shortTitle: "InputBase e DateTimePicker",
