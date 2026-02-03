@@ -18,6 +18,7 @@ type PlanInputProps = {
   disabled?: boolean;
   tooltip_on_overflow?: boolean;
   hideConfirm?: boolean;
+  numericKeyboard?: boolean;
 };
 
 export function NumericInput({
@@ -32,6 +33,7 @@ export function NumericInput({
   disabled,
   tooltip_on_overflow,
   hideConfirm = false,
+  numericKeyboard,
 }: PlanInputProps) {
   const original = useMemo(() => value, [value]);
   const [internalValue, setInternalValue] = useState(original);
@@ -100,6 +102,7 @@ export function NumericInput({
           rightIcon={<PencilSimpleIcon size={12} className="mr-2" />}
           error={error}
           disabled={disabled}
+          numericKeyboard={numericKeyboard}
         />
 
         <AnimatePresence>

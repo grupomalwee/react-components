@@ -195,3 +195,10 @@ export const HideConfirm: Story = {
   },
   render: (args) => <NumericInputWrapper {...args} />,
 };
+export const NumericKeyboard: Story = {
+  args: {
+    value: 120,
+    numericKeyboard: true,
+  },
+  render: (args) => <NumericInputWrapper {...args} />,
+};
