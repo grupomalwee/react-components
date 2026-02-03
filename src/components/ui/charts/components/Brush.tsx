@@ -18,7 +18,10 @@ interface BrushProps {
   legend?: string;
   startIndex: number;
   endIndex: number;
-  onMouseDown: (e: React.MouseEvent, type: "start" | "end" | "middle") => void;
+  onMouseDown: (
+    e: React.MouseEvent | React.TouchEvent,
+    type: "start" | "end" | "middle",
+  ) => void;
   brushRef: React.RefObject<HTMLDivElement | null>;
   xAxisKey: string;
   seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }>;
@@ -145,17 +148,22 @@ const Brush: React.FC<BrushProps> = ({
           />
 
           <div
-            className="absolute top-0 bottom-0 border-x-2 border-y border-primary/50 cursor-move group hover:bg-primary/5 rounded-md"
+            className="absolute top-0 bottom-0 border-x-2 border-y border-primary/50 cursor-move group hover:bg-primary/5 rounded-md touch-none"
             style={{
               left: `${(startIndex / (dataLength - 1)) * 100}%`,
               right: `${((dataLength - 1 - endIndex) / (dataLength - 1)) * 100}%`,
               backgroundColor: "transparent",
             }}
             onMouseDown={(e) => onMouseDown(e, "middle")}
+            onTouchStart={(e) => onMouseDown(e, "middle")}
           >
             <div
-              className="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle"
+              className="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle touch-none"
               onMouseDown={(e) => {
+                e.stopPropagation();
+                onMouseDown(e, "start");
+              }}
+              onTouchStart={(e) => {
                 e.stopPropagation();
                 onMouseDown(e, "start");
               }}
@@ -169,8 +177,12 @@ const Brush: React.FC<BrushProps> = ({
             </div>
 
             <div
-              className="absolute top-1/2 -translate-y-1/2 -right-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle"
+              className="absolute top-1/2 -translate-y-1/2 -right-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle touch-none"
               onMouseDown={(e) => {
+                e.stopPropagation();
+                onMouseDown(e, "end");
+              }}
+              onTouchStart={(e) => {
                 e.stopPropagation();
                 onMouseDown(e, "end");
               }}

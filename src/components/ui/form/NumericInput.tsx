@@ -6,7 +6,7 @@ import { InputBase } from './InputBase';
 import LabelBase from './LabelBase';
 import { ButtonBase } from './ButtonBase';
 
-type PlanInputProps = {
+type NumericInputProps = {
   value: number;
   onChange: (value: number) => void;
   min?: number;
@@ -34,7 +34,7 @@ export function NumericInput({
   tooltip_on_overflow,
   hideConfirm = false,
   numericKeyboard,
-}: PlanInputProps) {
+}: NumericInputProps) {
   const original = useMemo(() => value, [value]);
   const [internalValue, setInternalValue] = useState(original);
 
