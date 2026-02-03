@@ -69,3 +69,5 @@ export * from "./ui/selects/Select";
 export * from "./ui/charts";
 
 export * from "./ui/LeaderBoard";
+export * from "./ui/form/NumericInput";
+export * from "./ui/FilterBase";
