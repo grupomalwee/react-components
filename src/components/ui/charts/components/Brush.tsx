@@ -19,6 +19,7 @@ interface BrushProps {
   startIndex: number;
   endIndex: number;
   onMouseDown: (e: React.MouseEvent, type: "start" | "end" | "middle") => void;
+  onTouchMove: (e:React.TouchEvent, type: "start" | "end" | "middle") => void;
   brushRef: React.RefObject<HTMLDivElement | null>;
   xAxisKey: string;
   seriesOrder: Array<{ type: "bar" | "line" | "area"; key: string }>;
@@ -40,6 +41,7 @@ const Brush: React.FC<BrushProps> = ({
   startIndex,
   endIndex,
   onMouseDown,
+  onTouchMove,
   brushRef,
   xAxisKey,
   seriesOrder,
@@ -49,7 +51,6 @@ const Brush: React.FC<BrushProps> = ({
   miniChartOpacity = 0.3,
 }) => {
   const dataLength = data.length;
-
   return (
     <div className="w-full px-8 pb-4">
       {legend && (
@@ -152,6 +153,7 @@ const Brush: React.FC<BrushProps> = ({
               backgroundColor: "transparent",
             }}
             onMouseDown={(e) => onMouseDown(e, "middle")}
+            onTouchMove={(e) => onTouchMove(e, "middle")}
           >
             <div
               className="absolute top-1/2 -translate-y-1/2 -left-3.5 w-7 h-12 flex items-center justify-center cursor-ew-resize group/handle"
@@ -159,13 +161,17 @@ const Brush: React.FC<BrushProps> = ({
                 e.stopPropagation();
                 onMouseDown(e, "start");
               }}
+              onTouchMove={(e) => {
+                e.stopPropagation();
+                onTouchMove(e, "start")
+              }}
             >
               <div
                 className="w-1.5 h-6 rounded-sm flex flex-col items-center justify-center gap-1 border border-primary/20"
                 style={{
                   backgroundColor: brushColor ?? "hsl(var(--muted-foreground))",
                 }}
-              ></div>
+                ></div>
             </div>
 
             <div
@@ -173,6 +179,10 @@ const Brush: React.FC<BrushProps> = ({
               onMouseDown={(e) => {
                 e.stopPropagation();
                 onMouseDown(e, "end");
+              }}
+              onTouchMove={(e) => {
+                e.stopPropagation();
+                onTouchMove(e, "end")
               }}
             >
               <div

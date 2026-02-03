@@ -123,8 +123,7 @@ const Chart: React.FC<ChartProps> = ({
     return timeSeries;
   }, [timeSeries]);
 
-  const { startIndex, endIndex, brushRef, handleMouseDown } =
-    useTimeSeriesRange({
+  const { startIndex, endIndex, brushRef, handleMouseDown, handleTouchMove } = useTimeSeriesRange({
       dataLength: data.length,
       defaultStartIndex: timeSeriesConfig?.start,
       defaultEndIndex: timeSeriesConfig?.end,
@@ -829,6 +828,7 @@ const Chart: React.FC<ChartProps> = ({
 
         {timeSeriesConfig && (
           <Brush
+            onTouchMove={handleTouchMove}
             legend={timeSeriesLegend}
             data={data}
             startIndex={startIndex}
