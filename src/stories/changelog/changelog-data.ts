@@ -11,6 +11,17 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.8.13",
+    date: "2026-02-03",
+    shortTitle: "Select e TimeSeries",
+    added: [
+      "Select: nova prop Empty que aceita React.ReactNode para customizar completamente a mensagem exibida quando a busca não retorna resultados, permitindo ilustrações e ações customizadas.",
+    ],
+    changed: [
+      "Time Series: ajustado TouchEvent para melhorar a experiência de usuário em dispositivos móveis, garantindo rolagem suave e seleção precisa de intervalos de tempo.",
+    ],
+  },
+  {
     version: "1.8.12",
     date: "2026-02-03",
     shortTitle: "Numeric Input",
