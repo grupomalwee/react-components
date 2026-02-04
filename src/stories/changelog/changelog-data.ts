@@ -11,6 +11,23 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.0",
+    date: "2026-02-03",
+    shortTitle: "Selects, Theme, Dialog, Chart e Date Time Picker",
+    fixed: [
+      "Selects: erros de inconsistencia de cores e Children.",
+      "Combobox: arrumado scroll em dispositivos móveis.",
+      "Dialogs: arrumado arrumado paddins em dispositivos mobile.",
+      "Chart: ajuste de padding, borda e responsividade em dispositivos mobile.",
+      "Date Time Picker:arrumado layout em dispositivos mobile, ajuste de bordar e theme",
+    ],
+    changed: [
+      "Theme:arrumado animacao para dispositivos IOS",
+      "DraggableTooltip: disponibilidade de movimentacao mobile",
+    ],
+   
+  },
+  {
     version: "1.8.13",
     date: "2026-02-03",
     shortTitle: "Theme e Combobox",
