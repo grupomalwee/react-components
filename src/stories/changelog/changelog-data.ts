@@ -13,6 +13,17 @@ export const changelogData: ChangeItem[] = [
   {
     version: "1.8.13",
     date: "2026-02-03",
+    shortTitle: "Theme e Combobox",
+    fixed: [
+      "Combobox: arrumdo children error no console log",
+    ],
+    changed: [
+      "Theme: ajustado o tema dark para componentes de formulários para melhor contraste e legibilidade.",
+    ],
+  },
+  {
+    version: "1.8.13",
+    date: "2026-02-03",
     shortTitle: "Select e TimeSeries",
     added: [
       "Select: nova prop Empty que aceita React.ReactNode para customizar completamente a mensagem exibida quando a busca não retorna resultados, permitindo ilustrações e ações customizadas.",
