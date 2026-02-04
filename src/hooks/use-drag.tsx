@@ -11,6 +11,15 @@ interface UseDragOptions {
   onDrag?: (id: string, position: Position) => void;
 }
 
+const isTouchDevice = () => {
+  return (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    (navigator as unknown as { msMaxTouchPoints?: number }).msMaxTouchPoints !==
+      undefined
+  );
+};
+
 export const useDrag = (options: UseDragOptions = {}) => {
   const [isDragging, setIsDragging] = useState<string | null>(null);
   const [positions, setPositions] = useState<Record<string, Position>>({});
@@ -21,6 +30,7 @@ export const useDrag = (options: UseDragOptions = {}) => {
     elementY: number;
   } | null>(null);
   const dragId = useRef<string | null>(null);
+  const isTouch = useRef(isTouchDevice());
 
   const handleDragStart = useCallback(
     (id: string, e: React.MouseEvent | React.TouchEvent) => {
@@ -31,10 +41,7 @@ export const useDrag = (options: UseDragOptions = {}) => {
       const clientY = isTouchEvent
         ? e.touches[0].clientY
         : (e as React.MouseEvent).clientY;
-
-      if (!isTouchEvent) {
-        e.preventDefault();
-      }
+      e.preventDefault();
 
       const currentPosition = positions[id] || { top: 0, left: 0 };
 
@@ -57,6 +64,12 @@ export const useDrag = (options: UseDragOptions = {}) => {
       if (!isDragging || !dragStartPos.current || !dragId.current) return;
 
       const isTouchEvent = "touches" in e;
+
+      // Previne o scroll no mobile durante o drag
+      if (isTouchEvent) {
+        e.preventDefault();
+      }
+
       const clientX = isTouchEvent
         ? e.touches[0].clientX
         : (e as MouseEvent).clientX;
@@ -103,19 +116,32 @@ export const useDrag = (options: UseDragOptions = {}) => {
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-      document.addEventListener("touchmove", handleMouseMove, {
-        passive: false,
-      });
-      document.addEventListener("touchend", handleMouseUp);
+      // Captura o valor do ref para usar no cleanup
+      const isTouchDev = isTouch.current;
+
+      // Adiciona event listeners baseado no tipo de dispositivo
+      if (isTouchDev) {
+        // Dispositivo touch - apenas eventos touch
+        document.addEventListener("touchmove", handleMouseMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleMouseUp);
+      } else {
+        // Dispositivo desktop - apenas eventos mouse
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+      }
+
       document.body.style.userSelect = "none";
 
       return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-        document.removeEventListener("touchmove", handleMouseMove);
-        document.removeEventListener("touchend", handleMouseUp);
+        if (isTouchDev) {
+          document.removeEventListener("touchmove", handleMouseMove);
+          document.removeEventListener("touchend", handleMouseUp);
+        } else {
+          document.removeEventListener("mousemove", handleMouseMove);
+          document.removeEventListener("mouseup", handleMouseUp);
+        }
         document.body.style.userSelect = "";
       };
     }

@@ -108,7 +108,7 @@ interface DraggableTooltipProps {
   title?: string;
   dataKeys: string[];
   finalColors: Record<string, string>;
-  onMouseDown?: (id: string, e: React.MouseEvent) => void;
+  onMouseDown?: (id: string, e: React.MouseEvent | React.TouchEvent) => void;
   onClose: (id: string) => void;
   periodLabel?: string;
   dataLabel?: string;
@@ -154,7 +154,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       showOnlyHighlighted && highlightedSeries && highlightedSeries.size > 0
         ? dataKeys.filter((k) => highlightedSeries.has(k))
         : dataKeys,
-    [showOnlyHighlighted, highlightedSeries, dataKeys]
+    [showOnlyHighlighted, highlightedSeries, dataKeys],
   );
 
   // Componente interno para exibir total - memorizado para evitar re-renders
@@ -265,7 +265,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
       setAlignmentGuides(guides);
     },
-    [getAllTooltips, id]
+    [getAllTooltips, id],
   );
 
   const snapToGuides = useCallback(
@@ -326,15 +326,35 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
       return snappedPosition;
     },
-    [alignmentGuides]
+    [alignmentGuides],
   );
 
   // Drag handlers using document mouse events and RAF
   useEffect(() => {
     let rafId: number | null = null;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragging) return;
       lastMouse.current = { x: e.clientX, y: e.clientY };
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const newLeft = lastMouse.current.x - offsetRef.current.x;
+        const newTop = lastMouse.current.y - offsetRef.current.y;
+        const rawPosition = {
+          top: Math.max(0, Math.min(newTop, window.innerHeight - 200)),
+          left: Math.max(0, Math.min(newLeft, window.innerWidth - 250)),
+        };
+        updateAlignmentGuides(rawPosition);
+        const snapped = snapToGuides(rawPosition);
+        setLocalPos(snapped);
+        if (onPositionChange) onPositionChange(id, snapped);
+      });
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragging || !e.touches[0]) return;
+      e.preventDefault(); 
+      lastMouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const newLeft = lastMouse.current.x - offsetRef.current.x;
@@ -358,11 +378,23 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       }
     };
 
+    const handleTouchEnd = () => {
+      if (dragging) {
+        setDragging(false);
+        setAlignmentGuides([]);
+        if (rafId) cancelAnimationFrame(rafId);
+      }
+    };
+
     if (dragging) {
       document.addEventListener("mousemove", handleMouseMove, {
         passive: true,
       });
       document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false, // Permite preventDefault para evitar scroll
+      });
+      document.addEventListener("touchend", handleTouchEnd);
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
     }
@@ -370,6 +402,8 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       if (rafId) cancelAnimationFrame(rafId);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
     };
@@ -381,7 +415,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
     const handleRequestTooltipCount = () => {
       window.dispatchEvent(
-        new CustomEvent("tooltipCountResponse", { detail: { count: 1 } })
+        new CustomEvent("tooltipCountResponse", { detail: { count: 1 } }),
       );
     };
 
@@ -478,11 +512,12 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       setDragging(true);
       onMouseDown?.(id, e);
     },
-    [id, onMouseDown]
+    [id, onMouseDown],
   );
 
   const handleTouchStartLocal = useCallback(
     (e: React.TouchEvent) => {
+      e.preventDefault(); // Previne comportamento padrão (scroll, zoom, etc)
       e.stopPropagation();
       const touch = e.touches[0];
       if (!touch) return;
@@ -492,9 +527,9 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
         y: touch.clientY - rect.top,
       };
       setDragging(true);
-      onMouseDown?.(id, e as unknown as React.MouseEvent);
+      onMouseDown?.(id, e);
     },
-    [id, onMouseDown]
+    [id, onMouseDown],
   );
 
   const handleCloseClick = useCallback(
@@ -502,7 +537,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       e.stopPropagation();
       onClose(id);
     },
-    [id, onClose]
+    [id, onClose],
   );
 
   return (
@@ -514,26 +549,26 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
           const startX = isHorizontal
             ? Math.min(
                 guide.sourceTooltip.left + guide.sourceTooltip.width / 2,
-                guide.targetTooltip.left + guide.targetTooltip.width / 2
+                guide.targetTooltip.left + guide.targetTooltip.width / 2,
               )
             : guide.sourceTooltip.left + guide.sourceTooltip.width / 2;
           const endX = isHorizontal
             ? Math.max(
                 guide.sourceTooltip.left + guide.sourceTooltip.width / 2,
-                guide.targetTooltip.left + guide.targetTooltip.width / 2
+                guide.targetTooltip.left + guide.targetTooltip.width / 2,
               )
             : guide.targetTooltip.left + guide.targetTooltip.width / 2;
           const startY = isHorizontal
             ? guide.sourceTooltip.top + guide.sourceTooltip.height / 2
             : Math.min(
                 guide.sourceTooltip.top + guide.sourceTooltip.height / 2,
-                guide.targetTooltip.top + guide.targetTooltip.height / 2
+                guide.targetTooltip.top + guide.targetTooltip.height / 2,
               );
           const endY = isHorizontal
             ? guide.targetTooltip.top + guide.targetTooltip.height / 2
             : Math.max(
                 guide.sourceTooltip.top + guide.sourceTooltip.height / 2,
-                guide.targetTooltip.top + guide.targetTooltip.height / 2
+                guide.targetTooltip.top + guide.targetTooltip.height / 2,
               );
 
           return (
@@ -679,11 +714,11 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                   if (value === undefined) return null;
 
                   const numericKeys = dataKeys.filter(
-                    (k) => typeof data[k] === "number"
+                    (k) => typeof data[k] === "number",
                   );
                   const absDenominator = numericKeys.reduce(
                     (s, k) => s + Math.abs(Number(data[k]) || 0),
-                    0
+                    0,
                   );
                   const val =
                     typeof value === "number"
@@ -783,7 +818,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                 toggleHighlight,
                 finalColors,
                 valueFormatter,
-              ]
+              ],
             )}
 
             <div className="mt-3 pt-2 border-t">
