@@ -649,8 +649,8 @@ export const SelectEmpty:Story = {
     return (
       <div className="w-[300px]">
         <Select
-          empty={<option className="text-center pt-1">Nenhum item encontrado</option>}
-          items={manyItems}
+          empty="oieee00000iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii000"
+          items={[]}
           selected={selected}
           onChange={setSelected}
           placeholder="Select with no items"

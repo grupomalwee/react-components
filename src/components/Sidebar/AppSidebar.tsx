@@ -90,8 +90,8 @@ import { ContextMenuPage } from "@/pages/ContextMenu";
 import { HoverCardPage } from "@/pages/HoverCard";
 import { NavigationMenuPage } from "@/pages/NavigationMenu";
 import DocsTests from "@/pages/Docs-tests";
-import { BarChartPage } from "@/pages/BarChart";
-import { LineChartPage } from "@/pages/LineChart";
+// import { BarChartPage } from "@/pages/BarChart";
+// import { LineChartPage } from "@/pages/LineChart";
 import DraggableTooltipPage from "@/pages/DraggableTooltip";
 // import ChartPage from "@/pages/Chart";
 import DatePickerPage from "@/pages/DatePicker";
@@ -205,8 +205,8 @@ export function AppSidebar() {
           />
           <Route path="/avatar" element={<AvatarPage />} />
           <Route path="/badge" element={<BadgePage />} />
-          <Route path="/bar-chart" element={<BarChartPage />} />
-          <Route path="/line-chart" element={<LineChartPage />} />
+          {/* <Route path="/bar-chart" element={<BarChartPage />} />
+          <Route path="/line-chart" element={<LineChartPage />} /> */}
           <Route path="/draggable-tooltip" element={<DraggableTooltipPage />} />
           <Route path="/button" element={<ButtonPage />} />
           <Route path="/breadcrumb" element={<BreadcrumbPage />} />
