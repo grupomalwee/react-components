@@ -1,4 +1,6 @@
 import { ModeToggleBase } from "@/components/theme/mode-toggle";
+import { MultiSelect } from "@/components/ui/selects/MultiSelect";
+import { useState } from "react";
 
 export default function ThemeColorTest() {
   const colorVariables = [
@@ -51,6 +53,15 @@ export default function ThemeColorTest() {
     },
   ];
 
+      const [selected, setSelected] = useState<string[]>([]);
+  
+ const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+    { label: "Option D", value: "d" },
+    { label: "Option E", value: "e" },
+  ];
   return (
     <div className="min-h-screen bg-background p-8">     
       <div className="max-w-7xl mx-auto">
@@ -70,6 +81,7 @@ export default function ThemeColorTest() {
             ]}
             variant="outline"
           />
+            <MultiSelect items={simpleItems} selected={selected} onChange={setSelected} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {colorVariables.map((color) => (

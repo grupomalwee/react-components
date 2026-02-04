@@ -182,7 +182,7 @@ export function MultiSelect<T extends string>({
       >
         <MultiSelectTriggerBase
           className={cn(
-            "flex items-center gap-2 justify-between",
+            "flex items-center gap-2 justify-between hover:bg-muted transition-all duration-150",
             error && "border-red-500",
             className,
           )}

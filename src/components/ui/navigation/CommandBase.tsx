@@ -19,7 +19,7 @@ const CommandBase = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-background text-popover-foreground",
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-background text-popover-foreground border-border",
       className
     )}
     data-testid={dataTestId}
@@ -47,7 +47,7 @@ const CommandDialogBase = ({ children, open, ...props }: DialogProps) => {
               exit="exit"
               variants={dialogVariants}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="overflow-hidden p-0"
+              className="overflow-hidden p-0 "
             >
               <CommandBase className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
                 {children}
@@ -66,7 +66,7 @@ const CommandInputBase = React.forwardRef<
     testid?: string;
   }
 >(({ className, testid: dataTestId = "command-input", ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+  <div className="flex items-center border-b px-3  border-border" cmdk-input-wrapper="">
     <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
     <CommandPrimitive.Input
       ref={ref}

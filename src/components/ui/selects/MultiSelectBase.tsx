@@ -335,7 +335,7 @@ export function MultiSelectContentBase({
     <>
       <PopoverContentBase
         forceMount
-        className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0"
+        className="w-[--radix-popover-trigger-width] relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md p-0 border-border"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -363,7 +363,7 @@ export function MultiSelectContentBase({
               ) : (
                 <button autoFocus className="sr-only" />
               )}
-              <CommandListBase>
+              <CommandListBase className="border-border">
                 {canSearch && (
                   <CommandEmptyBase>
                     {typeof search === "object"
