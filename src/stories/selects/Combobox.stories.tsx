@@ -3,6 +3,16 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Combobox } from "@/components/ui/selects/Combobox";
 import React from "react";
 import { expect } from "storybook/test";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { ComboboxItem } from "@/components/ui/selects/ComboboxBase";
 
 const meta: Meta<typeof Combobox> = {
   title: "selects/Combobox",
@@ -519,6 +529,72 @@ export const Disabled: Story = {
             disabled
           />
         </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Combobox } from '@mlw-packages/react-components';
+
+function Disabled() {
+  const items = [
+    { label: 'JavaScript', value: 'js' },
+    { label: 'TypeScript', value: 'ts' },
+  ];
+  const [selected, setSelected] = React.useState('ts');
+  return <Combobox items={items} selected={selected} onChange={setSelected} label="Linguagem (Desabilitado)" disabled />;
+}
+`,
+      },
+    },
+  },
+};
+export const Dialog: Story = {
+  render: () => {
+    const items: ComboboxItem<string>[] = Array.from({ length: 80 }, (_, i) => {
+      const n = i + 1;
+      return { value: `item-${n}`, label: `Item ${n}` };
+    });
+
+    const [selected, setSelected] = React.useState<string | null>(
+      items[0].value,
+    );
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <DialogBase>
+          <DialogTriggerBase asChild>
+            <ButtonBase variant="outline">Abrir dialog</ButtonBase>
+          </DialogTriggerBase>
+          <DialogContentBase className="sm:max-w-md">
+            <DialogHeaderBase>
+              <DialogTitleBase>Combobox dentro do Dialog</DialogTitleBase>
+              <DialogDescriptionBase>
+                Abra o combobox e use a rolagem (mouse wheel ou mouse3).
+              </DialogDescriptionBase>
+            </DialogHeaderBase>
+
+            <div className="mt-4" style={{ width: 360 }}>
+              <Combobox
+                items={items}
+                selected={selected}
+                onChange={(value) => {
+                  setSelected(value);
+                }}
+                label="Selecione um item"
+                searchPlaceholder="Buscar..."
+              />
+            </div>
+          </DialogContentBase>
+        </DialogBase>
       </div>
     );
   },
