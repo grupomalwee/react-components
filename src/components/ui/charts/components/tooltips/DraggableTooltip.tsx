@@ -329,7 +329,6 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
     [alignmentGuides],
   );
 
-  // Drag handlers using document mouse events and RAF
   useEffect(() => {
     let rafId: number | null = null;
 

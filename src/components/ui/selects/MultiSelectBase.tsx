@@ -291,7 +291,7 @@ export function MultiSelectValueBase({
         <Badge
           data-selected-item
           size="sm"
-          className="group flex items-center gap-1"
+          className="group flex items-center gap-1  border-border"
           key={value}
           onClick={
             clickToRemove
@@ -361,7 +361,7 @@ export function MultiSelectContentBase({
                   }
                 />
               ) : (
-                <button autoFocus className="sr-only" />
+                <button autoFocus className="sr-only " />
               )}
               <CommandListBase className="border-border">
                 {canSearch && (
@@ -438,7 +438,7 @@ function useMultiSelectContext() {
   const context = useContext(MultiSelectContext);
   if (context == null) {
     throw new Error(
-      "useMultiSelectContext must be used within a MultiSelectContext",
+      "useMultiSelectContext must be used within a MultiSelectContext ",
     );
   }
   return context;

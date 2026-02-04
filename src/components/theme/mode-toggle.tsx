@@ -87,41 +87,55 @@ export function ModeToggleBase({
         window.matchMedia("(prefers-color-scheme: dark)").matches));
 
   const toggleTheme = async (newTheme: Theme) => {
-    if (!buttonRef.current || !document.startViewTransition) {
+    if (!buttonRef.current) {
       setTheme(newTheme);
       return;
     }
 
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
+    const supportsViewTransition =
+      typeof document !== "undefined" &&
+      "startViewTransition" in document &&
+      typeof document.startViewTransition === "function";
 
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    );
-
-    const transition = document.startViewTransition(async () => {
+    if (!supportsViewTransition) {
       setTheme(newTheme);
-    });
+      return;
+    }
 
-    await transition.ready;
+    try {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
 
-    document.documentElement.animate(
-      [
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y),
+      );
+
+      const transition = document.startViewTransition(async () => {
+        setTheme(newTheme);
+      });
+
+      await transition.ready;
+
+      document.documentElement.animate(
+        [
+          {
+            clipPath: `circle(0px at ${x}px ${y}px)`,
+          },
+          {
+            clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)`,
+          },
+        ],
         {
-          clipPath: `circle(0px at ${x}px ${y}px)`,
+          duration: 400,
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          pseudoElement: "::view-transition-new(root)",
         },
-        {
-          clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)`,
-        },
-      ],
-      {
-        duration: 400,
-        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-        pseudoElement: "::view-transition-new(root)",
-      },
-    );
+      );
+    } catch {
+      setTheme(newTheme);
+    }
   };
 
   return (
@@ -131,10 +145,7 @@ export function ModeToggleBase({
           ref={buttonRef}
           variant={variant}
           size="icon"
-          className={cn(
-            "relative overflow-hidden group",
-            className,
-          )}
+          className={cn("relative overflow-hidden group", className)}
         >
           <>
             <SunIcon
