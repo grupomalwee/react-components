@@ -347,13 +347,13 @@ const Chart: React.FC<ChartProps> = ({
   return (
     <div
       ref={wrapperRef}
-      className={cn("w-full overflow-hidden min-w-0 rounded-lg", className)}
+      className={cn("w-full overflow-hidden min-w-0 rounded-lg border-border", className)}
     >
-      <div className="rounded-lg bg-card relative w-full max-w-full min-w-0">
+      <div className="rounded-lg bg-card relative w-full max-w-full min-w-0 py-1">
         {title && (
           <div
             className={cn(
-              "w-full flex items-center mt-5 mb-2",
+              "w-full flex items-center mt-3 mb-2",
               HORIZONTAL_PADDING_CLASS,
               titlePosition === "center" && "justify-center",
               titlePosition === "right" && "justify-end",
