@@ -23,7 +23,7 @@ const ModalOverlayBase = React.forwardRef<
     ref={ref}
     className={cn(
       "fixed inset-0 z-50 bg-black/60 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -56,16 +56,16 @@ const ModalContentBase = React.forwardRef<
       backdropBlur = true,
       ...props
     },
-    ref
+    ref,
   ) => {
     const sizeClass =
       size === "sm"
         ? "max-w-md"
         : size === "lg"
-        ? "max-w-4xl"
-        : size === "full"
-        ? "w-full max-w-[calc(100%-2rem)]"
-        : "max-w-2xl";
+          ? "max-w-4xl"
+          : size === "full"
+            ? "w-full max-w-[calc(100%-2rem)]"
+            : "max-w-2xl";
 
     const positionClass = centered
       ? "left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
@@ -95,25 +95,25 @@ const ModalContentBase = React.forwardRef<
         <DialogPrimitive.Content
           ref={ref}
           className={cn(
-            "fixed z-50 grid w-full gap-4 border bg-background p-6 shadow-lg sm:rounded-lg max-h-[90dvh] overflow-auto",
+            "fixed z-50 grid w-[calc(100%-2rem)] gap-3 sm:gap-4 border bg-background p-4 sm:p-6 shadow-lg rounded-md sm:rounded-lg max-h-[calc(100dvh-2rem)] sm:max-h-[90dvh] overflow-auto",
             "data-[state=open]:animate-modal-in data-[state=closed]:animate-modal-out border-border",
             positionClass,
             sizeClass,
-            className
+            className,
           )}
           data-testid={dataTestId}
           {...props}
         >
           {children}
 
-          <DialogPrimitive.Close className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-md bg-muted/10 p-1.5 opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10 hover:bg-muted/20 transition-colors">
+          <DialogPrimitive.Close className="absolute right-2 top-2 sm:right-4 sm:top-4 rounded-md bg-muted/10 p-1.5 sm:p-1.5 opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10 hover:bg-muted/20 transition-colors">
             <XIcon className="h-5 w-5 sm:h-4 sm:w-4 text-foreground" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         </DialogPrimitive.Content>
       </ModalPortalBase>
     );
-  }
+  },
 );
 ModalContentBase.displayName = DialogPrimitive.Content.displayName;
 
@@ -124,8 +124,8 @@ const ModalHeaderBase = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
+      "flex flex-col space-y-1 sm:space-y-1.5 text-center sm:text-left pr-8 sm:pr-0",
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -140,8 +140,8 @@ const ModalFooterBase = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
+      "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2 sm:gap-0",
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -157,7 +157,7 @@ const ModalTitleBase = React.forwardRef<
     ref={ref}
     className={cn(
       "text-lg font-semibold leading-none tracking-tight",
-      className
+      className,
     )}
     data-testid={dataTestId}
     {...props}
