@@ -154,6 +154,10 @@ export default function Example() {
       control: "boolean",
       description: "Legendas em maiúsculas",
     },
+    horizontal: {
+      control: "boolean",
+      description: "Inverter orientação do gráfico para barras horizontais",
+    },
   },
   args: {
     data: sampleData,
@@ -490,6 +494,77 @@ const generateTimeSeriesData = (months: number) => {
 
 const timeSeriesData = generateTimeSeriesData(18);
 
+export const HorizontalBars: Story = {
+  name: "Barras Horizontais",
+  render: (args) => (
+    <div style={{ width: "900px", height: "450px" }}>
+      <Chart
+        {...args}
+        data={bigData}
+        height={400}
+        horizontal
+        series={{
+          bar: ["receita", "despesas"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+        }}
+        yAxisLabel="Períodos"
+        xAxisLabel="Valores (R$)"
+        colors={["#0d1136", "#666666"]}
+        timeSeries
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Gráfico com barras horizontais usando a prop `horizontal={true}`.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const sampleData = [
+  { periodo: 'Jan/24', receita: 4200, despesas: 2800 },
+  { periodo: 'Fev/24', receita: 5100, despesas: 3200 },
+  { periodo: 'Mar/24', receita: 6800, despesas: 3900 },
+  { periodo: 'Abr/24', receita: 7500, despesas: 4300 },
+];
+
+export default function HorizontalBars() {
+  return (
+    <div style={{ width: 900, height: 450 }}>
+      <Chart
+        data={sampleData}
+        xAxis="periodo"
+        horizontal
+        series={{ bar: ['receita', 'despesas'] }}
+        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
+        colors={['#0ea5e9', '#f43f5e']}
+        yAxisLabel="Períodos"
+        xAxisLabel="Valores (R$)"
+        height={400}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar barras horizontais renderizadas", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBe(8); // 2 séries × 4 pontos
+      });
+    });
+  },
+};
+
 export const TimeSeries: Story = {
   render: (args) => (
     <div style={{ width: "900px" }}>
@@ -607,6 +682,146 @@ export const Loading: Story = {
 //     },
 //   },
 // };
+
+// Generate big data set
+const generateBigData = (points: number) => {
+  const data = [];
+  const startDate = new Date(2020, 0, 1);
+
+  for (let i = 0; i < points; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+
+    const dateStr = date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "2-digit",
+    });
+
+    const trend = i * 50;
+    const seasonality = Math.sin(i / 30) * 2000;
+    const noise = Math.random() * 1000;
+
+    data.push({
+      periodo: dateStr,
+      receita: Math.round(8000 + trend + seasonality + noise),
+      despesas: Math.round(
+        5000 + trend * 0.7 + seasonality * 0.6 + noise * 0.8,
+      ),
+      lucro: Math.round(2000 + trend * 0.3 + seasonality * 0.4 + noise * 0.5),
+      churn: Math.round(150 - i * 0.2 + Math.random() * 30),
+    });
+  }
+
+  return data;
+};
+
+const bigData = generateBigData(365);
+
+export const BigData: Story = {
+  render: (args) => (
+    <div style={{ width: "900px" }}>
+      <Chart
+        {...args}
+        data={bigData}
+        xAxis="periodo"
+        series={{
+          bar: ["receita", "despesas"],
+          line: ["lucro"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          lucro: "Lucro",
+        }}
+        height={350}
+        timeSeries={{
+          start: 0,
+          end: 30,
+          height: 50,
+        }}
+        timeSeriesLegend="Arraste para navegar pelos dados"
+        title="Análise Anual - 365 dias de dados"
+        enableHighlights={true}
+        formatBR={true}
+        showTooltipTotal={true}
+        colors={["#0ea5e9", "#f43f5e", "#10b981"]}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo com grande volume de dados (365 pontos). Demonstra a capacidade do Chart de lidar com big data utilizando timeSeries para navegação eficiente. Use o brush inferior para selecionar o intervalo de visualização.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+// Gera 365 dias de dados
+const generateBigData = (points: number) => {
+  const data = [];
+  const startDate = new Date(2020, 0, 1);
+
+  for (let i = 0; i < points; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    const dateStr = date.toLocaleDateString('pt-BR');
+
+    const trend = i * 50;
+    const seasonality = Math.sin(i / 30) * 2000;
+    const noise = Math.random() * 1000;
+
+    data.push({
+      periodo: dateStr,
+      receita: Math.round(8000 + trend + seasonality + noise),
+      despesas: Math.round(5000 + trend * 0.7 + seasonality * 0.6 + noise * 0.8),
+      lucro: Math.round(2000 + trend * 0.3 + seasonality * 0.4 + noise * 0.5),
+    });
+  }
+  return data;
+};
+
+const bigData = generateBigData(365);
+
+export default function BigData() {
+  return (
+    <div style={{ width: 900 }}>
+      <Chart
+        data={bigData}
+        xAxis="periodo"
+        series={{ bar: ['receita', 'despesas'], line: ['lucro'] }}
+        labelMap={{ receita: 'Receita', despesas: 'Despesas', lucro: 'Lucro' }}
+        height={350}
+        timeSeries={{ start: 0, end: 30, height: 50 }}
+        timeSeriesLegend="Arraste para navegar pelos dados"
+        title="Análise Anual - 365 dias de dados"
+        formatBR={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar brush de timeSeries renderizado", async () => {
+      await waitFor(() => {
+        const brush = canvasElement.querySelector(".recharts-brush");
+        expect(brush).toBeTruthy();
+      });
+    });
+
+    await step("Verificar se dados estão renderizados", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBeGreaterThan(0);
+      });
+    });
+  },
+};
 
 export const AllThings: Story = {
   args: {

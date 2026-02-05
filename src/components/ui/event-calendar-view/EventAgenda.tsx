@@ -207,16 +207,15 @@ export function EventAgenda({
                 setView(v);
               }}
               items={selectItems as SelectItem<CalendarViewAgenda>[]}
-              className="gap-2 px-3 py-1.5 max-[479px]:h-8"
               placeholder={viewLabel(view)}
+              className="min-w-24"
               hideClear={true}
             />
           </div>
         </div>
 
         <div
-          className="flex flex-1 flex-col transition-all duration-200 ease-in-out"
-          aria-live="polite"
+          className="flex flex-col transition-all duration-200 ease-in-out"
         >
           {view === "month" && (
             <MonthViewAgenda

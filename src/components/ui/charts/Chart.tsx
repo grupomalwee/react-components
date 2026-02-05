@@ -88,6 +88,7 @@ const Chart: React.FC<ChartProps> = ({
   timeSeries,
   timeSeriesLegend,
   customLegend,
+  horizontal = false,
 }) => {
   const { xAxisConfig, mapperConfig } = useMemo(() => {
     return fnSmartConfig({xAxis, data, labelMap});
@@ -468,6 +469,7 @@ const Chart: React.FC<ChartProps> = ({
           <ComposedChart
             data={processedData}
             height={height}
+            layout={horizontal ? "vertical" : "horizontal"}
             margin={{
               top: 10,
               right: finalChartRightMargin,
@@ -504,61 +506,125 @@ const Chart: React.FC<ChartProps> = ({
                 opacity={0.5}
               />
             )}
-            <XAxis
-              dataKey={xAxisConfig.dataKey}
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => {
-                if (categoryFormatter)
-                  return categoryFormatter(value as string | number);
-                if (xAxisConfig.valueFormatter)
-                  return xAxisConfig.valueFormatter(value as string | number);
-                return String(value ?? "");
-              }}
-              label={
-                xAxisLabel
-                  ? {
-                      value: xAxisLabel,
-                      position: "insideBottomRight",
-                      offset: -5,
-                      style: {
-                        fontSize: 12,
-                        fill: "hsl(var(--muted-foreground))",
-                        fontWeight: 500,
-                      },
-                    }
-                  : undefined
-              }
-            />
-            <YAxis
-              yAxisId="left"
-              width={yAxisTickWidth}
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={yTickFormatter}
-              domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
-              tickCount={6}
-              label={
-                yAxisLabel
-                  ? {
-                      value: yAxisLabel,
-                      angle: -90,
-                      position: "left",
-                      dx: leftYAxisLabelDx,
-                      style: {
-                        fontSize: 12,
-                        fill: "hsl(var(--muted-foreground))",
-                        fontWeight: 500,
-                        textAnchor: "middle",
-                      },
-                    }
-                  : undefined
-              }
-            />
+            {horizontal ? (
+              <>
+                <XAxis
+                  type="number"
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={yTickFormatter}
+                  domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
+                  tickCount={6}
+                  label={
+                    yAxisLabel
+                      ? {
+                          value: yAxisLabel,
+                          position: "insideBottomRight",
+                          offset: -5,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                          },
+                        }
+                      : undefined
+                  }
+                />
+                <YAxis
+                  type="category"
+                  dataKey={xAxisConfig.dataKey}
+                  yAxisId="left"
+                  width={yAxisTickWidth}
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    if (categoryFormatter)
+                      return categoryFormatter(value as string | number);
+                    if (xAxisConfig.valueFormatter)
+                      return xAxisConfig.valueFormatter(value as string | number);
+                    return String(value ?? "");
+                  }}
+                  label={
+                    xAxisLabel
+                      ? {
+                          value: xAxisLabel,
+                          angle: -90,
+                          position: "left",
+                          dx: leftYAxisLabelDx,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                            textAnchor: "middle",
+                          },
+                        }
+                      : undefined
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <XAxis
+                  dataKey={xAxisConfig.dataKey}
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    if (categoryFormatter)
+                      return categoryFormatter(value as string | number);
+                    if (xAxisConfig.valueFormatter)
+                      return xAxisConfig.valueFormatter(value as string | number);
+                    return String(value ?? "");
+                  }}
+                  label={
+                    xAxisLabel
+                      ? {
+                          value: xAxisLabel,
+                          position: "insideBottomRight",
+                          offset: -5,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                          },
+                        }
+                      : undefined
+                  }
+                />
+                <YAxis
+                  yAxisId="left"
+                  width={yAxisTickWidth}
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={yTickFormatter}
+                  domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
+                  tickCount={6}
+                  label={
+                    yAxisLabel
+                      ? {
+                          value: yAxisLabel,
+                          angle: -90,
+                          position: "left",
+                          dx: leftYAxisLabelDx,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                            textAnchor: "middle",
+                          },
+                        }
+                      : undefined
+                  }
+                />
+              </>
+            )}
             {minLeftDataValue < 0 && (
               <ReferenceLine
                 y={0}
@@ -663,7 +729,7 @@ const Chart: React.FC<ChartProps> = ({
                     yAxisId={rightKeys.includes(key) ? "right" : "left"}
                     name={label}
                     fill={color}
-                    radius={[4, 4, 0, 0]}
+                    radius={horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]}
                     onClick={handleBarClick}
                     className="cursor-pointer"
                     style={{ opacity: getSeriesOpacity(key) }}

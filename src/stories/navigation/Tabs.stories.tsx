@@ -64,7 +64,6 @@ export default function Example() {
         { name: "dark", value: "#222" },
       ],
     },
-    layout: "centered",
   },
 };
 
@@ -77,16 +76,7 @@ type Args = {
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "32px 0",
-    }}
-  >
-    {children}
-  </div>
+  <div>{children}</div>
 );
 
 export const TabsSimples: Story = {

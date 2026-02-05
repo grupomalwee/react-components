@@ -71,6 +71,7 @@ export interface ChartProps {
   timeSeriesLegend?: string;
   customLegend?: boolean;
   labelsVisibility?: { bar: boolean; line: boolean; area: boolean };
+  horizontal?: boolean;
 }
 
 export interface SeriesConfig {
@@ -81,8 +82,8 @@ export interface SeriesConfig {
 
 export type SeriesOrder = {
   type: "bar" | "line" | "area";
-  key: string
-}
+  key: string;
+};
 
 export type PropsLabelList = {
   height?: number | string;
@@ -91,7 +92,7 @@ export type PropsLabelList = {
   y?: number | string;
   value?: number | string;
   payload?: Record<string, unknown>;
-}
+};
 
 export type ValueFormatterType = (props: {
   value: number | string | undefined;
