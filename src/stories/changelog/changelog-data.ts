@@ -11,6 +11,14 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.1",
+    date: "2026-02-05",
+    shortTitle: "Selects, Theme, Dialog, Chart e Date Time Picker",
+    changed: [
+      "Date Time Picker: ajustado estilo do Dialog para corrigir overflow em telas pequenas. E scroll mobile funcionando corretamente.",
+    ],
+  },
+  {
     version: "1.9.0",
     date: "2026-02-03",
     shortTitle: "Selects, Theme, Dialog, Chart e Date Time Picker",
@@ -25,15 +33,12 @@ export const changelogData: ChangeItem[] = [
       "Theme:arrumado animacao para dispositivos IOS",
       "DraggableTooltip: disponibilidade de movimentacao mobile",
     ],
-   
   },
   {
     version: "1.8.13",
     date: "2026-02-03",
     shortTitle: "Theme e Combobox",
-    fixed: [
-      "Combobox: arrumdo children error no console log",
-    ],
+    fixed: ["Combobox: arrumdo children error no console log"],
     changed: [
       "Theme: ajustado o tema dark para componentes de formulários para melhor contraste e legibilidade.",
     ],
