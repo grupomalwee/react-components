@@ -47,7 +47,7 @@ const Brush: React.FC<BrushProps> = ({
   xAxisKey,
   seriesOrder,
   finalColors,
-  brushHeight = 80,
+  brushHeight = 40,
   brushColor,
   miniChartOpacity = 0.3,
 }) => {

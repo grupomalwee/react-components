@@ -3,6 +3,7 @@ import Chart from "@/components/ui/charts/Chart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
+import { gerarDadosCidades } from "./cidades-brasil";
 
 const sampleData = [
   { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
@@ -494,77 +495,6 @@ const generateTimeSeriesData = (months: number) => {
 
 const timeSeriesData = generateTimeSeriesData(18);
 
-export const HorizontalBars: Story = {
-  name: "Barras Horizontais",
-  render: (args) => (
-    <div style={{ width: "900px", height: "450px" }}>
-      <Chart
-        {...args}
-        data={bigData}
-        height={400}
-        horizontal
-        series={{
-          bar: ["receita", "despesas"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-        yAxisLabel="Períodos"
-        xAxisLabel="Valores (R$)"
-        colors={["#0d1136", "#666666"]}
-        timeSeries
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Gráfico com barras horizontais usando a prop `horizontal={true}`.",
-      },
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-
-const sampleData = [
-  { periodo: 'Jan/24', receita: 4200, despesas: 2800 },
-  { periodo: 'Fev/24', receita: 5100, despesas: 3200 },
-  { periodo: 'Mar/24', receita: 6800, despesas: 3900 },
-  { periodo: 'Abr/24', receita: 7500, despesas: 4300 },
-];
-
-export default function HorizontalBars() {
-  return (
-    <div style={{ width: 900, height: 450 }}>
-      <Chart
-        data={sampleData}
-        xAxis="periodo"
-        horizontal
-        series={{ bar: ['receita', 'despesas'] }}
-        labelMap={{ receita: 'Receita', despesas: 'Despesas' }}
-        colors={['#0ea5e9', '#f43f5e']}
-        yAxisLabel="Períodos"
-        xAxisLabel="Valores (R$)"
-        height={400}
-      />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar barras horizontais renderizadas", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(8); // 2 séries × 4 pontos
-      });
-    });
-  },
-};
-
 export const TimeSeries: Story = {
   render: (args) => (
     <div style={{ width: "900px" }}>
@@ -683,7 +613,6 @@ export const Loading: Story = {
 //   },
 // };
 
-// Generate big data set
 const generateBigData = (points: number) => {
   const data = [];
   const startDate = new Date(2020, 0, 1);
@@ -698,17 +627,15 @@ const generateBigData = (points: number) => {
       year: "2-digit",
     });
 
-    const trend = i * 50;
-    const seasonality = Math.sin(i / 30) * 2000;
-    const noise = Math.random() * 1000;
+    const trend = i * 30;
+    const seasonality = Math.sin(i / 30) * 1000;
+    const noise = Math.random() * 500;
 
     data.push({
       periodo: dateStr,
-      receita: Math.round(8000 + trend + seasonality + noise),
-      despesas: Math.round(
-        5000 + trend * 0.7 + seasonality * 0.6 + noise * 0.8,
-      ),
-      lucro: Math.round(2000 + trend * 0.3 + seasonality * 0.4 + noise * 0.5),
+      receita: Math.round(1000 + trend + seasonality + noise),
+      despesas: Math.round(500 + trend * 0.7 + seasonality * 0.6 + noise * 0.8),
+      lucro: Math.round(200 + trend * 0.3 + seasonality * 0.4 + noise * 0.5),
       churn: Math.round(150 - i * 0.2 + Math.random() * 30),
     });
   }
@@ -903,3 +830,115 @@ export const AllThings: Story = {
     },
   },
 };
+
+export const Horizontal: Story = {
+  args: {
+    data: [
+      {
+        periodo: "Jan/24",
+        receita: 4200,
+        despesas: 2800,
+        churn: 180,
+      },
+      {
+        periodo: "Fev/24",
+        receita: 5100,
+        despesas: 3200,
+        churn: 165,
+      },
+      {
+        periodo: "Mar/24",
+        receita: 6800,
+        despesas: 3900,
+        churn: 142,
+      },
+      {
+        periodo: "Abr/24",
+        receita: 7500,
+        despesas: 4300,
+        churn: 128,
+      },
+    ],
+
+    xAxis: "periodo",
+    className: "border",
+    title: "Barras Horizontais Exemplo",
+    enableHighlights: false,
+  },
+
+  name: "Barras Horizontais",
+
+  render: (args) => (
+    <div
+      style={{
+        width: "900px",
+        height: "450px",
+      }}
+    >
+      <Chart
+        {...args}
+        data={gerarDadosCidades()}
+        xAxis="cidade"
+        showLabels
+        height={400}
+        orderBy="valorReal"
+        
+        horizontal
+        series={{
+          bar: ["valorAnoAnterior", "valorReal"],
+        }}
+        labelMap={{
+          valorAnoAnterior: "Valor Ano Anterior",
+          valorReal: "Valor Real",
+        }}
+        colors={["#666665", "#0d1136"]}
+      />
+    </div>
+  ),
+
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Gráfico com barras horizontais usando a prop `horizontal={true}`, mostrando comparação de valores entre ano anterior e real para aproximadamente 300 cidades brasileiras de diversos tamanhos.",
+      },
+
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+import { gerarDadosCidades } from './cidades-brasil';
+
+const horizontalBarsData = gerarDadosCidades();
+
+export default function HorizontalBars() {
+  return (
+    <div style={{ width: 900, height: 450 }}>
+      <Chart
+        data={horizontalBarsData}
+        xAxis="cidade"
+        horizontal
+        series={{ bar: ['valorAnoAnterior', 'valorReal'] }}
+        labelMap={{ valorAnoAnterior: 'Valor Ano Anterior', valorReal: 'Valor Real' }}
+        colors={['#0d1136', '#666666']}
+        yAxisLabel="Cidades"
+        xAxisLabel="Valores (R$)"
+        height={400}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+
+  play: async ({ canvasElement, step }) => {
+    await step("Verificar barras horizontais renderizadas", async () => {
+      await waitFor(() => {
+        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+        expect(bars.length).toBeGreaterThan(0);
+      });
+    });
+  },
+};
+
