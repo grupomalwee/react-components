@@ -40,12 +40,9 @@ function ScrollColumn({
       <span className="text-muted-foreground rounded-md font-semibold text-sm text-center pb-2 uppercase tracking-wider">
         {label}
       </span>
-      <div className={cn("relative w-24 sm:w-20")}>
-        <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-background via-background/80 to-transparent pointer-events-none z-20" />
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-20" />
-
+      <div className={cn("relative w-20")}>
         <div
-          className="absolute left-0 right-0 pointer-events-none bg-muted/50 backdrop-blur-sm rounded-md border border-border"
+          className="absolute left-0 right-0 pointer-events-none bg-muted/50  rounded-md border border-border"
           style={{
             top: `${centerIndex * itemHeight}px`,
             height: `${itemHeight}px`,

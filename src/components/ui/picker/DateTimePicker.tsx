@@ -337,7 +337,7 @@ export function DateTimePicker({
 
           <ErrorMessage error={error} />
 
-          <DialogContentBase className="p-0 max-h-[65vh] w-[calc(100vw-24px)] sm:w-[calc(100vw-32px)] overflow-hidden flex flex-col">
+          <DialogContentBase className="p-0 max-h-[95vh] w-[calc(100vw-24px)] sm:w-[calc(100vw-32px)] overflow-hidden flex flex-col">
             <div className="overflow-y-auto flex-1">
               {renderPickerContent()}
             </div>
