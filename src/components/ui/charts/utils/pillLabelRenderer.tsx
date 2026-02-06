@@ -24,11 +24,11 @@ const formatCompactNumber = (value: number): string => {
 
   let formatted: string;
   if (absValue >= 1000000000) {
-    formatted = (absValue / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
+    formatted = (absValue / 1000000000).toFixed(0) + "B";
   } else if (absValue >= 1000000) {
-    formatted = (absValue / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+    formatted = (absValue / 1000000).toFixed(0) + "M";
   } else if (absValue >= 1000) {
-    formatted = (absValue / 1000).toFixed(1).replace(/\.0$/, "") + " mil";
+    formatted = (absValue / 1000).toFixed(0) + " mil";
   } else {
     try {
       const nf = new Intl.NumberFormat("pt-BR", {
@@ -60,7 +60,7 @@ const parseNumber = (v: number | string | undefined) => {
 export const renderPillLabel = (
   color: string,
   variant: Variant,
-  valueFormatter?: valueFormatter
+  valueFormatter?: valueFormatter,
 ) => {
   return (props: LabelRendererProps) => {
     const { x, y, value } = props;
@@ -81,7 +81,7 @@ export const renderPillLabel = (
     const approxCharWidth = 7;
     const pillWidth = Math.max(
       40,
-      String(text).length * approxCharWidth + paddingX * 2
+      String(text).length * approxCharWidth + paddingX * 2,
     );
     const pillHeight = 14;
 
@@ -137,10 +137,10 @@ export const renderPillLabel = (
       (typeof py === "number"
         ? py
         : vb && typeof vb.y === "number" && typeof vb.height === "number"
-        ? vb.y + vb.height / 2
-        : typeof cyNum === "number"
-        ? cyNum
-        : 0);
+          ? vb.y + vb.height / 2
+          : typeof cyNum === "number"
+            ? cyNum
+            : 0);
 
     const rectX = centerX - pillWidth / 2;
     const rectY = centerY - pillHeight - 6;
@@ -151,8 +151,8 @@ export const renderPillLabel = (
       variant === "filled"
         ? color
         : variant === "soft"
-        ? `${color}20`
-        : "#ffffff";
+          ? `${color}20`
+          : "#ffffff";
 
     const rectStroke = variant === "outline" ? `${color}CC` : undefined;
 
@@ -198,7 +198,7 @@ export default renderPillLabel;
 
 export const renderInsideBarLabel = (
   color: string,
-  valueFormatter?: valueFormatter
+  valueFormatter?: valueFormatter,
 ) => {
   return (props: LabelRendererProps) => {
     const { x, y, value, width, height, viewBox, cx, cy, index } = props;
@@ -259,15 +259,15 @@ export const renderInsideBarLabel = (
     const baseFontSize = 10;
     let fontSize = baseFontSize;
     if (typeof pWidth === "number") {
-      const padding = 7; 
-      const approxCharWidth = 7; 
+      const padding = 7;
+      const approxCharWidth = 7;
       const requiredWidth = String(text).length * approxCharWidth + padding * 2;
       const widthScale = Math.min(1, pWidth / Math.max(1, requiredWidth));
       fontSize = Math.max(1, Math.round(baseFontSize * widthScale));
     }
 
     if (typeof pHeight === "number") {
-      const heightRef = 14; 
+      const heightRef = 14;
       const heightFactor = Math.max(0.8, Math.min(1.6, pHeight / heightRef));
       fontSize = Math.min(18, Math.max(8, Math.round(fontSize * heightFactor)));
     }

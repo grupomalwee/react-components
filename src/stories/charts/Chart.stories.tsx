@@ -246,6 +246,11 @@ export const Biaxial: Story = {
         labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
         yAxisLabel="Valor (R$)"
         biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
+        valueFormatter={{
+          receita: "",
+          despesas: "R$",
+          churn: "%",
+        }}
       />
     </div>
   ),
@@ -336,6 +341,51 @@ export const CustomFormatter: Story = {
   },
 };
 
+export const CustomFormatterPerKey: Story = {
+  name: "Formatador por Chave",
+  render: (args) => {
+    const metricsData = [
+      { mes: "Jan", receita: 15000, despesas: 8900, taxa: 85, peso: 1200 },
+      { mes: "Fev", receita: 22000, despesas: 12000, taxa: 92, peso: 1800 },
+      { mes: "Mar", receita: 18000, despesas: 9500, taxa: 88, peso: 1500 },
+      { mes: "Abr", receita: 28000, despesas: 15000, taxa: 95, peso: 2100 },
+    ];
+
+    return (
+      <div style={{ width: "900px", height: "350px" }}>
+        <Chart
+          {...args}
+          data={metricsData}
+          height={350}
+          series={{
+            bar: ["receita", "despesas", "peso"],
+          }}
+          labelMap={{
+            receita: "Receita",
+            despesas: "Despesas",
+            peso: "Peso Total",
+          }}
+          showLabels={true}
+          valueFormatter={{
+            receita: "R$", 
+            despesas: "R$", 
+            peso: "kg", 
+          }}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo com IntelliSense aprimorado! Ao editar valueFormatter, pressione Ctrl+Espaço para ver as chaves dos dados e os formatos predefinidos (R$, %, kg, etc). Os formatos são aplicados automaticamente: moedas antes (R$ 1.234) e medidas depois (10kg).",
+      },
+    },
+  },
+};
+
+
 export const AllBars: Story = {
   name: "Só Barras",
   render: (args) => (
@@ -366,7 +416,7 @@ export const AllBars: Story = {
     await step("Verificar todas as barras renderizadas", async () => {
       await waitFor(() => {
         const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(12); // 3 séries × 4 pontos
+        expect(bars.length).toBe(12); 
       });
     });
 
@@ -882,7 +932,6 @@ export const Horizontal: Story = {
         showLabels
         height={400}
         orderBy="valorReal"
-        
         horizontal
         series={{
           bar: ["valorAnoAnterior", "valorReal"],
@@ -941,4 +990,3 @@ export default function HorizontalBars() {
     });
   },
 };
-

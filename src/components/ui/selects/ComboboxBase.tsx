@@ -21,7 +21,6 @@ import { motion } from "framer-motion";
 import { ReactNode, useState } from "react";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface ComboboxItem<T extends string> {
   label: string;
@@ -75,7 +74,6 @@ export function ComboboxBase<T extends string>({
   hideClear = false,
 }: ComboboxBaseProps<T>) {
   const [open, setOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   return (
     <div
@@ -85,7 +83,7 @@ export function ComboboxBase<T extends string>({
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}
-        modal={isMobile}
+        modal={false}
       >
         <PopoverTriggerBase
           asChild

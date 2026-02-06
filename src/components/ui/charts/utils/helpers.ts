@@ -290,17 +290,50 @@ export const adaptDataForTooltip = <T extends Record<string, unknown>>(
 };
 
 export const createValueFormatter = (
-  customFormatter: ValueFormatterType | undefined,
+  customFormatter: ValueFormatterType | Record<string, string> | undefined,
   formatBR: boolean,
+  dataKey?: string,
 ): ValueFormatterType | undefined => {
   const nf = new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
+  // Formatos que aparecem ANTES do valor (prefixos)
+  const prefixFormats = ["R$", "$", "€", "£"];
+
+  // Formatos que aparecem DEPOIS do valor (sufixos)
+  const suffixFormats = ["%", "kg", "km", "m", "L", "un", "t", "h", "min", "s"];
+
+  /**
+   * Determina se o formato deve aparecer antes (prefixo) ou depois (sufixo)
+   */
+  const getFormattedValue = (baseValue: string, format: string): string => {
+    const trimmedFormat = format.trim();
+
+    // Verifica se é um prefixo
+    if (prefixFormats.includes(trimmedFormat)) {
+      return `${trimmedFormat} ${baseValue}`;
+    }
+
+    // Verifica se é um sufixo
+    if (suffixFormats.includes(trimmedFormat)) {
+      return `${baseValue}${trimmedFormat}`;
+    }
+
+    // Caso não seja predefinido, coloca como sufixo com espaço
+    return `${baseValue} ${trimmedFormat}`;
+  };
+
   if (customFormatter) {
-    if (formatBR) {
-      const wrapped: ValueFormatterType = (props) => {
+    // Se for um objeto (Record<string, string>)
+    if (
+      typeof customFormatter === "object" &&
+      !Array.isArray(customFormatter)
+    ) {
+      const formatterMap = customFormatter as Record<string, string>;
+
+      return (props) => {
         const { value, formattedValue } = props as {
           value: number | string | undefined;
           formattedValue: string;
@@ -314,20 +347,53 @@ export const createValueFormatter = (
           num = Number.isNaN(parsed) ? NaN : parsed;
         }
 
-        const brFormatted = !Number.isNaN(num)
-          ? nf.format(num)
-          : String(formattedValue ?? value ?? "");
+        const baseFormatted =
+          formatBR && !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
 
-        return customFormatter({
-          ...(props as object),
-          formattedValue: brFormatted,
-          value: undefined,
-        }) as string;
+        // Aplicar o formatter específico para a chave, se existir
+        const format =
+          dataKey && formatterMap[dataKey] ? formatterMap[dataKey] : "";
+
+        return format
+          ? getFormattedValue(baseFormatted, format)
+          : baseFormatted;
       };
-      return wrapped;
     }
 
-    return customFormatter;
+    // Se for uma função (comportamento antigo)
+    if (typeof customFormatter === "function") {
+      if (formatBR) {
+        const wrapped: ValueFormatterType = (props) => {
+          const { value, formattedValue } = props as {
+            value: number | string | undefined;
+            formattedValue: string;
+            [key: string]: unknown;
+          };
+
+          let num: number = NaN;
+          if (typeof value === "number") num = value;
+          else if (typeof value === "string" && value.trim() !== "") {
+            const parsed = Number(value);
+            num = Number.isNaN(parsed) ? NaN : parsed;
+          }
+
+          const brFormatted = !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
+
+          return customFormatter({
+            ...(props as object),
+            formattedValue: brFormatted,
+            value: undefined,
+          }) as string;
+        };
+        return wrapped;
+      }
+
+      return customFormatter;
+    }
   }
 
   if (!formatBR) return undefined;
@@ -358,8 +424,8 @@ export const createYTickFormatter = (
   finalValueFormatter: ValueFormatterType | undefined,
 ): ((value: number | string) => string) => {
   const nf = new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
   const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");

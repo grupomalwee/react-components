@@ -65,6 +65,7 @@ import {
   fnOpenTooltipForPeriod,
   fnSmartConfig,
 } from "./utils/filters";
+import { calcDivision } from "@/utils/calcDivision";
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
@@ -190,6 +191,14 @@ const Chart: React.FC<ChartProps> = ({
 
   const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
 
+  const seriesTypeMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    seriesOrder.forEach((s) => {
+      map[s.key] = s.type;
+    });
+    return map;
+  }, [seriesOrder]);
+
   const finalColors = useMemo(
     () => generateColorMap(allKeys, colors, mapperConfig),
     [allKeys, colors, mapperConfig],
@@ -291,10 +300,46 @@ const Chart: React.FC<ChartProps> = ({
     [highlightedSeries],
   );
 
-  const finalValueFormatter = useMemo(
-    () => createValueFormatter(valueFormatter, formatBR),
+  const createFormatterForKey = useCallback(
+    (dataKey: string) => {
+      return createValueFormatter(valueFormatter, formatBR, dataKey);
+    },
     [valueFormatter, formatBR],
   );
+
+  const finalValueFormatter = useMemo(() => {
+    const baseFormatter = createValueFormatter(valueFormatter, formatBR);
+    return (props: {
+      value: number | string | undefined;
+      formattedValue: string;
+      dataKey?: string;
+      [key: string]: unknown;
+    }) => {
+      const isLine = props.dataKey && seriesTypeMap[props.dataKey] === "line";
+      if (isLine) {
+        const numValue =
+          typeof props.value === "number"
+            ? props.value
+            : typeof props.value === "string"
+              ? parseFloat(props.value)
+              : 0;
+        const percentage = calcDivision(numValue, 100);
+        const formattedPercentage =
+          typeof percentage === "number"
+            ? percentage.toFixed(1).replace(".", ",")
+            : String(percentage).replace(".", ",");
+        return `${formattedPercentage}%`;
+      }
+      if (props.dataKey) {
+        const keyFormatter = createFormatterForKey(props.dataKey);
+        if (keyFormatter) {
+          return keyFormatter(props);
+        }
+      }
+
+      return baseFormatter ? baseFormatter(props) : props.formattedValue;
+    };
+  }, [valueFormatter, formatBR, seriesTypeMap, createFormatterForKey]);
 
   const yTickFormatter = useMemo(
     () => createYTickFormatter(finalValueFormatter),
@@ -846,11 +891,6 @@ const Chart: React.FC<ChartProps> = ({
                       highlightedSeries.has(key) ? (
                         <LabelList
                           dataKey={key}
-                          /* Use a custom content renderer so that very small bars
-                           * (in width or height) will show their label above the bar
-                           * instead of being hidden inside the bar. We still reuse
-                           * the existing `renderInsideBarLabel` for normal-sized bars.
-                           */
                           content={(props: PropsLabelList) => {
                             if (!fnContentLabelList(props)) return null;
 
@@ -868,6 +908,25 @@ const Chart: React.FC<ChartProps> = ({
                   );
                 }
                 if (s.type === "line") {
+                  const lineFormatter = (props: {
+                    value: number | string | undefined;
+                    formattedValue: string;
+                    [key: string]: unknown;
+                  }) => {
+                    const numValue =
+                      typeof props.value === "number"
+                        ? props.value
+                        : typeof props.value === "string"
+                          ? parseFloat(props.value)
+                          : 0;
+                    const percentage = calcDivision(numValue, 100);
+                    const formattedPercentage =
+                      typeof percentage === "number"
+                        ? percentage.toFixed(1).replace(".", ",")
+                        : String(percentage).replace(".", ",");
+                    return `${formattedPercentage}%`;
+                  };
+
                   return (
                     <Line
                       key={`line-${key}`}
@@ -893,7 +952,7 @@ const Chart: React.FC<ChartProps> = ({
                             renderPillLabel(
                               color,
                               "filled",
-                              finalValueFormatter,
+                              lineFormatter,
                             ) as LabelListContent
                           }
                           offset={14}

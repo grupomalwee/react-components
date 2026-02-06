@@ -1,6 +1,15 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
 
 const meta: Meta<typeof AvatarCombobox> = {
@@ -883,6 +892,66 @@ export default function UsersWithImages() {
           placeholder="Select a user"
           label="User Selection"
         />
+      </div>
+    );
+  },
+};
+
+export const With100Items: Story = {
+  name: "Com 100 itens",
+  render: () => {
+    const items = Array.from({ length: 100 }, (_, i) => ({
+      label: `User ${i + 1}`,
+      value: `user-${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string | null>(items[0].value);
+
+    return (
+      <div className="w-[300px]">
+        <AvatarCombobox
+          items={items}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select user"
+        />
+      </div>
+    );
+  },
+};
+
+export const With100ItemsInDialog: Story = {
+  name: "Dentro do Dialog com 100 itens",
+  render: () => {
+    const items = Array.from({ length: 100 }, (_, i) => ({
+      label: `User ${i + 1}`,
+      value: `user-${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string | null>(items[0].value);
+
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+        <DialogBase>
+          <DialogTriggerBase asChild>
+            <ButtonBase variant="outline">Abrir dialog</ButtonBase>
+          </DialogTriggerBase>
+          <DialogContentBase className="sm:max-w-md">
+            <DialogHeaderBase>
+              <DialogTitleBase>AvatarCombobox dentro do Dialog</DialogTitleBase>
+              <DialogDescriptionBase>
+                Exemplo com 100 itens.
+              </DialogDescriptionBase>
+            </DialogHeaderBase>
+
+            <div className="mt-4" style={{ width: 360 }}>
+              <AvatarCombobox
+                items={items}
+                selected={selected}
+                onChange={setSelected}
+                placeholder="Select user"
+              />
+            </div>
+          </DialogContentBase>
+        </DialogBase>
       </div>
     );
   },
