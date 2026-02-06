@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.3",
+    date: "2026-02-06",
+    shortTitle: "Combobox",
+    changed: [
+      "Combobox: arrumado visualizacao em scroll no IOS mobile.",
+      "Chart: arrumado labels e formatter",
+    ],
+  },
+  {
     version: "1.9.2",
     date: "2026-02-05",
     shortTitle: "Combobox",
