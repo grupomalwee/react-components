@@ -311,38 +311,10 @@ export const FormatBR: Story = {
   },
 };
 
-export const CustomFormatter: Story = {
-  name: "Formatador Custom",
-  render: (args) => (
-    <div style={{ width: "900px", height: "350px" }}>
-      <Chart
-        {...args}
-        height={350}
-        series={{
-          bar: ["receita", "despesas"],
-        }}
-        labelMap={{
-          receita: "Receita",
-          despesas: "Despesas",
-        }}
-        showLabels={true}
-        valueFormatter={(props) => `R$ ${props.formattedValue}`}
-        colors={["#10b981", "#ef4444"]}
-      />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Exemplo de como usar valueFormatter para adicionar símbolos customizados aos labels dos dados (R$, %, €, etc).",
-      },
-    },
-  },
-};
+
 
 export const CustomFormatterPerKey: Story = {
-  name: "Formatador por Chave",
+  name: "Formatador",
   render: (args) => {
     const metricsData = [
       { mes: "Jan", receita: 15000, despesas: 8900, taxa: 85, peso: 1200 },
@@ -358,7 +330,8 @@ export const CustomFormatterPerKey: Story = {
           data={metricsData}
           height={350}
           series={{
-            bar: ["receita", "despesas", "peso"],
+            bar: ["receita", "despesas"],
+            line: ["peso"],
           }}
           labelMap={{
             receita: "Receita",

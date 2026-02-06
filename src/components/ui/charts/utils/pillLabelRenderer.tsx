@@ -24,11 +24,18 @@ const formatCompactNumber = (value: number): string => {
 
   let formatted: string;
   if (absValue >= 1000000000) {
-    formatted = (absValue / 1000000000).toFixed(0) + "B";
+    const billions = absValue / 1000000000;
+    formatted =
+      (billions % 1 === 0 ? billions.toFixed(0) : billions.toFixed(1)) + "B";
   } else if (absValue >= 1000000) {
-    formatted = (absValue / 1000000).toFixed(0) + "M";
+    const millions = absValue / 1000000;
+    formatted =
+      (millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)) + "M";
   } else if (absValue >= 1000) {
-    formatted = (absValue / 1000).toFixed(0) + " mil";
+    const thousands = absValue / 1000;
+    formatted =
+      (thousands % 1 === 0 ? thousands.toFixed(0) : thousands.toFixed(1)) +
+      " mil";
   } else {
     try {
       const nf = new Intl.NumberFormat("pt-BR", {

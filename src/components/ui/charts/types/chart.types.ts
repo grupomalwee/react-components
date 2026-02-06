@@ -50,21 +50,6 @@ export interface ChartProps<T extends ChartData = ChartData> {
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
   labelMap?: Record<string, string>;
-  /**
-   * Formata valores exibidos no gráfico.
-   *
-   * **Pressione Ctrl+Espaço para ver:**
-   * - Chaves dos seus dados
-   * - Formatos predefinidos (R$, $, %, kg, km, etc.)
-   *
-   * @example
-   * // Opção 1: Formatos predefinidos (recomendado)
-   * valueFormatter={{ receita: "R$", taxa: "%", peso: "kg" }}
-   *
-   * @example
-   * // Opção 2: Função customizada
-   * valueFormatter={(props) => `R$ ${props.formattedValue}`}
-   */
   valueFormatter?: ValueFormatterConfig | ValueFormatterMap<T>;
   categoryFormatter?: (value: string | number) => string;
   periodLabel?: string;
@@ -115,13 +100,6 @@ export type ValueFormatterType = (props: {
   [key: string]: unknown;
 }) => string;
 
-/**
- * Formatos predefinidos com posicionamento automático.
- * Use Ctrl+Espaço para ver todas as opções!
- *
- * Prefixos (antes do valor): "R$", "$", "€", "£"
- * Sufixos (depois do valor): "%", "kg", "km", "m", "L", "un", "t", "h", "min", "s"
- */
 export type PredefinedFormat =
   | "R$" // Real brasileiro - antes: "R$ 1.234"
   | "$" // Dólar - antes: "$ 1,234"
@@ -138,33 +116,15 @@ export type PredefinedFormat =
   | "min" // Minuto - depois: "30min"
   | "s"; // Segundo - depois: "45s";
 
-/**
- * Tipo helper para extrair chaves de string de um objeto.
- * Usado para sugerir as chaves do data no IntelliSense.
- */
+
 export type ExtractStringKeys<T> = {
   [K in keyof T]: T[K] extends string | number ? K : never;
 }[keyof T];
 
-/**
- * Tipo helper para criar um Record com sugestões de chaves.
- * Use Partial para tornar todas as propriedades opcionais.
- */
 export type ValueFormatterMap<T extends Record<string, unknown>> = Partial<
   Record<ExtractStringKeys<T>, PredefinedFormat | string>
 >;
 
-/**
- * Configuração do valueFormatter.
- *
- * @example
- * // Opção 1: Objeto com formatos predefinidos (recomendado)
- * valueFormatter={{ receita: "R$", taxa: "%", peso: "kg" }}
- *
- * @example
- * // Opção 2: Função customizada
- * valueFormatter={(props) => `R$ ${props.formattedValue}`}
- */
 export type ValueFormatterConfig =
   | ValueFormatterType
   | Record<string, PredefinedFormat | string>;

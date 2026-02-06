@@ -292,41 +292,30 @@ export const adaptDataForTooltip = <T extends Record<string, unknown>>(
 export const createValueFormatter = (
   customFormatter: ValueFormatterType | Record<string, string> | undefined,
   formatBR: boolean,
-  dataKey?: string,
 ): ValueFormatterType | undefined => {
   const nf = new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
 
-  // Formatos que aparecem ANTES do valor (prefixos)
   const prefixFormats = ["R$", "$", "€", "£"];
 
-  // Formatos que aparecem DEPOIS do valor (sufixos)
   const suffixFormats = ["%", "kg", "km", "m", "L", "un", "t", "h", "min", "s"];
 
-  /**
-   * Determina se o formato deve aparecer antes (prefixo) ou depois (sufixo)
-   */
   const getFormattedValue = (baseValue: string, format: string): string => {
     const trimmedFormat = format.trim();
 
-    // Verifica se é um prefixo
     if (prefixFormats.includes(trimmedFormat)) {
       return `${trimmedFormat} ${baseValue}`;
     }
-
-    // Verifica se é um sufixo
     if (suffixFormats.includes(trimmedFormat)) {
       return `${baseValue}${trimmedFormat}`;
     }
 
-    // Caso não seja predefinido, coloca como sufixo com espaço
     return `${baseValue} ${trimmedFormat}`;
   };
 
   if (customFormatter) {
-    // Se for um objeto (Record<string, string>)
     if (
       typeof customFormatter === "object" &&
       !Array.isArray(customFormatter)
@@ -334,9 +323,14 @@ export const createValueFormatter = (
       const formatterMap = customFormatter as Record<string, string>;
 
       return (props) => {
-        const { value, formattedValue } = props as {
+        const {
+          value,
+          formattedValue,
+          dataKey: propsDataKey,
+        } = props as {
           value: number | string | undefined;
           formattedValue: string;
+          dataKey?: string;
           [key: string]: unknown;
         };
 
@@ -354,7 +348,9 @@ export const createValueFormatter = (
 
         // Aplicar o formatter específico para a chave, se existir
         const format =
-          dataKey && formatterMap[dataKey] ? formatterMap[dataKey] : "";
+          propsDataKey && formatterMap[propsDataKey]
+            ? formatterMap[propsDataKey]
+            : "";
 
         return format
           ? getFormattedValue(baseFormatted, format)
@@ -362,7 +358,6 @@ export const createValueFormatter = (
       };
     }
 
-    // Se for uma função (comportamento antigo)
     if (typeof customFormatter === "function") {
       if (formatBR) {
         const wrapped: ValueFormatterType = (props) => {
