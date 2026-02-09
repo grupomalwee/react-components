@@ -3,7 +3,6 @@ import Chart from "@/components/ui/charts/Chart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
-import { gerarDadosCidades } from "./cidades-brasil";
 
 const sampleData = [
   { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
@@ -245,12 +244,7 @@ export const Biaxial: Story = {
         series={{ bar: ["receita", "despesas"], area: ["churn"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
         yAxisLabel="Valor (R$)"
-        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
-        valueFormatter={{
-          receita: "",
-          despesas: "R$",
-          churn: "%",
-        }}
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}      
       />
     </div>
   ),
@@ -337,11 +331,7 @@ export const CustomFormatterPerKey: Story = {
             peso: "Peso Total",
           }}
           showLabels={true}
-          valueFormatter={{
-          receta: "R$",
-            despesas: "R$",
-            peso: "kg",
-          }}
+         
         />
       </div>
     );
@@ -714,112 +704,112 @@ export const AllThings: Story = {
   },
 };
 
-export const Horizontal: Story = {
-  args: {
-    data: [
-      {
-        periodo: "Jan/24",
-        receita: 4200,
-        despesas: 2800,
-        churn: 180,
-      },
-      {
-        periodo: "Fev/24",
-        receita: 5100,
-        despesas: 3200,
-        churn: 165,
-      },
-      {
-        periodo: "Mar/24",
-        receita: 6800,
-        despesas: 3900,
-        churn: 142,
-      },
-      {
-        periodo: "Abr/24",
-        receita: 7500,
-        despesas: 4300,
-        churn: 128,
-      },
-    ],
+// export const Horizontal: Story = {
+//   args: {
+//     data: [
+//       {
+//         periodo: "Jan/24",
+//         receita: 4200,
+//         despesas: 2800,
+//         churn: 180,
+//       },
+//       {
+//         periodo: "Fev/24",
+//         receita: 5100,
+//         despesas: 3200,
+//         churn: 165,
+//       },
+//       {
+//         periodo: "Mar/24",
+//         receita: 6800,
+//         despesas: 3900,
+//         churn: 142,
+//       },
+//       {
+//         periodo: "Abr/24",
+//         receita: 7500,
+//         despesas: 4300,
+//         churn: 128,
+//       },
+//     ],
 
-    xAxis: "periodo",
-    className: "border",
-    title: "Barras Horizontais Exemplo",
-    enableHighlights: false,
-  },
+//     xAxis: "periodo",
+//     className: "border",
+//     title: "Barras Horizontais Exemplo",
+//     enableHighlights: false,
+//   },
 
-  name: "Barras Horizontais",
+//   name: "Barras Horizontais",
 
-  render: (args) => (
-    <div
-      style={{
-        width: "900px",
-        height: "450px",
-      }}
-    >
-      <Chart
-        {...args}
-        data={gerarDadosCidades()}
-        xAxis="cidade"
-        showLabels
-        height={400}
-        orderBy="valorReal"
-        horizontal
-        series={{
-          bar: ["valorAnoAnterior", "valorReal"],
-        }}
-        labelMap={{
-          valorAnoAnterior: "Valor Ano Anterior",
-          valorReal: "Valor Real",
-        }}
-        colors={["#666665", "#0d1136"]}
-      />
-    </div>
-  ),
+//   render: (args) => (
+//     <div
+//       style={{
+//         width: "900px",
+//         height: "450px",
+//       }}
+//     >
+//       <Chart
+//         {...args}
+//         data={gerarDadosCidades()}
+//         xAxis="cidade"
+//         showLabels
+//         height={400}
+//         orderBy="valorReal"
+//         horizontal
+//         series={{
+//           bar: ["valorAnoAnterior", "valorReal"],
+//         }}
+//         labelMap={{
+//           valorAnoAnterior: "Valor Ano Anterior",
+//           valorReal: "Valor Real",
+//         }}
+//         colors={["#666665", "#0d1136"]}
+//       />
+//     </div>
+//   ),
 
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Gráfico com barras horizontais usando a prop `horizontal={true}`, mostrando comparação de valores entre ano anterior e real para aproximadamente 300 cidades brasileiras de diversos tamanhos.",
-      },
+//   parameters: {
+//     docs: {
+//       description: {
+//         story:
+//           "Gráfico com barras horizontais usando a prop `horizontal={true}`, mostrando comparação de valores entre ano anterior e real para aproximadamente 300 cidades brasileiras de diversos tamanhos.",
+//       },
 
-      source: {
-        code: `import React from 'react';
-import Chart from '@mlw-packages/react-components';
-import { gerarDadosCidades } from './cidades-brasil';
+//       source: {
+//         code: `import React from 'react';
+// import Chart from '@mlw-packages/react-components';
+// import { gerarDadosCidades } from './cidades-brasil';
 
-const horizontalBarsData = gerarDadosCidades();
+// const horizontalBarsData = gerarDadosCidades();
 
-export default function HorizontalBars() {
-  return (
-    <div style={{ width: 900, height: 450 }}>
-      <Chart
-        data={horizontalBarsData}
-        xAxis="cidade"
-        horizontal
-        series={{ bar: ['valorAnoAnterior', 'valorReal'] }}
-        labelMap={{ valorAnoAnterior: 'Valor Ano Anterior', valorReal: 'Valor Real' }}
-        colors={['#0d1136', '#666666']}
-        yAxisLabel="Cidades"
-        xAxisLabel="Valores (R$)"
-        height={400}
-      />
-    </div>
-  );
-}
-`,
-      },
-    },
-  },
+// export default function HorizontalBars() {
+//   return (
+//     <div style={{ width: 900, height: 450 }}>
+//       <Chart
+//         data={horizontalBarsData}
+//         xAxis="cidade"
+//         horizontal
+//         series={{ bar: ['valorAnoAnterior', 'valorReal'] }}
+//         labelMap={{ valorAnoAnterior: 'Valor Ano Anterior', valorReal: 'Valor Real' }}
+//         colors={['#0d1136', '#666666']}
+//         yAxisLabel="Cidades"
+//         xAxisLabel="Valores (R$)"
+//         height={400}
+//       />
+//     </div>
+//   );
+// }
+// `,
+//       },
+//     },
+//   },
 
-  play: async ({ canvasElement, step }) => {
-    await step("Verificar barras horizontais renderizadas", async () => {
-      await waitFor(() => {
-        const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBeGreaterThan(0);
-      });
-    });
-  },
-};
+//   play: async ({ canvasElement, step }) => {
+//     await step("Verificar barras horizontais renderizadas", async () => {
+//       await waitFor(() => {
+//         const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
+//         expect(bars.length).toBeGreaterThan(0);
+//       });
+//     });
+//   },
+// };

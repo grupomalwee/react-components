@@ -1,4 +1,5 @@
 import { TimeSeriesConfig } from "../types";
+import { valueFormatter } from "../utils";
 export interface ChartData {
   [key: string]: string | number | boolean | null | undefined;
 }
@@ -29,8 +30,8 @@ export type SeriesProp = {
   line?: string[];
   area?: string[];
 };
-export interface ChartProps<T extends ChartData = ChartData> {
-  data: T[];
+export interface ChartProps {
+  data: ChartData[];
   series?: SeriesProp;
   className?: string;
   chartMargin?: Partial<{
@@ -50,7 +51,7 @@ export interface ChartProps<T extends ChartData = ChartData> {
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
   labelMap?: Record<string, string>;
-  valueFormatter?: ValueFormatterConfig | ValueFormatterMap<T>;
+  valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
   periodLabel?: string;
   xAxisLabel?: string;
@@ -71,7 +72,6 @@ export interface ChartProps<T extends ChartData = ChartData> {
   customLegend?: boolean;
   labelsVisibility?: { bar: boolean; line: boolean; area: boolean };
   horizontal?: boolean;
-  orderBy?: string;
 }
 
 export interface SeriesConfig {
@@ -99,35 +99,6 @@ export type ValueFormatterType = (props: {
   formattedValue: string;
   [key: string]: unknown;
 }) => string;
-
-export type PredefinedFormat =
-  | "R$" // Real brasileiro - antes: "R$ 1.234"
-  | "$" // Dólar - antes: "$ 1,234"
-  | "€" // Euro - antes: "€ 1.234"
-  | "£" // Libra - antes: "£ 1,234"
-  | "%" // Porcentagem - depois: "12,5%"
-  | "kg" // Quilograma - depois: "10kg"
-  | "km" // Quilômetro - depois: "100km"
-  | "m" // Metro - depois: "5m"
-  | "L" // Litro - depois: "2L"
-  | "un" // Unidade - depois: "50un"
-  | "t" // Tonelada - depois: "3t"
-  | "h" // Hora - depois: "8h"
-  | "min" // Minuto - depois: "30min"
-  | "s"; // Segundo - depois: "45s";
-
-
-export type ExtractStringKeys<T> = {
-  [K in keyof T]: T[K] extends string | number ? K : never;
-}[keyof T];
-
-export type ValueFormatterMap<T extends Record<string, unknown>> = Partial<
-  Record<ExtractStringKeys<T>, PredefinedFormat | string>
->;
-
-export type ValueFormatterConfig =
-  | ValueFormatterType
-  | Record<string, PredefinedFormat | string>;
 
 export type Padding =
   | number
