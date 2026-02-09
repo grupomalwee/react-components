@@ -320,7 +320,6 @@ export const StressHorizontalManyBars: Story = {
     horizontal: true,
     showGrid: true,
     showLegend: true,
-    orderBy: "vendas",
     labelMap: {
       vendas: "Vendas",
       custos: "Custos",
