@@ -71,3 +71,4 @@ export * from "./ui/charts";
 export * from "./ui/LeaderBoard";
 export * from "./ui/form/NumericInput";
 export * from "./ui/FilterBase";
+export * from "./ui/charts/HorizontalChart";

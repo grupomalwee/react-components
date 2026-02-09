@@ -308,35 +308,6 @@ export const StressRealTimeUpdates: Story = {
   },
 };
 
-export const StressHorizontalManyBars: Story = {
-  args: {
-    data: generateLargeDataset(50),
-    series: {
-      bar: ["vendas", "custos", "lucro"],
-    },
-    xAxis: "periodo",
-    title: "Gráfico Horizontal com 50 Barras",
-    height: 600,
-    horizontal: true,
-    showGrid: true,
-    showLegend: true,
-    orderBy: "vendas",
-    labelMap: {
-      vendas: "Vendas",
-      custos: "Custos",
-      lucro: "Lucro",
-    },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Teste de estresse com gráfico horizontal contendo 50 barras. Avalia scroll e renderização vertical.",
-      },
-    },
-  },
-};
-
 export const StressTimeSeriesWithBrush: Story = {
   args: {
     data: generateLargeDataset(1000),

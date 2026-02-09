@@ -39,7 +39,7 @@ const HorizontalLegend: React.FC<HorizontalLegendProps> = ({
   };
   return (
     <div className={cn(className)}>
-      <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 overflow-x-auto">
+      <div className="flex items-center justify-left gap-2 sm:gap-3 md:gap-4 overflow-x-auto">
         {allKeys.map((key) => {
           const displayLabel = formatLegendLabel(key);
           return (
