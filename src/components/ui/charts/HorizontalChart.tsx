@@ -185,7 +185,6 @@ const HorizontalChart: React.FC<ChartProps> = ({
     () => createYTickFormatter(finalValueFormatter),
     [finalValueFormatter],
   );
-
   const CONTAINER_PADDING_LEFT = -6;
 
   const finalChartRightMargin = chartMargin?.right ?? 0;
@@ -406,7 +405,7 @@ const HorizontalChart: React.FC<ChartProps> = ({
               margin={{
                 top: 10,
                 right: finalChartRightMargin,
-                left: finalChartLeftMargin,
+                left: 55 + finalChartLeftMargin,
                 bottom: 10,
               }}
               onClick={handleChartClick}
@@ -449,9 +448,9 @@ const HorizontalChart: React.FC<ChartProps> = ({
                 dataKey={xAxisConfig.dataKey}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                width={125}
+                tickLine={true}
+                minTickGap={24}
+                axisLine={true}
                 tickFormatter={(value) => {
                   if (categoryFormatter)
                     return categoryFormatter(value as string | number);

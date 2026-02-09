@@ -363,42 +363,11 @@ const Chart: React.FC<ChartProps> = ({
 
   if (Array.isArray(data) && data.length === 0) {
     return (
-      <div>
         <NoData
           title={title}
           paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
           height={height}
-        />
-        <div style={{ height: 0 }}>
-          <svg width={effectiveChartWidth} height={height}>
-            {xAxisLabel && (
-              <text
-                x={effectiveChartWidth - 40}
-                y={height - 10}
-                fontSize={12}
-                fill="hsl(var(--muted-foreground))"
-                fontWeight={500}
-                textAnchor="end"
-              >
-                {xAxisLabel}
-              </text>
-            )}
-            {yAxisLabel && (
-              <text
-                x={20}
-                y={40}
-                fontSize={12}
-                fill="hsl(var(--muted-foreground))"
-                fontWeight={500}
-                textAnchor="start"
-                transform={`rotate(-90 20 40)`}
-              >
-                {yAxisLabel}
-              </text>
-            )}
-          </svg>
-        </div>
-      </div>
+        />     
     );
   }
 
@@ -406,7 +375,7 @@ const Chart: React.FC<ChartProps> = ({
     <div
       ref={wrapperRef}
       className={cn(
-        "w-full overflow-hidden min-w-0 rounded-lg border-border",
+        "w-full overflow-hidden min-w-0 rounded-lg border-border h-full",
         className,
       )}
     >
@@ -525,7 +494,7 @@ const Chart: React.FC<ChartProps> = ({
             </div>
           )}
 
-        <ResponsiveContainer width="100%" height={height}>
+        <ResponsiveContainer width="100%" height={height} className="h-full">
           <ComposedChart
             data={processedData}
             height={height}

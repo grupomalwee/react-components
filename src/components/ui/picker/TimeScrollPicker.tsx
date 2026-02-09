@@ -77,7 +77,7 @@ function ScrollColumn({
                 className={cn(
                   "snap-center flex items-center justify-center select-none font-bold tabular-nums transition-all duration-200",
                   isCentered
-                    ? "text-2xl sm:text-xl text-foreground scale-110"
+                    ? "text-foreground scale-110"
                     : "text-base sm:text-sm text-muted-foreground/60",
                 )}
                 style={{ height: `${itemHeight}px` }}

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// Eduardo Ronchi de Araujo - Desenvolvidor de Sistemas Junio
+
 export default {
   darkMode: ["class"],
   content: [
@@ -10,10 +10,9 @@ export default {
   ],
   theme: {
     extend: {
-
       transitionTimingFunction: {
-        'ease-out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'ease-standard': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        "ease-out-back": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "ease-standard": "cubic-bezier(0.4, 0, 0.2, 1)",
       },
 
       fontFamily: {

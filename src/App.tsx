@@ -1,5 +1,5 @@
 /**
- * Eduardo Ronchi de Araujo
+ *
  * Desenvolvidor de Sistemas Junio
  */
 import { ThemeProviderBase } from "./components/theme/theme-provider";
@@ -53,7 +53,6 @@ function App() {
         </div>
       </ThemeProviderBase>
       <Toaster />
-     
     </div>
   );
 }
