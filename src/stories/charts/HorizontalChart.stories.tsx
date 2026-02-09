@@ -54,6 +54,38 @@ export const Default: Story = {
     title: "Vendas por Cidade",
     height: 400,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const smallData = [
+  { cidade: "São Paulo/SP", vendas: 15420, meta: 12000 },
+  { cidade: "Rio de Janeiro/RJ", vendas: 12300, meta: 10000 },
+  { cidade: "Belo Horizonte/MG", vendas: 8900, meta: 9000 },
+  { cidade: "Brasília/DF", vendas: 7600, meta: 8000 },
+  { cidade: "Curitiba/PR", vendas: 6800, meta: 7000 },
+];
+
+export default function Default() {
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <HorizontalChart
+        data={smallData}
+        series={{ bar: ["vendas"] }}
+        xAxis="cidade"
+        yAxisLabel="Vendas"
+        title="Vendas por Cidade"
+        height={400}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const MultipleSeriesWithScroll: Story = {
@@ -72,6 +104,42 @@ export const MultipleSeriesWithScroll: Story = {
       meta: "Meta Estabelecida",
     },
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const largeData = [
+  { cidade: "São Paulo/SP", vendas: 15420, meta: 12000 },
+  { cidade: "Rio de Janeiro/RJ", vendas: 12300, meta: 10000 },
+  // ... (dados completos)
+];
+
+export default function MultipleSeriesWithScroll() {
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <HorizontalChart
+        data={largeData}
+        series={{ bar: ["vendas", "meta"] }}
+        xAxis="cidade"
+        yAxisLabel="Valor (R$)"
+        title="Vendas vs Meta - Top 20 Cidades"
+        height={500}
+        showLegend={true}
+        colors={["#666665", "#0d1136"]}
+        labelMap={{
+          vendas: "Vendas Realizadas",
+          meta: "Meta Estabelecida",
+        }}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const WithCustomColors: Story = {
@@ -85,6 +153,39 @@ export const WithCustomColors: Story = {
     colors: ["#10b981"],
     showGrid: true,
     showLabels: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const largeData = [
+  { cidade: "São Paulo/SP", vendas: 15420, meta: 12000 },
+  { cidade: "Rio de Janeiro/RJ", vendas: 12300, meta: 10000 },
+  // ...
+];
+
+export default function WithCustomColors() {
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <HorizontalChart
+        data={largeData}
+        series={{ bar: ["vendas"] }}
+        xAxis="cidade"
+        yAxisLabel="Vendas (R$)"
+        title="Ranking de Vendas"
+        height={500}
+        colors={["#10b981"]}
+        showGrid={true}
+        showLabels={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
   },
 };
 
@@ -100,6 +201,35 @@ export const WithHighlights: Story = {
     enableShowOnly: true,
     showLegend: true,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const largeData = [ ... ]; // Seus dados aqui
+
+export default function WithHighlights() {
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <HorizontalChart
+        data={largeData.slice(0, 15)}
+        series={{ bar: ["vendas", "meta"] }}
+        xAxis="cidade"
+        yAxisLabel="Valor (R$)"
+        title="Vendas por Cidade - Modo Interativo"
+        height={500}
+        enableHighlights={true}
+        enableShowOnly={true}
+        showLegend={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const WithValueFormatter: Story = {
@@ -112,6 +242,40 @@ export const WithValueFormatter: Story = {
     height: 400,
     showLabels: true,
     showLegend: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const smallData = [
+  { cidade: "São Paulo/SP", vendas: 15420, meta: 12000 },
+  { cidade: "Rio de Janeiro/RJ", vendas: 12300, meta: 10000 },
+  { cidade: "Belo Horizonte/MG", vendas: 8900, meta: 9000 },
+  { cidade: "Brasília/DF", vendas: 7600, meta: 8000 },
+  { cidade: "Curitiba/PR", vendas: 6800, meta: 7000 },
+];
+
+export default function WithValueFormatter() {
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <HorizontalChart
+        data={smallData}
+        series={{ bar: ["vendas", "meta"] }}
+        xAxis="cidade"
+        yAxisLabel="Vendas"
+        title="Vendas Formatadas"
+        height={400}
+        showLabels={true}
+        showLegend={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
   },
 };
 
@@ -127,6 +291,35 @@ export const WithTooltipTotal: Story = {
     showLegend: true,
     colors: ["#666665", "#0d1136"],
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const largeData = [ ... ];
+
+export default function WithTooltipTotal() {
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <HorizontalChart
+        data={largeData}
+        series={{ bar: ["vendas", "meta"] }}
+        xAxis="cidade"
+        yAxisLabel="Valor (R$)"
+        title="Vendas com Total no Tooltip"
+        height={500}
+        showTooltipTotal={true}
+        showLegend={true}
+        colors={["#666665", "#0d1136"]}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const WithCustomLegend: Story = {
@@ -140,6 +333,41 @@ export const WithCustomLegend: Story = {
     customLegend: true,
     showLegend: false,
     formatBR: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const smallData = [
+  { cidade: "São Paulo/SP", vendas: 15420, meta: 12000 },
+  { cidade: "Rio de Janeiro/RJ", vendas: 12300, meta: 10000 },
+  { cidade: "Belo Horizonte/MG", vendas: 8900, meta: 9000 },
+  { cidade: "Brasília/DF", vendas: 7600, meta: 8000 },
+  { cidade: "Curitiba/PR", vendas: 6800, meta: 7000 },
+];
+
+export default function WithCustomLegend() {
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <HorizontalChart
+        data={smallData}
+        series={{ bar: ["vendas", "meta"] }}
+        xAxis="cidade"
+        yAxisLabel="Valor (R$)"
+        title="Vendas com Legenda Customizada"
+        height={400}
+        customLegend={true}
+        showLegend={false}
+        formatBR={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
   },
 };
 
@@ -158,6 +386,41 @@ export const LongScroll: Story = {
     showLabels: true,
     showGrid: true,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+// Exemplo de como gerar volumes grandes de dados
+const horizontalBarsData = Array.from({ length: 50 }, (_, i) => ({
+  cidade: \`Cidade \${i + 1}\`,
+  valorAnoAnterior: Math.floor(Math.random() * 10000),
+  valorReal: Math.floor(Math.random() * 10000),
+}));
+
+export default function LongScroll() {
+  return (
+    <div style={{ width: '100%', height: 600 }}>
+      <HorizontalChart
+        data={horizontalBarsData}
+        series={{ bar: ["valorAnoAnterior", "valorReal"] }}
+        xAxis="cidade"
+        yAxisLabel="Faturamento (mil R$)"
+        title="Faturamento por Estado - Todas as Regiões"
+        height={600}
+        colors={["#666665", "#0d1136"]}
+        orderBy="valorReal"
+        showLabels={true}
+        showGrid={true}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const MinimalConfig: Story = {
@@ -171,5 +434,34 @@ export const MinimalConfig: Story = {
     series: { bar: ["quantidade"] },
     xAxis: "produto",
     height: 300,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { HorizontalChart } from '@mlw-packages/react-components';
+
+const data = [
+  { produto: "Produto A", quantidade: 450 },
+  { produto: "Produto B", quantidade: 320 },
+  { produto: "Produto C", quantidade: 280 },
+  { produto: "Produto D", quantidade: 195 },
+];
+
+export default function MinimalConfig() {
+  return (
+    <div style={{ width: '100%', height: 300 }}>
+      <HorizontalChart
+        data={data}
+        series={{ bar: ["quantidade"] }}
+        xAxis="produto"
+        height={300}
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
   },
 };
