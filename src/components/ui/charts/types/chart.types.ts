@@ -72,6 +72,7 @@ export interface ChartProps {
   customLegend?: boolean;
   labelsVisibility?: { bar: boolean; line: boolean; area: boolean };
   horizontal?: boolean;
+  orderBy?: string;
 }
 
 export interface SeriesConfig {

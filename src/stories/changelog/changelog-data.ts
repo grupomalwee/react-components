@@ -11,6 +11,26 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.6",
+    date: "2026-02-09",
+    shortTitle: "Chart",
+    fixed: [
+      "Chart: removido propriedade orderBy da story StressHorizontalManyBars.",
+    ],
+  },
+  {
+    version: "1.9.5",
+    date: "2026-02-09",
+    shortTitle: "Chromatic",
+    fixed: ["Chromatic: ajustes de testes visuais."],
+  },
+  {
+    version: "1.9.4",
+    date: "2026-02-09",
+    shortTitle: "Chromatic",
+    fixed: ["Chromatic: ajustes de testes visuais."],
+  },
+  {
     version: "1.9.3",
     date: "2026-02-06",
     shortTitle: "Combobox",
@@ -23,9 +43,7 @@ export const changelogData: ChangeItem[] = [
     version: "1.9.2",
     date: "2026-02-05",
     shortTitle: "Combobox",
-    changed: [
-      "Combobox: arrumado visualizacao em scroll no IOS mobile.",
-    ],
+    changed: ["Combobox: arrumado visualizacao em scroll no IOS mobile."],
   },
   {
     version: "1.9.1",
