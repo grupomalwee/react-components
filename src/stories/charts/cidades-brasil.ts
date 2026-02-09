@@ -1,5 +1,10 @@
 export const cidadesBrasil = [
   "São Luís do Paraitinga/SP",
+  "São Francisco de Assis de Itabapoana/RJ",
+  "Santana do Livramento da Boa Vista/RS",
+  "São Sebastião do Alto da Serra Grande/RJ",
+  "Nossa Senhora do Livramento do Monte Alto/MT",
+  "São Francisco do Conde da Bahia de Todos os Santos/BA",
   "Presidente Bernardes/SP",
   "Santana de Parnaíba/SP",
   "São José do Rio Preto/SP",

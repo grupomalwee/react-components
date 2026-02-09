@@ -39,16 +39,16 @@ const HorizontalLegend: React.FC<HorizontalLegendProps> = ({
   };
   return (
     <div className={cn(className)}>
-      <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
+      <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 overflow-x-auto">
         {allKeys.map((key) => {
           const displayLabel = formatLegendLabel(key);
           return (
-            <div key={key} className="flex items-center gap-1.5 sm:gap-2">
+            <div key={key} className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
               <div
                 className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm flex-shrink-0"
                 style={{ backgroundColor: finalColors[key] }}
               />
-              <span className="text-xs sm:text-sm tracking-[0] break-words">
+              <span className="text-xs sm:text-sm tracking-[0] whitespace-nowrap">
                 {displayLabel}
               </span>
             </div>
@@ -56,13 +56,13 @@ const HorizontalLegend: React.FC<HorizontalLegendProps> = ({
         })}
 
         {orderBy && maxPeriodLabel && minPeriodLabel && (
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto justify-center mt-2 sm:mt-0 sm:ml-3 sm:pl-3 md:ml-4 md:pl-4 sm:border-l border-border">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 ml-3 pl-3 md:ml-4 md:pl-4 border-l border-border flex-shrink-0">
             <div className="flex items-center gap-1 sm:gap-1.5">
               <FunnelSimpleIcon
                 className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0"
                 weight="bold"
               />
-              <span className="text-xs sm:text-sm tracking-[0] font-medium truncate max-w-[120px] sm:max-w-none">
+              <span className="text-xs sm:text-sm tracking-[0] font-medium whitespace-nowrap">
                 {maxPeriodLabel}
               </span>
             </div>
@@ -71,7 +71,7 @@ const HorizontalLegend: React.FC<HorizontalLegendProps> = ({
                 className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 rotate-180 flex-shrink-0"
                 weight="bold"
               />
-              <span className="text-xs sm:text-sm tracking-[0] font-medium truncate max-w-[120px] sm:max-w-none">
+              <span className="text-xs sm:text-sm tracking-[0] font-medium whitespace-nowrap">
                 {minPeriodLabel}
               </span>
             </div>

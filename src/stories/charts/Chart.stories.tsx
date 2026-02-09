@@ -311,8 +311,6 @@ export const FormatBR: Story = {
   },
 };
 
-
-
 export const CustomFormatterPerKey: Story = {
   name: "Formatador",
   render: (args) => {
@@ -340,9 +338,9 @@ export const CustomFormatterPerKey: Story = {
           }}
           showLabels={true}
           valueFormatter={{
-            receita: "R$", 
-            despesas: "R$", 
-            peso: "kg", 
+          receta: "R$",
+            despesas: "R$",
+            peso: "kg",
           }}
         />
       </div>
@@ -357,7 +355,6 @@ export const CustomFormatterPerKey: Story = {
     },
   },
 };
-
 
 export const AllBars: Story = {
   name: "Só Barras",
@@ -389,7 +386,7 @@ export const AllBars: Story = {
     await step("Verificar todas as barras renderizadas", async () => {
       await waitFor(() => {
         const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-        expect(bars.length).toBe(12); 
+        expect(bars.length).toBe(12);
       });
     });
 

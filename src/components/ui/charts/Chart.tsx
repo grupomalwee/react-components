@@ -27,6 +27,7 @@ import {
   computeYAxisTickWidth,
 } from "./utils/helpers";
 import { cn } from "@/lib/utils";
+import CustomYAxisTick from "./CustomYAxisTick";
 import {
   Highlights,
   ShowOnly,
@@ -310,24 +311,28 @@ const Chart: React.FC<ChartProps> = ({
   const finalChartLeftMargin =
     chartMargin?.left ?? (yAxisLabel ? AXIS_LABEL_MARGIN : 0);
 
-  const yAxisTickWidth = useMemo(
-    () =>
-      computeYAxisTickWidth(
-        chartMargin?.left,
-        yAxisLabel,
-        AXIS_LABEL_MARGIN,
-        yTickFormatter,
-        minLeftDataValue,
-        niceMaxLeft,
-      ),
-    [
+  const yAxisTickWidth = useMemo(() => {
+    if (horizontal) {
+      if (typeof chartMargin?.left === "number") return chartMargin.left;
+      return 130;
+    }
+
+    return computeYAxisTickWidth(
       chartMargin?.left,
       yAxisLabel,
+      AXIS_LABEL_MARGIN,
       yTickFormatter,
       minLeftDataValue,
       niceMaxLeft,
-    ],
-  );
+    );
+  }, [
+    horizontal,
+    chartMargin?.left,
+    yAxisLabel,
+    yTickFormatter,
+    minLeftDataValue,
+    niceMaxLeft,
+  ]);
   const HORIZONTAL_PADDING_CLASS = "px-24";
   const teste = "pl-24 pr-4";
 
@@ -383,11 +388,42 @@ const Chart: React.FC<ChartProps> = ({
 
   if (Array.isArray(data) && data.length === 0) {
     return (
-      <NoData
-        title={title}
-        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
-        height={height}
-      />
+      <div>
+        <NoData
+          title={title}
+          paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
+          height={height}
+        />
+        <div style={{ height: 0 }}>
+          <svg width={effectiveChartWidth} height={height}>
+            {xAxisLabel && (
+              <text
+                x={effectiveChartWidth - 40}
+                y={height - 10}
+                fontSize={12}
+                fill="hsl(var(--muted-foreground))"
+                fontWeight={500}
+                textAnchor="end"
+              >
+                {xAxisLabel}
+              </text>
+            )}
+            {yAxisLabel && (
+              <text
+                x={20}
+                y={40}
+                fontSize={12}
+                fill="hsl(var(--muted-foreground))"
+                fontWeight={500}
+                textAnchor="start"
+                transform={`rotate(-90 20 40)`}
+              >
+                {yAxisLabel}
+              </text>
+            )}
+          </svg>
+        </div>
+      </div>
     );
   }
 
@@ -625,9 +661,10 @@ const Chart: React.FC<ChartProps> = ({
                     yAxisId="left"
                     width={yAxisTickWidth}
                     stroke="hsl(var(--muted-foreground))"
-                    fontSize={12}
+                    fontSize={11}
                     tickLine={false}
                     axisLine={false}
+                    tick={<CustomYAxisTick width={yAxisTickWidth - 10} />}
                     tickFormatter={(value) => {
                       if (categoryFormatter)
                         return categoryFormatter(value as string | number);
@@ -876,9 +913,10 @@ const Chart: React.FC<ChartProps> = ({
                           ? parseFloat(props.value)
                           : 0;
                     const percentage = calcDivision(numValue, 100);
-                    const formattedPercentage = typeof percentage === 'number' 
-                      ? percentage.toFixed(1).replace('.', ',')
-                      : String(percentage).replace('.', ',');
+                    const formattedPercentage =
+                      typeof percentage === "number"
+                        ? percentage.toFixed(1).replace(".", ",")
+                        : String(percentage).replace(".", ",");
                     return `${formattedPercentage}%`;
                   };
 

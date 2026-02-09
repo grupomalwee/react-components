@@ -10,6 +10,8 @@ import { DotsSixVerticalIcon, ArrowRight } from "@phosphor-icons/react";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
+import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
+import type { SystemData } from "./systemTooltipUtils";
 
 const tooltipVariants = {
   hidden: {
@@ -29,19 +31,6 @@ const tooltipVariants = {
   },
 };
 
-export interface Connection {
-  id: string;
-  name: string;
-  type: "entrada" | "saida";
-  status?: "active" | "inactive" | "warning";
-}
-
-export interface SystemData {
-  name: string;
-  description: string;
-  connections: Connection[];
-}
-
 interface Position {
   top: number;
   left: number;
@@ -52,6 +41,7 @@ interface SystemTooltipProps {
   data: SystemData;
   position: Position;
   title?: string;
+  isLoading?: boolean;
   onMouseDown?: (id: string, e: React.MouseEvent | React.TouchEvent) => void;
   onClose: (id: string) => void;
   onPositionChange?: (id: string, position: Position) => void;
@@ -62,12 +52,14 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
   data,
   position,
   title = "Conexões",
+  isLoading = false,
   onMouseDown,
   onClose,
   onPositionChange,
 }) => {
   const [localPos, setLocalPos] = useState<Position>(position);
   const [dragging, setDragging] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const offsetRef = useRef({ x: 0, y: 0 });
   const lastMouse = useRef({ x: 0, y: 0 });
 
@@ -202,17 +194,56 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
         </div>
 
         <div className="px-4 pt-4 pb-3">
-          <h3 className="text-xl font-bold text-foreground tracking-tight truncate">
-            {data.name}
-          </h3>
-          <h3 className="text-sm font-bold text-muted-foreground tracking-tight truncate">
-            {data.description}
-          </h3>
+          {isLoading ? (
+            <div className="space-y-2">
+              <SkeletonBase className="h-6 w-3/4" />
+              <SkeletonBase className="h-4 w-1/2" />
+            </div>
+          ) : (
+            <>
+              <h3 className="text-xl font-bold text-foreground tracking-tight truncate">
+                {data.name}
+              </h3>
+              {data.description && (
+                <p className="text-sm text-muted-foreground tracking-tight truncate">
+                  {data.description}
+                </p>
+              )}
+            </>
+          )}
         </div>
 
         <div className="px-3 pb-4 space-y-4 max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w- [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
           <SeparatorBase className="w-full" />
-          {entries.length > 0 && (
+          
+          {isLoading ? (
+            <>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <SkeletonBase className="w-1.5 h-1.5 rounded-full" />
+                  <SkeletonBase className="h-3 w-16" />
+                </div>
+                <div className="space-y-1">
+                  {[1, 2, 3].map((i) => (
+                    <SkeletonBase key={i} className="h-10 w-full rounded-lg" />
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <SkeletonBase className="w-1.5 h-1.5 rounded-full" />
+                  <SkeletonBase className="h-3 w-16" />
+                </div>
+                <div className="space-y-1">
+                  {[1, 2].map((i) => (
+                    <SkeletonBase key={i} className="h-10 w-full rounded-lg" />
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {entries.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 px-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -222,19 +253,69 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
               </div>
               <div className="space-y-1">
                 {entries.map((conn) => (
-                  <div
-                    key={conn.id}
-                    className="group flex items-center justify-between p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all"
-                  >
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <span className="text-sm font-medium truncate">
-                        {conn.name}
-                      </span>
-                    </div>{" "}
-                    <ArrowRight
-                      size={14}
-                      className="text-emerald-500 shrink-0 rotate-180"
-                    />
+                  <div key={conn.id} className="space-y-1">
+                    <div
+                      className="group flex items-center justify-between p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all cursor-pointer"
+                      onClick={() =>
+                        setExpandedId(expandedId === conn.id ? null : conn.id)
+                      }
+                    >
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <span className="text-sm font-medium truncate">
+                          {conn.name}
+                        </span>
+                      </div>
+                      <ArrowRight
+                        size={14}
+                        className="text-emerald-500 shrink-0 rotate-180"
+                      />
+                    </div>
+                    {expandedId === conn.id && conn.integration && (
+                      <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
+                        {conn.integration.Nome && (
+                          <div>
+                            <span className="font-semibold">Nome:</span>{" "}
+                            {conn.integration.Nome}
+                          </div>
+                        )}
+                        {(conn.integration.tipo || conn.integration.Tipo) && (
+                          <div>
+                            <span className="font-semibold">Tipo:</span>{" "}
+                            {conn.integration.tipo || conn.integration.Tipo}
+                          </div>
+                        )}
+                        {conn.integration.Protocolos && (
+                          <div>
+                            <span className="font-semibold">Protocolos:</span>{" "}
+                            {conn.integration.Protocolos}
+                          </div>
+                        )}
+                        {conn.integration.Ambiente && (
+                          <div>
+                            <span className="font-semibold">Ambiente:</span>{" "}
+                            {conn.integration.Ambiente}
+                          </div>
+                        )}
+                        {conn.integration.Setor && (
+                          <div>
+                            <span className="font-semibold">Setor:</span>{" "}
+                            {conn.integration.Setor}
+                          </div>
+                        )}
+                        {conn.integration.Contato && (
+                          <div>
+                            <span className="font-semibold">Contato:</span>{" "}
+                            {conn.integration.Contato}
+                          </div>
+                        )}
+                        {conn.integration.Sustentacao && (
+                          <div>
+                            <span className="font-semibold">Sustentação:</span>{" "}
+                            {conn.integration.Sustentacao}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -251,28 +332,83 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
               </div>
               <div className="space-y-1">
                 {exits.map((conn) => (
-                  <div
-                    key={conn.id}
-                    className="group flex items-center justify-between p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all"
-                  >
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <span className="text-sm font-medium truncate">
-                        {conn.name}
-                      </span>
+                  <div key={conn.id} className="space-y-1">
+                    <div
+                      className="group flex items-center justify-between p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all cursor-pointer"
+                      onClick={() =>
+                        setExpandedId(expandedId === conn.id ? null : conn.id)
+                      }
+                    >
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <span className="text-sm font-medium truncate">
+                          {conn.name}
+                        </span>
+                      </div>
+                      <ArrowRight
+                        size={14}
+                        className="text-blue-500 shrink-0"
+                      />
                     </div>
-                    <ArrowRight size={14} className="text-blue-500 shrink-0" />
+                    {expandedId === conn.id && conn.integration && (
+                      <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
+                        {conn.integration.Nome && (
+                          <div>
+                            <span className="font-semibold">Nome:</span>{" "}
+                            {conn.integration.Nome}
+                          </div>
+                        )}
+                        {(conn.integration.tipo || conn.integration.Tipo) && (
+                          <div>
+                            <span className="font-semibold">Tipo:</span>{" "}
+                            {conn.integration.tipo || conn.integration.Tipo}
+                          </div>
+                        )}
+                        {conn.integration.Protocolos && (
+                          <div>
+                            <span className="font-semibold">Protocolos:</span>{" "}
+                            {conn.integration.Protocolos}
+                          </div>
+                        )}
+                        {conn.integration.Ambiente && (
+                          <div>
+                            <span className="font-semibold">Ambiente:</span>{" "}
+                            {conn.integration.Ambiente}
+                          </div>
+                        )}
+                        {conn.integration.Setor && (
+                          <div>
+                            <span className="font-semibold">Setor:</span>{" "}
+                            {conn.integration.Setor}
+                          </div>
+                        )}
+                        {conn.integration.Contato && (
+                          <div>
+                            <span className="font-semibold">Contato:</span>{" "}
+                            {conn.integration.Contato}
+                          </div>
+                        )}
+                        {conn.integration.Sustentacao && (
+                          <div>
+                            <span className="font-semibold">Sustentação:</span>{" "}
+                            {conn.integration.Sustentacao}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {data.connections.length === 0 && (
+          {data.connections.length === 0 && !isLoading && (
             <div className="flex flex-col items-center justify-center p-6 text-center">
               <p className="text-xs text-muted-foreground">
                 Nenhuma conexão encontrada
               </p>
             </div>
+          )}
+          </>
           )}
         </div>
       </motion.div>
