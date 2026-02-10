@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.7",
+    date: "2026-02-10",
+    shortTitle: "Chart",
+    fixed: [
+      "Chart: arrumado erro de z-index do Tooltip",
+      "MultiSelect: removido duplição da prop error",
+    ],
+  },
+  {
     version: "1.9.6",
     date: "2026-02-09",
     shortTitle: "Chart",

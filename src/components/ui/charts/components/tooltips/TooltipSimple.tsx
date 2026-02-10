@@ -41,7 +41,7 @@ const TooltipSimple: React.FC<Props> = ({
     <div
       role="dialog"
       aria-label={`Tooltip ${label ?? ""}`}
-      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-[280px]"
+      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-[280px] z-9999"
       style={{ minWidth: 220 }}
     >
       <div className="mb-2">

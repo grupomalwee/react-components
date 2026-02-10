@@ -4,3 +4,8 @@ export * from "./useChartTooltips";
 export * from "./useChartClick";
 export * from "./useTimeSeriesRange";
 export * from "./useChartMinMax";
+export * from "./useProcessedData";
+export * from "./useBiaxial";
+export * from "./useChartLayout";
+export * from "./useSeriesOpacity";
+export * from "./useOpenTooltipForPeriod";

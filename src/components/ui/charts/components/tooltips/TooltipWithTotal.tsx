@@ -67,7 +67,6 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
       })
     : defaultTotalFormatted;
 
-  // If biaxial, compute denominators per axis (left/right), otherwise single denominator
   const absDenominator = numeric.reduce(
     (sum, p) => sum + Math.abs(typeof p.value === "number" ? p.value : 0),
     0
@@ -91,7 +90,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     <div
       role="dialog"
       aria-label={`Tooltip ${label ?? ""}`}
-      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-xs"
+      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-xs z-9999"
       style={{ minWidth: 220 }}
     >
       <div className="flex items-start justify-between mb-2">

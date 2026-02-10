@@ -4,13 +4,15 @@ import { DotsThreeIcon } from "@phosphor-icons/react/dist/ssr";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
+import { ChartData } from "../../types/chart.types";
+
 interface Props {
-  processedData: Array<{ name: string }>;
+  processedData: ChartData[];
   onOpenPeriod: (periodName: string) => void;
-  rightOffset?: number; 
-  topOffset?: number; 
-  activePeriod?: string; 
-  activePeriods?: string[]; 
+  rightOffset?: number;
+  topOffset?: number;
+  activePeriod?: string;
+  activePeriods?: string[];
 }
 
 const menuVariants = {
@@ -88,7 +90,7 @@ function PeriodsDropdown({
         }}
         title={open ? "Fechar lista de períodos" : "Abrir lista de períodos"}
       >
-        <DotsThreeIcon size={18} className="rotate-90"/>
+        <DotsThreeIcon size={18} className="rotate-90" />
         <span className="sr-only">
           {open ? "Fechar períodos" : "Abrir períodos"}
         </span>

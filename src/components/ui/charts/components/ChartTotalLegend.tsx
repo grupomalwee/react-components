@@ -1,7 +1,11 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { LegendItem } from "../types";
-import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react";
+import { LegendItem } from "../types/chart.types";
+import {
+  ArrowDownRightIcon,
+  ArrowUpRightIcon,
+  MinusIcon,
+} from "@phosphor-icons/react";
 
 interface ChartTotalLegendProps {
   items: LegendItem[];

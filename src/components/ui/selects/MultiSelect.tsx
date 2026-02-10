@@ -11,7 +11,7 @@ import {
   MultiSelectTriggerBase,
   MultiSelectValueBase,
 } from "./MultiSelectBase";
-import ErrorMessage, {
+import {
   ErrorMessageProps,
 } from "@/components/ui/shared/ErrorMessage";
 import { cn } from "@/lib/utils";
@@ -348,8 +348,6 @@ export function MultiSelect<T extends string>({
           )}
         </MultiSelectContentBase>
       </MultiSelectBase>
-
-      <ErrorMessage error={error} />
     </div>
   );
 }

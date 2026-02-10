@@ -152,10 +152,10 @@ export function MultiSelectTriggerBase({
           aria-disabled={disabled || undefined}
           disabled={disabled}
           className={cn(
-            "flex h-auto max-h-9 min-h-9 w-full items-center justify-between gap-2 overflow-hidden rounded-md border border-input bg-background px-3 py-1.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground  dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
+            "flex h-auto max-h-9 min-h-9 w-full items-center justify-between gap-2 overflow-hidden rounded-md border border-input bg-background px-3 py-1.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground  dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground hover:text-primary",
             error
-              ? "border-destructive focus:ring-1 focus:ring-destructive"
-              : "border-input focus:ring-1 focus:ring-ring",
+              ? "border-destructive focus:ring-1 focus:ring-destructive dark:border-red-500"
+              : "border-border focus:ring-1 focus:ring-ring",
             className,
           )}
         >

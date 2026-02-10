@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   ComposedChart,
   Bar,
@@ -23,12 +23,9 @@ import {
   adaptDataForTooltip as adaptData,
   createValueFormatter,
   createYTickFormatter,
-  computeYAxisTickWidth,
 } from "./utils/helpers";
 import { cn } from "@/lib/utils";
 import {
-  Highlights,
-  ShowOnly,
   TooltipSimple,
   DraggableTooltip,
   CloseAllButton,
@@ -36,7 +33,6 @@ import {
   Brush,
   // HorizontalLegend removido
 } from "./components";
-import ChartTotalLegend from "./components/ChartTotalLegend";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel } from "./utils";
 import NoData from "./NoData";
@@ -47,10 +43,15 @@ import {
   useChartClick,
   useTimeSeriesRange,
   // useChartMinMax removido
+  useProcessedData,
+  useBiaxial,
+  useChartLayout,
+  useSeriesOpacity,
+  useOpenTooltipForPeriod,
 } from "./hooks";
+import ChartHeader from "./components/ChartHeader";
+import ChartControls from "./components/ChartControls";
 import {
-  BiaxialConfig,
-  ChartData,
   ChartProps,
   LabelListContent,
   PropsLabelList,
@@ -61,10 +62,9 @@ import {
   fnConfigRightKeys,
   fnContentLabelList,
   fnFormatterValueLegend,
-  fnOpenTooltipForPeriod,
   fnSmartConfig,
 } from "./utils/filters";
-import { calcDivision } from "@/utils/calcDivision";
+import { formatLinePercentage } from "./utils/formatters";
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
@@ -151,21 +151,13 @@ const Chart: React.FC<ChartProps> = ({
 
   // Removido maxPeriodLabel e minPeriodLabel
 
-  const processedData = useMemo(() => {
-    const mapped = data.map((item) => ({
-      ...item,
-      name: String(item[xAxisConfig.dataKey] || "N/A"),
-    }));
-    let result = mapped;
-
-    if (timeSeriesConfig) {
-      result = mapped.slice(startIndex, endIndex + 1);
-    }
-
-    // Removido ordenação por orderBy e horizontal
-
-    return result;
-  }, [data, xAxisConfig.dataKey, timeSeriesConfig, startIndex, endIndex]);
+  const processedData = useProcessedData({
+    data,
+    xAxisKey: xAxisConfig.dataKey,
+    timeSeriesConfig,
+    startIndex,
+    endIndex,
+  });
 
   const seriesOrder = filtersOrder(mapperConfig, series!);
 
@@ -176,25 +168,7 @@ const Chart: React.FC<ChartProps> = ({
     [allKeys, colors, mapperConfig],
   );
 
-  const biaxialConfigNormalized = useMemo(() => {
-    if (!biaxial) return null;
-    if (typeof biaxial === "string") return { key: [biaxial] };
-    if (Array.isArray(biaxial)) return { key: biaxial };
-    return biaxial;
-  }, [biaxial]) as BiaxialConfig | null;
-
-  useMemo(() => {
-    if (!biaxialConfigNormalized) return;
-    const leftLabelMissing = !yAxisLabel || String(yAxisLabel).trim() === "";
-    const rightLabelMissing =
-      !biaxialConfigNormalized.label ||
-      String(biaxialConfigNormalized.label).trim() === "";
-    if (leftLabelMissing || rightLabelMissing) {
-      throw new Error(
-        "When using `biaxial`, you must provide both `yAxisLabel` (left axis) and `biaxial.label` (right axis).",
-      );
-    }
-  }, [biaxialConfigNormalized, yAxisLabel]);
+  const biaxialConfigNormalized = useBiaxial(biaxial, yAxisLabel);
 
   const rightKeys = useMemo(
     () => biaxialConfigNormalized?.key ?? [],
@@ -261,16 +235,7 @@ const Chart: React.FC<ChartProps> = ({
     },
   );
 
-  const getSeriesOpacity = useCallback(
-    (key: string) => {
-      return highlightedSeries.size > 0
-        ? highlightedSeries.has(key)
-          ? 1
-          : 0.25
-        : 1;
-    },
-    [highlightedSeries],
-  );
+  const getSeriesOpacity = useSeriesOpacity(highlightedSeries);
 
   const finalValueFormatter = useMemo(
     () => createValueFormatter(valueFormatter, formatBR),
@@ -284,66 +249,38 @@ const Chart: React.FC<ChartProps> = ({
 
   const AXIS_LABEL_MARGIN = 56;
   const CONTAINER_PADDING_LEFT = -6;
-
-  const finalChartRightMargin =
-    chartMargin?.right ?? (rightKeys.length > 0 ? AXIS_LABEL_MARGIN : 30);
-  const finalChartLeftMargin =
-    chartMargin?.left ?? (yAxisLabel ? AXIS_LABEL_MARGIN : 0);
-
-  const yAxisTickWidth = useMemo(() => {
-    // Removido ajuste para horizontal
-
-    return computeYAxisTickWidth(
-      chartMargin?.left,
-      yAxisLabel,
-      AXIS_LABEL_MARGIN,
-      yTickFormatter,
-      minLeftDataValue,
-      niceMaxLeft,
-    );
-  }, [
-    chartMargin?.left,
-    yAxisLabel,
-    yTickFormatter,
-    minLeftDataValue,
-    niceMaxLeft,
-  ]);
   const HORIZONTAL_PADDING_CLASS = "px-24";
   const teste = "pl-24 pr-4";
 
-  const effectiveChartWidth =
-    typeof width === "number"
-      ? width
-      : measuredWidth
-        ? Math.max(0, measuredWidth - 32)
-        : computedWidth;
-  const chartInnerWidth =
-    effectiveChartWidth - finalChartLeftMargin - finalChartRightMargin;
+  const {
+    finalChartRightMargin,
+    finalChartLeftMargin,
+    yAxisTickWidth,
+    effectiveChartWidth,
+    chartInnerWidth,
+    leftYAxisLabelDx,
+    rightYAxisLabelDx,
+  } = useChartLayout({
+    chartMargin,
+    yAxisLabel,
+    AXIS_LABEL_MARGIN,
+    yTickFormatter,
+    minLeftDataValue,
+    niceMaxLeft,
+    rightKeysLength: rightKeys.length,
+    measuredWidth,
+    width,
+    computedWidth,
+  });
 
-  const leftYAxisLabelDx = -Math.max(12, Math.round(yAxisTickWidth / 2));
-  const rightYAxisLabelDx = Math.max(12, Math.round(finalChartRightMargin / 2));
-
-  const openTooltipForPeriod = useCallback(
-    (periodName: string) => {
-      fnOpenTooltipForPeriod(
-        enableDraggableTooltips,
-        processedData,
-        periodName,
-        activeTooltips,
-        setActiveTooltips,
-        maxTooltips,
-        effectiveChartWidth,
-      );
-    },
-    [
-      enableDraggableTooltips,
-      processedData,
-      activeTooltips,
-      effectiveChartWidth,
-      maxTooltips,
-      setActiveTooltips,
-    ],
-  );
+  const openTooltipForPeriod = useOpenTooltipForPeriod({
+    enableDraggableTooltips,
+    processedData,
+    activeTooltips,
+    setActiveTooltips,
+    maxTooltips,
+    effectiveChartWidth,
+  });
 
   if (!data && !isLoading) return null;
 
@@ -363,11 +300,11 @@ const Chart: React.FC<ChartProps> = ({
 
   if (Array.isArray(data) && data.length === 0) {
     return (
-        <NoData
-          title={title}
-          paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
-          height={height}
-        />     
+      <NoData
+        title={title}
+        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
+        height={height}
+      />
     );
   }
 
@@ -380,97 +317,46 @@ const Chart: React.FC<ChartProps> = ({
       )}
     >
       <div className="rounded-lg bg-card relative w-full max-w-full min-w-0 py-1">
-        {title && (
-          <div
-            className={cn(
-              "w-full flex items-center mt-3 mb-2",
-              HORIZONTAL_PADDING_CLASS,
-              titlePosition === "center" && "justify-center",
-              titlePosition === "right" && "justify-end",
-              titlePosition === "left" && "justify-start",
-            )}
-          >
-            <div className="text-[1.4rem] font-semibold text-foreground">
-              {title}
-            </div>
-          </div>
-        )}
-
-        {customLegend && !!data.length && (
-          <div className={cn("px-6 mb-2", HORIZONTAL_PADDING_CLASS)}>
-            <ChartTotalLegend
-              items={allKeys.map((key) => {
-                const values = processedData.map((d) =>
-                  Number((d as ChartData)[key] || 0),
-                );
-                const total = values.reduce((a, b) => a + b, 0);
-                const first = values[0] || 0;
-                const last = values[values.length - 1] || 0;
-
-                const trendValue =
-                  first !== 0 ? Math.round(((last - first) / first) * 100) : 0;
-
-                const formattedTotal = finalValueFormatter
-                  ? finalValueFormatter({
-                      value: total,
-                      formattedValue: String(total),
-                    })
-                  : new Intl.NumberFormat(formatBR ? "pt-BR" : "en-US").format(
-                      total,
-                    );
-
-                return {
-                  label: mapperConfig[key]?.label || key,
-                  value: formattedTotal,
-                  color: finalColors[key],
-                  trend: {
-                    value: Math.abs(trendValue),
-                    positive: trendValue >= 0,
-                    neutral: trendValue === 0,
-                  },
-                };
-              })}
-            />
-          </div>
-        )}
+        <ChartHeader
+          title={title}
+          titlePosition={titlePosition}
+          HORIZONTAL_PADDING_CLASS={HORIZONTAL_PADDING_CLASS}
+          customLegend={customLegend}
+          data={data}
+          allKeys={allKeys}
+          processedData={processedData}
+          finalColors={finalColors}
+          mapperConfig={mapperConfig}
+          finalValueFormatter={finalValueFormatter}
+          formatBR={formatBR}
+        />
 
         {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
-          <div className={cn("flex items-center gap-2", teste)}>
-            {enableHighlights && (
-              <Highlights
-                allKeys={allKeys}
-                mapperConfig={mapperConfig}
-                finalColors={finalColors}
-                highlightedSeries={highlightedSeries}
-                toggleHighlight={toggleHighlight}
-                containerWidth={chartInnerWidth}
-              />
-            )}
-
-            {enableShowOnly && (
-              <ShowOnly
-                showOnlyHighlighted={showOnlyHighlighted}
-                setShowOnlyHighlighted={
-                  setShowOnlyHighlighted as React.Dispatch<
-                    React.SetStateAction<boolean>
-                  >
-                }
-                highlightedSeriesSize={highlightedSeries.size}
-                clearHighlights={clearHighlights}
-              />
-            )}
-
-            {enablePeriodsDropdown && enableDraggableTooltips && (
-              <div className="ml-auto flex items-center">
-                <PeriodsDropdown
-                  processedData={processedData}
-                  onOpenPeriod={openTooltipForPeriod}
-                  rightOffset={finalChartRightMargin}
-                  activePeriods={activePeriods}
-                />
-              </div>
-            )}
-          </div>
+          <ChartControls
+            allKeys={allKeys}
+            mapperConfig={mapperConfig}
+            finalColors={finalColors}
+            highlightedSeries={highlightedSeries}
+            toggleHighlight={toggleHighlight}
+            showOnlyHighlighted={showOnlyHighlighted}
+            setShowOnlyHighlighted={
+              setShowOnlyHighlighted as React.Dispatch<
+                React.SetStateAction<boolean>
+              >
+            }
+            highlightedSeriesSize={highlightedSeries.size}
+            clearHighlights={clearHighlights}
+            enableHighlights={enableHighlights}
+            enableShowOnly={enableShowOnly}
+            enablePeriodsDropdown={enablePeriodsDropdown}
+            enableDraggableTooltips={enableDraggableTooltips}
+            processedData={processedData}
+            onOpenPeriod={openTooltipForPeriod}
+            rightOffset={finalChartRightMargin}
+            activePeriods={activePeriods}
+            containerClass={cn("flex items-center gap-2", teste)}
+            containerWidth={chartInnerWidth}
+          />
         )}
 
         {!(allKeys.length > 0 && (enableHighlights || enableShowOnly)) &&
@@ -728,25 +614,6 @@ const Chart: React.FC<ChartProps> = ({
                 );
               }
               if (s.type === "line") {
-                const lineFormatter = (props: {
-                  value: number | string | undefined;
-                  formattedValue: string;
-                  [key: string]: unknown;
-                }) => {
-                  const numValue =
-                    typeof props.value === "number"
-                      ? props.value
-                      : typeof props.value === "string"
-                        ? parseFloat(props.value)
-                        : 0;
-                  const percentage = calcDivision(numValue, 100);
-                  const formattedPercentage =
-                    typeof percentage === "number"
-                      ? percentage.toFixed(1).replace(".", ",")
-                      : String(percentage).replace(".", ",");
-                  return `${formattedPercentage}%`;
-                };
-
                 return (
                   <Line
                     key={`line-${key}`}
@@ -772,7 +639,8 @@ const Chart: React.FC<ChartProps> = ({
                           renderPillLabel(
                             color,
                             "filled",
-                            lineFormatter,
+                            (props: { value?: number | string | undefined }) =>
+                              formatLinePercentage(props.value),
                           ) as LabelListContent
                         }
                         offset={14}

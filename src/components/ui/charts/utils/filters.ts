@@ -1,4 +1,4 @@
-import { ChartData, TooltipItem } from "../types";
+import { ChartData, TooltipItem } from "../types/chart.types";
 import { detectDataFields, detectXAxis, formatFieldName } from "./helpers";
 import {
   BiaxialConfig,
