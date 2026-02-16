@@ -113,7 +113,7 @@ const NoData: React.FC<NoDataProps> = ({
       <div className="w-full flex items-center justify-center pl-[var(--pl)] p-6 h-[var(--svg-h)]">
         <div className="w-full max-w-[900px] relative">
           <svg
-            className="w-full h-[var(--svg-h)] opacity-40"
+            className="w-full h-full opacity-40"
             viewBox={`0 0 900 ${h}`}
             preserveAspectRatio="none"
           >

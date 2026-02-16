@@ -84,107 +84,160 @@ const CommandInputBase = React.forwardRef<
 ));
 CommandInputBase.displayName = CommandPrimitive.Input.displayName;
 
+const CommandDebouncedInputBase = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.Input>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    testid?: string;
+  }
+>(({ className, testid: dataTestId = "command-input", ...props }, ref) => (
+  <div
+    className="flex items-center border-b px-3  border-border"
+    cmdk-input-wrapper=""
+  >
+    <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
+    <CommandPrimitive.Input
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      data-testid={dataTestId}
+      {...props}
+    />
+  </div>
+));
+CommandDebouncedInputBase.displayName = CommandPrimitive.Input.displayName;
+
 const CommandListBase = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
     testid?: string;
+    onEndReached?: () => void;
   }
->(({ className, testid: dataTestId = "command-list", ...props }, ref) => {
-  const listRef = React.useRef<HTMLDivElement>(null);
+>(
+  (
+    { className, testid: dataTestId = "command-list", onEndReached, ...props },
+    ref,
+  ) => {
+    const listRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    const element = listRef.current;
-    if (!element) return;
+    React.useEffect(() => {
+      const element = listRef.current;
+      if (!element) return;
 
-    const handleWheel = (e: WheelEvent) => {
-      const target = e.currentTarget as HTMLElement;
-      const { scrollTop, scrollHeight, clientHeight } = target;
+      const handleWheel = (e: WheelEvent) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
 
-      const isScrollingDown = e.deltaY > 0;
-      const isScrollingUp = e.deltaY < 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-      const isAtTop = scrollTop <= 1;
+        const isScrollingDown = e.deltaY > 0;
+        const isScrollingUp = e.deltaY < 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+        const isAtTop = scrollTop <= 1;
 
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+        if (isScrollingDown && isAtBottom && onEndReached) {
+          onEndReached();
+        }
+
+        if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+          e.stopPropagation();
+        }
+      };
+
+      const handleScroll = (e: Event) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        if (isAtBottom && onEndReached) {
+          onEndReached();
+        }
+      };
+
+      let touchStartY = 0;
+
+      const handleTouchStart = (e: TouchEvent) => {
+        touchStartY = e.touches[0].clientY;
         e.stopPropagation();
-      }
-    };
+      };
 
-    let touchStartY = 0;
+      const handleTouchMove = (e: TouchEvent) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        const touchCurrentY = e.touches[0].clientY;
+        const touchDeltaY = touchStartY - touchCurrentY;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      e.stopPropagation();
-    };
+        const isScrollingDown = touchDeltaY > 0;
+        const isScrollingUp = touchDeltaY < 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+        const isAtTop = scrollTop <= 1;
 
-    const handleTouchMove = (e: TouchEvent) => {
-      const target = e.currentTarget as HTMLElement;
-      const { scrollTop, scrollHeight, clientHeight } = target;
-      const touchCurrentY = e.touches[0].clientY;
-      const touchDeltaY = touchStartY - touchCurrentY;
+        if (isScrollingDown && isAtBottom && onEndReached) {
+          onEndReached();
+        }
 
-      const isScrollingDown = touchDeltaY > 0;
-      const isScrollingUp = touchDeltaY < 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-      const isAtTop = scrollTop <= 1;
+        if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+          e.stopPropagation();
+        } else if (
+          (isScrollingDown && isAtBottom) ||
+          (isScrollingUp && isAtTop)
+        ) {
+          e.preventDefault();
+        }
+      };
 
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
-        e.stopPropagation();
-      } else if (
-        (isScrollingDown && isAtBottom) ||
-        (isScrollingUp && isAtTop)
-      ) {
-        e.preventDefault();
-      }
-    };
+      element.addEventListener("wheel", handleWheel, { passive: false });
+      element.addEventListener("scroll", handleScroll);
+      element.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      element.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
 
-    element.addEventListener("wheel", handleWheel, { passive: false });
-    element.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    element.addEventListener("touchmove", handleTouchMove, { passive: false });
+      return () => {
+        element.removeEventListener("wheel", handleWheel);
+        element.removeEventListener("scroll", handleScroll);
+        element.removeEventListener("touchmove", handleTouchMove);
+        element.removeEventListener("touchstart", handleTouchStart);
+      };
+    }, [onEndReached]);
 
-    return () => {
-      element.removeEventListener("wheel", handleWheel);
-      element.removeEventListener("touchmove", handleTouchMove);
-      element.removeEventListener("touchstart", handleTouchStart);
-    };
-  }, []);
+    const combinedRef = React.useCallback(
+      (node: HTMLDivElement) => {
+        (listRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      },
+      [ref],
+    );
 
-  const combinedRef = React.useCallback(
-    (node: HTMLDivElement) => {
-      (listRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref) {
-        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      }
-    },
-    [ref],
-  );
-
-  return (
-    <CommandPrimitive.List
-      ref={combinedRef}
-      className={cn(
-        "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
-        className,
-      )}
-      data-testid={dataTestId}
-      style={{
-        overscrollBehavior: "contain",
-        WebkitOverflowScrolling: "touch",
-        touchAction: "pan-y",
-        scrollbarWidth: "thin",
-        scrollbarColor: "hsl(var(--muted)) transparent",
-        overflowY: "auto",
-        willChange: "scroll-position",
-        transform: "translateZ(0)",
-      }}
-      {...props}
-    />
-  );
-});
+    return (
+      <CommandPrimitive.List
+        ref={combinedRef}
+        className={cn(
+          "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
+          className,
+        )}
+        data-testid={dataTestId}
+        style={{
+          overscrollBehavior: "contain",
+          WebkitOverflowScrolling: "touch",
+          touchAction: "pan-y",
+          scrollbarWidth: "thin",
+          scrollbarColor: "hsl(var(--muted)) transparent",
+          overflowY: "auto",
+          willChange: "scroll-position",
+          transform: "translateZ(0)",
+        }}
+        {...props}
+      />
+    );
+  },
+);
 CommandListBase.displayName = CommandPrimitive.List.displayName;
 
 const CommandEmptyBase = React.forwardRef<

@@ -86,7 +86,7 @@ export function MonthViewAgenda({
 
   const handleEventClick = (
     event: CalendarEventAgenda,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.stopPropagation();
     onEventSelect(event, e);
@@ -140,7 +140,7 @@ export function MonthViewAgenda({
               const dayEvents = getEventsForDayAgenda(eventsWithStart, day);
               const spanningEvents = getSpanningEventsForDayAgenda(
                 eventsWithStart,
-                day
+                day,
               );
               const isCurrentMonth = isSameMonth(day, currentDate);
               const cellId = `month-cell-${day.toISOString()}`;
@@ -175,8 +175,8 @@ export function MonthViewAgenda({
                   >
                     <div
                       className={twMerge(
-                        `mt-1 inline-flex w-6 h-6 sm:w-7 sm:h-7 items-center justify-center rounded-full text-xs sm:text-sm font-semibold text-muted-foreground`,
-                        isToday(day) ? "bg-blue-500 text-white" : ""
+                        `mt-1 inline-flex w-6 h-6 sm:w-7 sm:h-7 items-center justify-center border rounded-md text-xs sm:text-sm font-semibold text-muted-foreground`,
+                        isToday(day) ? "bg-blue-500 text-white" : "",
                       )}
                     >
                       {format(day, "d")}
@@ -203,7 +203,6 @@ export function MonthViewAgenda({
                         if (!visibleCount) return null;
 
                         if (!isFirstDay) {
-                          // Show a compact visible label for spanning events instead of invisible content
                           return (
                             <div
                               aria-hidden={isHidden ? "true" : undefined}
@@ -220,22 +219,18 @@ export function MonthViewAgenda({
                                 view="month"
                               >
                                 <div className="flex items-center gap-1 truncate text-[12px] text-foreground">
-                                  <span className="text-[11px] opacity-80">
-                                    →
-                                  </span>
-                                  <span className="truncate font-medium">
-                                    {event.title}
-                                  </span>
                                 </div>
                               </EventItemAgenda>
                             </div>
                           );
                         }
 
+                        const isMultiDay = !isLastDay;
+
                         return (
                           <div
                             aria-hidden={isHidden ? "true" : undefined}
-                            className="aria-hidden:hidden"
+                            className="aria-hidden:hidden relative"
                             key={event.id}
                           >
                             <EventItemAgenda
@@ -244,14 +239,17 @@ export function MonthViewAgenda({
                               isLastDay={isLastDay}
                               onClick={(e) => handleEventClick(event, e)}
                               view="month"
+                              className={isMultiDay ? "overflow-visible" : ""}
                             >
-                              <span className="flex items-center gap-1 sm:gap-2 truncate text-[12px] text-foreground">
+                              <span className="flex items-center gap-1 sm:gap-2 truncate text-[12px] text-foreground relative z-10">
                                 {!event.allDay && (
                                   <span className="truncate font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
                                     {format(eventStart, "HH:mm")}
                                   </span>
                                 )}
-                                <span className="truncate font-medium text-xs sm:text-sm">
+                                <span
+                                  className={`font-medium text-xs sm:text-sm ${isMultiDay ? "whitespace-nowrap" : "truncate"}`}
+                                >
                                   {event.title}
                                 </span>
                               </span>
@@ -270,7 +268,7 @@ export function MonthViewAgenda({
                               aria-label={`Show ${remainingCount} more events on ${format(
                                 day,
                                 "PPP",
-                                { locale: ptBR }
+                                { locale: ptBR },
                               )}`}
                             >
                               <span className="font-medium">

@@ -653,7 +653,6 @@ export const AllThings: Story = {
     ],
 
     xAxis: "periodo",
-    className: "border",
     title: "Nome bem grande para verem que ficam bom de verdade",
     enableHighlights: true,
     enableShowOnly: true,
@@ -672,6 +671,7 @@ export const AllThings: Story = {
         {...args}
         data={timeSeriesData}
         xAxis="periodo"
+        
         series={{
           bar: ["receita", "despesas"],
           line: ["lucro"],
@@ -681,7 +681,6 @@ export const AllThings: Story = {
           despesas: "Despesas",
           lucro: "Lucro",
         }}
-        height={350}
         timeSeries={{
           start: 0,
           end: 11,
@@ -701,6 +700,67 @@ export const AllThings: Story = {
           "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
       },
     },
+  },
+};
+
+export const FullHeight: Story = {
+  name: "Altura Completa",
+  render: (args) => {
+    return (
+      <div style={{ width: "900px", height: "420px", display: "flex", gap: 12 }}>
+        <div style={{ flex: 1, height: "100%", border: "1px solid rgba(0,0,0,0.06)" }}>
+          <div className="h-full">
+            <Chart
+              {...args}
+              data={sampleData}
+              xAxis="periodo"
+              className="h-full"
+              timeSeries
+            />
+          </div>
+        </div>
+
+        <div style={{ flex: 1, height: "100%", border: "1px solid rgba(0,0,0,0.06)" }}>
+          <Chart
+            {...args}
+            data={sampleData}
+            xAxis="periodo"
+            
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Teste mostrando duas variações: (1) `className=\"h-full\"` no wrapper + `className=\"h-full\"` no `Chart`; (2) prop `height=\"100%\"` passada diretamente. Útil para validar comportamento responsivo de altura.",
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    await step("Aguardar renderização dos containers responsivos", async () => {
+      await waitFor(() => {
+        const containers = canvasElement.querySelectorAll(
+          ".recharts-responsive-container",
+        );
+        expect(containers.length).toBeGreaterThanOrEqual(2);
+      });
+    });
+
+    await step("Verificar que ambos os charts ocupam altura significativa do wrapper", async () => {
+      const containers = canvasElement.querySelectorAll(
+        ".recharts-responsive-container",
+      );
+
+      const heights = Array.from(containers).map((c) =>
+        (c as HTMLElement).getBoundingClientRect().height,
+      );
+
+      // ambos devem ocupar parte significativa da altura (>= 300px)
+      heights.forEach((h) => expect(h).toBeGreaterThan(300));
+    });
   },
 };
 

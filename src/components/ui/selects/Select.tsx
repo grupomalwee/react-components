@@ -207,7 +207,7 @@ export function Select<T extends string>({
         </SelectTriggerBase>
 
         <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>
-          <SelectContentBase data-testid={testIds.content ?? "select-content"}>
+          <SelectContentBase data-testid={testIds.content ?? "select-content"} className="border-border">
             {pagination && pagination > 0 ? (
               <>
                 <div

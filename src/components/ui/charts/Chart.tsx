@@ -107,6 +107,24 @@ const Chart: React.FC<ChartProps> = ({
   // horizontal removido
   // orderBy removido
 }) => {
+  const usesFullHeight =
+    (typeof height === "string" && (height === "100%" || height === "100vh")) ||
+    (typeof className === "string" && /\bh-full\b/.test(className || ""));
+
+  const responsiveHeight: number | string = usesFullHeight ? "100%" : height;
+  const wrapperClass = cn(
+    "w-full min-w-0 rounded-lg border-border",
+    className,
+    "overflow-hidden",
+  );
+  const wrapperStyle: React.CSSProperties | undefined = usesFullHeight
+    ? undefined
+    : {
+        height:
+          typeof responsiveHeight === "number"
+            ? `${responsiveHeight}px`
+            : (responsiveHeight as string),
+      };
   const { xAxisConfig, mapperConfig } = useMemo(() => {
     return fnSmartConfig({ xAxis, data, labelMap });
   }, [data, xAxis, labelMap]);
@@ -282,6 +300,11 @@ const Chart: React.FC<ChartProps> = ({
     effectiveChartWidth,
   });
 
+  const legendSpace = showLegend ? 44 : 0;
+  const xAxisLabelSpace = xAxisLabel ? 18 : 0;
+  const brushSpace = timeSeriesConfig?.height ? 200 : 0;
+  const bottomMargin = 10 + legendSpace + xAxisLabelSpace + brushSpace;
+
   if (!data && !isLoading) return null;
 
   if (isLoading) {
@@ -309,14 +332,11 @@ const Chart: React.FC<ChartProps> = ({
   }
 
   return (
-    <div
-      ref={wrapperRef}
-      className={cn(
-        "w-full overflow-hidden min-w-0 rounded-lg border-border h-full",
-        className,
-      )}
-    >
-      <div className="rounded-lg bg-card relative w-full max-w-full min-w-0 py-1">
+    <div ref={wrapperRef} className={wrapperClass} style={wrapperStyle}>
+      <div
+        className="rounded-lg bg-card relative w-full max-w-full min-w-0 py-1"
+        style={usesFullHeight ? { height: "100%" } : undefined}
+      >
         <ChartHeader
           title={title}
           titlePosition={titlePosition}
@@ -380,15 +400,14 @@ const Chart: React.FC<ChartProps> = ({
             </div>
           )}
 
-        <ResponsiveContainer width="100%" height={height} className="h-full">
+        <ResponsiveContainer width="100%" height={responsiveHeight}>
           <ComposedChart
             data={processedData}
-            height={height}
             margin={{
               top: 10,
               right: finalChartRightMargin,
               left: finalChartLeftMargin,
-              bottom: 10,
+              bottom: bottomMargin,
             }}
             onClick={handleChartClick}
           >

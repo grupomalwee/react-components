@@ -35,11 +35,11 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
 
         <div
           className={cn(
-            "flex items-center rounded-md transition h-9 focus-within:ring-1 focus-within:ring-ring focus-within:border-ring bg-background overflow-hidden",
+            "flex items-center rounded-md transition h-9  bg-background overflow-hidden",
             type !== "file" && "border border-input",
             error
               ? "border-destructive focus:ring-1 focus:ring-destructive"
-              : "border-input focus:ring-1 focus:ring-ring",
+              : "border-input",
           )}
         >
           {leftIcon && (
