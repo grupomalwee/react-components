@@ -11,6 +11,18 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.8",
+    date: "2026-02-16",
+    shortTitle: "Controled Combobox",
+    added: [
+      "Controled Combobox: componente de combobox controlado com paginação.",
+    ],
+    changed: [
+      "Chart: arrumado erro de z-index do Tooltip",
+      "Event Agenda: arrumado style",
+    ],
+  },
+  {
     version: "1.9.7",
     date: "2026-02-10",
     shortTitle: "Chart",

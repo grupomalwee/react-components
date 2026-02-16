@@ -40,7 +40,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     : label;
 
   const numeric = payload.filter(
-    (p) => typeof p.value === "number" && Number.isFinite(p.value)
+    (p) => typeof p.value === "number" && Number.isFinite(p.value),
   ) as TooltipPayloadItem[];
 
   const total = numeric.reduce((sum, p) => sum + (p.value || 0), 0);
@@ -69,7 +69,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
 
   const absDenominator = numeric.reduce(
     (sum, p) => sum + Math.abs(typeof p.value === "number" ? p.value : 0),
-    0
+    0,
   );
 
   const axisDenominators: Record<string, number> = {};
@@ -90,7 +90,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
     <div
       role="dialog"
       aria-label={`Tooltip ${label ?? ""}`}
-      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-xs z-9999"
+      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-xs z-[10000]"
       style={{ minWidth: 220 }}
     >
       <div className="flex items-start justify-between mb-2">
@@ -179,8 +179,8 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
                           return denom > 0 ? `${p.toFixed(1)}%` : "-";
                         })()
                       : absDenominator > 0
-                      ? `${pct.toFixed(1)}%`
-                      : "-"}
+                        ? `${pct.toFixed(1)}%`
+                        : "-"}
                   </span>
                 </div>
               </div>

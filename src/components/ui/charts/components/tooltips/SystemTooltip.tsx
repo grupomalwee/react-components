@@ -154,7 +154,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
     <AnimatePresence>
       <motion.div
         key={id}
-        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl z-50 w-80 overflow-hidden"
+        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl z-[10000] w-80 overflow-hidden"
         variants={tooltipVariants}
         initial="hidden"
         animate="visible"
@@ -215,7 +215,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
 
         <div className="px-3 pb-4 space-y-4 max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w- [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
           <SeparatorBase className="w-full" />
-          
+
           {isLoading ? (
             <>
               <div className="space-y-2">
@@ -244,171 +244,185 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
           ) : (
             <>
               {entries.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-bold text-muted-foreground uppercase">
-                  Entradas
-                </span>
-              </div>
-              <div className="space-y-1">
-                {entries.map((conn) => (
-                  <div key={conn.id} className="space-y-1">
-                    <div
-                      className="group flex items-center justify-between p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all cursor-pointer"
-                      onClick={() =>
-                        setExpandedId(expandedId === conn.id ? null : conn.id)
-                      }
-                    >
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <span className="text-sm font-medium truncate">
-                          {conn.name}
-                        </span>
-                      </div>
-                      <ArrowRight
-                        size={14}
-                        className="text-emerald-500 shrink-0 rotate-180"
-                      />
-                    </div>
-                    {expandedId === conn.id && conn.integration && (
-                      <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
-                        {conn.integration.Nome && (
-                          <div>
-                            <span className="font-semibold">Nome:</span>{" "}
-                            {conn.integration.Nome}
-                          </div>
-                        )}
-                        {(conn.integration.tipo || conn.integration.Tipo) && (
-                          <div>
-                            <span className="font-semibold">Tipo:</span>{" "}
-                            {conn.integration.tipo || conn.integration.Tipo}
-                          </div>
-                        )}
-                        {conn.integration.Protocolos && (
-                          <div>
-                            <span className="font-semibold">Protocolos:</span>{" "}
-                            {conn.integration.Protocolos}
-                          </div>
-                        )}
-                        {conn.integration.Ambiente && (
-                          <div>
-                            <span className="font-semibold">Ambiente:</span>{" "}
-                            {conn.integration.Ambiente}
-                          </div>
-                        )}
-                        {conn.integration.Setor && (
-                          <div>
-                            <span className="font-semibold">Setor:</span>{" "}
-                            {conn.integration.Setor}
-                          </div>
-                        )}
-                        {conn.integration.Contato && (
-                          <div>
-                            <span className="font-semibold">Contato:</span>{" "}
-                            {conn.integration.Contato}
-                          </div>
-                        )}
-                        {conn.integration.Sustentacao && (
-                          <div>
-                            <span className="font-semibold">Sustentação:</span>{" "}
-                            {conn.integration.Sustentacao}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 px-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                      Entradas
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {exits.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                <span className="text-[10px] font-bold text-muted-foreground uppercase">
-                  Saídas
-                </span>
-              </div>
-              <div className="space-y-1">
-                {exits.map((conn) => (
-                  <div key={conn.id} className="space-y-1">
-                    <div
-                      className="group flex items-center justify-between p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all cursor-pointer"
-                      onClick={() =>
-                        setExpandedId(expandedId === conn.id ? null : conn.id)
-                      }
-                    >
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <span className="text-sm font-medium truncate">
-                          {conn.name}
-                        </span>
-                      </div>
-                      <ArrowRight
-                        size={14}
-                        className="text-blue-500 shrink-0"
-                      />
-                    </div>
-                    {expandedId === conn.id && conn.integration && (
-                      <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
-                        {conn.integration.Nome && (
-                          <div>
-                            <span className="font-semibold">Nome:</span>{" "}
-                            {conn.integration.Nome}
+                  <div className="space-y-1">
+                    {entries.map((conn) => (
+                      <div key={conn.id} className="space-y-1">
+                        <div
+                          className="group flex items-center justify-between p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all cursor-pointer"
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === conn.id ? null : conn.id,
+                            )
+                          }
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span className="text-sm font-medium truncate">
+                              {conn.name}
+                            </span>
                           </div>
-                        )}
-                        {(conn.integration.tipo || conn.integration.Tipo) && (
-                          <div>
-                            <span className="font-semibold">Tipo:</span>{" "}
-                            {conn.integration.tipo || conn.integration.Tipo}
-                          </div>
-                        )}
-                        {conn.integration.Protocolos && (
-                          <div>
-                            <span className="font-semibold">Protocolos:</span>{" "}
-                            {conn.integration.Protocolos}
-                          </div>
-                        )}
-                        {conn.integration.Ambiente && (
-                          <div>
-                            <span className="font-semibold">Ambiente:</span>{" "}
-                            {conn.integration.Ambiente}
-                          </div>
-                        )}
-                        {conn.integration.Setor && (
-                          <div>
-                            <span className="font-semibold">Setor:</span>{" "}
-                            {conn.integration.Setor}
-                          </div>
-                        )}
-                        {conn.integration.Contato && (
-                          <div>
-                            <span className="font-semibold">Contato:</span>{" "}
-                            {conn.integration.Contato}
-                          </div>
-                        )}
-                        {conn.integration.Sustentacao && (
-                          <div>
-                            <span className="font-semibold">Sustentação:</span>{" "}
-                            {conn.integration.Sustentacao}
+                          <ArrowRight
+                            size={14}
+                            className="text-emerald-500 shrink-0 rotate-180"
+                          />
+                        </div>
+                        {expandedId === conn.id && conn.integration && (
+                          <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
+                            {conn.integration.Nome && (
+                              <div>
+                                <span className="font-semibold">Nome:</span>{" "}
+                                {conn.integration.Nome}
+                              </div>
+                            )}
+                            {(conn.integration.tipo ||
+                              conn.integration.Tipo) && (
+                              <div>
+                                <span className="font-semibold">Tipo:</span>{" "}
+                                {conn.integration.tipo || conn.integration.Tipo}
+                              </div>
+                            )}
+                            {conn.integration.Protocolos && (
+                              <div>
+                                <span className="font-semibold">
+                                  Protocolos:
+                                </span>{" "}
+                                {conn.integration.Protocolos}
+                              </div>
+                            )}
+                            {conn.integration.Ambiente && (
+                              <div>
+                                <span className="font-semibold">Ambiente:</span>{" "}
+                                {conn.integration.Ambiente}
+                              </div>
+                            )}
+                            {conn.integration.Setor && (
+                              <div>
+                                <span className="font-semibold">Setor:</span>{" "}
+                                {conn.integration.Setor}
+                              </div>
+                            )}
+                            {conn.integration.Contato && (
+                              <div>
+                                <span className="font-semibold">Contato:</span>{" "}
+                                {conn.integration.Contato}
+                              </div>
+                            )}
+                            {conn.integration.Sustentacao && (
+                              <div>
+                                <span className="font-semibold">
+                                  Sustentação:
+                                </span>{" "}
+                                {conn.integration.Sustentacao}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
+              )}
 
-          {data.connections.length === 0 && !isLoading && (
-            <div className="flex flex-col items-center justify-center p-6 text-center">
-              <p className="text-xs text-muted-foreground">
-                Nenhuma conexão encontrada
-              </p>
-            </div>
-          )}
-          </>
+              {exits.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 px-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                      Saídas
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {exits.map((conn) => (
+                      <div key={conn.id} className="space-y-1">
+                        <div
+                          className="group flex items-center justify-between p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all cursor-pointer"
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === conn.id ? null : conn.id,
+                            )
+                          }
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span className="text-sm font-medium truncate">
+                              {conn.name}
+                            </span>
+                          </div>
+                          <ArrowRight
+                            size={14}
+                            className="text-blue-500 shrink-0"
+                          />
+                        </div>
+                        {expandedId === conn.id && conn.integration && (
+                          <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
+                            {conn.integration.Nome && (
+                              <div>
+                                <span className="font-semibold">Nome:</span>{" "}
+                                {conn.integration.Nome}
+                              </div>
+                            )}
+                            {(conn.integration.tipo ||
+                              conn.integration.Tipo) && (
+                              <div>
+                                <span className="font-semibold">Tipo:</span>{" "}
+                                {conn.integration.tipo || conn.integration.Tipo}
+                              </div>
+                            )}
+                            {conn.integration.Protocolos && (
+                              <div>
+                                <span className="font-semibold">
+                                  Protocolos:
+                                </span>{" "}
+                                {conn.integration.Protocolos}
+                              </div>
+                            )}
+                            {conn.integration.Ambiente && (
+                              <div>
+                                <span className="font-semibold">Ambiente:</span>{" "}
+                                {conn.integration.Ambiente}
+                              </div>
+                            )}
+                            {conn.integration.Setor && (
+                              <div>
+                                <span className="font-semibold">Setor:</span>{" "}
+                                {conn.integration.Setor}
+                              </div>
+                            )}
+                            {conn.integration.Contato && (
+                              <div>
+                                <span className="font-semibold">Contato:</span>{" "}
+                                {conn.integration.Contato}
+                              </div>
+                            )}
+                            {conn.integration.Sustentacao && (
+                              <div>
+                                <span className="font-semibold">
+                                  Sustentação:
+                                </span>{" "}
+                                {conn.integration.Sustentacao}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {data.connections.length === 0 && !isLoading && (
+                <div className="flex flex-col items-center justify-center p-6 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    Nenhuma conexão encontrada
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </motion.div>

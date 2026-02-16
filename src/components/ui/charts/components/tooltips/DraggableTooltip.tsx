@@ -352,7 +352,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!dragging || !e.touches[0]) return;
-      e.preventDefault(); 
+      e.preventDefault();
       lastMouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
@@ -573,7 +573,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
           return (
             <div key={index}>
               <motion.div
-                className="fixed pointer-events-none z-30"
+                className="fixed pointer-events-none z-[9998]"
                 variants={guideVariants}
                 initial="hidden"
                 animate="visible"
@@ -592,7 +592,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                 }}
               />
               <motion.div
-                className="fixed pointer-events-none z-31"
+                className="fixed pointer-events-none z-[9999]"
                 variants={guideDotVariants}
                 initial="hidden"
                 animate="visible"
@@ -642,7 +642,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       <AnimatePresence>
         <motion.div
           key={id}
-          className="fixed bg-card border border-border rounded-lg shadow-lg z-50 min-w-80 select-none"
+          className="fixed bg-card border border-border rounded-lg shadow-lg z-[10000] min-w-80 select-none"
           variants={tooltipVariants}
           initial="hidden"
           animate="visible"
