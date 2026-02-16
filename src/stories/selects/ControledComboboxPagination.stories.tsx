@@ -43,6 +43,75 @@ const PAGE_SIZE = 20;
 
 export const PublicAPI: Story = {
   name: "Public API (120k+ items)",
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ControlledCombobox } from '@mlw-packages/react-components';
+
+function PublicAPI() {
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [total, setTotal] = useState(0);
+
+  const fetchItems = useCallback(async (isInitial = false, query = "") => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const currentPage = isInitial ? 1 : page + 1;
+      const endpoint = query
+        ? \`https://api.artic.edu/api/v1/artworks/search?q=\${encodeURIComponent(query)}&page=\${currentPage}&limit=20\`
+        : \`https://api.artic.edu/api/v1/artworks?page=\${currentPage}&limit=20\`;
+      
+      const response = await fetch(endpoint);
+      const json = await response.json();
+      
+      const newItems = json.data.map(item => ({
+        label: item.title,
+        value: String(item.id),
+      }));
+      
+      if (isInitial) {
+        setItems(newItems);
+        setPage(1);
+      } else {
+        setItems(prev => [...prev, ...newItems]);
+        setPage(currentPage);
+      }
+      setTotal(json.pagination.total);
+    } catch (error) {
+      console.error('Failed to fetch:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, page]);
+
+  useEffect(() => {
+    fetchItems(true, "");
+  }, []);
+
+  return (
+    <ControlledCombobox
+      items={items}
+      loading={loading}
+      renderSelected={selected ? items.find(i => i.value === selected)?.label || "Item Selected" : "Search in 120k+ artworks..."}
+      handleSelection={(val) => setSelected(val)}
+      checkIsSelected={(val) => selected === val}
+      onSearchChange={(val) => setSearch(val)}
+      onEndReached={() => { if (!loading && items.length < total) fetchItems(false, search); }}
+      hasSelected={!!selected}
+      onClear={() => setSelected(null)}
+      searchPlaceholder="Type to search artworks..."
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const [page, setPage] = useState(1);
@@ -91,7 +160,8 @@ export const PublicAPI: Story = {
 
     useEffect(() => {
       fetchItems(true, "");
-    }, [fetchItems]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       if (search === currentSearchRef.current) return;
@@ -137,6 +207,76 @@ export const PublicAPI: Story = {
 
 export const PublicUserAPI: Story = {
   name: "Public User API (GitHub 100M+)",
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState, useEffect, useCallback } from 'react';
+import { ControlledCombobox } from '@mlw-packages/react-components';
+
+function PublicUserAPI() {
+  const [items, setItems] = useState([]);
+  const [lastId, setLastId] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  const fetchItems = useCallback(async (isInitial = false, query = "") => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const since = isInitial ? 0 : lastId;
+      const response = await fetch(\`https://api.github.com/users?since=\${since}&per_page=20\`);
+      
+      if (response.status === 403) {
+        alert('GitHub API Rate limit reached. Please try again later.');
+        return;
+      }
+      
+      const json = await response.json();
+      const newItems = json.map(user => ({
+        label: \`User \${user.id} (\${user.login})\`,
+        value: String(user.id),
+      }));
+      
+      const filteredItems = query ? newItems.filter(item => item.label.toLowerCase().includes(query.toLowerCase())) : newItems;
+      
+      if (isInitial) {
+        setItems(filteredItems);
+        setLastId(json[json.length - 1]?.id || 0);
+      } else {
+        setItems(prev => [...prev, ...filteredItems]);
+        setLastId(json[json.length - 1]?.id || lastId);
+      }
+    } catch (error) {
+      console.error('Failed to fetch GitHub users:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, lastId]);
+
+  useEffect(() => {
+    fetchItems(true, "");
+  }, []);
+
+  return (
+    <ControlledCombobox
+      items={items}
+      loading={loading}
+      renderSelected={selected ? items.find(i => i.value === selected)?.label || "User Selected" : "Search massive GitHub dataset..."}
+      handleSelection={(val) => setSelected(val)}
+      checkIsSelected={(val) => selected === val}
+      onSearchChange={(val) => setSearch(val)}
+      onEndReached={() => { if (!loading) fetchItems(false, search); }}
+      hasSelected={!!selected}
+      onClear={() => setSelected(null)}
+      searchPlaceholder="Type to filter results..."
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const [lastId, setLastId] = useState(0);
@@ -203,7 +343,8 @@ export const PublicUserAPI: Story = {
     // Initial load
     useEffect(() => {
       fetchItems(true, "");
-    }, [fetchItems]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Handle search with debounce
     useEffect(() => {
@@ -251,6 +392,81 @@ export const PublicUserAPI: Story = {
 
 export const LargeUserDataset: Story = {
   name: "Large User Dataset (100k+ Mock)",
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState, useCallback } from 'react';
+import { ControlledCombobox } from '@mlw-packages/react-components';
+
+function LargeUserDataset() {
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [total, setTotal] = useState(100001);
+  const PAGE_SIZE = 20;
+
+  const fetchItems = useCallback(async (isInitial = false, query = "") => {
+    if (loading) return;
+    setLoading(true);
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    try {
+      const currentPage = isInitial ? 1 : page + 1;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      let results = [];
+      
+      if (query) {
+        // Filter all items based on search
+        for (let i = 0; i < 100001; i++) {
+          const label = \`User \${i}\`;
+          if (label.toLowerCase().includes(query.toLowerCase())) {
+            results.push({ label, value: \`user-\${i}\` });
+          }
+        }
+        results = results.slice(start, start + PAGE_SIZE);
+      } else {
+        // Return paginated items
+        const end = Math.min(start + PAGE_SIZE, 100001);
+        for (let i = start; i < end; i++) {
+          results.push({ label: \`User \${i}\`, value: \`user-\${i}\` });
+        }
+      }
+      
+      if (isInitial) {
+        setItems(results);
+        setPage(1);
+      } else {
+        setItems(prev => [...prev, ...results]);
+        setPage(currentPage);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, page]);
+
+  return (
+    <ControlledCombobox
+      items={items}
+      loading={loading}
+      renderSelected={selected ? items.find(i => i.value === selected)?.label || "User Selected" : "Search 100k+ users..."}
+      handleSelection={(val) => setSelected(val)}
+      checkIsSelected={(val) => selected === val}
+      onSearchChange={(val) => setSearch(val)}
+      onEndReached={() => { if (!loading && items.length < total) fetchItems(false, search); }}
+      hasSelected={!!selected}
+      onClear={() => setSelected(null)}
+      searchPlaceholder="Type 'User 99999'..."
+    />
+  );
+}
+`,
+      },
+    },
+  },
   render: () => {
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const [page, setPage] = useState(1);
@@ -322,7 +538,8 @@ export const LargeUserDataset: Story = {
 
     useEffect(() => {
       fetchItems(true, "");
-    }, [fetchItems]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       if (search === currentSearchRef.current) return;
