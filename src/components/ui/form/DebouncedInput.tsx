@@ -44,9 +44,12 @@ export const DebouncedInput = forwardRef<HTMLInputElement, DebouncedInputProps>(
     }, [initialValue]);
 
     useEffect(() => {
-      if (value !== initialValue) {
-        setIsDebouncing(true);
+      if (value === initialValue) {
+        setIsDebouncing(false);
+        return;
       }
+
+      setIsDebouncing(true);
 
       const timeout = setTimeout(() => {
         onChange(value);

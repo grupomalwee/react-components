@@ -56,7 +56,7 @@ import { CardPage } from "@/pages/Card";
 import { CheckBoxPage } from "@/pages/Checkbox";
 import { CommandPage } from "@/pages/Command";
 import { ComboboxPage } from "@/pages/Combobox";
-import { CarouselPage } from "@/pages/Carousel";
+// import { CarouselPage } from "@/pages/Carousel";
 import { CollapsiblePage } from "@/pages/Collapsible";
 import { MultiComboboxPage } from "@/pages/Multicombobox";
 import { DialogPage } from "@/pages/Dialog";
@@ -131,7 +131,7 @@ const items = [
   { title: "Collapsible", url: "/collapsible", icon: ListDashesIcon },
   { title: "Command", url: "/command", icon: TerminalWindowIcon },
   { title: "Combobox", url: "/combobox", icon: MagnifyingGlassIcon },
-  { title: "Carousel", url: "/carousel", icon: ImageIcon },
+  // { title: "Carousel", url: "/carousel", icon: ImageIcon },
   { title: "Dialog", url: "/dialog", icon: ChatCenteredIcon },
   { title: "Drawer", url: "/drawer", icon: SidebarIcon },
   { title: "Dropdown Menu", url: "/dropdown-menu", icon: DotsNineIcon },
@@ -217,7 +217,7 @@ export function AppSidebar() {
           <Route path="/collapsible" element={<CollapsiblePage />} />
           <Route path="/command" element={<CommandPage />} />
           <Route path="/combobox" element={<ComboboxPage />} />
-          <Route path="/carousel" element={<CarouselPage />} />
+          {/* <Route path="/carousel" element={<CarouselPage />} /> */}
           <Route path="/dialog" element={<DialogPage />} />
           <Route path="/drawer" element={<DrawerPage />} />
           <Route path="/dropdown-menu" element={<DropDownMenuPage />} />

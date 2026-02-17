@@ -243,7 +243,7 @@ export const StressExtreme: Story = {
 
 export const StressRealTimeUpdates: Story = {
   render: () => {
-    const initial = useMemo(() => generateLargeDataset(100, new Date()), []);
+    const initial = useMemo(() => generateLargeDataset(10, new Date()), []);
     const [data, setData] = useState(initial);
     const [isUpdating, setIsUpdating] = useState(false);
     const lastDateRef = useRef(new Date(initial[initial.length - 1].periodo));
@@ -257,7 +257,7 @@ export const StressRealTimeUpdates: Story = {
 
         const newPoint = {
           periodo: next.toISOString().split("T")[0],
-          vendas: Math.round(Math.random() * 10000) + 5000,
+          vendas: Math.round(Math.random() * 1000) + 5000,
           custos: Math.round(Math.random() * 7000) + 3000,
           lucro: Math.round(Math.random() * 5000) + 2000,
         };
@@ -268,7 +268,7 @@ export const StressRealTimeUpdates: Story = {
         });
 
         lastDateRef.current = next;
-      }, 1000);
+      }, 2000);
 
       return () => clearInterval(interval);
     }, [isUpdating]);
