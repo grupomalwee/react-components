@@ -1,8 +1,8 @@
 import {
   CommandBase,
+  CommandDebouncedInputBase,
   CommandEmptyBase,
   CommandGroupBase,
-  CommandInputBase,
   CommandItemBase,
   CommandListBase,
 } from "@/components/ui/navigation/CommandBase";
@@ -59,6 +59,7 @@ export interface ControlledComboboxProps<
   isMulti?: boolean;
   hasSelected?: boolean;
   onSearchChange?: (value: string) => void;
+  search?: string;
   onEndReached?: () => void;
   loading?: boolean;
 }
@@ -78,6 +79,7 @@ export function ControlledCombobox<T extends string>({
   hasSelected = false,
   hideClear = false,
   onSearchChange,
+  search,
   onEndReached,
   loading = false,
 }: ControlledComboboxProps<T>) {
@@ -156,12 +158,14 @@ export function ControlledCombobox<T extends string>({
                   }
             }
           >
-            <CommandInputBase
+            <CommandDebouncedInputBase
               tabIndex={-1}
               disabled={disabled}
               placeholder={searchPlaceholder ?? "Busque uma opção..."}
               data-testid={testIds.search ?? "combobox-search"}
-              onValueChange={onSearchChange}
+              onSearch={onSearchChange}
+              search={search}
+              debounce={500}
             />
             <CommandListBase
               data-testid={testIds.list ?? "combobox-list"}

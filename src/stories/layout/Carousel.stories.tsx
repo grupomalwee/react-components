@@ -1,61 +1,112 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  CarouselBase,
-  CarouselContentBase,
-  CarouselItemBase,
-  CarouselNextBase,
-  CarouselPreviousBase,
+import CarouselBase, {
+  type CarouselItem,
 } from "@/components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "@/components/ui/data/CardBase";
+
+const sampleItems: CarouselItem[] = [
+  {
+    id: 1,
+    url: "https://images.unsplash.com/photo-1761882835101-02ab45ac0726?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=690",
+    title: "MAXX PHAM",
+  },
+  {
+    id: 2,
+    url: "https://images.unsplash.com/photo-1661980494567-40a5e01b699b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=685",
+    title: "BOXIEN BAY",
+  },
+  {
+    id: 3,
+    url: "https://images.unsplash.com/photo-1761882725885-d3d8bd2032d1?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687",
+    title: "AUSIZE MAM",
+  },
+  {
+    id: 4,
+    url: "https://images.unsplash.com/photo-1761775915848-467e41c1c4db?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=689",
+    title: "RECLKTIKA",
+  },
+  {
+    id: 5,
+    url: "https://images.unsplash.com/photo-1761078980679-e89e25fe279b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687",
+    title: "SONYPOO",
+  },
+  {
+    id: 6,
+    url: "https://images.unsplash.com/photo-1760389005000-bf02bf24f463?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1123",
+    title: "DONM FLY",
+  },
+  {
+    id: 7,
+    url: "https://images.unsplash.com/photo-1761165307495-56bd564d322f?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=663",
+    title: "Snowy Mountain Highway",
+  },
+  {
+    id: 8,
+    url: "https://images.unsplash.com/photo-1756299792672-157811bf1005?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1074",
+    title: "FOGGY FOLS",
+  },
+];
 
 const meta: Meta<typeof CarouselBase> = {
   title: "layout/Carousel",
   component: CarouselBase,
   tags: ["autodocs"],
   args: {
-    orientation: "horizontal",
-    opts: { align: "center" },
-    className: "w-full max-w-xs",
-    items: 5,
-  } as unknown as Record<string, unknown>,
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    autoPlay: false,
+    autoPlayInterval: 3000,
+  },
   argTypes: {
-    orientation: {
-      control: { type: "inline-radio" },
-      options: ["horizontal", "vertical"],
+    items: {
+      control: { type: "object" },
+      description: "Array de items para exibir no carousel",
     },
-    opts: { control: { type: "object" } },
-    className: { control: { type: "text" } },
-    items: { control: { type: "number", min: 1, max: 12, step: 1 } },
-    onChange: { action: "onChange" },
-  } as unknown as Record<string, unknown>,
+    width: {
+      control: { type: "text" },
+      description: "Largura do carousel (ex: 800px, 100%)",
+    },
+    height: {
+      control: { type: "text" },
+      description: "Altura do carousel (ex: 400px, 50vh)",
+    },
+    showControls: {
+      control: { type: "boolean" },
+      description: "Mostrar botões de navegação anterior/próximo",
+    },
+    showIndicators: {
+      control: { type: "boolean" },
+      description: "Mostrar indicadores de progresso (dots)",
+    },
+    autoPlay: {
+      control: { type: "boolean" },
+      description: "Ativar reprodução automática",
+    },
+    autoPlayInterval: {
+      control: { type: "number" },
+      description: "Intervalo em milissegundos para autoPlay",
+    },
+    springConfig: {
+      control: { type: "object" },
+      description: "Configuração de animação do spring (stiffness, damping)",
+    },
+    className: {
+      control: { type: "text" },
+    },
+    containerClassName: {
+      control: { type: "text" },
+    },
+    imageClassName: {
+      control: { type: "text" },
+    },
+  },
   parameters: {
     docs: {
       description: {
         component:
-          "Carousel para navegação de imagens ou cards, horizontal, vertical e responsivo.",
-      },
-      source: {
-        code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
-
-export default function Example() {
-  return (
-    <CarouselBase className="w-full max-w-xs">
-      <CarouselContentBase>
-        <CarouselItemBase>
-          <CardBase>
-            <CardContentBase className="p-6">Item</CardContentBase>
-          </CardBase>
-        </CarouselItemBase>
-      </CarouselContentBase>
-      <CarouselPreviousBase />
-      <CarouselNextBase />
-    </CarouselBase>
-  );
-}
-`,
+          "Carousel moderno com framer-motion, suportando navegação manual, automática e controles totalmente customizáveis.",
       },
     },
     backgrounds: {
@@ -65,231 +116,140 @@ export default function Example() {
         { name: "dark", value: "#222" },
       ],
     },
-    layout: "centered",
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof CarouselBase>;
 
-export const Horizontal: Story = {
-  parameters: {
-    docs: {
-      source: {
-        code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
-
-export default function Horizontal() {
-  return (
-    <CarouselBase className="w-full max-w-xs">
-      <CarouselContentBase>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItemBase key={index}>
-            <CardBase>
-              <CardContentBase className="p-6">Item {index + 1}</CardContentBase>
-            </CardBase>
-          </CarouselItemBase>
-        ))}
-      </CarouselContentBase>
-      <CarouselPreviousBase />
-      <CarouselNextBase />
-    </CarouselBase>
-  );
-}
-`,
-      },
-    },
-  },
+export const Default: Story = {
   args: {
-    className: "w-full max-w-xs",
-    orientation: "horizontal",
-    opts: { align: "center" },
-    items: 5,
-  } as unknown as Record<string, unknown>,
-  render: (args) => {
-    const a = args as unknown as Record<string, unknown>;
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-        }}
-      >
-        <CarouselBase
-          orientation={a.orientation as "horizontal" | "vertical"}
-          opts={a.opts as unknown as Record<string, unknown>}
-          className={a.className as string}
-        >
-          <CarouselContentBase>
-            {Array.from({ length: a.items as number }).map((_, index) => (
-              <CarouselItemBase key={index}>
-                <CardBase>
-                  <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                    <img
-                      src="/pwa-512x512.png"
-                      alt={`Imagem ${index + 1}`}
-                      className="rounded-xl object-cover w-40 h-40"
-                    />
-                  </CardContentBase>
-                </CardBase>
-              </CarouselItemBase>
-            ))}
-          </CarouselContentBase>
-          <CarouselPreviousBase />
-          <CarouselNextBase />
-        </CarouselBase>
-      </div>
-    );
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
   },
 };
 
-export const Responsivo: Story = {
+export const AutoPlay: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    autoPlay: true,
+    autoPlayInterval: 3000,
+  },
   parameters: {
     docs: {
-      source: {
-        code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
-
-export default function Responsivo() {
-  return (
-    <CarouselBase opts={{ align: 'start' }} className="w-full max-w-sm">
-      <CarouselContentBase>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItemBase key={index} className="md:basis-1/2 lg:basis-1/3">
-            <CardBase>
-              <CardContentBase className="p-6">Item {index + 1}</CardContentBase>
-            </CardBase>
-          </CarouselItemBase>
-        ))}
-      </CarouselContentBase>
-      <CarouselPreviousBase />
-      <CarouselNextBase />
-    </CarouselBase>
-  );
-}
-`,
+      description: {
+        story: "Carousel com reprodução automática a cada 3 segundos.",
       },
     },
-  },
-  args: {
-    className: "w-full max-w-sm",
-    orientation: "horizontal",
-    opts: { align: "start" },
-    items: 5,
-  } as unknown as Record<string, unknown>,
-  render: (args) => {
-    const a = args as unknown as Record<string, unknown>;
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-        }}
-      >
-        <CarouselBase
-          orientation={a.orientation as "horizontal" | "vertical"}
-          opts={a.opts as unknown as Record<string, unknown>}
-          className={a.className as string}
-        >
-          <CarouselContentBase>
-            {Array.from({ length: a.items as number }).map((_, index) => (
-              <CarouselItemBase key={index}>
-                <div className="p-1">
-                  <CardBase>
-                    <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-4xl font-semibold">
-                        {index + 1}
-                      </span>
-                    </CardContentBase>
-                  </CardBase>
-                </div>
-              </CarouselItemBase>
-            ))}
-          </CarouselContentBase>
-          <CarouselPreviousBase />
-          <CarouselNextBase />
-        </CarouselBase>
-      </div>
-    );
   },
 };
 
-export const Vertical: Story = {
+export const NoControls: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: false,
+    showIndicators: true,
+  },
   parameters: {
     docs: {
-      source: {
-        code: `import React from 'react';
-import { CarouselBase, CarouselContentBase, CarouselItemBase, CarouselPreviousBase, CarouselNextBase } from "../components/ui/layout/CarouselBase";
-import { CardBase, CardContentBase } from "../components/ui/data/CardBase";
-
-export default function Vertical() {
-  return (
-    <CarouselBase opts={{ align: 'start' }} orientation="vertical" className="w-full max-w-xs mt-20">
-      <CarouselContentBase className="-mt-1 h-[220px]">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItemBase key={index} className="pt-1 md:basis-1/2">
-            <CardBase>
-              <CardContentBase className="p-6">Item {index + 1}</CardContentBase>
-            </CardBase>
-          </CarouselItemBase>
-        ))}
-      </CarouselContentBase>
-      <CarouselPreviousBase />
-      <CarouselNextBase />
-    </CarouselBase>
-  );
-}
-`,
+      description: {
+        story: "Carousel sem botões de navegação, apenas indicadores.",
       },
     },
   },
+};
+
+export const NoIndicators: Story = {
   args: {
-    className: "w-full max-w-xs mt-20",
-    orientation: "vertical",
-    opts: { align: "start" },
-    items: 5,
-  } as unknown as Record<string, unknown>,
-  render: (args) => {
-    const a = args as unknown as Record<string, unknown>;
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-        }}
-      >
-        <CarouselBase
-          orientation={a.orientation as "horizontal" | "vertical"}
-          opts={a.opts as unknown as Record<string, unknown>}
-          className={a.className as string}
-        >
-          <CarouselContentBase className="-mt-1 h-[220px]">
-            {Array.from({ length: a.items as number }).map((_, index) => (
-              <CarouselItemBase key={index} className="pt-1 md:basis-1/2">
-                <CardBase>
-                  <CardContentBase className="flex aspect-square items-center justify-center p-6">
-                    <img
-                      src="/pwa-512x512.png"
-                      alt={`Imagem ${index + 1}`}
-                      className="rounded-xl object-cover w-40 h-40"
-                    />
-                  </CardContentBase>
-                </CardBase>
-              </CarouselItemBase>
-            ))}
-          </CarouselContentBase>
-          <CarouselPreviousBase />
-          <CarouselNextBase />
-        </CarouselBase>
-      </div>
-    );
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel sem indicadores de progresso, apenas controles.",
+      },
+    },
+  },
+};
+
+export const Minimal: Story = {
+  args: {
+    items: sampleItems,
+    height: "500px",
+    showControls: false,
+    showIndicators: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel minimalista sem controles ou indicadores.",
+      },
+    },
+  },
+};
+
+export const CustomHeight: Story = {
+  args: {
+    items: sampleItems,
+    height: "500px",
+    width: "50%",
+    showControls: true,
+    showIndicators: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel com altura customizada de 300px.",
+      },
+    },
+  },
+};
+
+export const FastAnimation: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    springConfig: {
+      stiffness: 600,
+      damping: 40,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel com animação mais rápida e responsiva.",
+      },
+    },
+  },
+};
+
+export const SlowAnimation: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    springConfig: {
+      stiffness: 100,
+      damping: 20,
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel com animação mais suave e lenta.",
+      },
+    },
   },
 };

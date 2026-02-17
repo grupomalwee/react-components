@@ -11,6 +11,7 @@ import {
   DialogBase,
   DialogContentBase,
 } from "@/components/ui/feedback/DialogBase";
+import DebouncedInput from "../form/DebouncedInput";
 
 const CommandBase = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -85,28 +86,57 @@ const CommandInputBase = React.forwardRef<
 CommandInputBase.displayName = CommandPrimitive.Input.displayName;
 
 const CommandDebouncedInputBase = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+  React.ElementRef<typeof DebouncedInput>,
+  Omit<
+    React.ComponentPropsWithoutRef<typeof DebouncedInput>,
+    "value" | "onChange"
+  > & {
+    value?: string;
+    onChange?: (value: string) => void;
+    search?: string;
+    onSearch?: (value: string) => void;
     testid?: string;
+    onValueChange?: (value: string) => void;
   }
->(({ className, testid: dataTestId = "command-input", ...props }, ref) => (
-  <div
-    className="flex items-center border-b px-3  border-border"
-    cmdk-input-wrapper=""
-  >
-    <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
-    <CommandPrimitive.Input
-      ref={ref}
-      className={cn(
-        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      )}
-      data-testid={dataTestId}
-      {...props}
-    />
-  </div>
-));
-CommandDebouncedInputBase.displayName = CommandPrimitive.Input.displayName;
+>(
+  (
+    {
+      className,
+      testid: dataTestId = "command-input",
+      onValueChange,
+      value: propValue,
+      onChange: propOnChange,
+      search,
+      onSearch,
+      ...props
+    },
+    ref,
+  ) => (
+    <div
+      className="flex items-center px-3 border-border border-b"
+      cmdk-input-wrapper=""
+    >
+      <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
+      <DebouncedInput
+        ref={ref}
+        className={cn(
+          "flex h-10 border-transparent w-full rounded-md bg-transparent text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        data-testid={dataTestId}
+        cmdk-input=""
+        value={search ?? propValue ?? ""}
+        {...props}
+        onChange={(value: string) => {
+          onValueChange?.(value);
+          propOnChange?.(value);
+          onSearch?.(value);
+        }}
+      />
+    </div>
+  ),
+);
+CommandDebouncedInputBase.displayName = "CommandDebouncedInputBase";
 
 const CommandListBase = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
@@ -326,6 +356,7 @@ export {
   CommandBase,
   CommandDialogBase,
   CommandInputBase,
+  CommandDebouncedInputBase,
   CommandListBase,
   CommandEmptyBase,
   CommandGroupBase,

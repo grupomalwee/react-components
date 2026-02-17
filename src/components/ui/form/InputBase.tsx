@@ -40,6 +40,7 @@ const InputBase = React.forwardRef<HTMLInputElement, InputBaseProps>(
             error
               ? "border-destructive focus:ring-1 focus:ring-destructive"
               : "border-input",
+            className,
           )}
         >
           {leftIcon && (

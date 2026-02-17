@@ -34,11 +34,6 @@ interface GitHubUser {
   login: string;
 }
 
-interface ComboboxItem {
-  label: string;
-  value: string;
-}
-
 const PAGE_SIZE = 20;
 
 export const PublicAPI: Story = {
@@ -120,8 +115,6 @@ function PublicAPI() {
     const [selected, setSelected] = useState<string | null>(null);
     const [total, setTotal] = useState(0);
 
-    const currentSearchRef = useRef("");
-
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
         if (loading) return;
@@ -163,16 +156,10 @@ function PublicAPI() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-      if (search === currentSearchRef.current) return;
-
-      const timer = setTimeout(() => {
-        currentSearchRef.current = search;
-        fetchItems(true, search);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }, [search, fetchItems]);
+    const handleSearch = (val: string) => {
+      setSearch(val);
+      fetchItems(true, val);
+    };
 
     return (
       <div className="w-[400px]">
@@ -190,7 +177,8 @@ function PublicAPI() {
           }
           handleSelection={(val) => setSelected(val)}
           checkIsSelected={(val) => selected === val}
-          onSearchChange={(val) => setSearch(val)}
+          onSearchChange={handleSearch}
+          search={search}
           onEndReached={() => {
             if (!loading && items.length < total) {
               fetchItems(false, search);
@@ -285,8 +273,6 @@ function PublicUserAPI() {
     const [selected, setSelected] = useState<string | null>(null);
     const [total] = useState(100000000);
 
-    const currentSearchRef = useRef("");
-
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
         if (loading) return;
@@ -294,10 +280,11 @@ function PublicUserAPI() {
 
         try {
           const since = isInitial ? 0 : lastId;
+          const endpoint = query
+            ? `https://api.github.com/search/users?q=${encodeURIComponent(query)}&page=${isInitial ? 1 : Math.floor(items.length / PAGE_SIZE) + 1}&per_page=${PAGE_SIZE}`
+            : `https://api.github.com/users?since=${since}&per_page=${PAGE_SIZE}`;
 
-          const response = await fetch(
-            `https://api.github.com/users?since=${since}&per_page=${PAGE_SIZE}`,
-          );
+          const response = await fetch(endpoint);
 
           if (response.status === 403) {
             alert(
@@ -307,29 +294,23 @@ function PublicUserAPI() {
           }
 
           const json = await response.json();
+          const rawNodes = query ? json.items : json;
 
-          if (!Array.isArray(json)) {
+          if (!Array.isArray(rawNodes)) {
             throw new Error("Invalid response from GitHub");
           }
 
-          const newItems = json.map((user: GitHubUser) => ({
+          const newItems = rawNodes.map((user: GitHubUser) => ({
             label: `User ${user.id} (${user.login})`,
             value: String(user.id),
           }));
 
-          // Local filtering if search query is provided
-          const filteredItems = query
-            ? newItems.filter((item: ComboboxItem) =>
-                item.label.toLowerCase().includes(query.toLowerCase()),
-              )
-            : newItems;
-
           if (isInitial) {
-            setItems(filteredItems);
-            setLastId(json[json.length - 1]?.id || 0);
+            setItems(newItems);
+            setLastId(rawNodes[rawNodes.length - 1]?.id || 0);
           } else {
-            setItems((prev) => [...prev, ...filteredItems]);
-            setLastId(json[json.length - 1]?.id || lastId);
+            setItems((prev) => [...prev, ...newItems]);
+            setLastId(rawNodes[rawNodes.length - 1]?.id || lastId);
           }
         } catch (error) {
           console.error("Failed to fetch GitHub users:", error);
@@ -340,23 +321,15 @@ function PublicUserAPI() {
       [loading, lastId],
     );
 
-    // Initial load
     useEffect(() => {
       fetchItems(true, "");
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Handle search with debounce
-    useEffect(() => {
-      if (search === currentSearchRef.current) return;
-
-      const timer = setTimeout(() => {
-        currentSearchRef.current = search;
-        fetchItems(true, search);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }, [search, fetchItems]);
+    const handleSearch = (val: string) => {
+      setSearch(val);
+      fetchItems(true, val);
+    };
 
     return (
       <div className="w-[400px]">
@@ -375,7 +348,8 @@ function PublicUserAPI() {
           }
           handleSelection={(val) => setSelected(val)}
           checkIsSelected={(val) => selected === val}
-          onSearchChange={(val) => setSearch(val)}
+          onSearchChange={handleSearch}
+          search={search}
           onEndReached={() => {
             if (!loading && items.length < total) {
               fetchItems(false, search);
@@ -411,7 +385,6 @@ function LargeUserDataset() {
     if (loading) return;
     setLoading(true);
     
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 300));
     
     try {
@@ -420,7 +393,6 @@ function LargeUserDataset() {
       let results = [];
       
       if (query) {
-        // Filter all items based on search
         for (let i = 0; i < 100001; i++) {
           const label = \`User \${i}\`;
           if (label.toLowerCase().includes(query.toLowerCase())) {
@@ -429,7 +401,6 @@ function LargeUserDataset() {
         }
         results = results.slice(start, start + PAGE_SIZE);
       } else {
-        // Return paginated items
         const end = Math.min(start + PAGE_SIZE, 100001);
         for (let i = start; i < end; i++) {
           results.push({ label: \`User \${i}\`, value: \`user-\${i}\` });
