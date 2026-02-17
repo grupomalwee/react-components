@@ -11,6 +11,14 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.10",
+    date: "2026-02-17",
+    shortTitle: "Carousel",
+    changed: [
+      "Carousel: import",
+    ],
+  },
+  {
     version: "1.9.9",
     date: "2026-02-17",
     shortTitle: "Controled Combobox",

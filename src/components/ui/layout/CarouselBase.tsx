@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +25,7 @@ export interface CarouselBaseProps {
   };
 }
 
-export default function CarouselBase({
+export function CarouselBase({
   items,
   className,
   containerClassName,
@@ -155,7 +153,6 @@ export default function CarouselBase({
             </>
           )}
 
-          {/* Progress Indicator */}
           {showIndicators && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
               {items.map((_, i) => (
