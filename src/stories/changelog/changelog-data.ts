@@ -15,6 +15,14 @@ export const changelogData: ChangeItem[] = [
     date: "2026-02-17",
     shortTitle: "Carousel",
     changed: [
+      "Carousel: props and style",
+    ],
+  },
+  {
+    version: "1.9.10",
+    date: "2026-02-17",
+    shortTitle: "Carousel",
+    changed: [
       "Carousel: import",
     ],
   },
