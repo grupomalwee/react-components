@@ -8,42 +8,42 @@ import {
 const sampleItems: CarouselItem[] = [
   {
     id: 1,
-    url: "https://images.unsplash.com/photo-1761882835101-02ab45ac0726?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=690",
+    url: "/pwa-512x512.png",
     title: "MAXX PHAM",
   },
   {
     id: 2,
-    url: "https://images.unsplash.com/photo-1661980494567-40a5e01b699b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=685",
+    url: "/pwa-512x512.png",
     title: "BOXIEN BAY",
   },
   {
     id: 3,
-    url: "https://images.unsplash.com/photo-1761882725885-d3d8bd2032d1?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687",
+    url: "/pwa-512x512.png",
     title: "AUSIZE MAM",
   },
   {
     id: 4,
-    url: "https://images.unsplash.com/photo-1761775915848-467e41c1c4db?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=689",
+    url: "/pwa-512x512.png",
     title: "RECLKTIKA",
   },
   {
     id: 5,
-    url: "https://images.unsplash.com/photo-1761078980679-e89e25fe279b?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687",
+    url: "/pwa-512x512.png",
     title: "SONYPOO",
   },
   {
     id: 6,
-    url: "https://images.unsplash.com/photo-1760389005000-bf02bf24f463?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1123",
+    url: "/pwa-512x512.png",
     title: "DONM FLY",
   },
   {
     id: 7,
-    url: "https://images.unsplash.com/photo-1761165307495-56bd564d322f?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=663",
+    url: "/pwa-512x512.png",
     title: "Snowy Mountain Highway",
   },
   {
     id: 8,
-    url: "https://images.unsplash.com/photo-1756299792672-157811bf1005?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1074",
+    url: "/pwa-512x512.png",
     title: "FOGGY FOLS",
   },
 ];
@@ -102,6 +102,11 @@ const meta: Meta<typeof CarouselBase> = {
     imageClassName: {
       control: { type: "text" },
     },
+    zoomEffect: {
+      control: { type: "radio" },
+      options: ["lens", "scale", null],
+      description: "Efeito de zoom ao passar o mouse ('lens' ou 'scale')",
+    },
   },
   parameters: {
     docs: {
@@ -126,7 +131,6 @@ type Story = StoryObj<typeof CarouselBase>;
 export const Default: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
     showControls: true,
     showIndicators: true,
   },
@@ -185,7 +189,6 @@ export const NoIndicators: Story = {
 export const Minimal: Story = {
   args: {
     items: sampleItems,
-    height: "500px",
     showControls: false,
     showIndicators: false,
   },
@@ -250,6 +253,42 @@ export const SlowAnimation: Story = {
     docs: {
       description: {
         story: "Carousel com animação mais suave e lenta.",
+      },
+    },
+  },
+};
+export const LensEffect: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    zoomEffect: "lens",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Carousel com efeito de lupa (lens). Use o scroll do mouse para controlar o nível de zoom.",
+      },
+    },
+  },
+};
+
+export const ScaleEffect: Story = {
+  args: {
+    items: sampleItems,
+    height: "400px",
+    showControls: true,
+    showIndicators: true,
+    zoomEffect: "scale",
+    download: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Carousel com efeito de zoom (scale). Use o scroll do mouse para controlar o zoom.",
       },
     },
   },

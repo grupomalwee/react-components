@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  animate,
+  AnimatePresence,
+} from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Lens } from "./Lens";
+import { ZoomImage } from "./ZoomImage";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface CarouselItem {
   id: number | string;
@@ -23,6 +31,8 @@ export interface CarouselBaseProps {
     stiffness?: number;
     damping?: number;
   };
+  zoomEffect?: "lens" | "scale" | null;
+  download?: boolean;
 }
 
 export function CarouselBase({
@@ -31,7 +41,7 @@ export function CarouselBase({
   containerClassName,
   imageClassName,
   width,
-  height = "400px",
+  height,
   showControls = true,
   showIndicators = true,
   autoPlay = false,
@@ -40,10 +50,15 @@ export function CarouselBase({
     stiffness: 300,
     damping: 30,
   },
+  zoomEffect = null,
+  download = false,
 }: CarouselBaseProps) {
+  const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -68,41 +83,176 @@ export function CarouselBase({
     return () => clearInterval(interval);
   }, [autoPlay, autoPlayInterval, items.length]);
 
+  const handleDownload = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    setDownloadSuccess(false);
+
+    const currentItem = items[index];
+    try {
+      const response = await fetch(currentItem.url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = currentItem.title || "image";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      setIsDownloading(false);
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 2000);
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div
       className={cn("w-full lg:p-10 sm:p-4 p-2", className)}
-      style={{ width }}
+      style={{ width, height }}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 h-full">
         <div
           className={cn(
-            "relative overflow-hidden rounded-lg",
+            "relative overflow-hidden rounded-lg h-full",
             containerClassName,
           )}
           ref={containerRef}
         >
-          <motion.div className="flex" style={{ x }}>
+          <motion.div className="flex h-full" style={{ x }}>
             {items.map((item) => (
-              <div key={item.id} className="shrink-0 w-full" style={{ height }}>
-                <img
-                  src={item.url}
-                  alt={item.title}
-                  className={cn(
-                    "w-full h-full object-cover rounded-lg select-none pointer-events-none",
-                    imageClassName,
-                  )}
-                  draggable={false}
-                />
+              <div key={item.id} className="shrink-0 w-full h-full">
+                {isMobile || zoomEffect === "scale" ? (
+                  <ZoomImage
+                    src={item.url}
+                    alt={item.title}
+                    className={cn("w-full h-full select-none")}
+                    imageClassName={imageClassName}
+                    borderRadius={8}
+                    maxZoom={3.0}
+                  />
+                ) : zoomEffect === "lens" ? (
+                  <Lens>
+                    <img
+                      src={item.url}
+                      alt={item.title}
+                      className={cn(
+                        "w-full h-full object-cover rounded-lg select-none pointer-events-none",
+                        imageClassName,
+                      )}
+                      draggable={false}
+                    />
+                  </Lens>
+                ) : (
+                  <img
+                    src={item.url}
+                    alt={item.title}
+                    className={cn(
+                      "w-full h-full object-cover rounded-lg select-none pointer-events-none",
+                      imageClassName,
+                    )}
+                    draggable={false}
+                  />
+                )}
               </div>
             ))}
           </motion.div>
+
+          {download && (
+            <motion.button
+              onClick={handleDownload}
+              className={cn(
+                "absolute top-4 right-4 z-30 p-2 rounded-full text-white transition-colors border border-white/10",
+                downloadSuccess
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-black/50 hover:bg-black/70",
+              )}
+              title="Download image"
+              initial={false}
+              animate={{
+                scale: isDownloading ? 0.9 : 1,
+                backgroundColor: downloadSuccess
+                  ? "rgb(34, 197, 94)"
+                  : "rgba(0, 0, 0, 0.5)",
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDownloading ? (
+                  <motion.svg
+                    key="loading"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      ease: "linear",
+                      duration: 1,
+                    }}
+                  >
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </motion.svg>
+                ) : downloadSuccess ? (
+                  <motion.svg
+                    key="success"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </motion.svg>
+                ) : (
+                  <motion.svg
+                    key="download"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" x2="12" y1="15" y2="3" />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          )}
 
           {showControls && (
             <>
               <motion.button
                 disabled={index === 0}
                 onClick={() => setIndex((i) => Math.max(0, i - 1))}
-                className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-30
                   ${
                     index === 0
                       ? "opacity-40 cursor-not-allowed"
@@ -129,7 +279,7 @@ export function CarouselBase({
                 onClick={() =>
                   setIndex((i) => Math.min(items.length - 1, i + 1))
                 }
-                className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10
+                className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-30
                   ${
                     index === items.length - 1
                       ? "opacity-40 cursor-not-allowed"
