@@ -123,6 +123,7 @@ interface DraggableTooltipProps {
   showOnlyHighlighted?: boolean;
   valueFormatter?: valueFormatter;
   categoryFormatter?: (value: string | number) => string;
+  seriesTypeMap?: Record<string, string>;
 }
 
 const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
@@ -147,6 +148,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
   showOnlyHighlighted,
   valueFormatter,
   categoryFormatter,
+  seriesTypeMap,
 }) => {
   // keys currently visible inside the tooltip (respecting showOnlyHighlighted)
   const visibleKeys = useMemo(
@@ -170,7 +172,9 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
       return numeric.reduce((s, v) => s + (v || 0), 0);
     }, [data, visibleKeys]);
 
-    const defaultTotalFormatted = total.toLocaleString("pt-BR");
+    const defaultTotalFormatted = total.toLocaleString("pt-BR", {
+      maximumFractionDigits: 0,
+    });
     const displayTotal = localformatter
       ? localformatter({
           value: total,
@@ -516,7 +520,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
   const handleTouchStartLocal = useCallback(
     (e: React.TouchEvent) => {
-      e.preventDefault(); // Previne comportamento padrão (scroll, zoom, etc)
+      e.preventDefault();
       e.stopPropagation();
       const touch = e.touches[0];
       if (!touch) return;
@@ -724,7 +728,15 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                       ? value
                       : Number(value as unknown) || 0;
 
-                  const defaultFormatted = val.toLocaleString("pt-BR");
+                  const isLine = seriesTypeMap?.[key] === "line";
+                  const defaultFormatted = isLine
+                    ? `${(val / 100).toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}%`
+                    : val.toLocaleString("pt-BR", {
+                        maximumFractionDigits: 0,
+                      });
                   const displayValue = valueFormatter
                     ? valueFormatter({
                         value: value,
@@ -790,7 +802,9 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                             {displayValue}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {absDenominator > 0 ? `${pct.toFixed(1)}%` : "-"}
+                            {absDenominator > 0
+                              ? `${pct.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
+                              : "-"}
                           </span>
                         </div>
                       </div>

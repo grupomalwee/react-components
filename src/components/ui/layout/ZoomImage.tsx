@@ -65,11 +65,23 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
       mouseY.set(y);
     };
 
-    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-      const delta = -e.deltaY * 0.005;
-      const newZoom = Math.min(Math.max(1, zoomLevel.get() + delta), maxZoom);
-      zoomLevel.set(newZoom);
-    };
+    const innerRef = React.useRef<HTMLDivElement>(null);
+    React.useImperativeHandle(ref, () => innerRef.current!);
+
+    React.useEffect(() => {
+      const element = innerRef.current;
+      if (!element) return;
+
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        const delta = -e.deltaY * 0.005;
+        const newZoom = Math.min(Math.max(1, zoomLevel.get() + delta), maxZoom);
+        zoomLevel.set(newZoom);
+      };
+
+      element.addEventListener("wheel", onWheel, { passive: false });
+      return () => element.removeEventListener("wheel", onWheel);
+    }, [maxZoom, zoomLevel]);
 
     const handleMouseLeave = () => {
       if (!isPinching.current) {
@@ -136,7 +148,7 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
 
     return (
       <motion.div
-        ref={ref}
+        ref={innerRef}
         className={cn(
           "relative w-full h-full overflow-hidden touch-none",
           className,
@@ -144,7 +156,7 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
         style={{ borderRadius: `${borderRadius}px` }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onWheel={handleWheel}
+        // onWheel removed in favor of native listener
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

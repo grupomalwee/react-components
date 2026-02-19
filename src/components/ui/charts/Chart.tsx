@@ -300,6 +300,14 @@ const Chart: React.FC<ChartProps> = ({
     effectiveChartWidth,
   });
 
+  const seriesTypeMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    seriesOrder.forEach((s) => {
+      map[s.key] = s.type;
+    });
+    return map;
+  }, [seriesOrder]); 
+
   if (!data && !isLoading) return null;
 
   if (isLoading) {
@@ -553,6 +561,7 @@ const Chart: React.FC<ChartProps> = ({
                           valueFormatter={finalValueFormatter}
                           categoryFormatter={categoryFormatter}
                           periodLabel={periodLabel}
+                          seriesTypeMap={seriesTypeMap}
                         />
                       ) : (
                         <TooltipSimple
@@ -560,6 +569,7 @@ const Chart: React.FC<ChartProps> = ({
                           valueFormatter={finalValueFormatter}
                           categoryFormatter={categoryFormatter}
                           periodLabel={periodLabel}
+                          seriesTypeMap={seriesTypeMap}
                         />
                       )
                     }
@@ -772,6 +782,7 @@ const Chart: React.FC<ChartProps> = ({
             }
             closeAllButtonPosition="top-center"
             closeAllButtonVariant="floating"
+            seriesTypeMap={seriesTypeMap}
           />
         ))}
 

@@ -4,7 +4,7 @@ import { ZoomImage } from "./ZoomImage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Lens } from "./Lens";
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export interface CarouselItem {
   id: number | string;
@@ -106,7 +106,6 @@ function CarouselSkeleton({ className }: { className?: string }) {
   );
 }
 
-
 export function CarouselBase({
   items,
   className,
@@ -124,7 +123,8 @@ export function CarouselBase({
 }: CarouselBaseProps) {
   const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const options = useMemo(() => ({ loop: true }), []);
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
@@ -153,12 +153,6 @@ export function CarouselBase({
 
     return () => clearInterval(interval);
   }, [autoPlay, autoPlayInterval, items.length, emblaApi]);
-
-  useEffect(() => {
-    if (emblaApi && index !== emblaApi.selectedScrollSnap()) {
-      emblaApi.scrollTo(index);
-    }
-  }, [index, emblaApi]);
 
   const handleDownload = async () => {
     if (isDownloading) return;
@@ -216,27 +210,36 @@ export function CarouselBase({
         style={{ width, height }}
       >
         <div className="flex flex-col gap-3 h-full">
-          <div
-            className={cn(
-              "relative overflow-hidden rounded-lg h-full cursor-grab active:cursor-grabbing",
-              containerClassName,
-            )}
-            ref={emblaRef}
-          >
-            <div className="flex h-full">
-              {items.map((item) => (
-                <div key={item.id} className="shrink-0 w-full h-full min-w-0">
-                  {isMobile || zoomEffect === "scale" ? (
-                    <ZoomImage
-                      src={item.url}
-                      alt={item.title}
-                      className={cn("w-full h-full select-none")}
-                      imageClassName={imageClassName}
-                      borderRadius={8}
-                      maxZoom={3.0}
-                    />
-                  ) : zoomEffect === "lens" ? (
-                    <Lens>
+          <div className={cn("relative h-full", containerClassName)}>
+            <div
+              ref={emblaRef}
+              className="overflow-hidden rounded-lg h-full cursor-grab active:cursor-grabbing"
+            >
+              <div className="flex h-full">
+                {items.map((item) => (
+                  <div key={item.id} className="shrink-0 w-full h-full min-w-0">
+                    {isMobile || zoomEffect === "scale" ? (
+                      <ZoomImage
+                        src={item.url}
+                        alt={item.title}
+                        className={cn("w-full h-full select-none")}
+                        imageClassName={imageClassName}
+                        borderRadius={8}
+                        maxZoom={3.0}
+                      />
+                    ) : zoomEffect === "lens" ? (
+                      <Lens>
+                        <img
+                          src={item.url}
+                          alt={item.title}
+                          className={cn(
+                            "w-full h-full object-cover rounded-lg select-none pointer-events-none",
+                            imageClassName,
+                          )}
+                          draggable={false}
+                        />
+                      </Lens>
+                    ) : (
                       <img
                         src={item.url}
                         alt={item.title}
@@ -246,27 +249,20 @@ export function CarouselBase({
                         )}
                         draggable={false}
                       />
-                    </Lens>
-                  ) : (
-                    <img
-                      src={item.url}
-                      alt={item.title}
-                      className={cn(
-                        "w-full h-full object-cover rounded-lg select-none pointer-events-none",
-                        imageClassName,
-                      )}
-                      draggable={false}
-                    />
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {download && (
               <motion.button
                 onClick={handleDownload}
+                onPointerDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
                 className={cn(
-                  "absolute top-4 right-4 z-30 p-2 rounded-full text-white transition-colors border border-white/10",
+                  "absolute top-4 right-4 z-50 p-2 rounded-full text-white transition-colors border border-white/10",
                   downloadSuccess
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-black/50 hover:bg-black/70",
@@ -352,7 +348,10 @@ export function CarouselBase({
                 <motion.button
                   disabled={!emblaApi?.canScrollPrev()}
                   onClick={() => emblaApi?.scrollPrev()}
-                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-30
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-50
                     ${
                       !emblaApi?.canScrollPrev()
                         ? "opacity-40 cursor-not-allowed"
@@ -377,7 +376,10 @@ export function CarouselBase({
                 <motion.button
                   disabled={!emblaApi?.canScrollNext()}
                   onClick={() => emblaApi?.scrollNext()}
-                  className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-30
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-50
                     ${
                       !emblaApi?.canScrollNext()
                         ? "opacity-40 cursor-not-allowed"
@@ -402,11 +404,14 @@ export function CarouselBase({
             )}
 
             {showIndicators && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-50">
                 {items.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => emblaApi?.scrollTo(i)}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                     className={`h-2 rounded-full transition-all ${
                       i === index ? "w-8 bg-white" : "w-2 bg-white/50"
                     }`}

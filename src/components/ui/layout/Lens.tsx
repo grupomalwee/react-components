@@ -42,11 +42,19 @@ export const Lens: React.FC<LensProps> = ({
     setMousePosition({ x, y });
   };
 
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    if (!isActivated) return;
-    const delta = -e.deltaY * 0.005;
-    setZoomFactor((prev) => Math.min(Math.max(1.1, prev + delta), maxZoom));
-  };
+  React.useEffect(() => {
+    const element = containerRef.current;
+    if (!element || !isActivated) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = -e.deltaY * 0.005;
+      setZoomFactor((prev) => Math.min(Math.max(1.1, prev + delta), maxZoom));
+    };
+
+    element.addEventListener("wheel", onWheel, { passive: false });
+    return () => element.removeEventListener("wheel", onWheel);
+  }, [isActivated, maxZoom]);
 
   const resetZoom = () => {
     setZoomFactor(initialZoom);
@@ -69,7 +77,6 @@ export const Lens: React.FC<LensProps> = ({
         resetZoom();
       }}
       onMouseMove={handleMouseMove}
-      onWheel={handleWheel}
     >
       {children}
 
@@ -109,11 +116,11 @@ export const Lens: React.FC<LensProps> = ({
               top: position.y - lensSize / 2,
               width: lensSize,
               height: lensSize,
-              borderRadius: "50%",
+              borderRadius: "10%",
               boxShadow:
-                "0 8px 32px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.2)",
+                "0 8px 12px rgba(0, 0, 0, 1), 0 4px 16px rgba(5,3, 1, 1)",
               background:
-                "radial-gradient(circle at center, transparent 60%, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 0.2) 80%, transparent 100%)",
+                "radial-gradient(circle at center, transparent 100%, rgba(255, 255, 255, 1) 100%, rgba(255, 255, 255, 1) 100%, transparent 100%)",
             }}
           />
         </div>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/feedback/DialogBase";
 import { MultiSelect } from "@/components/ui/selects/MultiSelect";
 import { useState } from "react";
+import Chart from "@/components/ui/charts/Chart";
 
 export default function ThemeColorTest() {
   const colorVariables = [
@@ -61,6 +62,12 @@ export default function ThemeColorTest() {
       var: "--destructive-foreground",
       className: "bg-destructive-foreground",
     },
+  ];
+  const sampleData = [
+    { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
+    { periodo: "Fev/24", receita: 5100, despesas: 3200, churn: 165 },
+    { periodo: "Mar/24", receita: 6800, despesas: 3900, churn: 142 },
+    { periodo: "Abr/24", receita: 7500, despesas: 4300, churn: 128 },
   ];
 
   const [selected, setSelected] = useState<string[]>([]);
@@ -119,6 +126,8 @@ export default function ThemeColorTest() {
             </DialogContentBase>
           </DialogBase>
         </div>
+        <Chart data={sampleData} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {colorVariables.map((color) => (
             <div
