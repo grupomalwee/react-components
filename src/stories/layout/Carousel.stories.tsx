@@ -107,6 +107,10 @@ const meta: Meta<typeof CarouselBase> = {
       options: ["lens", "scale", null],
       description: "Efeito de zoom ao passar o mouse ('lens' ou 'scale')",
     },
+    isLoading: {
+      control: { type: "boolean" },
+      description: "Estado de carregamento (skeleton)",
+    },
   },
   parameters: {
     docs: {
@@ -289,6 +293,21 @@ export const ScaleEffect: Story = {
       description: {
         story:
           "Carousel com efeito de zoom (scale). Use o scroll do mouse para controlar o zoom.",
+      },
+    },
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    items: [],
+    height: "400px",
+    isLoading: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Estado de carregamento com skeleton animation.",
       },
     },
   },

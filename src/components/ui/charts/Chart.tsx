@@ -31,7 +31,6 @@ import {
   CloseAllButton,
   PeriodsDropdown,
   Brush,
-  // HorizontalLegend removido
 } from "./components";
 import RechartTooltipWithTotal from "./components/tooltips/TooltipWithTotal";
 import { renderPillLabel, renderInsideBarLabel } from "./utils";
@@ -42,7 +41,6 @@ import {
   useChartTooltips,
   useChartClick,
   useTimeSeriesRange,
-  // useChartMinMax removido
   useProcessedData,
   useBiaxial,
   useChartLayout,
@@ -68,11 +66,36 @@ import { formatLinePercentage } from "./utils/formatters";
 
 const DEFAULT_COLORS = ["#55af7d", "#8e68ff", "#2273e1"];
 
+function ChartWrapper({
+  className,
+  children,
+  wrapperRef,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  wrapperRef?: React.Ref<HTMLDivElement>;
+}) {
+  const cls = className ?? "";
+  const hasExplicitSizing = /\bh-/.test(cls) || /\bflex-1\b/.test(cls);
+
+  return (
+    <div
+      ref={wrapperRef}
+      className={cn(
+        "w-full overflow-hidden min-w-0 rounded-lg border-border",
+        !hasExplicitSizing && "h-[550px]",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 const Chart: React.FC<ChartProps> = ({
   data,
   series,
   className,
-  height = 350,
   width = "100%",
   colors = DEFAULT_COLORS,
   gridColor,
@@ -104,27 +127,7 @@ const Chart: React.FC<ChartProps> = ({
   timeSeries,
   timeSeriesLegend,
   customLegend,
-  // horizontal removido
-  // orderBy removido
 }) => {
-  const usesFullHeight =
-    (typeof height === "string" && (height === "100%" || height === "100vh")) ||
-    (typeof className === "string" && /\bh-full\b/.test(className || ""));
-
-  const responsiveHeight: number | string = usesFullHeight ? "100%" : height;
-  const wrapperClass = cn(
-    "w-full min-w-0 rounded-lg border-border",
-    className,
-    "overflow-hidden",
-  );
-  const wrapperStyle: React.CSSProperties | undefined = usesFullHeight
-    ? undefined
-    : {
-        height:
-          typeof responsiveHeight === "number"
-            ? `${responsiveHeight}px`
-            : (responsiveHeight as string),
-      };
   const { xAxisConfig, mapperConfig } = useMemo(() => {
     return fnSmartConfig({ xAxis, data, labelMap });
   }, [data, xAxis, labelMap]);
@@ -167,8 +170,6 @@ const Chart: React.FC<ChartProps> = ({
       onRangeChange: timeSeriesConfig?.onRangeChange,
     });
 
-  // Removido maxPeriodLabel e minPeriodLabel
-
   const processedData = useProcessedData({
     data,
     xAxisKey: xAxisConfig.dataKey,
@@ -178,7 +179,6 @@ const Chart: React.FC<ChartProps> = ({
   });
 
   const seriesOrder = filtersOrder(mapperConfig, series!);
-
   const allKeys = seriesOrder.map((s) => s.key).filter(Boolean);
 
   const finalColors = useMemo(
@@ -300,421 +300,450 @@ const Chart: React.FC<ChartProps> = ({
     effectiveChartWidth,
   });
 
-  const legendSpace = showLegend ? 44 : 0;
-  const xAxisLabelSpace = xAxisLabel ? 18 : 0;
-  const brushSpace = timeSeriesConfig?.height ? 200 : 0;
-  const bottomMargin = 10 + legendSpace + xAxisLabelSpace + brushSpace;
-
   if (!data && !isLoading) return null;
 
   if (isLoading) {
     return (
-      <NoData
-        title={title}
-        isLoading
-        loadingMessage={
-          typeof title === "string" ? `${title} — Carregando` : "Carregando"
-        }
-        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
-        height={height}
-      />
+      <ChartWrapper className={className}>
+        <NoData
+          title={title}
+          isLoading
+          loadingMessage={
+            typeof title === "string" ? `${title} — Carregando` : "Carregando"
+          }
+          paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
+          height="100%"
+        />
+      </ChartWrapper>
     );
   }
 
   if (Array.isArray(data) && data.length === 0) {
     return (
-      <NoData
-        title={title}
-        paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
-        height={height}
-      />
+      <ChartWrapper className={className}>
+        <NoData
+          title={title}
+          paddingLeft={CONTAINER_PADDING_LEFT + finalChartLeftMargin}
+          height="100%"
+        />
+      </ChartWrapper>
     );
   }
 
   return (
-    <div ref={wrapperRef} className={wrapperClass} style={wrapperStyle}>
-      <div
-        className="rounded-lg bg-card relative w-full max-w-full min-w-0 py-1"
-        style={usesFullHeight ? { height: "100%" } : undefined}
-      >
-        <ChartHeader
-          title={title}
-          titlePosition={titlePosition}
-          HORIZONTAL_PADDING_CLASS={HORIZONTAL_PADDING_CLASS}
-          customLegend={customLegend}
-          data={data}
-          allKeys={allKeys}
-          processedData={processedData}
-          finalColors={finalColors}
-          mapperConfig={mapperConfig}
-          finalValueFormatter={finalValueFormatter}
-          formatBR={formatBR}
-        />
-
-        {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
-          <ChartControls
+    <>
+      <ChartWrapper className={className} wrapperRef={wrapperRef}>
+        <div className="h-full w-full flex flex-col rounded-lg bg-card py-1 overflow-hidden">
+          <ChartHeader
+            title={title}
+            titlePosition={titlePosition}
+            HORIZONTAL_PADDING_CLASS={HORIZONTAL_PADDING_CLASS}
+            customLegend={customLegend}
+            data={data}
             allKeys={allKeys}
-            mapperConfig={mapperConfig}
-            finalColors={finalColors}
-            highlightedSeries={highlightedSeries}
-            toggleHighlight={toggleHighlight}
-            showOnlyHighlighted={showOnlyHighlighted}
-            setShowOnlyHighlighted={
-              setShowOnlyHighlighted as React.Dispatch<
-                React.SetStateAction<boolean>
-              >
-            }
-            highlightedSeriesSize={highlightedSeries.size}
-            clearHighlights={clearHighlights}
-            enableHighlights={enableHighlights}
-            enableShowOnly={enableShowOnly}
-            enablePeriodsDropdown={enablePeriodsDropdown}
-            enableDraggableTooltips={enableDraggableTooltips}
             processedData={processedData}
-            onOpenPeriod={openTooltipForPeriod}
-            rightOffset={finalChartRightMargin}
-            activePeriods={activePeriods}
-            containerClass={cn("flex items-center gap-2", teste)}
-            containerWidth={chartInnerWidth}
+            finalColors={finalColors}
+            mapperConfig={mapperConfig}
+            finalValueFormatter={finalValueFormatter}
+            formatBR={formatBR}
           />
-        )}
 
-        {!(allKeys.length > 0 && (enableHighlights || enableShowOnly)) &&
-          enablePeriodsDropdown &&
-          enableDraggableTooltips && (
-            <div
-              className={cn(
-                "w-full flex justify-end mb-2",
-                HORIZONTAL_PADDING_CLASS,
-              )}
-              style={{
-                paddingRight: `${finalChartRightMargin}px`,
-                maxWidth: `${chartInnerWidth}px`,
-              }}
-            >
-              <PeriodsDropdown
-                processedData={processedData}
-                onOpenPeriod={openTooltipForPeriod}
-                rightOffset={finalChartRightMargin}
-              />
-            </div>
+          {allKeys.length > 0 && (enableHighlights || enableShowOnly) && (
+            <ChartControls
+              allKeys={allKeys}
+              mapperConfig={mapperConfig}
+              finalColors={finalColors}
+              highlightedSeries={highlightedSeries}
+              toggleHighlight={toggleHighlight}
+              showOnlyHighlighted={showOnlyHighlighted}
+              setShowOnlyHighlighted={
+                setShowOnlyHighlighted as React.Dispatch<
+                  React.SetStateAction<boolean>
+                >
+              }
+              highlightedSeriesSize={highlightedSeries.size}
+              clearHighlights={clearHighlights}
+              enableHighlights={enableHighlights}
+              enableShowOnly={enableShowOnly}
+              enablePeriodsDropdown={enablePeriodsDropdown}
+              enableDraggableTooltips={enableDraggableTooltips}
+              processedData={processedData}
+              onOpenPeriod={openTooltipForPeriod}
+              rightOffset={finalChartRightMargin}
+              activePeriods={activePeriods}
+              containerClass={cn("flex items-center gap-2", teste)}
+              containerWidth={chartInnerWidth}
+            />
           )}
 
-        <ResponsiveContainer width="100%" height={responsiveHeight}>
-          <ComposedChart
-            data={processedData}
-            margin={{
-              top: 10,
-              right: finalChartRightMargin,
-              left: finalChartLeftMargin,
-              bottom: bottomMargin,
-            }}
-            onClick={handleChartClick}
-          >
-            <defs>
-              {seriesOrder
-                .filter((s) => s.type === "area")
-                .map((s) => {
-                  const key = s.key;
-                  const color = finalColors[key];
-                  return (
-                    <linearGradient
-                      key={`gradient-${key}`}
-                      id={`gradient-${key}`}
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="0.8"
-                    >
-                      <stop offset="0%" stopColor={color} stopOpacity={0.8} />
-                      <stop offset="90%" stopColor={color} stopOpacity={0.1} />
-                    </linearGradient>
-                  );
-                })}
-            </defs>
-            {showGrid && (
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={gridColor || "hsl(var(--muted-foreground))"}
-                opacity={0.5}
-              />
-            )}
-            <XAxis
-              dataKey={xAxisConfig.dataKey}
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => {
-                if (categoryFormatter)
-                  return categoryFormatter(value as string | number);
-                if (xAxisConfig.valueFormatter)
-                  return xAxisConfig.valueFormatter(value as string | number);
-                return String(value ?? "");
-              }}
-              label={
-                xAxisLabel
-                  ? {
-                      value: xAxisLabel,
-                      position: "insideBottomRight",
-                      offset: -5,
-                      style: {
-                        fontSize: 12,
-                        fill: "hsl(var(--muted-foreground))",
-                        fontWeight: 500,
-                      },
-                    }
-                  : undefined
-              }
-            />
-            <YAxis
-              yAxisId="left"
-              width={yAxisTickWidth}
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={yTickFormatter}
-              domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
-              tickCount={6}
-              label={
-                yAxisLabel
-                  ? {
-                      value: yAxisLabel,
-                      angle: -90,
-                      position: "left",
-                      dx: leftYAxisLabelDx,
-                      style: {
-                        fontSize: 12,
-                        fill: "hsl(var(--muted-foreground))",
-                        fontWeight: 500,
-                        textAnchor: "middle",
-                      },
-                    }
-                  : undefined
-              }
-            />
-
-            {rightKeys.length > 0 &&
-              (() => {
-                const { rightAxisColor, rightTickFormatter } =
-                  fnConfigRightKeys(
-                    biaxialConfigNormalized,
-                    yTickFormatter,
-                    finalColors,
-                  );
-
-                return (
-                  <YAxis
-                    yAxisId="right"
-                    width={finalChartRightMargin}
-                    orientation="right"
-                    stroke={"hsl(var(--muted-foreground))"}
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tick={{ fill: rightAxisColor }}
-                    tickFormatter={rightTickFormatter}
-                    domain={[Math.min(minRightDataValue, 0), niceMaxRight]}
-                    tickCount={6}
-                    label={
-                      biaxialConfigNormalized?.label
-                        ? {
-                            value: biaxialConfigNormalized.label,
-                            angle: -90,
-                            position: "right",
-                            dx: rightYAxisLabelDx,
-                            style: {
-                              fontSize: 12,
-                              fill: "hsl(var(--muted-foreground))",
-                              fontWeight: 500,
-                              textAnchor: "middle",
-                            },
-                          }
-                        : undefined
-                    }
-                  />
-                );
-              })()}
-
-            {showTooltip && (
-              <Tooltip
-                content={
-                  showTooltipTotal ? (
-                    <RechartTooltipWithTotal
-                      finalColors={finalColors}
-                      valueFormatter={finalValueFormatter}
-                      categoryFormatter={categoryFormatter}
-                      periodLabel={periodLabel}
-                    />
-                  ) : (
-                    <TooltipSimple
-                      finalColors={finalColors}
-                      valueFormatter={finalValueFormatter}
-                      categoryFormatter={categoryFormatter}
-                      periodLabel={periodLabel}
-                    />
-                  )
-                }
-                cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
-              />
-            )}
-            {showLegend && (
-              <Legend
-                iconSize={12}
-                formatter={(value) => {
-                  return (
-                    <span className="tracking-[0] rounded-sm">
-                      {fnFormatterValueLegend(
-                        value,
-                        mapperConfig,
-                        labelMap,
-                        legendUppercase,
-                      )}
-                    </span>
-                  );
+          {!(allKeys.length > 0 && (enableHighlights || enableShowOnly)) &&
+            enablePeriodsDropdown &&
+            enableDraggableTooltips && (
+              <div
+                className={cn(
+                  "w-full flex justify-end mb-2",
+                  HORIZONTAL_PADDING_CLASS,
+                )}
+                style={{
+                  paddingRight: `${finalChartRightMargin}px`,
+                  maxWidth: `${chartInnerWidth}px`,
                 }}
-              />
+              >
+                <PeriodsDropdown
+                  processedData={processedData}
+                  onOpenPeriod={openTooltipForPeriod}
+                  rightOffset={finalChartRightMargin}
+                />
+              </div>
             )}
-            {seriesOrder.map((s) => {
-              if (showOnlyHighlighted && !highlightedSeries.has(s.key))
-                return null;
 
-              const { label, color, key } = fnBuildConfigData(
-                s,
-                mapperConfig,
-                labelMap,
-                finalColors,
-                rightKeys,
-                biaxialConfigNormalized,
-              );
+          <div className="flex-1 min-h-0 relative overflow-hidden">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart
+                data={processedData}
+                margin={{
+                  top: 10,
+                  right: finalChartRightMargin,
+                  left: finalChartLeftMargin,
+                  bottom: 10,
+                }}
+                onClick={handleChartClick}
+              >
+                <defs>
+                  {seriesOrder
+                    .filter((s) => s.type === "area")
+                    .map((s) => {
+                      const key = s.key;
+                      const color = finalColors[key];
+                      return (
+                        <linearGradient
+                          key={`gradient-${key}`}
+                          id={`gradient-${key}`}
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="0.8"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor={color}
+                            stopOpacity={0.8}
+                          />
+                          <stop
+                            offset="90%"
+                            stopColor={color}
+                            stopOpacity={0.1}
+                          />
+                        </linearGradient>
+                      );
+                    })}
+                </defs>
+                {showGrid && (
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={gridColor || "hsl(var(--muted-foreground))"}
+                    opacity={0.5}
+                  />
+                )}
+                <XAxis
+                  dataKey={xAxisConfig.dataKey}
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    if (categoryFormatter)
+                      return categoryFormatter(value as string | number);
+                    if (xAxisConfig.valueFormatter)
+                      return xAxisConfig.valueFormatter(
+                        value as string | number,
+                      );
+                    return String(value ?? "");
+                  }}
+                  label={
+                    xAxisLabel
+                      ? {
+                          value: xAxisLabel,
+                          position: "insideBottomRight",
+                          offset: -5,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                          },
+                        }
+                      : undefined
+                  }
+                />
+                <YAxis
+                  yAxisId="left"
+                  width={yAxisTickWidth}
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={yTickFormatter}
+                  domain={[Math.min(minLeftDataValue, 0), niceMaxLeft]}
+                  tickCount={6}
+                  label={
+                    yAxisLabel
+                      ? {
+                          value: yAxisLabel,
+                          angle: -90,
+                          position: "left",
+                          dx: leftYAxisLabelDx,
+                          style: {
+                            fontSize: 12,
+                            fill: "hsl(var(--muted-foreground))",
+                            fontWeight: 500,
+                            textAnchor: "middle",
+                          },
+                        }
+                      : undefined
+                  }
+                />
 
-              if (s.type === "bar") {
-                return (
-                  <Bar
-                    key={`bar-${key}`}
-                    dataKey={key}
-                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
-                    name={label}
-                    fill={color}
-                    radius={[4, 4, 0, 0]}
-                    onClick={handleBarClick}
-                    className="cursor-pointer"
-                    style={{ opacity: getSeriesOpacity(key) }}
-                    activeBar={
-                      <Rectangle
+                {rightKeys.length > 0 &&
+                  (() => {
+                    const { rightAxisColor, rightTickFormatter } =
+                      fnConfigRightKeys(
+                        biaxialConfigNormalized,
+                        yTickFormatter,
+                        finalColors,
+                      );
+                    return (
+                      <YAxis
+                        yAxisId="right"
+                        width={finalChartRightMargin}
+                        orientation="right"
+                        stroke={"hsl(var(--muted-foreground))"}
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fill: rightAxisColor }}
+                        tickFormatter={rightTickFormatter}
+                        domain={[Math.min(minRightDataValue, 0), niceMaxRight]}
+                        tickCount={6}
+                        label={
+                          biaxialConfigNormalized?.label
+                            ? {
+                                value: biaxialConfigNormalized.label,
+                                angle: -90,
+                                position: "right",
+                                dx: rightYAxisLabelDx,
+                                style: {
+                                  fontSize: 12,
+                                  fill: "hsl(var(--muted-foreground))",
+                                  fontWeight: 500,
+                                  textAnchor: "middle",
+                                },
+                              }
+                            : undefined
+                        }
+                      />
+                    );
+                  })()}
+
+                {showTooltip && (
+                  <Tooltip
+                    content={
+                      showTooltipTotal ? (
+                        <RechartTooltipWithTotal
+                          finalColors={finalColors}
+                          valueFormatter={finalValueFormatter}
+                          categoryFormatter={categoryFormatter}
+                          periodLabel={periodLabel}
+                        />
+                      ) : (
+                        <TooltipSimple
+                          finalColors={finalColors}
+                          valueFormatter={finalValueFormatter}
+                          categoryFormatter={categoryFormatter}
+                          periodLabel={periodLabel}
+                        />
+                      )
+                    }
+                    cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
+                  />
+                )}
+                {showLegend && (
+                  <Legend
+                    iconSize={12}
+                    formatter={(value) => (
+                      <span className="tracking-[0] rounded-sm">
+                        {fnFormatterValueLegend(
+                          value,
+                          mapperConfig,
+                          labelMap,
+                          legendUppercase,
+                        )}
+                      </span>
+                    )}
+                  />
+                )}
+                {seriesOrder.map((s) => {
+                  if (showOnlyHighlighted && !highlightedSeries.has(s.key))
+                    return null;
+
+                  const { label, color, key } = fnBuildConfigData(
+                    s,
+                    mapperConfig,
+                    labelMap,
+                    finalColors,
+                    rightKeys,
+                    biaxialConfigNormalized,
+                  );
+
+                  if (s.type === "bar") {
+                    return (
+                      <Bar
+                        key={`bar-${key}`}
+                        dataKey={key}
+                        yAxisId={rightKeys.includes(key) ? "right" : "left"}
+                        name={label}
                         fill={color}
+                        radius={[4, 4, 0, 0]}
+                        onClick={handleBarClick}
+                        className="cursor-pointer"
+                        style={{ opacity: getSeriesOpacity(key) }}
+                        activeBar={
+                          <Rectangle
+                            fill={color}
+                            stroke={color}
+                            strokeWidth={2}
+                            opacity={0.8}
+                          />
+                        }
+                      >
+                        {(showLabels &&
+                          labelsVisibility.bar !== false &&
+                          highlightedSeries.size === 0) ||
+                        highlightedSeries.has(key) ? (
+                          <LabelList
+                            dataKey={key}
+                            content={(props: PropsLabelList) => {
+                              if (!fnContentLabelList(props)) return null;
+                              const inside = renderInsideBarLabel(
+                                color,
+                                finalValueFormatter,
+                              ) as LabelListContent;
+                              return inside(props as unknown);
+                            }}
+                            offset={0}
+                          />
+                        ) : null}
+                      </Bar>
+                    );
+                  }
+                  if (s.type === "line") {
+                    return (
+                      <Line
+                        key={`line-${key}`}
+                        dataKey={key}
+                        yAxisId={rightKeys.includes(key) ? "right" : "left"}
+                        name={label}
                         stroke={color}
                         strokeWidth={2}
-                        opacity={0.8}
-                      />
-                    }
-                  >
-                    {(showLabels &&
-                      labelsVisibility.bar !== false &&
-                      highlightedSeries.size === 0) ||
-                    highlightedSeries.has(key) ? (
-                      <LabelList
+                        dot={{ r: 3 }}
+                        activeDot={{ r: 6 }}
+                        onClick={handleSeriesClick}
+                        className="cursor-pointer pointer-events-auto"
+                        style={{ opacity: getSeriesOpacity(key) }}
+                      >
+                        {(showLabels &&
+                          labelsVisibility.line !== false &&
+                          highlightedSeries.size === 0) ||
+                        highlightedSeries.has(key) ? (
+                          <LabelList
+                            dataKey={key}
+                            position="top"
+                            content={
+                              renderPillLabel(
+                                color,
+                                "filled",
+                                (props: {
+                                  value?: number | string | undefined;
+                                }) => formatLinePercentage(props.value),
+                              ) as LabelListContent
+                            }
+                            offset={14}
+                          />
+                        ) : null}
+                      </Line>
+                    );
+                  }
+                  if (s.type === "area") {
+                    return (
+                      <Area
+                        key={`area-${key}`}
+                        type="monotone"
                         dataKey={key}
-                        content={(props: PropsLabelList) => {
-                          if (!fnContentLabelList(props)) return null;
-
-                          const inside = renderInsideBarLabel(
-                            color,
-                            finalValueFormatter,
-                          ) as LabelListContent;
-
-                          return inside(props as unknown);
+                        yAxisId={rightKeys.includes(key) ? "right" : "left"}
+                        name={label}
+                        stroke={color}
+                        fill={`url(#gradient-${key})`}
+                        fillOpacity={1}
+                        strokeWidth={2}
+                        onClick={handleSeriesClick}
+                        className="cursor-pointer pointer-events-auto"
+                        style={{ opacity: getSeriesOpacity(key) }}
+                        activeDot={{
+                          r: 6,
+                          fill: color,
+                          stroke: "hsl(var(--background))",
+                          strokeWidth: 2,
                         }}
-                        offset={0}
-                      />
-                    ) : null}
-                  </Bar>
-                );
-              }
-              if (s.type === "line") {
-                return (
-                  <Line
-                    key={`line-${key}`}
-                    dataKey={key}
-                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
-                    name={label}
-                    stroke={color}
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 6 }}
-                    onClick={handleSeriesClick}
-                    className="cursor-pointer pointer-events-auto"
-                    style={{ opacity: getSeriesOpacity(key) }}
-                  >
-                    {(showLabels &&
-                      labelsVisibility.line !== false &&
-                      highlightedSeries.size === 0) ||
-                    highlightedSeries.has(key) ? (
-                      <LabelList
-                        dataKey={key}
-                        position="top"
-                        content={
-                          renderPillLabel(
-                            color,
-                            "filled",
-                            (props: { value?: number | string | undefined }) =>
-                              formatLinePercentage(props.value),
-                          ) as LabelListContent
-                        }
-                        offset={14}
-                      />
-                    ) : null}
-                  </Line>
-                );
-              }
-              if (s.type === "area") {
-                return (
-                  <Area
-                    key={`area-${key}`}
-                    type="monotone"
-                    dataKey={key}
-                    yAxisId={rightKeys.includes(key) ? "right" : "left"}
-                    name={label}
-                    stroke={color}
-                    fill={`url(#gradient-${key})`}
-                    fillOpacity={1}
-                    strokeWidth={2}
-                    onClick={handleSeriesClick}
-                    className="cursor-pointer pointer-events-auto"
-                    style={{ opacity: getSeriesOpacity(key) }}
-                    activeDot={{
-                      r: 6,
-                      fill: color,
-                      stroke: "hsl(var(--background))",
-                      strokeWidth: 2,
-                    }}
-                  >
-                    {(showLabels &&
-                      labelsVisibility.area !== false &&
-                      highlightedSeries.size === 0) ||
-                    highlightedSeries.has(key) ? (
-                      <LabelList
-                        dataKey={key}
-                        position="top"
-                        content={
-                          renderPillLabel(
-                            color,
-                            "soft",
-                            finalValueFormatter,
-                          ) as LabelListContent
-                        }
-                        offset={12}
-                      />
-                    ) : null}
-                  </Area>
-                );
-              }
-              return null;
-            })}
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
+                      >
+                        {(showLabels &&
+                          labelsVisibility.area !== false &&
+                          highlightedSeries.size === 0) ||
+                        highlightedSeries.has(key) ? (
+                          <LabelList
+                            dataKey={key}
+                            position="top"
+                            content={
+                              renderPillLabel(
+                                color,
+                                "soft",
+                                finalValueFormatter,
+                              ) as LabelListContent
+                            }
+                            offset={12}
+                          />
+                        ) : null}
+                      </Area>
+                    );
+                  }
+                  return null;
+                })}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {timeSeriesConfig && (
+            <Brush
+              legend={timeSeriesLegend}
+              data={data}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              onMouseDown={handleMouseDown}
+              brushRef={brushRef}
+              xAxisKey={xAxisConfig.dataKey}
+              seriesOrder={seriesOrder}
+              finalColors={finalColors}
+              brushHeight={timeSeriesConfig.height}
+              brushColor={timeSeriesConfig.brushColor}
+              miniChartOpacity={timeSeriesConfig.miniChartOpacity}
+              showGrid={showGrid}
+              gridColor={gridColor}
+              margin={{
+                left: finalChartLeftMargin,
+                right: finalChartRightMargin,
+              }}
+            />
+          )}
+        </div>
+      </ChartWrapper>
 
       {enableDraggableTooltips &&
         activeTooltips.map((tooltip) => (
@@ -754,30 +783,7 @@ const Chart: React.FC<ChartProps> = ({
           variant="floating"
         />
       )}
-
-      {timeSeriesConfig && (
-        <Brush
-          legend={timeSeriesLegend}
-          data={data}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          onMouseDown={handleMouseDown}
-          brushRef={brushRef}
-          xAxisKey={xAxisConfig.dataKey}
-          seriesOrder={seriesOrder}
-          finalColors={finalColors}
-          brushHeight={timeSeriesConfig.height}
-          brushColor={timeSeriesConfig.brushColor}
-          miniChartOpacity={timeSeriesConfig.miniChartOpacity}
-          showGrid={showGrid}
-          gridColor={gridColor}
-          margin={{
-            left: finalChartLeftMargin,
-            right: finalChartRightMargin,
-          }}
-        />
-      )}
-    </div>
+    </>
   );
 };
 

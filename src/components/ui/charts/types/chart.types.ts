@@ -39,8 +39,9 @@ export interface ChartProps {
     left: number;
     bottom: number;
   }>;
-  height?: number;
+
   width?: number | string;
+  height?: number;
   colors?: string[];
   gridColor?: string;
   showGrid?: boolean;
@@ -125,7 +126,6 @@ export type ValueFormatter = (value: string | number) => string | number;
 export type FinalValueFormatter = (
   value: number | string | null | undefined,
 ) => string;
-
 
 export type SeriesEntry = { type: "bar" | "line" | "area"; key: string };
 export type SeriesCounts = { bar: number; line: number; area: number };

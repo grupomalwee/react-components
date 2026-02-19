@@ -3,6 +3,8 @@ import Chart from "@/components/ui/charts/Chart";
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor } from "storybook/test";
+import { Leaderboard } from "@/components/ui/LeaderBoard";
+import { CardBase } from "@/components/ui/data/CardBase";
 
 const sampleData = [
   { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
@@ -39,7 +41,7 @@ const sampleData = [
 export default function Example() {
   return (
     <div style={{ width: 900, height: 420 }}>
-      <Chart data={sampleData} xAxis="periodo" series={{ bar: ['despesas'] }} labelMap={{ despesas: 'Despesas' }} height={360} />
+      <Chart data={sampleData} xAxis="periodo" series={{ bar: ['despesas'] }} labelMap={{ despesas: 'Despesas' }} className="h-[360px]" />
     </div>
   );
 }
@@ -66,10 +68,7 @@ export default function Example() {
       control: "object",
       description: "Margens do gráfico (top, right, bottom, left)",
     },
-    height: {
-      control: { type: "number", min: 200, max: 600, step: 50 },
-      description: "Altura do gráfico em pixels",
-    },
+
     width: {
       control: "text",
       description: "Largura do gráfico (número ou string)",
@@ -169,7 +168,7 @@ export default meta;
 type Story = StoryObj<typeof Chart>;
 
 const Template = (args: React.ComponentProps<typeof Chart>) => (
-  <div style={{ width: "900px", height: "350px" }}>
+  <div style={{ width: "900px" }}>
     <Chart {...args} />
   </div>
 );
@@ -193,7 +192,7 @@ const sampleData = [
 export default function Default() {
   return (
     <div style={{ width: 900, height: 420 }}>
-      <Chart data={sampleData} xAxis="periodo" height={360} />
+      <Chart data={sampleData} xAxis="periodo" className="h-[360px]" />
     </div>
   );
 }
@@ -209,7 +208,6 @@ export const Combined: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={350}
         series={{
           bar: ["despesas"],
           area: ["receita"],
@@ -239,12 +237,11 @@ export const Biaxial: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={360}
         xAxis="periodo"
         series={{ bar: ["receita", "despesas"], area: ["churn"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
         yAxisLabel="Valor (R$)"
-        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}      
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
       />
     </div>
   ),
@@ -265,7 +262,7 @@ export const NegativeValues: Story = {
       <Chart
         {...args}
         data={negativeData}
-        height={360}
+        className="h-[360px]"
         series={{ bar: ["despesas"], line: ["receita"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas" }}
         colors={["#06b6d4", "#ef4444"]}
@@ -287,7 +284,7 @@ export const FormatBR: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={360}
+        className="h-[360px]"
         series={{ bar: ["receita", "despesas"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas" }}
         xAxis="periodo"
@@ -320,7 +317,6 @@ export const CustomFormatterPerKey: Story = {
         <Chart
           {...args}
           data={metricsData}
-          height={350}
           series={{
             bar: ["receita", "despesas"],
             line: ["peso"],
@@ -331,7 +327,6 @@ export const CustomFormatterPerKey: Story = {
             peso: "Peso Total",
           }}
           showLabels={true}
-         
         />
       </div>
     );
@@ -352,7 +347,6 @@ export const AllBars: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={350}
         series={{
           bar: ["receita", "despesas", "churn"],
         }}
@@ -396,7 +390,6 @@ export const AllLines: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={350}
         series={{
           line: ["receita", "despesas", "churn"],
         }}
@@ -440,7 +433,6 @@ export const AllAreas: Story = {
     <div style={{ width: "900px", height: "350px" }}>
       <Chart
         {...args}
-        height={350}
         series={{
           area: ["receita", "despesas", "churn"],
         }}
@@ -514,7 +506,6 @@ export const TimeSeries: Story = {
         xAxis="periodo"
         series={{ bar: ["receita", "despesas", "lucro"] }}
         labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
-        height={350}
         timeSeries={{
           start: 0,
           end: 11,
@@ -544,7 +535,6 @@ export const Empty: Story = {
       <Chart
         {...args}
         data={[]}
-        height={350}
         series={{
           bar: ["receita"],
         }}
@@ -572,7 +562,6 @@ export const Loading: Story = {
       <Chart
         {...args}
         data={[]}
-        height={350}
         series={{
           bar: ["receita"],
         }}
@@ -671,7 +660,6 @@ export const AllThings: Story = {
         {...args}
         data={timeSeriesData}
         xAxis="periodo"
-        
         series={{
           bar: ["receita", "despesas"],
           line: ["lucro"],
@@ -681,14 +669,11 @@ export const AllThings: Story = {
           despesas: "Despesas",
           lucro: "Lucro",
         }}
-        timeSeries={{
-          start: 0,
-          end: 11,
-          height: 40,
-        }}
+        timeSeries
         timeSeriesLegend="Selecionar intervalo"
         biaxial={{ key: ["lucro"], label: "Lucro", percentage: true }}
         yAxisLabel="Lucro"
+        className="border"
       />
     </div>
   ),
@@ -812,3 +797,224 @@ export const AllThings: Story = {
 //     });
 //   },
 // };
+
+export const GridTest: Story = {
+  render: (args) => {
+    // Generate 12 items for a 3x4 grid
+    const gridItems = Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      title: `Chart ${i + 1}`,
+      // Mix of different configurations
+      isTimeSeries: i === 10 || i === 11,
+      variant: i % 3 === 0 ? "bar" : i % 3 === 1 ? "line" : "area",
+    }));
+
+    return (
+      <div className="w-[1200px] grid grid-cols-3 gap-4 p-4 bg-muted/20">
+        {gridItems.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white rounded-lg p-2 flex flex-col min-h-0 overflow-hidden shadow-sm h-[300px]"
+          >
+            <h3 className="text-sm font-semibold mb-2">{item.title}</h3>
+            <div className="flex-1 min-h-0 relative">
+              <Chart
+                {...args}
+                data={item.isTimeSeries ? timeSeriesData : args.data}
+                className="h-full"
+                title={undefined} // Hide title inside chart to save space
+                series={{
+                  [item.variant]: ["receita", "despesas"],
+                }}
+                labelMap={{ receita: "Receita", despesas: "Despesas" }}
+                timeSeries={item.isTimeSeries}
+                timeSeriesLegend="Intervalo"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Teste de grid 3x4 para verificar comportamento de altura (h-full) e responsividade em múltiplos gráficos.",
+      },
+    },
+  },
+};
+
+export const LayoutTest: Story = {
+  render: (args) => (
+    <div className="w-full bg-muted/20 p-4 gap-2 space-y-2">
+      <div className="h-12 bg-white rounded border flex items-center px-4 text-sm text-muted-foreground w-full">
+        WeeksSummaryFilters Placeholder
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+        <div className="flex flex-col h-full gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 shrink-0">
+            <CardBase className="flex flex-col w-full p-3 gap-4">
+              <div>
+                <h3 className="text-md font-bold text-center">200</h3>
+                <div className="text-lg text-center font-medium truncate">
+                  2222
+                </div>
+              </div>
+
+              <div className="flex h-full justify-between flex-col gap-4">
+                <div>
+                  <p className="text-sm">Ano Anterior</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">22222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center
+              `}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm">Planejado</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center`}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardBase>
+            <CardBase className="flex flex-col w-full p-3 gap-4">
+              <div>
+                <h3 className="text-md font-bold text-center">200</h3>
+                <div className="text-lg text-center font-medium truncate">
+                  2222
+                </div>
+              </div>
+
+              <div className="flex h-full justify-between flex-col gap-4">
+                <div>
+                  <p className="text-sm">Ano Anterior</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">22222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center
+              `}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm">Planejado</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center`}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardBase>
+            <CardBase className="flex flex-col w-full p-3 gap-4">
+              <div>
+                <h3 className="text-md font-bold text-center">200</h3>
+                <div className="text-lg text-center font-medium truncate">
+                  2222
+                </div>
+              </div>
+
+              <div className="flex h-full justify-between flex-col gap-4">
+                <div>
+                  <p className="text-sm">Ano Anterior</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">22222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center
+              `}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm">Planejado</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium">222</p>
+                    <p
+                      className={`text-xs font-semibold flex gap-1 items-center`}
+                    >
+                      222222
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardBase>
+          </div>
+            <Chart {...args} title="Regional Chart" className="border h-full" />
+        
+        </div>
+
+        <div className="grid grid-cols-1 gap-2 h-full">
+            <Leaderboard />
+            <Chart {...args} title="Total Chart" className="border" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 h-[400px]">
+          <Chart {...args} title="Brand Chart" className="h-full border" />
+          <Chart
+            {...args}
+            title="Weeks Sub Channel"
+            className="h-full border"
+          />
+          <div className="flex h-full sm:col-span-2 xl:col-span-1">
+            <Chart
+              {...args}
+              title="Leftover Chart"
+              className="h-full flex-1 border"
+            />
+          </div>
+        </div>
+
+        <Chart {...args} title="Weeks Chart" className="h-[350px] border" />
+        <Chart
+          {...args}
+          title="Weekly Revenue Summary"
+          className="h-[350px] border"
+        />
+        <Chart
+          {...args}
+          title="Active Customers Summary"
+          className="h-[350px] border"
+        />
+        <Chart
+          {...args}
+          title="New Customers Summary"
+          className="h-[350px] border"
+        />
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "Teste de layout complexo simulando uma dashboard real. Verifica se os gráficos com `h-full` se comportam corretamente dentro de flex-col e grids aninhados.",
+      },
+    },
+  },
+};

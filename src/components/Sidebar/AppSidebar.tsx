@@ -21,7 +21,7 @@ import {
   SquaresFourIcon,
   DotsThreeOutlineVerticalIcon,
   CheckSquareIcon,
-  TerminalWindowIcon,
+TerminalWindowIcon,
   MagnifyingGlassIcon,
   SidebarIcon,
   SlidersHorizontalIcon,
