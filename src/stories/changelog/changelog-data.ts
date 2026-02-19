@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.13",
+    date: "2026-02-19",
+    shortTitle: "CHart e Carousel",
+    changed: [
+      "Chart: arrumado uso de valueFormatter.",
+      "Carousel: arrumado erro de scroll lock.",
+    ],
+  },
+  {
     version: "1.9.12",
     date: "2026-02-19",
     shortTitle: "Radial Menu",
