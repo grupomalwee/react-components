@@ -97,7 +97,7 @@ const NoData: React.FC<NoDataProps> = ({
   return (
     <div
       className={cn(
-        "rounded-xl bg-card relative overflow-hidden w-full border border-border/50 shadow-sm h-full",
+        "rounded-xl bg-card relative overflow-hidden w-full shadow-sm h-full",
         className,
       )}
       style={

@@ -51,7 +51,7 @@ export interface ChartProps {
   titlePosition?: "left" | "center" | "right";
   showLabels?: boolean;
   labelMap?: Record<string, string>;
-  valueFormatter?: valueFormatter;
+  valueFormatter?: valueFormatter | Record<string, string>;
   categoryFormatter?: (value: string | number) => string;
   periodLabel?: string;
   xAxisLabel?: string;
