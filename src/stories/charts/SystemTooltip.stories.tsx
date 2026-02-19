@@ -83,6 +83,38 @@ export const Example: Story = {
         story:
           "Exemplo de uso do componente `SystemTooltip`. Use o cabeçalho para arrastar, clique nas conexões para expandir detalhes e feche com o botão X.",
       },
+      source: {
+        code: `import React, { useState } from 'react';
+import SystemTooltip from '@mlw-packages/react-components';
+
+const systemData = {
+  name: "Sistema Exemplo",
+  description: "Descrição de exemplo",
+  connections: [
+    { id: "c1", name: "Gateway", type: "entrada", integration: { Tipo: "API" } },
+    { id: "c2", name: "ERP", type: "saida", integration: { Tipo: "Banco" } },
+  ],
+};
+
+export default function Example() {
+  const [visible, setVisible] = useState(true);
+  const [pos, setPos] = useState({ top: 80, left: 80 });
+
+  if (!visible) return <button onClick={() => setVisible(true)}>Abrir</button>;
+
+  return (
+    <SystemTooltip
+      id="sys-1"
+      data={systemData}
+      position={pos}
+      title="Conexões do Sistema"
+      onClose={() => setVisible(false)}
+      onPositionChange={(_, newPos) => setPos(newPos)}
+    />
+  );
+}
+`,
+      },
     },
   },
 };

@@ -54,7 +54,7 @@ const meta: Meta<typeof CarouselBase> = {
   tags: ["autodocs"],
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     autoPlay: false,
@@ -68,10 +68,6 @@ const meta: Meta<typeof CarouselBase> = {
     width: {
       control: { type: "text" },
       description: "Largura do carousel (ex: 800px, 100%)",
-    },
-    height: {
-      control: { type: "text" },
-      description: "Altura do carousel (ex: 400px, 50vh)",
     },
     showControls: {
       control: { type: "boolean" },
@@ -138,12 +134,38 @@ export const Default: Story = {
     showControls: true,
     showIndicators: true,
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [
+  { id: 1, url: "/img1.png", title: "Item 1" },
+  { id: 2, url: "/img2.png", title: "Item 2" },
+  { id: 3, url: "/img3.png", title: "Item 3" },
+];
+
+export default function Default() {
+  return (
+    <CarouselBase
+      items={items}
+      showControls={true}
+      showIndicators={true}
+      height="400px"
+    />
+  );
+}
+`,
+      },
+    },
+  },
 };
 
 export const AutoPlay: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     autoPlay: true,
@@ -154,6 +176,24 @@ export const AutoPlay: Story = {
       description: {
         story: "Carousel com reprodução automática a cada 3 segundos.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function AutoPlay() {
+  return (
+    <CarouselBase
+      items={items}
+      autoPlay={true}
+      autoPlayInterval={3000}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -161,7 +201,7 @@ export const AutoPlay: Story = {
 export const NoControls: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: false,
     showIndicators: true,
   },
@@ -170,6 +210,24 @@ export const NoControls: Story = {
       description: {
         story: "Carousel sem botões de navegação, apenas indicadores.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function NoControls() {
+  return (
+    <CarouselBase
+      items={items}
+      showControls={false}
+      showIndicators={true}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -177,7 +235,7 @@ export const NoControls: Story = {
 export const NoIndicators: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: false,
   },
@@ -185,6 +243,24 @@ export const NoIndicators: Story = {
     docs: {
       description: {
         story: "Carousel sem indicadores de progresso, apenas controles.",
+      },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function NoIndicators() {
+  return (
+    <CarouselBase
+      items={items}
+      showControls={true}
+      showIndicators={false}
+      height="400px"
+    />
+  );
+}
+`,
       },
     },
   },
@@ -201,6 +277,24 @@ export const Minimal: Story = {
       description: {
         story: "Carousel minimalista sem controles ou indicadores.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function Minimal() {
+  return (
+    <CarouselBase
+      items={items}
+      showControls={false}
+      showIndicators={false}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -208,7 +302,6 @@ export const Minimal: Story = {
 export const CustomHeight: Story = {
   args: {
     items: sampleItems,
-    height: "500px",
     width: "50%",
     showControls: true,
     showIndicators: true,
@@ -218,6 +311,23 @@ export const CustomHeight: Story = {
       description: {
         story: "Carousel com altura customizada de 300px.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function CustomHeight() {
+  return (
+    <CarouselBase
+      items={items}
+      height="500px"
+      width="50%"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -225,7 +335,7 @@ export const CustomHeight: Story = {
 export const FastAnimation: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     springConfig: {
@@ -238,6 +348,23 @@ export const FastAnimation: Story = {
       description: {
         story: "Carousel com animação mais rápida e responsiva.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function FastAnimation() {
+  return (
+    <CarouselBase
+      items={items}
+      springConfig={{ stiffness: 600, damping: 40 }}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -245,7 +372,7 @@ export const FastAnimation: Story = {
 export const SlowAnimation: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     springConfig: {
@@ -258,13 +385,30 @@ export const SlowAnimation: Story = {
       description: {
         story: "Carousel com animação mais suave e lenta.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function SlowAnimation() {
+  return (
+    <CarouselBase
+      items={items}
+      springConfig={{ stiffness: 100, damping: 20 }}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
 export const LensEffect: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     zoomEffect: "lens",
@@ -275,6 +419,23 @@ export const LensEffect: Story = {
         story:
           "Carousel com efeito de lupa (lens). Use o scroll do mouse para controlar o nível de zoom.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function LensEffect() {
+  return (
+    <CarouselBase
+      items={items}
+      zoomEffect="lens"
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -282,7 +443,7 @@ export const LensEffect: Story = {
 export const ScaleEffect: Story = {
   args: {
     items: sampleItems,
-    height: "400px",
+
     showControls: true,
     showIndicators: true,
     zoomEffect: "scale",
@@ -294,6 +455,24 @@ export const ScaleEffect: Story = {
         story:
           "Carousel com efeito de zoom (scale). Use o scroll do mouse para controlar o zoom.",
       },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function ScaleEffect() {
+  return (
+    <CarouselBase
+      items={items}
+      zoomEffect="scale"
+      download={true}
+      height="400px"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -301,13 +480,28 @@ export const ScaleEffect: Story = {
 export const Loading: Story = {
   args: {
     items: [],
-    height: "400px",
+
     isLoading: true,
   },
   parameters: {
     docs: {
       description: {
         story: "Estado de carregamento com skeleton animation.",
+      },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+export default function Loading() {
+  return (
+    <CarouselBase
+      items={[]}
+      isLoading={true}
+      height="400px"
+    />
+  );
+}
+`,
       },
     },
   },

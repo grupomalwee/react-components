@@ -18,7 +18,6 @@ export interface CarouselBaseProps {
   containerClassName?: string;
   imageClassName?: string;
   width?: string;
-  height?: string;
   showControls?: boolean;
   showIndicators?: boolean;
   autoPlay?: boolean;
@@ -37,7 +36,7 @@ function CarouselSkeleton({ className }: { className?: string }) {
     <div className={cn("w-full h-full lg:p-10 sm:p-4 p-2", className)}>
       <div className="flex flex-col gap-3 h-full">
         <div className="relative overflow-hidden rounded-lg h-full">
-          <div className="w-full h-full bg-muted rounded-lg overflow-hidden relative">
+          <div className="w-full h-full min-h-[300px] bg-muted rounded-lg overflow-hidden relative">
             <motion.div
               className="absolute inset-0"
               style={{
@@ -112,7 +111,6 @@ export function CarouselBase({
   containerClassName,
   imageClassName,
   width,
-  height,
   showControls = true,
   showIndicators = true,
   autoPlay = false,
@@ -190,7 +188,7 @@ export function CarouselBase({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          style={{ width, height }}
+          style={{ width }}
           className="h-full"
         >
           <CarouselSkeleton className={className} />
@@ -207,7 +205,7 @@ export function CarouselBase({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
         className={cn("w-full lg:p-10 sm:p-4 p-2", className)}
-        style={{ width, height }}
+        style={{ width }}
       >
         <div className="flex flex-col gap-3 h-full">
           <div className={cn("relative h-full", containerClassName)}>

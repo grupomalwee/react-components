@@ -73,6 +73,43 @@ export const Default: Story = {
       </RadialMenu>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { RadialMenu } from '@mlw-packages/react-components';
+import { PencilIcon, CopyIcon, DownloadIcon, TrashIcon } from '@phosphor-icons/react';
+
+export default function Example() {
+  const items = [
+    { id: 1, label: 'Edit', icon: PencilIcon },
+    { id: 2, label: 'Copy', icon: CopyIcon },
+    { id: 3, label: 'Download', icon: DownloadIcon },
+    { id: 4, label: 'Delete', icon: TrashIcon },
+  ];
+
+  return (
+    <div className="flex items-center justify-center w-[600px] h-[400px] bg-muted/20 rounded-xl border border-dashed border-border">
+      <RadialMenu
+        menuItems={items}
+        size={260}
+        iconSize={24}
+        bandWidth={60}
+        innerGap={16}
+        outerGap={12}
+        outerRingWidth={8}
+        onSelect={(item) => alert('Selected: ' + item.label)}
+      >
+        <div className="flex items-center justify-center size-64 bg-background border rounded-2xl shadow-sm text-muted-foreground font-medium select-none cursor-pointer hover:shadow-md transition-all">
+          Right-click or Long-press me (1s)
+        </div>
+      </RadialMenu>
+    </div>
+  );
+}`,
+      },
+    },
+  },
 };
 
 export const MobileSimulation: Story = {
@@ -89,28 +126,40 @@ export const MobileSimulation: Story = {
     viewport: {
       defaultViewport: "mobile1",
     },
-  },
-  render: (args) => (
-    <div className="flex flex-col items-center justify-center w-[375px] h-[667px] bg-background border rounded-[40px] overflow-hidden shadow-2xl relative">
-      {/* Fake Mobile UI */}
-      <div className="absolute top-0 w-full h-8 bg-black/5 flex justify-between px-6 items-center text-[10px] font-bold text-black/40">
-        <span>9:41</span>
-        <div className="flex gap-1">
-          <div className="size-2.5 bg-black/40 rounded-full" />
-          <div className="size-2.5 bg-black/40 rounded-full" />
-          <div className="w-4 h-2.5 bg-black/40 rounded-[2px]" />
-        </div>
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { RadialMenu } from '@mlw-packages/react-components';
+import { HouseIcon, UserIcon, GearIcon, BellIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
+
+export default function MobileExample() {
+  const navItems = [
+    { id: 1, label: "Home", icon: HouseIcon },
+    { id: 2, label: "Profile", icon: UserIcon },
+    { id: 3, label: "Settings", icon: GearIcon },
+    { id: 4, label: "Notifications", icon: BellIcon },
+    { id: 5, label: "Search", icon: MagnifyingGlassIcon },
+  ];
+
+  return (
+    <RadialMenu
+      menuItems={navItems}
+      size={220}
+      iconSize={20}
+      bandWidth={50}
+      innerGap={10}
+      outerGap={10}
+      onSelect={(item) => console.log('Navigating to: ' + item.label)}
+    >
+      <div className="w-64 h-32 bg-primary/10 rounded-2xl flex items-center justify-center text-primary font-semibold">
+        Long Press Here
       </div>
-
-      <RadialMenu {...args}>
-        <div className="w-64 h-32 bg-primary/10 rounded-2xl flex items-center justify-center text-primary font-semibold">
-          Long Press Here
-        </div>
-      </RadialMenu>
-
-      <div className="absolute bottom-2 w-32 h-1 bg-black/20 rounded-full" />
-    </div>
-  ),
+    </RadialMenu>
+  );
+}`,
+      },
+    },
+  },
 };
 
 export const Playground: Story = {

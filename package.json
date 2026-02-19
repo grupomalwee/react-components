@@ -15,7 +15,7 @@
   "types": "dist/index.d.ts",
   "style": "dist/global.css",
   "files": [
-    "dist"  
+    "dist"
   ],
   "scripts": {
     "dev": "vite",
@@ -83,9 +83,13 @@
     "@eslint/js": "^9.19.0",
     "@phosphor-icons/react": "^2.1.10",
     "@playwright/test": "^1.53.1",
+    "@storybook/addon-designs": "^11.1.2",
     "@storybook/addon-docs": "^9.1.2",
+    "@storybook/addon-highlight": "^8.6.14",
+    "@storybook/addon-links": "^10.2.10",
     "@storybook/addon-onboarding": "^9.1.2",
-    "@storybook/react-vite": "^9.1.2",
+    "@storybook/addon-storysource": "^8.6.14",
+    "@storybook/react-vite": "^9.1.19",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
@@ -104,7 +108,8 @@
     "postcss": "^8.5.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "storybook": "^9.1.2",
+    "storybook": "^9.1.19",
+    "storybook-addon-performance": "^0.17.3",
     "tailwindcss": "^3.4.17",
     "tsup": "^8.4.0",
     "typescript": "~5.7.2",

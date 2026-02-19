@@ -143,7 +143,7 @@ export const Default: Story = {
       { value: "Item C", label: "Item C" },
     ];
     const [selected, setSelected] = React.useState<string | null>(
-      (args.selected as string) || items[0].value
+      (args.selected as string) || items[0].value,
     );
 
     return (
@@ -264,7 +264,7 @@ export const WithError: Story = {
       { value: "Item C", label: "Item C" },
     ];
     const [selected, setSelected] = React.useState<string | null>(
-      (args.selected as string) || items[0].value
+      (args.selected as string) || items[0].value,
     );
 
     return (
@@ -303,10 +303,10 @@ export const FixedMiddleMouseScroll: Story = {
     });
 
     const [selected, setSelected] = React.useState<string | null>(
-      items[0].value
+      items[0].value,
     );
     const [multiSelected, setMultiSelected] = React.useState<string[]>(
-      selected ? [selected] : []
+      selected ? [selected] : [],
     );
 
     return (
@@ -354,5 +354,32 @@ export const FixedMiddleMouseScroll: Story = {
         </DialogBase>
       </div>
     );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { ComboboxBase, DialogBase, DialogTriggerBase, DialogContentBase, ButtonBase } from '@mlw-packages/react-components';
+
+export default function DialogExample() {
+  const items = Array.from({ length: 80 }, (_, i) => ({ value: 'item-' + (i + 1), label: 'Item ' + (i + 1) }));
+  const [selected, setSelected] = useState(items[0].value);
+
+  return (
+    <DialogBase>
+      <DialogTriggerBase asChild><ButtonBase>Abrir dialog</ButtonBase></DialogTriggerBase>
+      <DialogContentBase>
+        <ComboboxBase
+          items={items}
+          renderSelected={<span>{items.find(i => i.value === selected)?.label}</span>}
+          handleSelection={setSelected}
+          checkIsSelected={v => selected === v}
+        />
+      </DialogContentBase>
+    </DialogBase>
+  );
+}`,
+      },
+    },
   },
 };

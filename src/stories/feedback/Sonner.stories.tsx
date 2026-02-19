@@ -13,6 +13,22 @@ const meta: Meta<typeof Toaster> = {
         component:
           'Sonner para notificações, feedback de sucesso, erro, aviso, info e loading. Para o uso, importe o  "Toaster" no App.tsx/jsx.',
       },
+      source: {
+        code: `import { Toaster, toast } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+// Configure <Toaster /> at the root of your app
+export default function Example() {
+  return (
+    <>
+      <ButtonBase onClick={() => toast.success("Operação concluída!")}>
+        Disparar Toast
+      </ButtonBase>
+      <Toaster />
+    </>
+  );
+}`,
+      },
     },
     backgrounds: {
       default: "light",
@@ -21,7 +37,10 @@ const meta: Meta<typeof Toaster> = {
         { name: "dark", value: "#222" },
       ],
     },
-    layout: "centered",
+  },
+  args: {
+    expand: false,
+    position: "bottom-right",
   },
 };
 
@@ -49,6 +68,15 @@ export const Sucesso: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.success("Operação concluída com sucesso!")`,
+      },
+    },
+  },
 };
 
 export const Erro: Story = {
@@ -70,6 +98,15 @@ export const Erro: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.error("Opa! Algo deu errado.")`,
+      },
+    },
+  },
 };
 
 export const Aviso: Story = {
@@ -91,6 +128,15 @@ export const Aviso: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.warning("Atenção! Confira os dados.")`,
+      },
+    },
+  },
 };
 
 export const Info: Story = {
@@ -114,6 +160,15 @@ export const Info: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.info("Informação: nada demais, só avisando.")`,
+      },
+    },
+  },
 };
 
 export const Loading: Story = {
@@ -139,6 +194,15 @@ export const Loading: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.loading("Loading: baixando...")`,
+      },
+    },
+  },
 };
 export const ComDescricao: Story = {
   name: "Notificação com Descrição",
@@ -166,6 +230,15 @@ export const ComDescricao: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { toast } from '@mlw-packages/react-components';
+        
+// toast.success("Arquivos enviados", { description: "Todos os 12 arquivos foram processados." })`,
+      },
+    },
+  },
 };
 export const All: Story = {
   name: "Todos os tipos",
@@ -215,4 +288,15 @@ export const All: Story = {
       </div>
     </div>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { Toaster, toast } from '@mlw-packages/react-components';
+
+export default function App() {
+  return <Toaster />;
+}`,
+      },
+    },
+  },
 };

@@ -70,6 +70,49 @@ type Story = StoryObj<typeof SheetBase>;
 
 export const Basico: Story = {
   name: "Sheet Básico",
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { SheetBase, SheetTriggerBase, SheetContentBase, SheetHeaderBase, SheetFooterBase, SheetTitleBase, SheetDescriptionBase, SheetCloseBase } from '@mlw-packages/react-components';
+import { ButtonBase, InputBase, LabelBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+      <SheetBase>
+        <SheetTriggerBase asChild>
+          <ButtonBase variant="outline">Abrir Sheet Básico</ButtonBase>
+        </SheetTriggerBase>
+        <SheetContentBase side="right">
+          <SheetHeaderBase>
+            <SheetTitleBase>Editar Perfil</SheetTitleBase>
+            <SheetDescriptionBase>
+              Altere as informações do seu perfil aqui. Clique em salvar quando terminar.
+            </SheetDescriptionBase>
+          </SheetHeaderBase>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <LabelBase htmlFor="nome" className="text-right">
+                Nome
+              </LabelBase>
+              <InputBase id="nome" defaultValue="João da Silva" className="col-span-3" />
+            </div>
+            {/* ... other fields ... */}
+          </div>
+          <SheetFooterBase>
+            <SheetCloseBase asChild>
+              <ButtonBase type="submit">Salvar alterações</ButtonBase>
+            </SheetCloseBase>
+          </SheetFooterBase>
+        </SheetContentBase>
+      </SheetBase>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{
@@ -136,6 +179,47 @@ export const Basico: Story = {
 
 export const Detalhado: Story = {
   name: "Sheet Detalhado",
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { SheetBase, SheetTriggerBase, SheetContentBase, SheetHeaderBase, SheetFooterBase, SheetTitleBase, SheetDescriptionBase, SheetCloseBase } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+      <SheetBase>
+        <SheetTriggerBase asChild>
+          <ButtonBase variant="outline">Abrir Detalhes</ButtonBase>
+        </SheetTriggerBase>
+        <SheetContentBase side="left">
+          <SheetHeaderBase>
+            <SheetTitleBase>Resumo da Conta</SheetTitleBase>
+            <SheetDescriptionBase>
+              Informações rápidas sobre sua conta.
+            </SheetDescriptionBase>
+          </SheetHeaderBase>
+          <div className="flex flex-col gap-3 py-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Email:</p>
+              <p className="font-medium">peduarte@email.com</p>
+            </div>
+            {/* ... other fields ... */}
+          </div>
+          <SheetFooterBase>
+            <SheetCloseBase asChild>
+              <ButtonBase variant="destructive">Encerrar Sessão</ButtonBase>
+            </SheetCloseBase>
+          </SheetFooterBase>
+        </SheetContentBase>
+      </SheetBase>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{

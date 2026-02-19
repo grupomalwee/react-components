@@ -51,6 +51,31 @@ export default meta;
 type Story = StoryObj<typeof TooltipBase>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { TooltipProviderBase, TooltipBase, TooltipTriggerBase, TooltipContentBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild>
+            <button className="px-4 py-2 bg-primary text-white rounded">
+              Passe o mouse
+            </button>
+          </TooltipTriggerBase>
+          <TooltipContentBase sideOffset={8}>Dica!</TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{
@@ -74,6 +99,30 @@ export const Default: Story = {
   ),
 };
 export const Click: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { TooltipProviderBase, TooltipBase, TooltipTriggerBase, TooltipContentBase } from '@mlw-packages/react-components';
+import { ButtonBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild button>
+            <ButtonBase>oioioi</ButtonBase>
+          </TooltipTriggerBase>
+          <TooltipContentBase sideOffset={8}>Dica!</TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{

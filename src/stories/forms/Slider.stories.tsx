@@ -88,7 +88,25 @@ export const SliderHorizontal: Story = {
 SliderHorizontal.parameters = {
   docs: {
     source: {
-      code: `// controlled horizontal slider\nimport { SlideBase } from '@mlw-packages/react-components';`,
+      code: `import React, { useState } from 'react';
+import { SlideBase } from '@mlw-packages/react-components';
+
+export default function SliderHorizontal() {
+  const [value, setValue] = useState([20]);
+  return (
+    <div className='flex flex-col gap-2 w-64'>
+      <SlideBase
+        label='Volume'
+        value={value}
+        onValueChange={setValue}
+        max={100}
+        min={0}
+        step={1}
+      />
+      <span>Value: {value[0]}</span>
+    </div>
+  );
+}`,
     },
   },
 };
@@ -125,7 +143,27 @@ export const SliderHorizontalIcon: Story = {
 SliderHorizontalIcon.parameters = {
   docs: {
     source: {
-      code: `// horizontal slider with leading icon\nimport { SlideBase } from '@mlw-packages/react-components';`,
+      code: `import React, { useState } from 'react';
+import { SlideBase } from '@mlw-packages/react-components';
+import { SunIcon } from '@phosphor-icons/react';
+
+export default function SliderHorizontalIcon() {
+  const [value, setValue] = useState([50]);
+  return (
+    <div className='flex items-center gap-3 w-64'>
+      <SunIcon size={24} />
+      <SlideBase
+        className='flex-1 h-6 rounded-ful'
+        value={value}
+        onValueChange={setValue}
+        max={100}
+        min={0}
+        step={1}
+      />
+      <span>{value[0]}%</span>
+    </div>
+  );
+}`,
     },
   },
 };
@@ -163,7 +201,27 @@ export const SliderVertical: Story = {
 SliderVertical.parameters = {
   docs: {
     source: {
-      code: `// vertical slider\nimport { SlideBase } from '@mlw-packages/react-components';`,
+      code: `import React, { useState } from 'react';
+import { SlideBase } from '@mlw-packages/react-components';
+
+export default function SliderVertical() {
+  const [value, setValue] = useState([75]);
+  return (
+    <div className='flex flex-col gap-2 h-40'>
+      <SlideBase
+        label='Vertical Slider'
+        orientation='vertical'
+        className='h-32 w-6 rounded-md'
+        value={value}
+        onValueChange={setValue}
+        max={100}
+        min={0}
+        step={1}
+      />
+      <span>{value[0]}</span>
+    </div>
+  );
+}`,
     },
   },
 };
@@ -200,7 +258,27 @@ export const SliderSteps: Story = {
 SliderSteps.parameters = {
   docs: {
     source: {
-      code: `// slider with step marks\nimport { SlideBase } from '@mlw-packages/react-components';`,
+      code: `import React, { useState } from 'react';
+import { SlideBase } from '@mlw-packages/react-components';
+import { LadderIcon } from '@phosphor-icons/react';
+
+export default function SliderSteps() {
+  const [value, setValue] = useState([20]);
+  return (
+    <div className='flex flex-col gap-2 w-64'>
+      <SlideBase
+        label='Slider com Steps'
+        className='w-full h-4 rounded-md'
+        value={value}
+        onValueChange={setValue}
+        max={100}
+        min={0}
+        step={25}
+        rightIcon={<LadderIcon />}
+      />
+    </div>
+  );
+}`,
     },
   },
 };

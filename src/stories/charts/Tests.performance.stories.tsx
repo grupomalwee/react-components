@@ -97,6 +97,30 @@ export const Load100Points: Story = {
         story:
           "Teste com 100 pontos de dados. Performance esperada: Excelente.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+// Mock function to generate data
+const generateData = (count) => Array.from({ length: count }, (_, i) => ({
+  periodo: \`2024-01-\${i + 1}\`,
+  vendas: Math.random() * 1000,
+  custos: Math.random() * 800,
+  lucro: Math.random() * 200,
+}));
+
+export default function Load100Points() {
+  const data = generateData(100);
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas", "custos"], line: ["lucro"] }}
+      xAxis="periodo"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -128,6 +152,28 @@ export const Load500Points: Story = {
       description: {
         story: "Teste com 500 pontos de dados. Performance esperada: Boa.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+// Mock function
+const generateData = (count) => Array.from({ length: count }, (_, i) => ({
+  periodo: \`P\${i}\`,
+  vendas: Math.random() * 1000,
+}));
+
+export default function Load500Points() {
+  const data = generateData(500);
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -157,6 +203,22 @@ export const Load1000Points: Story = {
         story:
           "Teste com 1000 pontos de dados. Performance esperada: Moderada. Pode haver lentidão na renderização.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function Load1000Points() {
+  // ... generating 1000 points
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -181,6 +243,27 @@ export const StressMultipleSeries: Story = {
       description: {
         story:
           "Teste de estresse com 20 séries diferentes. Avalia a capacidade de renderizar múltiplas séries simultaneamente.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressMultipleSeries() {
+  // ... generating data with 20 series
+  const series = {
+    bar: Array.from({ length: 10 }, (_, i) => \`serie\${i + 1}\`),
+    line: Array.from({ length: 10 }, (_, i) => \`serie\${i + 11}\`),
+  };
+  
+  return (
+    <Chart
+      data={data}
+      series={series}
+      xAxis="periodo"
+    />
+  );
+}
+`,
       },
     },
   },
@@ -211,6 +294,22 @@ export const StressWithAllLabels: Story = {
         story:
           "Teste de estresse com labels visíveis em todos os 200 pontos. Avalia a performance de renderização de texto.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressWithAllLabels() {
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+      showLabels={true}
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -236,6 +335,22 @@ export const StressExtreme: Story = {
       description: {
         story:
           "500 pontos de dados com 15 séries (7500 pontos renderizados). Pode causar lentidão significativa.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressExtreme() {
+  // ... 500 points x 15 series
+  return (
+    <Chart
+      data={data}
+      series={series}
+      xAxis="periodo"
+    />
+  );
+}
+`,
       },
     },
   },
@@ -304,6 +419,30 @@ export const StressRealTimeUpdates: Story = {
         story:
           "Teste de estresse com atualizações em tempo real. Avalia a performance de re-renderização do componente.",
       },
+      source: {
+        code: `import React, { useState, useEffect } from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressRealTimeUpdates() {
+  const [data, setData] = useState(initialData);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        // update data ...
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -338,6 +477,22 @@ export const StressTimeSeriesWithBrush: Story = {
         story:
           "Teste com 1000 pontos usando TimeSeries e Brush para navegação. Avalia performance da navegação temporal.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressTimeSeriesWithBrush() {
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+      timeSeries={{ start: 0, end: 100, height: 60 }}
+    />
+  );
+}
+`,
+      },
     },
   },
 };
@@ -370,6 +525,22 @@ export const StressDraggableTooltips: Story = {
       description: {
         story:
           "Teste com tooltips arrastáveis em dataset com 300 pontos. Avalia performance de interação.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function StressDraggableTooltips() {
+  return (
+    <Chart
+      data={data}
+      series={{ bar: ["vendas"] }}
+      xAxis="periodo"
+      enableDraggableTooltips={true}
+    />
+  );
+}
+`,
       },
     },
   },

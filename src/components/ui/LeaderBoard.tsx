@@ -79,7 +79,7 @@ export function Leaderboard<T extends string>({
 
   return (
     <div
-      className={`border rounded-xl flex flex-col max-h-80 w-[52rem]  ${className}`}
+      className={`border rounded-xl flex flex-col max-h-80 ${className}`}
     >
       <div className="flex items-center justify-between py-2 px-4 border-b flex-shrink-0 gap-3 ">
         <h2 className="text-lg font-semibold px-1 whitespace-nowrap">
@@ -96,7 +96,7 @@ export function Leaderboard<T extends string>({
             }}
             placeholder="Pesquisar..."
             leftIcon={<MagnifyingGlassIcon size={16} />}
-            className="h-8 py-1 w-24"
+            className="h-8 py-1"
           />
 
           <ButtonBase

@@ -138,20 +138,36 @@ export const ManyItems: Story = {
       </CommandBase>
     </div>
   ),
-}; 
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';\nimport { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandSeparator } from '@mlw-packages/react-components';\n\nexport default function Example() {\n  return (\n    <Command>\n      <CommandInput placeholder="Type a command or search..." />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading="Sugestões">\n          <CommandItem>Calendar</CommandItem>\n          <CommandItem>Search Emoji</CommandItem>\n          <CommandItem>Calculator</CommandItem>\n          {/* ... many items ... */}\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading="Configurações">\n          <CommandItem>Profile</CommandItem>\n          <CommandItem>Billing</CommandItem>\n          <CommandItem>Settings</CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </Command>\n  );\n}`,
+      },
+    },
+  },
+};
 
 export const NotFound: Story = {
   render: () => (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "32px 0" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
       <CommandBase>
-        <CommandInputBase 
-          placeholder="Type a command or search..." 
-          value="xyz123" 
-          readOnly 
+        <CommandInputBase
+          placeholder="Type a command or search..."
+          value="xyz123"
+          readOnly
         />
         <CommandListBase>
           <CommandEmptyBase>
-            <div style={{ padding: "32px", textAlign: "center", color: "#64748b" }}>
+            <div
+              style={{ padding: "32px", textAlign: "center", color: "#64748b" }}
+            >
               <p>Nenhum resultado encontrado para "xyz123".</p>
             </div>
           </CommandEmptyBase>

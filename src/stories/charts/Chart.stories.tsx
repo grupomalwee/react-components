@@ -227,6 +227,40 @@ export const Combined: Story = {
       description: {
         story: "Combina barras, áreas e linhas em um único gráfico.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [
+  { periodo: 'Jan/24', receita: 4200, despesas: 2800, churn: 180 },
+  { periodo: 'Fev/24', receita: 5100, despesas: 3200, churn: 165 },
+  { periodo: 'Mar/24', receita: 6800, despesas: 3900, churn: 142 },
+  { periodo: 'Abr/24', receita: 7500, despesas: 4300, churn: 128 },
+];
+
+export default function Combined() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        xAxis="periodo"
+        series={{
+          bar: ["despesas"],
+          area: ["receita"],
+          line: ["churn"],
+        }}
+        labelMap={{
+          despesas: "Despesas",
+          receita: "Receita",
+          churn: "Churn",
+        }}
+        colors={["#ef4444", "#22c55e", "#6366f1"]}
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
@@ -251,6 +285,32 @@ export const Biaxial: Story = {
         story:
           "Exemplo demonstrando o uso de `biaxial` para mapear `churn` ao eixo direito (com sufixo `%`).",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [
+  { periodo: 'Jan/24', receita: 4200, despesas: 2800, churn: 180 },
+  { periodo: 'Fev/24', receita: 5100, despesas: 3200, churn: 165 },
+  // ...
+];
+
+export default function Biaxial() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        xAxis="periodo"
+        series={{ bar: ["receita", "despesas"], area: ["churn"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", churn: "Churn" }}
+        yAxisLabel="Valor (R$)"
+        biaxial={{ key: ["churn"], label: "Churn (%)", percentage: true }}
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
@@ -273,6 +333,32 @@ export const NegativeValues: Story = {
     docs: {
       description: {
         story: "Exemplo com valores negativos para mostrar perdas e ajustes.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const negativeData = [
+  { periodo: "Q1/24", receita: -2000, despesas: 1800, churn: 200 },
+  { periodo: "Q2/24", receita: 3500, despesas: -1200, churn: 170 },
+  { periodo: "Q3/24", receita: 5800, despesas: 3400, churn: 140 },
+];
+
+export default function NegativeValues() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={negativeData}
+        xAxis="periodo"
+        className="h-[360px]"
+        series={{ bar: ["despesas"], line: ["receita"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        colors={["#06b6d4", "#ef4444"]}
+      />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -297,6 +383,28 @@ export const FormatBR: Story = {
       description: {
         story:
           "Exemplo que ativa a prop `formatBR` para formatar valores no padrão pt-BR (ex.: 12.345,67)",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [ ... ];
+
+export default function FormatBR() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        className="h-[360px]"
+        series={{ bar: ["receita", "despesas"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas" }}
+        xAxis="periodo"
+        formatBR
+      />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -337,6 +445,38 @@ export const CustomFormatterPerKey: Story = {
         story:
           "Exemplo com IntelliSense aprimorado! Ao editar valueFormatter, pressione Ctrl+Espaço para ver as chaves dos dados e os formatos predefinidos (R$, %, kg, etc). Os formatos são aplicados automaticamente: moedas antes (R$ 1.234) e medidas depois (10kg).",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const metricsData = [
+  { mes: "Jan", receita: 15000, despesas: 8900, taxa: 85, peso: 1200 },
+  { mes: "Fev", receita: 22000, despesas: 12000, taxa: 92, peso: 1800 },
+  { mes: "Mar", receita: 18000, despesas: 9500, taxa: 88, peso: 1500 },
+  { mes: "Abr", receita: 28000, despesas: 15000, taxa: 95, peso: 2100 },
+];
+
+export default function CustomFormatterPerKey() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={metricsData}
+        series={{
+          bar: ["receita", "despesas"],
+          line: ["peso"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          peso: "Peso Total",
+        }}
+        showLabels={true}
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
@@ -363,6 +503,32 @@ export const AllBars: Story = {
     docs: {
       description: {
         story: "Todas as séries renderizadas como barras agrupadas.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [ ... ];
+
+export default function AllBars() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        series={{
+          bar: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita Total",
+          despesas: "Despesas Totais",
+          churn: "Churn Total",
+        }}
+        colors={["#0ea5e9", "#f43f5e", "#a855f7"]}
+      />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -407,6 +573,32 @@ export const AllLines: Story = {
       description: {
         story: "Todas as séries renderizadas como linhas.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [ ... ];
+
+export default function AllLines() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        series={{
+          line: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#14b8a6", "#f97316", "#8b5cf6"]}
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -449,6 +641,32 @@ export const AllAreas: Story = {
     docs: {
       description: {
         story: "Todas as séries renderizadas como áreas empilhadas.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+const data = [ ... ];
+
+export default function AllAreas() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={data}
+        series={{
+          area: ["receita", "despesas", "churn"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          churn: "Churn",
+        }}
+        colors={["#06b6d4", "#f59e0b", "#ec4899"]}
+      />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -521,6 +739,37 @@ export const TimeSeries: Story = {
         story:
           "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+// Dados de série temporal
+const timeSeriesData = [
+  { periodo: "Jan/23", receita: 5200, despesas: 3100, lucro: 2100 },
+  { periodo: "Fev/23", receita: 5400, despesas: 3200, lucro: 2200 },
+  // ... mais dados
+];
+
+export default function TimeSeries() {
+  return (
+    <div style={{ width: 900 }}>
+      <Chart
+        data={timeSeriesData}
+        xAxis="periodo"
+        series={{ bar: ["receita", "despesas", "lucro"] }}
+        labelMap={{ receita: "Receita", despesas: "Despesas", lucro: "Lucro" }}
+        timeSeries={{
+          start: 0,
+          end: 11,
+          height: 40,
+        }}
+        timeSeriesLegend="Selecionar intervalo"
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
@@ -548,6 +797,27 @@ export const Empty: Story = {
     docs: {
       description: {
         story: "Gráfico sem dados para testar estado vazio.",
+      },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function Empty() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={[]}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+      />
+    </div>
+  );
+}
+`,
       },
     },
   },
@@ -577,40 +847,31 @@ export const Loading: Story = {
       description: {
         story: "Gráfico em estado de carregamento.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+export default function Loading() {
+  return (
+    <div style={{ width: 900, height: 350 }}>
+      <Chart
+        data={[]}
+        series={{
+          bar: ["receita"],
+        }}
+        labelMap={{
+          receita: "Receita",
+        }}
+        isLoading={true}
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
-// export const lBarChart: Story = {
-//   name: "Gráfico de Barras Horizontal",
-//   render: (args) => (
-//     <div
-//       style={{ width: "900px" }}
-//       data-testid="horizontal-bar-chart-wrapper"
-//     >
-//       <Chart
-//         {...args}
-//         data={sampleData}
-//         series={{
-//           bar: ["receita", "despesas", "lucro"],
-//         }}
-//         labelMap={{
-//           receita: "Receita",
-//           despesas: "Despesas",
-//           lucro: "Lucro",
-//         }}
-//         vertical={true}
-//       />
-//     </div>
-//   ),
-//   parameters: {
-//     docs: {
-//       description: {
-//         story:
-//           "Gráfico de barras horizontal. Ideal para evitar sobrecarga de labels no eixo X quando há muitas categorias. Os eixos são invertidos: categorias ficam no eixo Y e valores no eixo X.",
-//       },
-//     },
-//   },
-// };
 
 export const AllThings: Story = {
   args: {
@@ -684,119 +945,42 @@ export const AllThings: Story = {
         story:
           "Chart com timeSeries habilitado. Use o brush para selecionar o intervalo de dados a ser exibido.",
       },
+      source: {
+        code: `import React from 'react';
+import Chart from '@mlw-packages/react-components';
+
+// Dados de série temporal
+const timeSeriesData = [ ... ];
+
+export default function AllThings() {
+  return (
+    <div style={{ width: 900 }}>
+      <Chart
+        data={timeSeriesData}
+        xAxis="periodo"
+        series={{
+          bar: ["receita", "despesas"],
+          line: ["lucro"],
+        }}
+        labelMap={{
+          receita: "Receita",
+          despesas: "Despesas",
+          lucro: "Lucro",
+        }}
+        timeSeries
+        timeSeriesLegend="Selecionar intervalo"
+        biaxial={{ key: ["lucro"], label: "Lucro", percentage: true }}
+        yAxisLabel="Lucro"
+        className="border"
+      />
+    </div>
+  );
+}
+`,
+      },
     },
   },
 };
-
-// export const Horizontal: Story = {
-//   args: {
-//     data: [
-//       {
-//         periodo: "Jan/24",
-//         receita: 4200,
-//         despesas: 2800,
-//         churn: 180,
-//       },
-//       {
-//         periodo: "Fev/24",
-//         receita: 5100,
-//         despesas: 3200,
-//         churn: 165,
-//       },
-//       {
-//         periodo: "Mar/24",
-//         receita: 6800,
-//         despesas: 3900,
-//         churn: 142,
-//       },
-//       {
-//         periodo: "Abr/24",
-//         receita: 7500,
-//         despesas: 4300,
-//         churn: 128,
-//       },
-//     ],
-
-//     xAxis: "periodo",
-//     className: "border",
-//     title: "Barras Horizontais Exemplo",
-//     enableHighlights: false,
-//   },
-
-//   name: "Barras Horizontais",
-
-//   render: (args) => (
-//     <div
-//       style={{
-//         width: "900px",
-//         height: "450px",
-//       }}
-//     >
-//       <Chart
-//         {...args}
-//         data={gerarDadosCidades()}
-//         xAxis="cidade"
-//         showLabels
-//         height={400}
-//         orderBy="valorReal"
-//         horizontal
-//         series={{
-//           bar: ["valorAnoAnterior", "valorReal"],
-//         }}
-//         labelMap={{
-//           valorAnoAnterior: "Valor Ano Anterior",
-//           valorReal: "Valor Real",
-//         }}
-//         colors={["#666665", "#0d1136"]}
-//       />
-//     </div>
-//   ),
-
-//   parameters: {
-//     docs: {
-//       description: {
-//         story:
-//           "Gráfico com barras horizontais usando a prop `horizontal={true}`, mostrando comparação de valores entre ano anterior e real para aproximadamente 300 cidades brasileiras de diversos tamanhos.",
-//       },
-
-//       source: {
-//         code: `import React from 'react';
-// import Chart from '@mlw-packages/react-components';
-// import { gerarDadosCidades } from './cidades-brasil';
-
-// const horizontalBarsData = gerarDadosCidades();
-
-// export default function HorizontalBars() {
-//   return (
-//     <div style={{ width: 900, height: 450 }}>
-//       <Chart
-//         data={horizontalBarsData}
-//         xAxis="cidade"
-//         horizontal
-//         series={{ bar: ['valorAnoAnterior', 'valorReal'] }}
-//         labelMap={{ valorAnoAnterior: 'Valor Ano Anterior', valorReal: 'Valor Real' }}
-//         colors={['#0d1136', '#666666']}
-//         yAxisLabel="Cidades"
-//         xAxisLabel="Valores (R$)"
-//         height={400}
-//       />
-//     </div>
-//   );
-// }
-// `,
-//       },
-//     },
-//   },
-
-//   play: async ({ canvasElement, step }) => {
-//     await step("Verificar barras horizontais renderizadas", async () => {
-//       await waitFor(() => {
-//         const bars = canvasElement.querySelectorAll(".recharts-bar-rectangle");
-//         expect(bars.length).toBeGreaterThan(0);
-//       });
-//     });
-//   },
-// };
 
 export const GridTest: Story = {
   render: (args) => {
@@ -962,13 +1146,12 @@ export const LayoutTest: Story = {
               </div>
             </CardBase>
           </div>
-            <Chart {...args} title="Regional Chart" className="border h-full" />
-        
+          <Chart {...args} title="Regional Chart" className="border h-full" />
         </div>
 
         <div className="grid grid-cols-1 gap-2 h-full">
-            <Leaderboard />
-            <Chart {...args} title="Total Chart" className="border" />
+          <Leaderboard />
+          <Chart {...args} title="Total Chart" className="border" />
         </div>
       </div>
 
