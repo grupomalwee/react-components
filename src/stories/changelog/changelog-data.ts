@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.14",
+    date: "2026-02-19",
+    shortTitle: "Carousel e Leaderboard",
+    changed: [
+      "Carousel: height prop removed",
+      "Leaderboard: arrumado largura do input",
+    ],
+  },
+  {
     version: "1.9.13",
     date: "2026-02-19",
     shortTitle: "CHart e Carousel",
