@@ -15,6 +15,22 @@ const meta: Meta<typeof Banner> = {
         component:
           "Banner informativo com ação e opção de fechar. Suporta persistência de fechamento via `localStorage`.",
       },
+      source: {
+        code: `import React from 'react';
+import Banner from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <Banner
+      id="unique-banner-id"
+      title="Título do Banner"
+      description="Descrição detalhada do banner."
+      actionText="Ação"
+    />
+  );
+}
+`,
+      },
     },
     layout: "centered",
   },

@@ -114,7 +114,42 @@ export default function Default() {
     >
       <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
+          <InputBase id="email" label="E-mail" placeholder="seu@email.com"/>
+        </div>
+      </div>
+    </div>
+  ),
+};
+export const Keyboard: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { InputBase } from '@mlw-packages/react-components';
+
+export default function Default() {
+  return (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <InputBase id="email" label="E-mail" placeholder="seu@email.com" />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+      }}
+    >
+      <div className="mt-5 ml-5 flex flex-col gap-5 p-3 rounded-sm">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <InputBase id="email" label="E-mail" placeholder="seu@email.com" numericKeyboard/>
         </div>
       </div>
     </div>

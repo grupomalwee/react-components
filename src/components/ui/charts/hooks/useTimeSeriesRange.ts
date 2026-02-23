@@ -57,10 +57,16 @@ export function useTimeSeriesRange({
   );
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent, type: "start" | "end" | "middle") => {
+    (
+      e: React.MouseEvent | React.TouchEvent,
+      type: "start" | "end" | "middle",
+    ) => {
       e.preventDefault();
+      const isTouchEvent = "touches" in e;
+      const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
+
       setIsDragging(type);
-      setDragStartX(e.clientX);
+      setDragStartX(clientX);
       setInitialStartIndex(startIndex);
       setInitialEndIndex(endIndex);
     },
@@ -68,11 +74,14 @@ export function useTimeSeriesRange({
   );
 
   const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+    (e: MouseEvent | TouchEvent) => {
       if (!isDragging || !brushRef.current) return;
 
+      const isTouchEvent = "touches" in e;
+      const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
+
       const brushWidth = brushRef.current.offsetWidth;
-      const deltaX = e.clientX - dragStartX;
+      const deltaX = clientX - dragStartX;
       const indexDelta = Math.round((deltaX / brushWidth) * dataLength);
 
       if (isDragging === "start") {
@@ -123,9 +132,13 @@ export function useTimeSeriesRange({
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleMouseMove);
+      document.addEventListener("touchend", handleMouseUp);
       return () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
+        document.removeEventListener("touchmove", handleMouseMove);
+        document.removeEventListener("touchend", handleMouseUp);
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);

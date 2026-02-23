@@ -11,6 +11,7 @@ import {
   DialogBase,
   DialogContentBase,
 } from "@/components/ui/feedback/DialogBase";
+import DebouncedInput from "../form/DebouncedInput";
 
 const CommandBase = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -19,8 +20,8 @@ const CommandBase = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-background text-popover-foreground",
-      className
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-background text-popover-foreground border-border",
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -47,7 +48,7 @@ const CommandDialogBase = ({ children, open, ...props }: DialogProps) => {
               exit="exit"
               variants={dialogVariants}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="overflow-hidden p-0"
+              className="overflow-hidden p-0 "
             >
               <CommandBase className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
                 {children}
@@ -66,13 +67,16 @@ const CommandInputBase = React.forwardRef<
     testid?: string;
   }
 >(({ className, testid: dataTestId = "command-input", ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+  <div
+    className="flex items-center border-b px-3  border-border"
+    cmdk-input-wrapper=""
+  >
     <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
         "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        className,
       )}
       data-testid={dataTestId}
       {...props}
@@ -81,57 +85,189 @@ const CommandInputBase = React.forwardRef<
 ));
 CommandInputBase.displayName = CommandPrimitive.Input.displayName;
 
+const CommandDebouncedInputBase = React.forwardRef<
+  React.ElementRef<typeof DebouncedInput>,
+  Omit<
+    React.ComponentPropsWithoutRef<typeof DebouncedInput>,
+    "value" | "onChange"
+  > & {
+    value?: string;
+    onChange?: (value: string) => void;
+    search?: string;
+    onSearch?: (value: string) => void;
+    testid?: string;
+    onValueChange?: (value: string) => void;
+  }
+>(
+  (
+    {
+      className,
+      testid: dataTestId = "command-input",
+      onValueChange,
+      value: propValue,
+      onChange: propOnChange,
+      search,
+      onSearch,
+      ...props
+    },
+    ref,
+  ) => (
+    <div
+      className="flex items-center px-3 border-border border-b"
+      cmdk-input-wrapper=""
+    >
+      <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
+      <DebouncedInput
+        ref={ref}
+        className={cn(
+          "flex h-10 border-transparent w-full rounded-md bg-transparent text-sm outline-none text-primary placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        data-testid={dataTestId}
+        cmdk-input=""
+        value={search ?? propValue ?? ""}
+        {...props}
+        onChange={(value: string) => {
+          onValueChange?.(value);
+          propOnChange?.(value);
+          onSearch?.(value);
+        }}
+      />
+    </div>
+  ),
+);
+CommandDebouncedInputBase.displayName = "CommandDebouncedInputBase";
+
 const CommandListBase = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
     testid?: string;
+    onEndReached?: () => void;
   }
->(({ className, testid: dataTestId = "command-list", ...props }, ref) => {
-  const listRef = React.useRef<HTMLDivElement>(null);
+>(
+  (
+    { className, testid: dataTestId = "command-list", onEndReached, ...props },
+    ref,
+  ) => {
+    const listRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    const element = listRef.current;
-    if (!element) return;
+    React.useEffect(() => {
+      const element = listRef.current;
+      if (!element) return;
 
-    const handleWheel = (e: WheelEvent) => {
-      e.stopPropagation();
-    };
+      const handleWheel = (e: WheelEvent) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
 
-    element.addEventListener("wheel", handleWheel, { passive: false });
+        const isScrollingDown = e.deltaY > 0;
+        const isScrollingUp = e.deltaY < 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+        const isAtTop = scrollTop <= 1;
 
-    return () => {
-      element.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+        if (isScrollingDown && isAtBottom && onEndReached) {
+          onEndReached();
+        }
 
-  const combinedRef = React.useCallback(
-    (node: HTMLDivElement) => {
-      (listRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref) {
-        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      }
-    },
-    [ref]
-  );
+        if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+          e.stopPropagation();
+        }
+      };
 
-  return (
-    <CommandPrimitive.List
-      ref={combinedRef}
-      className={cn(
-        "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
-        className
-      )}
-      data-testid={dataTestId}
-      style={{
-        overscrollBehavior: "contain",
-        WebkitOverflowScrolling: "touch",
-      }}
-      {...props}
-    />
-  );
-});
+      const handleScroll = (e: Event) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        if (isAtBottom && onEndReached) {
+          onEndReached();
+        }
+      };
+
+      let touchStartY = 0;
+
+      const handleTouchStart = (e: TouchEvent) => {
+        touchStartY = e.touches[0].clientY;
+        e.stopPropagation();
+      };
+
+      const handleTouchMove = (e: TouchEvent) => {
+        const target = e.currentTarget as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        const touchCurrentY = e.touches[0].clientY;
+        const touchDeltaY = touchStartY - touchCurrentY;
+
+        const isScrollingDown = touchDeltaY > 0;
+        const isScrollingUp = touchDeltaY < 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+        const isAtTop = scrollTop <= 1;
+
+        if (isScrollingDown && isAtBottom && onEndReached) {
+          onEndReached();
+        }
+
+        if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+          e.stopPropagation();
+        } else if (
+          (isScrollingDown && isAtBottom) ||
+          (isScrollingUp && isAtTop)
+        ) {
+          e.preventDefault();
+        }
+      };
+
+      element.addEventListener("wheel", handleWheel, { passive: false });
+      element.addEventListener("scroll", handleScroll);
+      element.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      element.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+
+      return () => {
+        element.removeEventListener("wheel", handleWheel);
+        element.removeEventListener("scroll", handleScroll);
+        element.removeEventListener("touchmove", handleTouchMove);
+        element.removeEventListener("touchstart", handleTouchStart);
+      };
+    }, [onEndReached]);
+
+    const combinedRef = React.useCallback(
+      (node: HTMLDivElement) => {
+        (listRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      },
+      [ref],
+    );
+
+    return (
+      <CommandPrimitive.List
+        ref={combinedRef}
+        className={cn(
+          "max-h-[300px] overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50",
+          className,
+        )}
+        data-testid={dataTestId}
+        style={{
+          overscrollBehavior: "contain",
+          WebkitOverflowScrolling: "touch",
+          touchAction: "pan-y",
+          scrollbarWidth: "thin",
+          scrollbarColor: "hsl(var(--muted)) transparent",
+          overflowY: "auto",
+          willChange: "scroll-position",
+          transform: "translateZ(0)",
+        }}
+        {...props}
+      />
+    );
+  },
+);
 CommandListBase.displayName = CommandPrimitive.List.displayName;
 
 const CommandEmptyBase = React.forwardRef<
@@ -159,7 +295,7 @@ const CommandGroupBase = React.forwardRef<
     ref={ref}
     className={cn(
       "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
-      className
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -191,8 +327,8 @@ const CommandItemBase = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:text-primary data-[disabled=true]:opacity-50 aria-[selected=true]:bg-accent hover:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.02] active:scale-[0.98]",
-      className
+      "relative flex cursor-pointer gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:text-primary data-[disabled=true]:opacity-50 aria-[selected=true]:bg-accent hover:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 ",
+      className,
     )}
     data-testid={dataTestId}
     {...props}
@@ -208,7 +344,7 @@ const CommandShortcutBase = ({
     <span
       className={cn(
         "ml-auto text-xs tracking-widest text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     />
@@ -220,6 +356,7 @@ export {
   CommandBase,
   CommandDialogBase,
   CommandInputBase,
+  CommandDebouncedInputBase,
   CommandListBase,
   CommandEmptyBase,
   CommandGroupBase,

@@ -47,7 +47,7 @@ export const Default: Story = {
     >
       <div className="flex flex-col gap-6 p-8">
         <DropDownMenuBase>
-          <DropDownMenuTriggerBase className="flex items-center gap-2">
+          <DropDownMenuTriggerBase className="flex items-center gap-2 border p-2 rounded-md">
             Abrir menu
             <ListIcon />
           </DropDownMenuTriggerBase>
@@ -59,7 +59,7 @@ export const Default: Story = {
             <DropDownMenuItemBase rightIcon={<CheckIcon />}>
               Team
             </DropDownMenuItemBase>
-            <DropDownMenuItemBase leftIcon={<CheckIcon />}>
+            <DropDownMenuItemBase>
               Subscription
             </DropDownMenuItemBase>
           </DropDownMenuContentBase>

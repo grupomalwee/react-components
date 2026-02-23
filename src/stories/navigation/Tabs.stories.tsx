@@ -64,7 +64,6 @@ export default function Example() {
         { name: "dark", value: "#222" },
       ],
     },
-    layout: "centered",
   },
 };
 
@@ -77,16 +76,7 @@ type Args = {
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "32px 0",
-    }}
-  >
-    {children}
-  </div>
+  <div>{children}</div>
 );
 
 export const TabsSimples: Story = {
@@ -192,6 +182,21 @@ export const TriggerScale: Story = {
     triggerAnimation: "scale",
     contentAnimation: "default",
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `// Trigger scale animation
+<TabsBase>
+  <TabsListBase>
+    <TabsTriggerBase value="tab1" animation="scale">Visao Geral</TabsTriggerBase>
+    <TabsTriggerBase value="tab2" animation="scale">Adulto</TabsTriggerBase>
+  </TabsListBase>
+  <TabsContentBase value="tab1">Content 1</TabsContentBase>
+  <TabsContentBase value="tab2">Content 2</TabsContentBase>
+</TabsBase>`,
+      },
+    },
+  },
 };
 
 export const ContentSlide: Story = {
@@ -229,6 +234,21 @@ export const ContentSlide: Story = {
   args: {
     triggerAnimation: "default",
     contentAnimation: "slide",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `// Content slide animation
+<TabsBase>
+  <TabsListBase>
+    <TabsTriggerBase value="tab1">Visao Geral</TabsTriggerBase>
+    <TabsTriggerBase value="tab2">Adulto</TabsTriggerBase>
+  </TabsListBase>
+  <TabsContentBase value="tab1" animation="slide">Content 1</TabsContentBase>
+  <TabsContentBase value="tab2" animation="slide">Content 2</TabsContentBase>
+</TabsBase>`,
+      },
+    },
   },
 };
 
@@ -268,5 +288,20 @@ export const SemAnimacao: Story = {
   args: {
     triggerAnimation: "none",
     contentAnimation: "none",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `// No animations
+<TabsBase>
+  <TabsListBase>
+    <TabsTriggerBase value="tab1" animation="none">Visao Geral</TabsTriggerBase>
+    <TabsTriggerBase value="tab2" animation="none">Adulto</TabsTriggerBase>
+  </TabsListBase>
+  <TabsContentBase value="tab1" animation="none">Content 1</TabsContentBase>
+  <TabsContentBase value="tab2" animation="none">Content 2</TabsContentBase>
+</TabsBase>`,
+      },
+    },
   },
 };

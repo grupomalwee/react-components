@@ -28,7 +28,6 @@ export * from "./ui/form/SliderBase";
 export * from "./ui/form/SmallButtons";
 export * from "./ui/form/SwitchBase";
 export * from "./ui/form/TextAreaBase";
-export * from "./ui/layout/CarouselBase";
 export * from "./ui/layout/ScrollareaBase";
 export * from "./ui/layout/SeparatorBase";
 export * from "./ui/layout/TableBase";
@@ -42,7 +41,7 @@ export * from "./ui/overlays/DrawerBase";
 export * from "./ui/overlays/PopoverBase";
 export * from "./ui/overlays/SheetBase";
 export { default as ErrorMessage } from "./ui/shared/ErrorMessage";
-export * from "./ui/UniversalTooltipRenderer";
+export * from "./ui/TooltipRenderer";
 
 export * from "./ui/navigation/ContextMenuBase";
 export * from "./ui/CodeBlock";
@@ -69,3 +68,8 @@ export * from "./ui/selects/Select";
 export * from "./ui/charts";
 
 export * from "./ui/LeaderBoard";
+export * from "./ui/form/NumericInput";
+export * from "./ui/FilterBase";
+export * from "./ui/charts/HorizontalChart";
+export * from "./ui/layout/CarouselBase";
+export * from "./ui/navigation/RadialMenu";

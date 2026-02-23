@@ -1,6 +1,15 @@
 import "../../style/global.css";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { AvatarCombobox } from "@/components/ui/selects/AvatarCombobox";
 
 const meta: Meta<typeof AvatarCombobox> = {
@@ -154,6 +163,34 @@ const groupedUsers = {
   ],
 };
 
+const usersWithImages = [
+  {
+    label: "Gabriel Glatz",
+    value: "1",
+    img: "/img/logo.jpg",
+  },
+  {
+    label: "Eduardo Ronchi",
+    value: "2",
+    img: "/img/logo.jpg",
+  },
+  {
+    label: "Anne Kelley",
+    value: "3",
+    img: "/img/logo.jpg",
+  },
+  {
+    label: "Michael Chen",
+    value: "4",
+    img: "/img/logo.jpg",
+  },
+  {
+    label: "Sofia Martinez",
+    value: "5",
+    img: "/img/logo.jpg",
+  },
+];
+
 export const Interactive: Story = {
   parameters: {
     docs: {
@@ -264,10 +301,12 @@ export default function WithLabel() {
     {
       label: "Gabriel Glatz",
       value: "1",
+      img: '/img/logo.jpg'
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
+      img: ''
     },
   ];
 
@@ -304,10 +343,12 @@ export default function WithPlaceholder() {
     {
       label: "Gabriel Glatz",
       value: "1",
+      img: '/img/logo.jpg'
     },
     {
       label: "Eduardo Ronchi",
       value: "2",
+      img: ''
     },
   ];
 
@@ -345,7 +386,8 @@ export default function Grouped() {
       {
         label: "Xavier Guerra",
         value: "1",
-      },
+        img: ''
+        },
       {
         label: "Maria Silva",
         value: "2",
@@ -544,7 +586,7 @@ export default function WithCustomAvatar() {
           value: "2",
           avatar: "👑",
           avatarClassName: "bg-purple-400/20 text-purple-600",
-        },
+          },
         {
           label: "New User",
           value: "3",
@@ -686,7 +728,7 @@ export default function CitiesExample() {
   const cityItems = [
     { label: 'Florianópolis, SC', value: 'florianopolis-sc', avatar: 'SC', avatarClassName: 'bg-blue-100 text-blue-700' },
     { label: 'Joinville, SC', value: 'joinville-sc', avatar: 'SC', avatarClassName: 'bg-green-100 text-green-700' },
-    { label: 'Blumenau, SC', value: 'blumenau-sc', avatar: 'SC', avatarClassName: 'bg-purple-100 text-purple-700' },
+    { label: 'Blumenau, SC', value: 'blumenau-sc', avatar: 'SC', avatarClassName: 'bg-purple-100 text-purple-700'},
     { label: 'São Paulo, SP', value: 'sao-paulo-sp', avatar: 'SP', avatarClassName: 'bg-gray-100 text-gray-800' },
     { label: 'Rio de Janeiro, RJ', value: 'rio-de-janeiro-rj', avatar: 'RJ', avatarClassName: 'bg-red-100 text-red-700' },
     { label: 'Belo Horizonte, MG', value: 'belo-horizonte-mg', avatar: 'MG', avatarClassName: 'bg-amber-100 text-amber-700' },
@@ -799,5 +841,118 @@ export default function CitiesExample() {
     onChange: (v: string) => console.log("changed", v),
     placeholder: "Selecione uma cidade",
     label: "Cidades (UF)",
+  },
+};
+
+export const AvatarWithImages: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { AvatarCombobox } from '@mlw-packages/react-components';
+
+export default function UsersWithImages() {
+  const usersWithImages = [
+    {
+      label: "Gabriel Glatz",
+      value: "1",
+      img: '/img/logo.jpg'
+    },
+    {
+      label: "Eduardo Ronchi",
+      value: "2",
+      img: '/img/logo.jpg'
+    },
+  ];
+
+  return (
+   <div className="w-[300px] space-y-4">
+      <AvatarCombobox
+        items={usersWithImages}
+        selected={selected}
+        onChange={setSelected}
+        placeholder="Select a user"
+        label="User Selection"
+      />
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>("1");
+    return (
+      <div className="w-[300px] space-y-4">
+        <AvatarCombobox
+          items={usersWithImages}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select a user"
+          label="User Selection"
+        />
+      </div>
+    );
+  },
+};
+
+export const With100Items: Story = {
+  name: "Com 100 itens",
+  render: () => {
+    const items = Array.from({ length: 100 }, (_, i) => ({
+      label: `User ${i + 1}`,
+      value: `user-${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string | null>(items[0].value);
+
+    return (
+      <div className="w-[300px]">
+        <AvatarCombobox
+          items={items}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select user"
+        />
+      </div>
+    );
+  },
+};
+
+export const With100ItemsInDialog: Story = {
+  name: "Dentro do Dialog com 100 itens",
+  render: () => {
+    const items = Array.from({ length: 100 }, (_, i) => ({
+      label: `User ${i + 1}`,
+      value: `user-${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string | null>(items[0].value);
+
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 32 }}>
+        <DialogBase>
+          <DialogTriggerBase asChild>
+            <ButtonBase variant="outline">Abrir dialog</ButtonBase>
+          </DialogTriggerBase>
+          <DialogContentBase className="sm:max-w-md">
+            <DialogHeaderBase>
+              <DialogTitleBase>AvatarCombobox dentro do Dialog</DialogTitleBase>
+              <DialogDescriptionBase>
+                Exemplo com 100 itens.
+              </DialogDescriptionBase>
+            </DialogHeaderBase>
+
+            <div className="mt-4" style={{ width: 360 }}>
+              <AvatarCombobox
+                items={items}
+                selected={selected}
+                onChange={setSelected}
+                placeholder="Select user"
+              />
+            </div>
+          </DialogContentBase>
+        </DialogBase>
+      </div>
+    );
   },
 };

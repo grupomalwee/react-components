@@ -194,4 +194,11 @@ export const Playground: Story = {
   args: {
     title: "Playground",
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState, useEffect } from 'react';\nimport DraggableTooltip, { useDrag } from '@mlw-packages/react-components';\n\nconst sampleData = { name: 'Q1', receita: 4000, despesas: 2400 };\nconst dataKeys = ['receita', 'despesas'];\n\nexport default function Playground() {\n  const [tooltips, setTooltips] = useState([]);\n  const { handleMouseDown, getPosition, setPosition, isElementDragging } = useDrag();\n\n  useEffect(() => {\n    setTooltips([\n      { id: 'play-1', top: 120, left: 140 },\n      { id: 'play-2', top: 240, left: 380 },\n    ]);\n  }, []);\n\n  return (\n    <div style={{ height: '100vh', position: 'relative' }}>\n      <button onClick={() => setTooltips(p => [...p, { id: Date.now(), top: 100, left: 100 }])}>Add Tooltip</button>\n      {tooltips.map(t => (\n        <DraggableTooltip\n          key={t.id}\n          id={t.id}\n          data={sampleData}\n          position={getPosition(t.id)}\n          isDragging={isElementDragging(t.id)}\n          dataKeys={dataKeys}\n          onMouseDown={handleMouseDown}\n          onClose={(id) => setTooltips(p => p.filter(x => x.id !== id))}\n        />\n      ))}\n    </div>\n  );\n}`,
+      },
+    },
+  },
 };

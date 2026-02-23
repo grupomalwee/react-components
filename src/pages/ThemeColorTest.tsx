@@ -1,3 +1,17 @@
+import { ButtonBase } from "@/components/ui/form/ButtonBase";
+import { ModeToggleBase } from "@/components/theme/mode-toggle";
+import {
+  DialogBase,
+  DialogContentBase,
+  DialogDescriptionBase,
+  DialogFooterBase,
+  DialogHeaderBase,
+  DialogTitleBase,
+  DialogTriggerBase,
+} from "@/components/ui/feedback/DialogBase";
+import { MultiSelect } from "@/components/ui/selects/MultiSelect";
+import { useState } from "react";
+import Chart from "@/components/ui/charts/Chart";
 
 export default function ThemeColorTest() {
   const colorVariables = [
@@ -49,23 +63,71 @@ export default function ThemeColorTest() {
       className: "bg-destructive-foreground",
     },
   ];
+  const sampleData = [
+    { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
+    { periodo: "Fev/24", receita: 5100, despesas: 3200, churn: 165 },
+    { periodo: "Mar/24", receita: 6800, despesas: 3900, churn: 142 },
+    { periodo: "Abr/24", receita: 7500, despesas: 4300, churn: 128 },
+  ];
 
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const simpleItems = [
+    { label: "Option A", value: "a" },
+    { label: "Option B", value: "b" },
+    { label: "Option C", value: "c" },
+    { label: "Option D", value: "d" },
+    { label: "Option E", value: "e" },
+  ];
   return (
     <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">
-              Theme Color Palette Test
-            </h1>
-            <p className="text-muted-foreground">
-              Teste todas as cores do sistema em diferentes temas
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-center mb-6">
+          <p className="mr-2">Aperta -&gt;</p>
+          <ModeToggleBase
+            themes={[
+              "light",
+              "dark",
+              "system",
+              "light-purple",
+              "dark-purple",
+              "light-blue",
+              "dark-blue",
+              "light-green",
+              "dark-green",
+            ]}
+            variant="outline"
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={selected}
+            onChange={setSelected}
+          />
+          <DialogBase>
+            <DialogTriggerBase asChild>
+              <ButtonBase variant="outline">Open Composition</ButtonBase>
+            </DialogTriggerBase>
+            <DialogContentBase>
+              <DialogHeaderBase>
+                <DialogTitleBase>Composed Dialog</DialogTitleBase>
+                <DialogDescriptionBase>
+                  This dialog is built by composing the base primitives
+                  manually.
+                </DialogDescriptionBase>
+              </DialogHeaderBase>
+              <div className="py-4">
+                <p className="text-sm">
+                  You have full control over the layout here.
+                </p>
+              </div>
+              <DialogFooterBase>
+                <ButtonBase>Close</ButtonBase>
+              </DialogFooterBase>
+            </DialogContentBase>
+          </DialogBase>
+        </div>
+        <Chart data={sampleData} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {colorVariables.map((color) => (
             <div

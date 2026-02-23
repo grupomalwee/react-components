@@ -2,6 +2,7 @@ import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ModeToggleBase } from "@/components/theme/mode-toggle";
 import { ThemeProviderBase } from "@/components/theme/theme-provider";
+import ThemeColorTest from "@/pages/ThemeColorTest";
 
 const meta: Meta<typeof ModeToggleBase> = {
   title: "Theme/Mode Toggle",
@@ -50,7 +51,7 @@ export const Default: Story = {
       }}
     >
       <ThemeProviderBase>
-        <ModeToggleBase themes={["light", "dark", "system", "light-purple", "dark-purple", "light-blue", "dark-blue", "light-green", "dark-green"]} />
+        <ThemeColorTest />
       </ThemeProviderBase>
     </div>
   ),
@@ -74,3 +75,4 @@ export default function Example() {
     },
   },
 };
+

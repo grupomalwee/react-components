@@ -73,7 +73,9 @@ type TooltipTriggerProps = React.ComponentPropsWithoutRef<
 const TooltipTriggerBase = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Trigger>,
   TooltipTriggerProps
->(({ children, onPointerDown, ...props }, ref) => {
+>(({ children, onPointerDown, onClick: propOnClick, ...props }, ref) => {
+  const { setOpen, isMobile } = React.useContext(TooltipClickContext);
+
   const handlePointerDown = React.useCallback<
     React.PointerEventHandler<HTMLButtonElement | HTMLDivElement>
   >(
@@ -82,16 +84,32 @@ const TooltipTriggerBase = React.forwardRef<
         onPointerDown(e as React.PointerEvent<HTMLButtonElement>);
       }
     },
-    [onPointerDown]
+    [onPointerDown],
   );
 
   const onClick = React.useCallback(
     (e: React.MouseEvent) => {
+      if (propOnClick) {
+        propOnClick(e as React.MouseEvent<HTMLButtonElement>);
+      }
       if (onPointerDown) {
         onPointerDown(e as React.PointerEvent<HTMLButtonElement>);
       }
+      if (isMobile && setOpen) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
     },
-    [onPointerDown]
+    [onPointerDown, isMobile, setOpen, propOnClick],
+  );
+
+  const preventDefaultOnMobile = React.useCallback(
+    (e: React.SyntheticEvent) => {
+      if (isMobile) {
+        e.preventDefault();
+      }
+    },
+    [isMobile],
   );
 
   return (
@@ -100,6 +118,9 @@ const TooltipTriggerBase = React.forwardRef<
       tabIndex={-1}
       onPointerDown={onPointerDown ? handlePointerDown : undefined}
       onClick={onClick}
+      onFocus={preventDefaultOnMobile}
+      onMouseEnter={preventDefaultOnMobile}
+      onMouseLeave={preventDefaultOnMobile}
       data-tooltip-trigger
       aria-describedby="tooltip-content"
       {...props}
@@ -116,7 +137,7 @@ const TooltipContentBase = React.forwardRef<
 >(
   (
     { className, sideOffset = TOOLTIP_SIDE_OFFSET, onPointerDown, ...props },
-    ref
+    ref,
   ) => {
     return (
       <TooltipPrimitive.Portal>
@@ -136,7 +157,7 @@ const TooltipContentBase = React.forwardRef<
             "data-[side=left]:slide-in-from-right-2",
             "data-[side=right]:slide-in-from-left-2",
             "data-[side=top]:slide-in-from-bottom-2",
-            className
+            className,
           )}
           {...props}
         >
@@ -145,7 +166,7 @@ const TooltipContentBase = React.forwardRef<
         </TooltipPrimitive.Content>
       </TooltipPrimitive.Portal>
     );
-  }
+  },
 );
 TooltipContentBase.displayName = "TooltipContentBase";
 

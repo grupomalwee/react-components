@@ -33,14 +33,14 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
             text-foreground
             shadow-xl rounded-lg
             border-l-4
-            border-border
+
             flex items-center gap-3
             transition-all duration-300
             hover:scale-[1.02] hover:shadow-2xl
-            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50/95 data-[type=success]:text-green-800 data-[type=success]:border-green-500
+            data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50/95 data-[type=success]:text-green-800 data-[type=success]:border-green-500 data-
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50/95 data-[type=error]:text-red-800 data-[type=error]:border-red-500
             data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50/95 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
-            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50/95 data-[type=info]:text-blue-800 data-[type=info]:border-blue-500
+            data-[type=info]:border-l-blue-500 data-[type=info]:bg-blue-50/95 data-[type=info]:text-blue-800 data-[type=info]:border-blue-500 
           `,
           description: `
             text-xs

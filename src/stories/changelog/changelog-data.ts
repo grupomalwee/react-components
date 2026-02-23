@@ -11,16 +11,228 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.9.14",
+    date: "2026-02-19",
+    shortTitle: "Carousel e Leaderboard",
+    changed: [
+      "Carousel: height prop removed",
+      "Leaderboard: arrumado largura do input",
+    ],
+  },
+  {
+    version: "1.9.13",
+    date: "2026-02-19",
+    shortTitle: "CHart e Carousel",
+    changed: [
+      "Chart: arrumado uso de valueFormatter.",
+      "Carousel: arrumado erro de scroll lock.",
+    ],
+  },
+  {
+    version: "1.9.12",
+    date: "2026-02-19",
+    shortTitle: "Radial Menu",
+    added: [
+      "Radial Menu: novo componente de menu radial interativo e personalizável, ideal para interfaces modernas e acesso rápido a ações.",
+    ],
+    changed: [
+      "Chart: corrigido problema de sobreposição (z-index) no Tooltip e ajustado cálculo de altura para evitar cortes ou espaços indesejados no gráfico.",
+    ],
+  },
+  {
+    version: "1.9.11",
+    date: "2026-02-17",
+    shortTitle: "Carousel",
+    changed: [
+      "Carousel: refatoração completa das propriedades e estilos para garantir melhor controle sobre a exibição, transições mais fluidas e adequação aos padrões visuais do design system.",
+    ],
+  },
+  {
+    version: "1.9.10",
+    date: "2026-02-17",
+    shortTitle: "Carousel",
+    changed: [
+      "Carousel: corrigido e otimizado o sistema de importação do componente para evitar erros de resolução de módulos e melhorar a compatibilidade com diferentes bundlers.",
+    ],
+  },
+  {
+    version: "1.9.9",
+    date: "2026-02-17",
+    shortTitle: "Controlled Combobox",
+    changed: [
+      "Controlled Combobox: atualizada a API de uso para tornar o controle de estado mais intuitivo e previsível, facilitando a integração em formulários complexos e gerenciamento de seleção.",
+      "Carousel: ajustes finos de estilização para corrigir inconsistências visuais e garantir que o componente responda corretamente em diferentes resoluções de tela.",
+    ],
+  },
+  {
+    version: "1.9.8",
+    date: "2026-02-16",
+    shortTitle: "Controlled Combobox",
+    added: [
+      "Controlled Combobox: novo componente de combobox totalmente controlado, com suporte nativo a paginação de resultados server-side para lidar eficientemente com grandes conjuntos de dados.",
+    ],
+    changed: [
+      "Chart: resolvido conflito de z-index que fazia o Tooltip ficar oculto atrás de outros elementos em certos contextos de layout complexos.",
+      "Event Agenda: refinamento dos estilos visuais para melhor alinhamento, espaçamento e legibilidade dos eventos listados na agenda.",
+    ],
+  },
+  {
+    version: "1.9.7",
+    date: "2026-02-10",
+    shortTitle: "Chart",
+    fixed: [
+      "Chart: correção definitiva para o comportamento de z-index do Tooltip, garantindo sua visualização correta acima de todas as séries de dados e eixos.",
+      "MultiSelect: removida a duplicação na definição da propriedade 'error', que causava conflitos de tipagem e warnings desnecessários no console durante o desenvolvimento.",
+    ],
+  },
+  {
+    version: "1.9.6",
+    date: "2026-02-09",
+    shortTitle: "Chart",
+    fixed: [
+      "Chart: removida a propriedade obsoleta 'orderBy' da story StressHorizontalManyBars para corrigir erros de execução nos testes automatizados e na documentação.",
+    ],
+  },
+  {
+    version: "1.9.5",
+    date: "2026-02-09",
+    shortTitle: "Chromatic",
+    fixed: [
+      "Chromatic: ajustes nos parâmetros de testes de regressão visual para reduzir falsos positivos e estabilizar as snapshots de componentes com animações ou estados dinâmicos.",
+    ],
+  },
+  {
+    version: "1.9.4",
+    date: "2026-02-09",
+    shortTitle: "Chromatic",
+    fixed: [
+      "Chromatic: refinamento das configurações de viewport e delay nos testes visuais para garantir capturas mais consistentes e confiáveis em ambientes de CI.",
+    ],
+  },
+  {
+    version: "1.9.3",
+    date: "2026-02-06",
+    shortTitle: "Combobox",
+    changed: [
+      "Combobox: corrigido bug de renderização durante o scroll em dispositivos iOS, eliminando trepidações e áreas em branco indesejadas na lista de opções.",
+      "Chart: melhoria na lógica de formatação de labels e eixos, permitindo maior personalização e exibição correta de valores numéricos complexos e datas.",
+    ],
+  },
+  {
+    version: "1.9.2",
+    date: "2026-02-05",
+    shortTitle: "Combobox",
+    changed: [
+      "Combobox: otimização da experiência de scroll em dispositivos móveis iOS, prevenindo comportamentos nativos que conflitavam com a navegação na lista de opções.",
+    ],
+  },
+  {
+    version: "1.9.1",
+    date: "2026-02-05",
+    shortTitle: "Selects, Theme, Dialog, Chart e Date Time Picker",
+    changed: [
+      "Date Time Picker: ajustes críticos no estilo do Dialog para prevenir overflow em viewports menores, além de correções para garantir o funcionamento fluido do scroll em interfaces mobile.",
+    ],
+  },
+  {
+    version: "1.9.0",
+    date: "2026-02-03",
+    shortTitle: "Selects, Theme, Dialog, Chart e Date Time Picker",
+    fixed: [
+      "Selects: resolvidas inconsistências na aplicação de tokens de cor e renderização de elementos filhos (children), assegurando uniformidade visual em diferentes estados.",
+      "Combobox: corrigido comportamento de scroll travado ou inconsistente ao navegar pela lista de opções em touchscreens e dispositivos móveis.",
+      "Dialogs: revisão dos espaçamentos internos (paddings) para otimizar a área útil e a estética em dispositivos com telas reduzidas.",
+      "Chart: refinamento de layout incluindo ajustes de padding, bordas e dimensionamento, focado em melhorar a responsividade e leitura em telas pequenas.",
+      "Date Time Picker: reformulação completa do layout mobile, com correções nas bordas e aplicação consistente do tema para uma integração visual perfeita.",
+    ],
+    changed: [
+      "Theme: otimização das curvas de animação e transições para garantir performance fluida e visual agradável especificamente em dispositivos iOS.",
+      "DraggableTooltip: habilitado suporte a interações de arrastar (drag) em dispositivos móveis, melhorando a acessibilidade e permitindo que o usuário ajuste a visualização conforme necessário.",
+    ],
+  },
+  {
+    version: "1.8.13",
+    date: "2026-02-03",
+    shortTitle: "Theme e Combobox",
+    fixed: [
+      "Combobox: corrigido erro de validação de React children que gerava warnings no console, garantindo uma árvore de componentes limpa e sem erros de runtime.",
+    ],
+    changed: [
+      "Theme: ajustado o tema dark para componentes de formulários para melhor contraste e legibilidade.",
+    ],
+  },
+  {
+    version: "1.8.13",
+    date: "2026-02-03",
+    shortTitle: "Select e TimeSeries",
+    added: [
+      "Select: nova prop Empty que aceita React.ReactNode para customizar completamente a mensagem exibida quando a busca não retorna resultados, permitindo ilustrações e ações customizadas.",
+    ],
+    changed: [
+      "Time Series: ajustado TouchEvent para melhorar a experiência de usuário em dispositivos móveis, garantindo rolagem suave e seleção precisa de intervalos de tempo.",
+    ],
+  },
+  {
+    version: "1.8.12",
+    date: "2026-02-03",
+    shortTitle: "Numeric Input",
+    added: [
+      "Numeric Input: componente de input numérico com validação de min/max, confirmação e suporte a loading/disabled.",
+    ],
+  },
+  {
+    version: "1.8.11",
+    date: "2026-02-02",
+    shortTitle: "InputBase e DateTimePicker",
+    fixed: ["InputBase: keyboard numeric", "DateTimePicker: responsividade."],
+  },
+  {
+    version: "1.8.10",
+    date: "2026-02-02",
+    shortTitle: "TimeScrollPicker",
+    fixed: ["TimeScrollPicker: scroll de touch nao funcionava."],
+  },
+  {
+    version: "1.8.9",
+    date: "2026-01-30",
+    shortTitle: "SystemTooltip",
+    added: [
+      "SystemTooltip: novo componente para exibição de tooltips com sistema de coordenadas.",
+    ],
+    changed: [
+      "LeaderBoard: removido o prop `best`. Ajustado sistema de ordenação. Adicionado Input Search.",
+      "ModeToggle: novo estilo de Dropdown.",
+    ],
+  },
+  {
+    version: "1.8.8",
+    date: "2026-01-29",
+    shortTitle: "ModeToggle",
+    changed: [
+      "ModeToggle: new variant prop, e novo style de Dropdown.",
+      "Chart: removido esapcos mortos, paddings e functions nao utilizadas.",
+    ],
+  },
+  {
+    version: "1.8.7",
+    author: "Gabriel Glatz",
+    date: "2026-01-27",
+    shortTitle: "AvatarCombobox e Leaderboard ",
+    added: [
+      "AvatarCombobox: nova funcionalidade de Image.",
+      "Leaderboard: ordenação, visual e pesquisa.",
+    ],
+    changed: ["Sonner: corrigido o style inconsistente."],
+  },
+  {
     version: "1.8.6",
-    author: "Gabriel Glatz",  
+    author: "Gabriel Glatz",
     date: "2026-01-26",
     shortTitle: "TimeSeries, Leaderboard e Sonner",
     added: [
       "TimeSeries: nova propriedade `timeSeries` para visualização de intervalos de tempo no gráfico.",
     ],
-    changed: [
-      "Sonner: corrigido o style inconsistente.",
-    ],
+    changed: ["Sonner: corrigido o style inconsistente."],
   },
   {
     version: "1.8.5",

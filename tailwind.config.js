@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   darkMode: ["class"],
   content: [
@@ -9,8 +10,13 @@ export default {
   ],
   theme: {
     extend: {
+      transitionTimingFunction: {
+        "ease-out-back": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "ease-standard": "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+
       fontFamily: {
-        syne: ['Syne', 'sans-serif'], 
+        syne: ["Syne", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,10 +61,16 @@ export default {
       keyframes: {
         "collapsible-down": {
           from: { height: "0", opacity: "0" },
-          to: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+          to: {
+            height: "var(--radix-collapsible-content-height)",
+            opacity: "1",
+          },
         },
         "collapsible-up": {
-          from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+          from: {
+            height: "var(--radix-collapsible-content-height)",
+            opacity: "1",
+          },
           to: { height: "0", opacity: "0" },
         },
         "loading-spin": {
@@ -75,13 +87,21 @@ export default {
           "0%": { opacity: "0", transform: "translateY(4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
       },
       animation: {
-        "collapsible-down": "collapsible-down 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
+        "collapsible-down":
+          "collapsible-down 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
         "collapsible-up": "collapsible-up 600ms cubic-bezier(0.4, 0.0, 0.2, 1)",
-        "loading-spin": "loading-spin 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "loading-spin":
+          "loading-spin 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "loading-glow": "loading-glow 2s ease-in-out infinite",
         "loading-fade": "loading-fade 0.5s ease-out",
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

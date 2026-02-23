@@ -1,7 +1,11 @@
+import {
+  Margins,
+  Padding,
+  SeriesConfig,
+  ValueFormatterType,
+} from "../types/chart.types";
 export const formatFieldName = (fieldName: string): string => {
-  return fieldName
-    .split(/[/_-]/)
-    .filter(Boolean)
+  return (fieldName.match(/[^/_-]+/g) || [])
     .map((word) => {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
@@ -142,17 +146,6 @@ export const compactTick = (value: number) => {
   return String(value);
 };
 
-export type Padding =
-  | number
-  | Partial<{ left: number; right: number; top: number; bottom: number }>;
-
-export type Margins = Partial<{
-  top: number;
-  right: number;
-  left: number;
-  bottom: number;
-}>;
-
 export const resolveContainerPaddingLeft = (
   padding?: Padding,
   containerPaddingLeft?: number,
@@ -239,12 +232,6 @@ export const getMinDataValue = (
   return min;
 };
 
-interface SeriesConfig {
-  bar?: string[];
-  line?: string[];
-  area?: string[];
-}
-
 export const computeChartWidth = (
   width: number | string | undefined,
   dataLength: number,
@@ -302,27 +289,48 @@ export const adaptDataForTooltip = <T extends Record<string, unknown>>(
   return result;
 };
 
-export type ValueFormatterType = (props: {
-  value: number | string | undefined;
-  formattedValue: string;
-  [key: string]: unknown;
-}) => string;
-
 export const createValueFormatter = (
-  customFormatter: ValueFormatterType | undefined,
+  customFormatter: ValueFormatterType | Record<string, string> | undefined,
   formatBR: boolean,
 ): ValueFormatterType | undefined => {
   const nf = new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
+  const prefixFormats = ["R$", "$", "€", "£"];
+
+  const suffixFormats = ["%", "kg", "km", "m", "L", "un", "t", "h", "min", "s"];
+
+  const getFormattedValue = (baseValue: string, format: string): string => {
+    const trimmedFormat = format.trim();
+
+    if (prefixFormats.includes(trimmedFormat)) {
+      return `${trimmedFormat} ${baseValue}`;
+    }
+    if (suffixFormats.includes(trimmedFormat)) {
+      return `${baseValue}${trimmedFormat}`;
+    }
+
+    return `${baseValue} ${trimmedFormat}`;
+  };
+
   if (customFormatter) {
-    if (formatBR) {
-      const wrapped: ValueFormatterType = (props) => {
-        const { value, formattedValue } = props as {
+    if (
+      typeof customFormatter === "object" &&
+      !Array.isArray(customFormatter)
+    ) {
+      const formatterMap = customFormatter as Record<string, string>;
+
+      return (props) => {
+        const {
+          value,
+          formattedValue,
+          dataKey: propsDataKey,
+        } = props as {
           value: number | string | undefined;
           formattedValue: string;
+          dataKey?: string;
           [key: string]: unknown;
         };
 
@@ -333,20 +341,54 @@ export const createValueFormatter = (
           num = Number.isNaN(parsed) ? NaN : parsed;
         }
 
-        const brFormatted = !Number.isNaN(num)
-          ? nf.format(num)
-          : String(formattedValue ?? value ?? "");
+        const baseFormatted =
+          formatBR && !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
 
-        return customFormatter({
-          ...(props as object),
-          formattedValue: brFormatted,
-          value: undefined,
-        }) as string;
+        // Aplicar o formatter específico para a chave, se existir
+        const format =
+          propsDataKey && formatterMap[propsDataKey]
+            ? formatterMap[propsDataKey]
+            : "";
+
+        return format
+          ? getFormattedValue(baseFormatted, format)
+          : baseFormatted;
       };
-      return wrapped;
     }
 
-    return customFormatter;
+    if (typeof customFormatter === "function") {
+      if (formatBR) {
+        const wrapped: ValueFormatterType = (props) => {
+          const { value, formattedValue } = props as {
+            value: number | string | undefined;
+            formattedValue: string;
+            [key: string]: unknown;
+          };
+
+          let num: number = NaN;
+          if (typeof value === "number") num = value;
+          else if (typeof value === "string" && value.trim() !== "") {
+            const parsed = Number(value);
+            num = Number.isNaN(parsed) ? NaN : parsed;
+          }
+
+          const brFormatted = !Number.isNaN(num)
+            ? nf.format(num)
+            : String(formattedValue ?? value ?? "");
+
+          return customFormatter({
+            ...(props as object),
+            formattedValue: brFormatted,
+            value: undefined,
+          }) as string;
+        };
+        return wrapped;
+      }
+
+      return customFormatter;
+    }
   }
 
   if (!formatBR) return undefined;
@@ -377,8 +419,8 @@ export const createYTickFormatter = (
   finalValueFormatter: ValueFormatterType | undefined,
 ): ((value: number | string) => string) => {
   const nf = new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
   const stripCurrency = (s: string) => String(s).replace(/^\s*R\$\s?/, "");

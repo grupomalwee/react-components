@@ -10,3 +10,4 @@ export * from "./SwitchBase";
 export * from "./TextAreaBase";
 export * from "./SmallButtons";
 export * from "./DebouncedInput"
+export * from "./NumericInput"

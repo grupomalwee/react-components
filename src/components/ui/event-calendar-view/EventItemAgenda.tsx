@@ -58,7 +58,7 @@ function EventWrapper({
       return currentTime
         ? new Date(
             new Date(currentTime).getTime() +
-              (wrapperEnd.getTime() - wrapperStart.getTime())
+              (wrapperEnd.getTime() - wrapperStart.getTime()),
           )
         : wrapperEnd;
     }
@@ -75,15 +75,16 @@ function EventWrapper({
 
   const colorClasses = hasValidTimeForWrapper
     ? getEventColorClassesAgenda(event.color)
-    : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none";
+    : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none ";
 
   return (
     <button
       className={cn(
-        "flex w-full select-none overflow-hidden px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md border",
+        "flex w-full select-none px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md border ",
+        className?.includes("overflow-visible") ? "" : "overflow-hidden",
         colorClasses,
         getBorderRadiusClassesAgenda(isFirstDay, isLastDay),
-        className
+        className,
       )}
       data-dragging={isDragging || undefined}
       data-past-event={isEventInPast || undefined}
@@ -156,7 +157,7 @@ export function EventItemAgenda({
       return currentTime
         ? new Date(
             new Date(currentTime).getTime() +
-              (startDate ? endDate.getTime() - startDate.getTime() : 0)
+              (startDate ? endDate.getTime() - startDate.getTime() : 0),
           )
         : endDate;
     }
@@ -180,7 +181,7 @@ export function EventItemAgenda({
     }
 
     return `${formatTimeWithOptionalMinutes(
-      displayStart as Date
+      displayStart as Date,
     )} - ${formatTimeWithOptionalMinutes(displayEnd as Date)}`;
   };
   let ariaLabel: string;
@@ -190,11 +191,11 @@ export function EventItemAgenda({
     ariaLabel = `${event.title}, All day`;
   } else if (durationMinutes < 45) {
     ariaLabel = `${event.title}, ${formatTimeWithOptionalMinutes(
-      displayStart as Date
+      displayStart as Date,
     )}`;
   } else {
     ariaLabel = `${event.title}, ${formatTimeWithOptionalMinutes(
-      displayStart as Date
+      displayStart as Date,
     )} - ${formatTimeWithOptionalMinutes(displayEnd as Date)}`;
   }
 
@@ -203,7 +204,7 @@ export function EventItemAgenda({
       <EventWrapper
         className={cn(
           "mt-[var(--event-gap)] h-[var(--event-height)] items-center sm:text-xs",
-          className
+          className,
         )}
         currentTime={currentTime}
         dndAttributes={dndAttributes}
@@ -226,7 +227,7 @@ export function EventItemAgenda({
                 "truncate min-w-0",
                 agendaOnly
                   ? "font-bold text-sm sm:text-base md:text-lg"
-                  : "font-medium text-sm sm:text-base md:text-lg"
+                  : "font-medium text-sm sm:text-base md:text-lg",
               )}
             >
               {event.title}
@@ -244,7 +245,7 @@ export function EventItemAgenda({
           "py-1",
           durationMinutes < 45 ? "items-center" : "flex-col",
           view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
-          className
+          className,
         )}
         currentTime={currentTime}
         dndAttributes={dndAttributes}
@@ -272,7 +273,7 @@ export function EventItemAgenda({
           <>
             <div
               className={cn(
-                "truncate font-medium text-sm sm:text-base md:text-lg min-w-0"
+                "truncate font-medium text-sm sm:text-base md:text-lg min-w-0",
               )}
             >
               {event.title}
@@ -295,7 +296,7 @@ export function EventItemAgenda({
         className={cn(
           "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-past-event:line-through data-past-event:opacity-90 border-2 border-border",
           getEventColorClassesAgenda(eventColor),
-          className
+          className,
         )}
         aria-label={ariaLabel}
         onClick={onClick}
@@ -308,7 +309,7 @@ export function EventItemAgenda({
         <div className="flex w-full justify-between ">
           <div
             className={cn(
-              "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate"
+              "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate",
             )}
           >
             {event.title}
@@ -343,7 +344,7 @@ export function EventItemAgenda({
       className={cn(
         "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-past-event:line-through data-past-event:opacity-90 border-2 border-border",
         colorClasses,
-        className
+        className,
       )}
       data-past-event={isPast(displayEnd as Date) || undefined}
       aria-label={ariaLabel}
@@ -357,14 +358,14 @@ export function EventItemAgenda({
       <div className="flex w-full justify-between ">
         <div
           className={cn(
-            "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate"
+            "font-bold text-sm sm:text-base md:text-lg min-w-0 truncate",
           )}
         >
           {event.title}
         </div>
         <div
           className={cn(
-            "opacity-90 flex items-center gap-2 text-sm sm:text-base md:text-lg min-w-0"
+            "opacity-90 flex items-center gap-2 text-sm sm:text-base md:text-lg min-w-0",
           )}
         >
           {event.allDay ? (

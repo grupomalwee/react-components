@@ -35,13 +35,13 @@ export function getBorderRadiusClasses(
   isLastDay: boolean
 ): string {
   if (isFirstDay && isLastDay) {
-    return "rounded"; // Both ends rounded
+    return "rounded-lg"; // Both ends rounded
   }
   if (isFirstDay) {
-    return "rounded-l rounded-r-none"; // Only left end rounded
+    return "rounded-l-lg rounded-r-none"; // Only left end rounded
   }
   if (isLastDay) {
-    return "rounded-r rounded-l-none"; // Only right end rounded
+    return "rounded-r-lg rounded-l-none"; // Only right end rounded
   }
   return "rounded-none"; // No rounded corners
 }

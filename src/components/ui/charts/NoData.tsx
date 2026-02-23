@@ -97,23 +97,22 @@ const NoData: React.FC<NoDataProps> = ({
   return (
     <div
       className={cn(
-        "rounded-xl bg-card relative overflow-hidden w-full border border-border/50 shadow-sm",
-        className
+        "rounded-xl bg-card relative overflow-hidden w-full shadow-sm h-full",
+        className,
       )}
       style={
         {
           "--pl": `${paddingLeft}px`,
-          "--svg-h":
-            typeof height === "number" ? `${height}px` : String(height),
+          ...(typeof height === "number" ? { height } : {}),
         } as React.CSSProperties
       }
       role="img"
       aria-label={message}
     >
-      <div className="w-full flex items-center justify-center pl-[var(--pl)] p-6 h-[var(--svg-h)]">
+      <div className="w-full flex items-center justify-center pl-[var(--pl)] p-6 h-full">
         <div className="w-full max-w-[900px] relative">
           <svg
-            className="w-full h-[var(--svg-h)] opacity-40"
+            className="w-full h-full opacity-40"
             viewBox={`0 0 900 ${h}`}
             preserveAspectRatio="none"
           >
@@ -121,6 +120,7 @@ const NoData: React.FC<NoDataProps> = ({
               <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
                 <stop
                   offset="0%"
+                  
                   stopColor="hsl(var(--primary))"
                   stopOpacity="0.15"
                 />

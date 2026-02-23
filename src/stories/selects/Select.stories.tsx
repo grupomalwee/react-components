@@ -613,3 +613,50 @@ export default function PreSelected() {
     );
   },
 };
+
+export const SelectEmpty:Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo de select sem itens.",
+      },
+      source: {
+        code: `import React, { useState } from 'react';
+        import { Select } from '@mlw-packages/react-components';
+
+        export default function WithPagination() {
+          const [selected, setSelected] = useState<string | null>(null);
+            return (
+              <div className="w-[300px]">
+                <Select
+                  empty={<option className="text-center pt-1">Nenhum item encontrado</option>}
+                  items={manyItems}
+                  selected={selected}
+                  onChange={setSelected}
+                  placeholder="Select with no items"
+                  label="Empty Select"
+                />
+              </div>
+            );
+        }
+        `,
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string | null>(null);
+    return (
+      <div className="w-[300px]">
+        <Select
+          empty="oieee00000iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii000"
+          items={[]}
+          selected={selected}
+          onChange={setSelected}
+          placeholder="Select with no items"
+          label="Empty Select"
+        />
+      </div>
+    );
+  },
+} 

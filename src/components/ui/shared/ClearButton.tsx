@@ -1,5 +1,4 @@
 import React from "react";
-import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { cn } from "../../../lib/utils";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 
@@ -15,7 +14,7 @@ type ButtonVariant =
 type ButtonSize = "icon" | "default" | "select" | "sm" | "lg";
 
 export interface ClearButtonProps {
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e?: React.MouseEvent<HTMLElement>) => void;
   ariaLabel?: string;
   className?: string;
   variant?: ButtonVariant;
@@ -26,17 +25,13 @@ export function ClearButton({
   onClick,
   ariaLabel = "Limpar seleção",
   className,
-  variant = "ghost",
-  size = "icon",
 }: ClearButtonProps) {
   return (
-    <ButtonBase
-      variant={variant}
-      size={size}
+    <span    
+      role="button"
       aria-label={ariaLabel}
       tabIndex={-1}
       onPointerDown={(e) => {
-        // Prevent Radix (or parent) from opening the trigger on pointer interactions
         e.preventDefault();
         e.stopPropagation();
       }}
@@ -48,11 +43,11 @@ export function ClearButton({
         onClick?.(e);
       }}
       className={cn(
-        "flex justify-center hover:text-red-500 hover:bg-transparent",
+        "flex justify-center hover:text-red-500 hover:bg-transparent p-1 transition-all text-gray-500 cursor-pointer",
         className
       )}
     >
       <XIcon className={`w-4 h-4 ${className}`} />
-    </ButtonBase>
+    </span>
   );
 }

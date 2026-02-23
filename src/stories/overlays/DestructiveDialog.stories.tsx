@@ -43,9 +43,51 @@ type Story = StoryObj<typeof DestructiveDialog>;
 
 export const Default: Story = {
   args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { DestructiveDialog } from '@mlw-packages/react-components';
+
+export default function Example() {
+  return (
+    <DestructiveDialog
+      title="Excluir recurso"
+      description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
+      onConfirm={() => console.log("Confirmed")}
+      onCancel={() => console.log("Cancelled")}
+    />
+  );
+}`,
+      },
+    },
+  },
 };
 
 export const NoChildren: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { DestructiveDialog } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const handleConfirm = () => console.log("Confirmado: ação destrutiva executada");
+
+  return (
+    <div className="p-6">
+      <DestructiveDialog
+        title="Excluir recurso"
+        description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
+        onConfirm={handleConfirm}
+        onCancel={() => console.log("Cancelado")}
+      />
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: (args) => {
     const handleConfirm = () =>
       console.log("Confirmado: ação destrutiva executada");
@@ -63,6 +105,30 @@ export const NoChildren: Story = {
 };
 
 export const WithTriggerContent: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { DestructiveDialog } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const handleConfirm = () => console.log("Confirmado: ação destrutiva executada");
+
+  return (
+    <div className="p-6">
+      <DestructiveDialog
+        title="Excluir recurso"
+        description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
+        onConfirm={handleConfirm}
+        onCancel={() => console.log("Cancelado")}
+        triggerContent={"Exemplo"}
+      />
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: (args) => {
     const handleConfirm = () =>
       console.log("Confirmado: ação destrutiva executada");
@@ -81,6 +147,31 @@ export const WithTriggerContent: Story = {
 };
 
 export const WithChildText: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { DestructiveDialog, ButtonBase } from '@mlw-packages/react-components';
+
+export default function Example() {
+  const handleConfirm = () => console.log("Confirmado: ação destrutiva executada");
+
+  return (
+    <div className="p-6">
+      <DestructiveDialog
+        title="Excluir recurso"
+        description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
+        onConfirm={handleConfirm}
+        onCancel={() => console.log("Cancelado")}
+      >
+        <ButtonBase>yrrrrrrrrrrr</ButtonBase>
+      </DestructiveDialog>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: (args) => {
     const handleConfirm = () =>
       console.log("Confirmado: ação destrutiva executada");
@@ -100,6 +191,35 @@ export const WithChildText: Story = {
 };
 
 export const WithChildIcon: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { DestructiveDialog, ButtonBase } from '@mlw-packages/react-components';
+import { TrashIcon } from '@phosphor-icons/react';
+
+export default function Example() {
+  const handleConfirm = () => console.log("Confirmado: ação destrutiva executada");
+
+  return (
+    <div className="p-6">
+      <DestructiveDialog
+        title="Excluir recurso"
+        description="Essa ação é irreversível. Tem certeza que deseja prosseguir e excluir permanentemente este recurso?"
+        onConfirm={handleConfirm}
+        onCancel={() => console.log("Cancelado")}
+      >
+        <ButtonBase>
+          <TrashIcon />
+          Abrir
+        </ButtonBase>
+      </DestructiveDialog>
+    </div>
+  );
+}`,
+      },
+    },
+  },
   render: (args) => {
     const handleConfirm = () =>
       console.log("Confirmado: ação destrutiva executada");

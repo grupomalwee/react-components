@@ -39,7 +39,7 @@ const meta: Meta<typeof Leaderboard> = {
   args: {
     order: "desc",
     title: "Classificação",
-    legend: [["Participante", "Pontuação"]],
+    legend: ["Participante", "Pontuação"],
     items: [
       { name: "Ana", value: 92 },
       { name: "Bruno", value: 81 },
@@ -79,7 +79,7 @@ export const CustomTitle: Story = {
 };
 export const CustomLegend: Story = {
   args: {
-    legend: [["Nome", "Nota"]],
+    legend: ["Nome", "Nota"],
   },
 };
 
@@ -98,7 +98,7 @@ export const Loading: Story = {
 export const StringValues: Story = {
   args: {
     title: "Notas de Turma",
-    legend: [["Aluno", "Nota"]],
+    legend: ["Aluno", "Nota"],
     items: [
       { name: "Pedro", value: "A+" },
       { name: "Maria", value: "A" },
@@ -114,7 +114,7 @@ export const StringValues: Story = {
 export const MixedValues: Story = {
   args: {
     title: "Ranking Misto",
-    legend: [["Participante", "Resultado"]],
+    legend: ["Participante", "Resultado"],
     items: [
       { name: "Campeão", value: 100 },
       { name: "Vice", value: 95 },
@@ -127,4 +127,3 @@ export const MixedValues: Story = {
     ],
   },
 };
-

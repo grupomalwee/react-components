@@ -249,3 +249,35 @@
 [data-theme-transition="true"]::view-transition-new(root) {
   animation: none;
 }
+
+@supports (-webkit-overflow-scrolling: touch) {
+  [cmdk-list] {
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    transform: translateZ(0) !important;
+    will-change: scroll-position !important;
+  }
+}
+
+@media only screen and (min-device-width: 744px) and (max-device-width: 1366px) and (-webkit-min-device-pixel-ratio: 2) {
+  [cmdk-list] {
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    transform: translateZ(0) !important;
+    will-change: scroll-position !important;
+    position: relative !important;
+  }
+
+  [cmdk-group] {
+    position: relative !important;
+  }
+}
+
+[cmdk-list] {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}

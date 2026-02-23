@@ -1,10 +1,19 @@
 export { default as Chart } from "./Chart";
-export { default as BarChart } from "./BarChart";
-export { default as LineChart } from "./LineChart";
-export { default as PieChart } from "./PieChart";
+export { default as HorizontalChart } from "./HorizontalChart";
+// export { default as BarChart } from "./BarChart";
+// export { default as LineChart } from "./LineChart";
 export { default as TimeSeries } from "./TimeSeries";
 export * from "./components";
 export * from "./hooks";
 export * from "./utils";
 export { default as NoData } from "./NoData";
-export * from "./types";
+export * from "./components/tooltips";
+export { default as SystemTooltip } from "./components/tooltips/SystemTooltip";
+export * from "./HorizontalChart";
+export * from "./components/Brush"
+export * from "./components/ChartControls"
+export * from "./components/ChartHeader"
+export * from "./components/ChartTotalLegend"
+export * from "./components/HorizontalLegend"
+export * from "./types/chart.types"
+export * from "./components/tooltips/systemTooltipUtils"

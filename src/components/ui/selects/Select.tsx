@@ -9,6 +9,7 @@ import {
 import {
   SelectBase,
   SelectContentBase,
+  SelectEmpty,
   SelectGroupBase,
   SelectItemBase,
   SelectLabelBase,
@@ -43,10 +44,12 @@ export interface SelectTestIds {
   paginationPrev?: string;
   paginationNext?: string;
   paginationPage?: (page: number) => string;
+  empty?: string;
 }
 
-export interface DefaultSelectProps<T extends string>
-  extends ErrorMessageProps {
+export interface DefaultSelectProps<
+  T extends string,
+> extends ErrorMessageProps {
   selected: T | null;
   onChange: (value: T) => void;
   placeholder?: string;
@@ -58,20 +61,24 @@ export interface DefaultSelectProps<T extends string>
   hideClear?: boolean;
 }
 
-export interface SelectPropsWithItems<T extends string>
-  extends DefaultSelectProps<T> {
+export interface SelectPropsWithItems<
+  T extends string,
+> extends DefaultSelectProps<T> {
   items: SelectItem<T>[];
   groupItems?: never;
   testIds?: SelectTestIds;
+  empty?: React.ReactNode;
 }
 
-export interface SelectPropsWithGroupItems<T extends string>
-  extends DefaultSelectProps<T> {
+export interface SelectPropsWithGroupItems<
+  T extends string,
+> extends DefaultSelectProps<T> {
   items?: never;
   groupItems: {
     [key: string]: SelectItem<T>[];
   };
   testIds?: SelectTestIds;
+  empty?: React.ReactNode;
 }
 
 export type NewSelectProps<T extends string> =
@@ -92,6 +99,7 @@ export function Select<T extends string>({
   className,
   pagination,
   hideClear = false,
+  empty,
 }: NewSelectProps<T>) {
   const [page, setPage] = useState(1);
   const [animating, setAnimating] = useState(false);
@@ -119,7 +127,7 @@ export function Select<T extends string>({
     if (groupItems) {
       type Flat = SelectItem<T> & { group: string };
       const flattened: Flat[] = Object.keys(groupItems).flatMap((g) =>
-        groupItems[g].map((it) => ({ ...it, group: g }))
+        groupItems[g].map((it) => ({ ...it, group: g })),
       );
       const total = flattened.length;
 
@@ -170,7 +178,7 @@ export function Select<T extends string>({
           className={cn(
             "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 relative",
             error && "border-red-500",
-            className
+            className,
           )}
           data-testid={testIds.trigger ?? "select-trigger"}
           disabled={disabled}
@@ -199,7 +207,7 @@ export function Select<T extends string>({
         </SelectTriggerBase>
 
         <ScrollAreaBase data-testid={testIds.scrollarea ?? "select-scrollarea"}>
-          <SelectContentBase data-testid={testIds.content ?? "select-content"}>
+          <SelectContentBase data-testid={testIds.content ?? "select-content"} className="border-border">
             {pagination && pagination > 0 ? (
               <>
                 <div
@@ -295,37 +303,43 @@ export function Select<T extends string>({
             ) : (
               <>
                 {groupItems ? (
-                  <>
-                    {Object.keys(groupItems).map((key) => (
-                      <SelectGroupBase
-                        key={key}
-                        data-testid={testIds.group ?? "select-group"}
-                      >
-                        <SelectLabelBase
-                          data-testid={testIds.label ?? "select-label"}
+                  Object.keys(groupItems).length > 0 ? (
+                    <>
+                      {Object.keys(groupItems).map((key) => (
+                        <SelectGroupBase
+                          key={key}
+                          data-testid={testIds.group ?? "select-group"}
                         >
-                          {key}
-                        </SelectLabelBase>
-                        {groupItems[key].map((item) => (
-                          <SelectItemBase
-                            key={item.value}
-                            value={item.value}
-                            data-testid={
-                              testIds.item?.(String(item.value)) ??
-                              `select-item-${item.value}`
-                            }
+                          <SelectLabelBase
+                            data-testid={testIds.label ?? "select-label"}
                           >
-                            {item.label}
-                          </SelectItemBase>
-                        ))}
-                      </SelectGroupBase>
-                    ))}
-                  </>
-                ) : (
+                            {key}
+                          </SelectLabelBase>
+                          {groupItems[key].map((item) => (
+                            <SelectItemBase
+                              key={item.value}
+                              value={item.value}
+                              data-testid={
+                                testIds.item?.(String(item.value)) ??
+                                `select-item-${item.value}`
+                              }
+                            >
+                              {item.label}
+                            </SelectItemBase>
+                          ))}
+                        </SelectGroupBase>
+                      ))}
+                    </>
+                  ) : (
+                    <SelectEmpty data-testid={testIds.empty ?? "select-empty"}>
+                      {empty ?? "Nenhum item disponível"}
+                    </SelectEmpty>
+                  )
+                ) : items && items.length > 0 ? (
                   <SelectGroupBase
                     data-testid={testIds.group ?? "select-group"}
                   >
-                    {items!.map((item) => (
+                    {items.map((item) => (
                       <SelectItemBase
                         key={item.value}
                         value={item.value}
@@ -338,6 +352,10 @@ export function Select<T extends string>({
                       </SelectItemBase>
                     ))}
                   </SelectGroupBase>
+                ) : (
+                  <SelectEmpty data-testid={testIds.empty ?? "select-empty"}>
+                    {empty ?? "Nenhum item disponível"}
+                  </SelectEmpty>
                 )}
               </>
             )}

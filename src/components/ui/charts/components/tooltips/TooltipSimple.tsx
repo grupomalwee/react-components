@@ -18,6 +18,7 @@ interface Props {
   categoryFormatter?: (value: string | number) => string;
   yAxisMap?: Record<string, "left" | "right">;
   isBiaxial?: boolean;
+  seriesTypeMap?: Record<string, string>;
 }
 
 const TooltipSimple: React.FC<Props> = ({
@@ -30,6 +31,7 @@ const TooltipSimple: React.FC<Props> = ({
   categoryFormatter,
   yAxisMap,
   isBiaxial = false,
+  seriesTypeMap,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -41,7 +43,7 @@ const TooltipSimple: React.FC<Props> = ({
     <div
       role="dialog"
       aria-label={`Tooltip ${label ?? ""}`}
-      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-[280px]"
+      className="bg-card border border-border rounded-lg p-3 shadow-2xl max-w-[280px] z-[10000]"
       style={{ minWidth: 220 }}
     >
       <div className="mb-2">
@@ -73,23 +75,19 @@ const TooltipSimple: React.FC<Props> = ({
               .reduce(
                 (s, p) =>
                   s + Math.abs(typeof p.value === "number" ? p.value : 0),
-                0
+                0,
               );
             pct = axisSum > 0 ? (Math.abs(value) / axisSum) * 100 : 0;
           }
-          const defaultFormatted = ((): string => {
-            try {
-              if (Math.abs(value) < 1000) {
-                return new Intl.NumberFormat("pt-BR", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }).format(value);
-              }
-            } catch {
-              void 0;
-            }
-            return value.toLocaleString("pt-BR");
-          })();
+          const isLine = seriesTypeMap?.[entry.dataKey] === "line";
+          const defaultFormatted = isLine
+            ? `${(value / 100).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}%`
+            : value.toLocaleString("pt-BR", {
+                maximumFractionDigits: 0,
+              });
           const displayValue = valueFormatter
             ? valueFormatter({
                 value: entry.value,
@@ -126,7 +124,12 @@ const TooltipSimple: React.FC<Props> = ({
                   </span>
                   {isBiaxial ? (
                     <span className="text-xs text-muted-foreground">
-                      {pct > 0 ? `${pct.toFixed(1)}%` : "-"}
+                      {pct > 0
+                        ? `${pct.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}%`
+                        : "-"}
                     </span>
                   ) : null}
                 </div>

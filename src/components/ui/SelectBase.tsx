@@ -97,7 +97,7 @@ const SelectContentBase = React.forwardRef<
         <SelectPrimitive.Content
           ref={ref}
           className={cn(
-            "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
+            "relative z-50 max-h-96 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
             className,
           )}
           position={position}
@@ -122,7 +122,7 @@ const SelectContentBase = React.forwardRef<
                 className={cn(
                   "p-1",
                   position === "popper" &&
-                    "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+                    "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] max-w-[var(--radix-select-trigger-width)]",
                 )}
               >
                 {children}
@@ -196,6 +196,25 @@ const SelectSeparatorBase = React.forwardRef<
 ));
 SelectSeparatorBase.displayName = SelectPrimitive.Separator.displayName;
 
+const SelectEmpty = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "w-full min-h-[3rem] flex items-center justify-center px-4 py-3 text-sm text-center",
+      className,
+    )}
+    {...props}
+  >
+    <span className="block w-full break-words hyphens-auto">{children}</span>
+  </div>
+));
+SelectEmpty.displayName = "SelectEmpty";
+
+SelectItemBase.displayName = SelectPrimitive.Item.displayName;
+
 export {
   SelectBase,
   SelectGroupBase,
@@ -207,4 +226,5 @@ export {
   SelectSeparatorBase,
   SelectScrollUpButtonBase,
   SelectScrollDownButtonBase,
+  SelectEmpty,
 };

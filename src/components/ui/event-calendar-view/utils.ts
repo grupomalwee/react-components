@@ -9,25 +9,25 @@ import type {
  * Get CSS classes for event colors
  */
 export function getEventColorClassesAgenda(
-  color?: EventColorAgenda | string
+  color?: EventColorAgenda | string,
 ): string {
   const eventColor = color || "sky";
 
   switch (eventColor) {
     case "sky":
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8";
+      return "bg-sky-100 hover:bg-sky-200 text-sky-900 border dark:bg-sky-500/30 dark:hover:bg-sky-500/40 dark:text-sky-50 dark:border-sky-400/40 shadow-sky-500/15  hover:shadow-sky-500/25 transition-all duration-200";
     case "amber":
-      return "bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80 dark:bg-amber-400/25 dark:hover:bg-amber-400/20 dark:text-amber-200 shadow-amber-700/8";
+      return "bg-amber-100 hover:bg-amber-200 text-amber-900 border dark:bg-amber-500/30 dark:hover:bg-amber-500/40 dark:text-amber-50 dark:border-amber-400/40 shadow-amber-500/15  hover:shadow-amber-500/25 transition-all duration-200";
     case "violet":
-      return "bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8";
+      return "bg-violet-100 hover:bg-violet-200 text-violet-900 border dark:bg-violet-500/30 dark:hover:bg-violet-500/40 dark:text-violet-50 dark:border-violet-400/40 shadow-violet-500/15  hover:shadow-violet-500/25 transition-all duration-200";
     case "rose":
-      return "bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80 dark:bg-rose-400/25 dark:hover:bg-rose-400/20 dark:text-rose-200 shadow-rose-700/8";
+      return "bg-rose-100 hover:bg-rose-200 text-rose-900 border dark:bg-rose-500/30 dark:hover:bg-rose-500/40 dark:text-rose-50 dark:border-rose-400/40  shadow-rose-500/15  hover:shadow-rose-500/25 transition-all duration-200";
     case "emerald":
-      return "bg-emerald-200/50 hover:bg-emerald-200/40 text-emerald-950/80 dark:bg-emerald-400/25 dark:hover:bg-emerald-400/20 dark:text-emerald-200 shadow-emerald-700/8";
+      return "bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border dark:bg-emerald-500/30 dark:hover:bg-emerald-500/40 dark:text-emerald-50 dark:border-emerald-400/40  shadow-emerald-500/15  hover:shadow-emerald-500/25 transition-all duration-200";
     case "orange":
-      return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8";
+      return "bg-orange-100 hover:bg-orange-200 text-orange-900 border dark:bg-orange-500/30 dark:hover:bg-orange-500/40 dark:text-orange-50 dark:border-orange-400/40  shadow-orange-500/15  hover:shadow-orange-500/25 transition-all duration-200";
     default:
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8";
+      return "bg-sky-100 hover:bg-sky-200 text-sky-900 border dark:bg-sky-500/30 dark:hover:bg-sky-500/40 dark:text-sky-50 dark:border-sky-400/40  shadow-sky-500/15  hover:shadow-sky-500/25 transition-all duration-200";
   }
 }
 
@@ -36,7 +36,7 @@ export function getEventColorClassesAgenda(
  */
 export function getBorderRadiusClassesAgenda(
   isFirstDay: boolean,
-  isLastDay: boolean
+  isLastDay: boolean,
 ): string {
   if (isFirstDay && isLastDay) {
     return "rounded"; // Both ends rounded
@@ -57,7 +57,8 @@ export function isMultiDayEventAgenda(event: CalendarEventAgenda): boolean {
   const eventStart = getEventStartDate(event);
   const eventEnd = getEventEndDate(event);
   if (!eventStart || !eventEnd) return !!event.allDay;
-  return event.allDay || eventStart.getDate() !== eventEnd.getDate();
+  // Compare full dates, not just day of month, to handle cross-month events
+  return event.allDay || !isSameDay(eventStart, eventEnd);
 }
 
 /**
@@ -65,7 +66,7 @@ export function isMultiDayEventAgenda(event: CalendarEventAgenda): boolean {
  */
 export function getEventsForDayAgenda(
   events: CalendarEventAgenda[],
-  day: Date
+  day: Date,
 ): CalendarEventAgenda[] {
   return events
     .filter((event) => {
@@ -76,7 +77,7 @@ export function getEventsForDayAgenda(
 }
 
 export function sortEventsAgenda(
-  events: CalendarEventAgenda[]
+  events: CalendarEventAgenda[],
 ): CalendarEventAgenda[] {
   return [...events].sort((a, b) => {
     const aIsMultiDay = isMultiDayEventAgenda(a);
@@ -91,7 +92,7 @@ export function sortEventsAgenda(
 
 export function getSpanningEventsForDayAgenda(
   events: CalendarEventAgenda[],
-  day: Date
+  day: Date,
 ): CalendarEventAgenda[] {
   return events.filter((event) => {
     if (!isMultiDayEventAgenda(event)) return false;
@@ -112,7 +113,7 @@ export function getSpanningEventsForDayAgenda(
  */
 export function getAllEventsForDayAgenda(
   events: CalendarEventAgenda[],
-  day: Date
+  day: Date,
 ): CalendarEventAgenda[] {
   return events.filter((event) => {
     const eventStart = getEventStartDate(event);
@@ -131,7 +132,7 @@ export function getAllEventsForDayAgenda(
  */
 export function getAgendaEventsForDayAgenda(
   events: CalendarEventAgenda[],
-  day: Date
+  day: Date,
 ): CalendarEventAgenda[] {
   return events
     .filter((event) => {
@@ -154,7 +155,7 @@ export function getAgendaEventsForDayAgenda(
  * Return the event start as a Date if possible
  */
 export function getEventStartDate(
-  event: CalendarEventAgenda
+  event: CalendarEventAgenda,
 ): Date | undefined {
   if (isValidDate(event.start)) return new Date(event.start as Date);
   return undefined;
