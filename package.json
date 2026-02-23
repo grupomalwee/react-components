@@ -2,7 +2,8 @@
   "name": "@mlw-packages/react-components",
   "developer": "Eduardo Junio",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "type":"module"
   },
   "version": "1.9.14",
   "homepage": "https://main--68e80310a069c2f10b546ef3.chromatic.com/",

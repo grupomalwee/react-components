@@ -1,11 +1,6 @@
-"use client";
-
-import * as React from 'react';
-import { motion } from 'framer-motion';
-import type { Transition } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { IconProps } from '@phosphor-icons/react';
-
+import * as React from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion"; // Adicionado Variants
+import { cn } from "@/lib/utils";
 import {
   ContextMenuBase,
   ContextMenuContentBase,
@@ -13,20 +8,23 @@ import {
 } from "./ContextMenuBase";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
+import { IconProps, PencilIcon, CopyIcon, DownloadIcon, TrashIcon } from "@phosphor-icons/react";
+
 type PhosphorIcon = React.ForwardRefExoticComponent<
   IconProps & React.RefAttributes<SVGSVGElement>
 >;
 
-type MenuItem = {
-  id: number;
+export type MenuItem = {
+  id: string | number;
   label: string;
   icon: PhosphorIcon;
-  description?: string; // Opcional para o ModalDescription
+  color?: "default" | "danger";
+  variants?: number; 
 };
 
 type RadialMenuProps = {
   children?: React.ReactNode;
-  menuItems: MenuItem[];
+  menuItems?: MenuItem[];
   size?: number;
   iconSize?: number;
   bandWidth?: number;
@@ -36,24 +34,25 @@ type RadialMenuProps = {
   onSelect?: (item: MenuItem) => void;
 };
 
+
+const CRUD_ITEMS: MenuItem[] = [
+  { id: "edit", label: "Editar", icon: PencilIcon },
+  { id: "copy", label: "Copiar", icon: CopyIcon },
+  { id: "download", label: "Baixar", icon: DownloadIcon },
+  { id: "delete", label: "Excluir", icon: TrashIcon, color: "danger" },
+];
+
 const FULL_CIRCLE = 360;
 const START_ANGLE = -90;
 
-function degToRad(deg: number) {
-  return (deg * Math.PI) / 180;
-}
+function degToRad(deg: number) { return (deg * Math.PI) / 180; }
 
 function polarToCartesian(radius: number, angleDeg: number) {
   const rad = degToRad(angleDeg);
   return { x: Math.cos(rad) * radius, y: Math.sin(rad) * radius };
 }
 
-function slicePath(
-  index: number,
-  total: number,
-  wedgeRadius: number,
-  innerRadius: number,
-) {
+function slicePath(index: number, total: number, wedgeRadius: number, innerRadius: number) {
   if (total <= 0) return "";
   const anglePerSlice = FULL_CIRCLE / total;
   const midDeg = START_ANGLE + anglePerSlice * index;
@@ -70,7 +69,7 @@ function slicePath(
 
 export function RadialMenu({
   children,
-  menuItems,
+  menuItems = CRUD_ITEMS, 
   size = 240,
   iconSize = 24,
   bandWidth = 60,
@@ -81,8 +80,7 @@ export function RadialMenu({
 }: RadialMenuProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const radius = size / 2;
-  const outerRingOuterRadius = radius;
-  const outerRingInnerRadius = outerRingOuterRadius - outerRingWidth;
+  const outerRingInnerRadius = radius - outerRingWidth;
   const wedgeOuterRadius = outerRingInnerRadius - outerGap;
   const wedgeInnerRadius = wedgeOuterRadius - bandWidth;
   const iconRingRadius = (wedgeOuterRadius + wedgeInnerRadius) / 2;
@@ -91,55 +89,135 @@ export function RadialMenu({
 
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
+
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: isMobile
+        ? { duration: 0 }
+        : {
+            delayChildren: 0.05,
+            staggerChildren: 0.03,
+            type: "spring",
+            stiffness: 300,
+            damping: 24,
+          },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      transition: isMobile ? { duration: 0 } : { duration: 0.15 },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, scale: 0, rotate: -20 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: isMobile
+        ? { duration: 0 }
+        : { type: "spring", stiffness: 400, damping: 20 },
+    },
+  };
+
   return (
     <ContextMenuBase>
       <ContextMenuTriggerBase asChild>
-        <div className="select-none outline-none">
-          {children || <div className="size-80 flex justify-center items-center border-2 border-dashed rounded-lg">Right-click here.</div>}
+        <div className="select-none outline-none group touch-none">
+          {children || (
+            <div className="size-80 flex justify-center items-center border-2 border-dashed border-muted-foreground/20 rounded-xl bg-muted/5 cursor-context-menu">
+              Clique com botão direito
+            </div>
+          )}
         </div>
       </ContextMenuTriggerBase>
 
       <ContextMenuContentBase
-        className="p-0 border-none bg-transparent shadow-none overflow-visible"
+        className="p-0 border-none bg-transparent shadow-none overflow-visible -translate-x-1/2 -translate-y-1/2"
         style={{ width: size, height: size }}
       >
-        <motion.div
-          className="relative size-full"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={menuTransition}
-        >
-          <svg className="absolute inset-0 size-full" viewBox={`${-radius} ${-radius} ${radius * 2} ${radius * 2}`}>
-            {menuItems.map((item, index) => {
-              const Icon = item.icon;
-              const midDeg = START_ANGLE + slice * index;
-              const { x: iconX, y: iconY } = polarToCartesian(iconRingRadius, midDeg);
-              const isActive = activeIndex === index;
-              const ICON_BOX = iconSize * 2;
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="relative size-full drop-shadow-xl will-change-transform"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <svg
+              className="absolute inset-0 size-full overflow-visible"
+              viewBox={`${-radius} ${-radius} ${radius * 2} ${radius * 2}`}
+            >
+              <motion.circle r={centerRadius} className="fill-background stroke-border stroke-1" />
 
-              return (
-                <g key={item.id} className="cursor-pointer outline-none" onMouseEnter={() => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)}>
-                  <motion.path
-                    d={slicePath(index, menuItems.length, outerRingOuterRadius, outerRingInnerRadius)}
-                    className={cn(isActive ? "fill-accent" : "fill-muted/20")}
-                    transition={wedgeTransition}
-                  />
-                  <motion.path
-                    d={slicePath(index, menuItems.length, wedgeOuterRadius, wedgeInnerRadius)}
-                    className={cn("stroke-border/40 stroke-1", isActive ? "fill-accent/10" : "fill-popover")}
-                    transition={wedgeTransition}
-                  />
-                  <foreignObject x={iconX - ICON_BOX / 2} y={iconY - ICON_BOX / 2} width={ICON_BOX} height={ICON_BOX}>
-                    <ContextMenuItemBase className="size-full p-0 flex items-center justify-center bg-transparent focus:bg-transparent border-none" onClick={() => onSelect?.(item)}>
-                      <Icon size={iconSize} weight={isActive ? "fill" : "regular"} className={isActive ? "text-accent-foreground" : "text-foreground"} />
-                    </ContextMenuItemBase>
-                  </foreignObject>
-                </g>
-              );
-            })}
-            <circle r={centerRadius} className="fill-popover/50 stroke-border/50 stroke-1" />
-          </svg>
-        </motion.div>
+              <AnimatePresence>
+                {activeIndex !== null && (
+                  <motion.text
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="fill-foreground text-[11px] font-bold uppercase tracking-tighter pointer-events-none"
+                  >
+                    {menuItems[activeIndex].label}
+                  </motion.text>
+                )}
+              </AnimatePresence>
+
+              {menuItems.map((item, index) => {
+                const Icon = item.icon;
+                const midDeg = START_ANGLE + slice * index;
+                const { x: iconX, y: iconY } = polarToCartesian(iconRingRadius, midDeg);
+                const isActive = activeIndex === index;
+                const ICON_BOX = iconSize * 2.5;
+
+                return (
+                  <motion.g
+                    key={item.id}
+                    variants={itemVariants}
+                    className="cursor-pointer outline-none"
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onMouseLeave={() => setActiveIndex(null)}
+                    onClick={(e) => {
+                       e.stopPropagation(); 
+                       onSelect?.(item);
+                    }}
+                    style={{ originX: "0px", originY: "0px" }}
+                  >
+                    <path
+                      d={slicePath(index, menuItems.length, wedgeOuterRadius, wedgeInnerRadius)}
+                      className={cn(
+                        "transition-colors duration-200 stroke-1",
+                        isActive
+                          ? (item.color === "danger" ? "fill-destructive stroke-destructive-foreground/20" : "fill-primary stroke-primary-foreground/20")
+                          : "fill-background/90 stroke-border/50 hover:fill-accent",
+                      )}
+                    />
+
+                    <foreignObject x={iconX - ICON_BOX / 2} y={iconY - ICON_BOX / 2} width={ICON_BOX} height={ICON_BOX} className="pointer-events-none">
+                      <div className="size-full flex items-center justify-center">
+                        <Icon
+                          size={iconSize}
+                          weight={isActive ? "fill" : "regular"}
+                          className={cn(
+                            "transition-all duration-200",
+                            isActive ? "text-primary-foreground" : (item.color === "danger" ? "text-destructive" : "text-muted-foreground")
+                          )}
+                        />
+                      </div>
+                    </foreignObject>
+                  </motion.g>
+                );
+              })}
+            </svg>
+          </motion.div>
+        </AnimatePresence>
       </ContextMenuContentBase>
     </ContextMenuBase>
   );
