@@ -145,11 +145,11 @@ export function ControlledCombobox<T extends string>({
         </PopoverTriggerBase>
 
         <PopoverContentBase
-          className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none"
+          className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width] p-0 border-none focus:ring-0 focus:outline-none"
           data-testid={testIds.popover ?? "combobox-popover"}
         >
           <CommandBase
-            className="dark:text-white hover:bg-rsecondary"
+            className="dark:text-white hover:bg-rsecondary focus:ring-0 focus:outline-none"
             data-testid={testIds.command ?? "combobox-command"}
             filter={
               onSearchChange
@@ -176,6 +176,7 @@ export function ControlledCombobox<T extends string>({
             <CommandListBase
               data-testid={testIds.list ?? "combobox-list"}
               onEndReached={onEndReached}
+              className="focus:ring-0 focus:outline-none"
             >
               <CommandEmptyBase data-testid={testIds.empty ?? "combobox-empty"}>
                 {loading ? "Carregando..." : empty}

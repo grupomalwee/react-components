@@ -113,7 +113,7 @@ const CommandDebouncedInputBase = React.forwardRef<
     ref,
   ) => (
     <div
-      className="flex items-center px-3 border-border border-b"
+      className="flex items-center px-3 border-border border-b focus:ring-0"
       cmdk-input-wrapper=""
     >
       <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 text-primary" />
