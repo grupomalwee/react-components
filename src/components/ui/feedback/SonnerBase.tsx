@@ -21,6 +21,8 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
       className="toaster group"
       position="top-center"
       duration={4000}
+      swipeDirections={["top", "bottom", "left", "right"]}
+      closeButton={true}
       toastOptions={{
         style: {
           backdropFilter: "blur(8px)",
@@ -34,9 +36,8 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
             shadow-xl rounded-lg
             border-l-4
 
-            flex items-center gap-3
+            flex items-center gap-3 pr-10
             transition-all duration-300
-            hover:scale-[1.02] hover:shadow-2xl
             data-[type=success]:border-l-green-500 data-[type=success]:bg-green-50/95 data-[type=success]:text-green-800 data-[type=success]:border-green-500 data-
             data-[type=error]:border-l-red-500 data-[type=error]:bg-red-50/95 data-[type=error]:text-red-800 data-[type=error]:border-red-500
             data-[type=warning]:border-l-yellow-500 data-[type=warning]:bg-yellow-50/95 data-[type=warning]:text-yellow-800 data-[type=warning]:border-yellow-500
@@ -62,6 +63,13 @@ const Toaster = ({ testId, ...props }: ToasterProps) => {
             hover:bg-neutral-200 hover:scale-105
             transition-all duration-200
             active:scale-95
+          `,
+          closeButton: `
+            !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10
+            !border-0 !text-neutral-400 hover:!text-neutral-900 dark:hover:!text-neutral-100
+            transition-all duration-200 !left-[auto] !right-3 !top-1/2 !-translate-y-1/2
+            !w-7 !h-7 !rounded-lg flex items-center justify-center
+            active:scale-95 
           `,
         },
       }}
