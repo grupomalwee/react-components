@@ -21,6 +21,7 @@ import { motion } from "framer-motion";
 import { ReactNode, useState } from "react";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { LabelBase } from "../form";
 
 export interface ControlledComboboxItem<T extends string> {
   label: string;
@@ -62,6 +63,8 @@ export interface ControlledComboboxProps<
   search?: string;
   onEndReached?: () => void;
   loading?: boolean;
+  label?: string;
+  labelClassname?: string;
 }
 
 export function ControlledCombobox<T extends string>({
@@ -74,6 +77,8 @@ export function ControlledCombobox<T extends string>({
   searchPlaceholder,
   empty = "Nenhum dado encontrado",
   error,
+  label,
+  labelClassname,
   testIds = {},
   onClear,
   hasSelected = false,
@@ -87,9 +92,10 @@ export function ControlledCombobox<T extends string>({
 
   return (
     <div
-      className="col-span-1 w-full"
+      className="w-full flex flex-col"
       data-testid={testIds.root ?? "combobox-base-root"}
     >
+      {label && <LabelBase className={labelClassname}>{label}</LabelBase>}
       <PopoverBase
         open={open}
         onOpenChange={(v) => !disabled && setOpen(v)}

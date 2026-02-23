@@ -187,6 +187,7 @@ function PublicAPI() {
           hasSelected={!!selected}
           onClear={() => setSelected(null)}
           searchPlaceholder="Type to search artworks..."
+          label="Artworks"
         />
       </div>
     );
