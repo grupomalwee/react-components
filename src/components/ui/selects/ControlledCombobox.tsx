@@ -22,12 +22,12 @@ import { ReactNode, useState } from "react";
 import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-export interface ComboboxItem<T extends string> {
+export interface ControlledComboboxItem<T extends string> {
   label: string;
   value: T;
 }
 
-export interface ComboboxTestIds {
+export interface ControlledComboboxTestIds {
   root?: string;
   trigger?: string;
   popover?: string;
@@ -44,7 +44,7 @@ export interface ComboboxTestIds {
 export interface ControlledComboboxProps<
   T extends string,
 > extends ErrorMessageProps {
-  items: ComboboxItem<T>[];
+  items: ControlledComboboxItem<T>[];
   renderSelected: ReactNode;
   handleSelection: (value: T) => void;
   checkIsSelected: (value: T) => boolean;
@@ -55,7 +55,7 @@ export interface ControlledComboboxProps<
   empty?: ReactNode;
   hideClear?: boolean;
   onClear?: () => void;
-  testIds?: ComboboxTestIds;
+  testIds?: ControlledComboboxTestIds;
   isMulti?: boolean;
   hasSelected?: boolean;
   onSearchChange?: (value: string) => void;

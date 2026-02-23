@@ -73,3 +73,4 @@ export * from "./ui/FilterBase";
 export * from "./ui/charts/HorizontalChart";
 export * from "./ui/layout/CarouselBase";
 export * from "./ui/navigation/RadialMenu";
+export * from "./ui/selects/ControlledCombobox";

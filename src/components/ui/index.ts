@@ -29,3 +29,4 @@ export * from "./form/NumericInput";
 export * from "./charts/HorizontalChart";
 export * from "./";
 export * from "./navigation/RadialMenu";
+export * from "./selects/ControlledCombobox";

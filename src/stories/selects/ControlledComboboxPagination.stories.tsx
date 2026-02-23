@@ -1,11 +1,11 @@
 import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { ControlledCombobox } from "@/components/ui/selects/ControlledCombobox";
 
 const meta: Meta<typeof ControlledCombobox> = {
-  title: "selects/ControlledComboboxPagination",
+  title: "selects/Controlled Combobox",
   component: ControlledCombobox,
   tags: ["autodocs"],
   decorators: [
@@ -37,7 +37,7 @@ interface GitHubUser {
 const PAGE_SIZE = 20;
 
 export const PublicAPI: Story = {
-  name: "Public API (120k+ items)",
+  name: "Public API",
   parameters: {
     docs: {
       source: {
@@ -194,7 +194,7 @@ function PublicAPI() {
 };
 
 export const PublicUserAPI: Story = {
-  name: "Public User API (GitHub 100M+)",
+  name: "Public User API",
   parameters: {
     docs: {
       source: {
@@ -365,7 +365,7 @@ function PublicUserAPI() {
 };
 
 export const LargeUserDataset: Story = {
-  name: "Large User Dataset (100k+ Mock)",
+  name: "Large User Dataset",
   parameters: {
     docs: {
       source: {
