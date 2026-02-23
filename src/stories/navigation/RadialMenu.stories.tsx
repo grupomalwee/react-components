@@ -38,7 +38,7 @@ export const Default: Story = {
     menuItems: demoItems,
     size: 260,
     iconSize: 22,
-    onSelect: (item) => alert(`Selecionou: ${item.label}`),
+
   },
   render: (args) => (
     <div className="flex items-center justify-center w-[500px] h-[400px] ">
