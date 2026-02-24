@@ -26,7 +26,18 @@ import { useCurrentTimeIndicatorAgenda } from "./hooks/use-current-time-indicato
 import { EventItemAgenda } from "./EventItemAgenda";
 import { DroppableCellAgenda } from "./DroppableCell";
 import { UndatedEvents } from "@/components/ui/event-calendar-view/";
-import { getEventStartDate, getEventEndDate } from "./utils";
+import {
+  getEventStartDate,
+  getEventEndDate,
+  formatDurationAgenda,
+} from "./utils";
+import {
+  TooltipBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+  TooltipTriggerBase,
+} from "@/components/ui/feedback";
+import { MapPinIcon } from "@phosphor-icons/react";
 
 interface DayViewProps {
   currentDate: Date;
@@ -240,16 +251,39 @@ export function DayViewAgenda({
                   : false;
 
                 return (
-                  <EventItemAgenda
-                    event={event}
-                    isFirstDay={isFirstDay}
-                    isLastDay={isLastDay}
+                  <TooltipProviderBase
+                    delayDuration={400}
                     key={`spanning-${event.id}`}
-                    onClick={(e) => handleEventClick(event, e)}
-                    view="month"
                   >
-                    <div>{event.title}</div>
-                  </EventItemAgenda>
+                    <TooltipBase>
+                      <TooltipTriggerBase asChild>
+                        <div className="w-full">
+                          <EventItemAgenda
+                            event={event}
+                            isFirstDay={isFirstDay}
+                            isLastDay={isLastDay}
+                            onClick={(e) => handleEventClick(event, e)}
+                            view="month"
+                          >
+                            <div>{event.title}</div>
+                          </EventItemAgenda>
+                        </div>
+                      </TooltipTriggerBase>
+                      <TooltipContentBase side="top">
+                        <p className="font-semibold truncate max-w-[200px]">
+                          {event.title}
+                        </p>
+                        <p className="opacity-80 mt-0.5 leading-snug">
+                          {formatDurationAgenda(event)}
+                        </p>
+                        {event.location && (
+                          <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px] flex items-center gap-1">
+                            <MapPinIcon size={14} /> {event.location}
+                          </p>
+                        )}
+                      </TooltipContentBase>
+                    </TooltipBase>
+                  </TooltipProviderBase>
                 );
               })}
             </div>
@@ -293,14 +327,44 @@ export function DayViewAgenda({
                   zIndex: positionedEvent.zIndex,
                 }}
               >
-                <EventItemAgenda
-                  event={evt}
-                  view="day"
-                  isFirstDay={isFirstDay}
-                  isLastDay={isLastDay}
-                  onClick={(e) => handleEventClick(evt, e)}
-                  showTime
-                />
+                <TooltipProviderBase delayDuration={400}>
+                  <TooltipBase>
+                    <TooltipTriggerBase asChild>
+                      <div className="size-full">
+                        <EventItemAgenda
+                          event={evt}
+                          view="day"
+                          isFirstDay={isFirstDay}
+                          isLastDay={isLastDay}
+                          onClick={(e) => handleEventClick(evt, e)}
+                          showTime
+                        />
+                      </div>
+                    </TooltipTriggerBase>
+                    <TooltipContentBase
+                      side="top"
+                      sideOffset={6}
+                      className="max-w-[220px] space-y-0.5"
+                    >
+                      <p className="font-semibold text-sm leading-snug">
+                        {evt.title}
+                      </p>
+                      <p className="text-xs opacity-90">
+                        {formatDurationAgenda(evt)}
+                      </p>
+                      {evt.location && (
+                        <p className="text-xs flex items-center gap-2">
+                          <MapPinIcon size={15} /> {evt.location}
+                        </p>
+                      )}
+                      {evt.description && (
+                        <p className="text-xs opacity-75 line-clamp-2">
+                          {evt.description}
+                        </p>
+                      )}
+                    </TooltipContentBase>
+                  </TooltipBase>
+                </TooltipProviderBase>
               </div>
             );
           })}

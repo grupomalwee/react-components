@@ -28,9 +28,10 @@ import {
   isMultiDayEventAgenda,
   UndatedEvents,
   useCurrentTimeIndicatorAgenda,
-  WeekCellsHeightAgenda,
   getEventStartDate,
   getEventEndDate,
+  formatDurationAgenda,
+  WeekCellsHeightAgenda,
 } from "@/components/ui/event-calendar-view/";
 import { EndHour, StartHour } from "@/components/ui/event-calendar/constants";
 import { cn } from "@/lib/utils";
@@ -356,46 +357,64 @@ export function WeekViewAgenda({
                         isFirstDay || (!isFirstDay && colStart === 0);
 
                       return (
-                        <div
-                          key={event.id}
-                          className="absolute px-0.5"
-                          style={{
-                            left: `calc(${(colStart / 7) * 100}% + 2px)`,
-                            width: `calc(${(colSpan / 7) * 100}% - 4px)`,
-                            top: EventGapAgenda + slot * rowH,
-                            height: EventHeightAgenda,
-                          }}
-                        >
-                          <EventItemAgenda
-                            event={event}
-                            isFirstDay={isFirstDay}
-                            isLastDay={isLastDay}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEventClick(event, e);
-                            }}
-                            view="month"
-                            className="h-full"
-                          >
-                            <span className="flex items-center gap-1 min-w-0 w-full">
-                              {!isFirstDay && colStart === 0 && (
-                                <span className="shrink-0 text-[11px] font-bold opacity-60">
-                                  <CaretLeftIcon />
-                                </span>
+                        <TooltipProviderBase delayDuration={400} key={event.id}>
+                          <TooltipBase>
+                            <TooltipTriggerBase asChild>
+                              <div
+                                className="absolute px-0.5"
+                                style={{
+                                  left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                                  width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                                  top: EventGapAgenda + slot * rowH,
+                                  height: EventHeightAgenda,
+                                }}
+                              >
+                                <EventItemAgenda
+                                  event={event}
+                                  isFirstDay={isFirstDay}
+                                  isLastDay={isLastDay}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEventClick(event, e);
+                                  }}
+                                  view="month"
+                                  className="h-full"
+                                >
+                                  <span className="flex items-center gap-1 min-w-0 w-full">
+                                    {!isFirstDay && colStart === 0 && (
+                                      <span className="shrink-0 text-[11px] font-bold opacity-60">
+                                        <CaretLeftIcon />
+                                      </span>
+                                    )}
+                                    {showTitle && (
+                                      <span className="truncate text-xs font-medium">
+                                        {event.title}
+                                      </span>
+                                    )}
+                                    {!isLastDay && colStart + colSpan === 7 && (
+                                      <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                                        <CaretRightIcon />
+                                      </span>
+                                    )}
+                                  </span>
+                                </EventItemAgenda>
+                              </div>
+                            </TooltipTriggerBase>
+                            <TooltipContentBase side="top">
+                              <p className="font-semibold truncate max-w-[200px]">
+                                {event.title}
+                              </p>
+                              <p className="opacity-80 mt-0.5 leading-snug">
+                                {formatDurationAgenda(event)}
+                              </p>
+                              {event.location && (
+                                <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px] flex items-center gap-1">
+                                  <MapPinIcon size={14} /> {event.location}
+                                </p>
                               )}
-                              {showTitle && (
-                                <span className="truncate text-xs font-medium">
-                                  {event.title}
-                                </span>
-                              )}
-                              {!isLastDay && colStart + colSpan === 7 && (
-                                <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
-                                  <CaretRightIcon />
-                                </span>
-                              )}
-                            </span>
-                          </EventItemAgenda>
-                        </div>
+                            </TooltipContentBase>
+                          </TooltipBase>
+                        </TooltipProviderBase>
                       );
                     })}
                   </div>
@@ -443,71 +462,91 @@ export function WeekViewAgenda({
                         isFirstDay || (!isFirstDay && colStart === 0);
 
                       return (
-                        <div
-                          key={event.id}
-                          className="absolute px-0.5"
-                          style={{
-                            left: `calc(${(colStart / 7) * 100}% + 2px)`,
-                            width: `calc(${(colSpan / 7) * 100}% - 4px)`,
-                            top: EventGapAgenda + slot * rowH,
-                            height: EventHeightAgenda,
-                          }}
-                        >
-                          <EventItemAgenda
-                            event={event}
-                            isFirstDay={isFirstDay}
-                            isLastDay={isLastDay}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEventClick(event, e);
-                            }}
-                            view="month"
-                            className="h-full border-dashed"
-                          >
-                            <span className="flex items-center gap-1 min-w-0 w-full">
-                              {!isFirstDay && colStart === 0 && (
-                                <span className="shrink-0 text-[11px] font-bold opacity-60">
-                                  <CaretLeftIcon />
-                                </span>
-                              )}
-                              {showTitle && (
-                                <>
-                                  {isFirstDay && (
-                                    <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
-                                      {format(eventStart, "HH:mm")}
-                                    </span>
-                                  )}
-                                  <span className="truncate text-xs font-medium">
-                                    {event.title}
-                                  </span>
-                                  {isFirstDay &&
-                                    (() => {
-                                      const evStart = getEventStartDate(event);
-                                      const evEnd = getEventEndDate(event);
-                                      if (!evStart || !evEnd) return null;
-                                      const d =
-                                        Math.round(
-                                          (evEnd.getTime() -
-                                            evStart.getTime()) /
-                                            86400000,
-                                        ) + 1;
-                                      if (d < 2) return null;
-                                      return (
-                                        <span className="shrink-0 inline-flex items-end font-bold leading-none px-1 py-0.5 text-[10px]">
-                                          {d}d
+                        <TooltipProviderBase delayDuration={400} key={event.id}>
+                          <TooltipBase>
+                            <TooltipTriggerBase asChild>
+                              <div
+                                className="absolute px-0.5"
+                                style={{
+                                  left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                                  width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                                  top: EventGapAgenda + slot * rowH,
+                                  height: EventHeightAgenda,
+                                }}
+                              >
+                                <EventItemAgenda
+                                  event={event}
+                                  isFirstDay={isFirstDay}
+                                  isLastDay={isLastDay}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEventClick(event, e);
+                                  }}
+                                  view="month"
+                                  className="h-full border-dashed"
+                                >
+                                  <span className="flex items-center gap-1 min-w-0 w-full">
+                                    {!isFirstDay && colStart === 0 && (
+                                      <span className="shrink-0 text-[11px] font-bold opacity-60">
+                                        <CaretLeftIcon />
+                                      </span>
+                                    )}
+                                    {showTitle && (
+                                      <>
+                                        {isFirstDay && (
+                                          <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
+                                            {format(eventStart, "HH:mm")}
+                                          </span>
+                                        )}
+                                        <span className="truncate text-xs font-medium">
+                                          {event.title}
                                         </span>
-                                      );
-                                    })()}
-                                </>
+                                        {isFirstDay &&
+                                          (() => {
+                                            const evStart =
+                                              getEventStartDate(event);
+                                            const evEnd =
+                                              getEventEndDate(event);
+                                            if (!evStart || !evEnd) return null;
+                                            const d =
+                                              Math.round(
+                                                (evEnd.getTime() -
+                                                  evStart.getTime()) /
+                                                  86400000,
+                                              ) + 1;
+                                            if (d < 2) return null;
+                                            return (
+                                              <span className="shrink-0 inline-flex items-end font-bold leading-none px-1 py-0.5 text-[10px]">
+                                                {d}d
+                                              </span>
+                                            );
+                                          })()}
+                                      </>
+                                    )}
+                                    {!isLastDay && colStart + colSpan === 7 && (
+                                      <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                                        <CaretRightIcon />
+                                      </span>
+                                    )}
+                                  </span>
+                                </EventItemAgenda>
+                              </div>
+                            </TooltipTriggerBase>
+                            <TooltipContentBase side="top">
+                              <p className="font-semibold truncate max-w-[200px]">
+                                {event.title}
+                              </p>
+                              <p className="opacity-80 mt-0.5 leading-snug">
+                                {formatDurationAgenda(event)}
+                              </p>
+                              {event.location && (
+                                <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px] flex items-center gap-1">
+                                  <MapPinIcon size={14} /> {event.location}
+                                </p>
                               )}
-                              {!isLastDay && colStart + colSpan === 7 && (
-                                <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
-                                  <CaretRightIcon />
-                                </span>
-                              )}
-                            </span>
-                          </EventItemAgenda>
-                        </div>
+                            </TooltipContentBase>
+                          </TooltipBase>
+                        </TooltipProviderBase>
                       );
                     })}
                   </div>
@@ -539,13 +578,7 @@ export function WeekViewAgenda({
                 key={day.toString()}
               >
                 {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => {
-                  const evStart = getEventStartDate(positionedEvent.event);
-                  const evEnd = getEventEndDate(positionedEvent.event);
-                  const timeLabel = evStart
-                    ? evEnd
-                      ? `${format(evStart, "HH:mm")} – ${format(evEnd, "HH:mm")}`
-                      : format(evStart, "HH:mm")
-                    : undefined;
+                  const timeLabel = formatDurationAgenda(positionedEvent.event);
 
                   return (
                     <TooltipProviderBase key={positionedEvent.event.id}>
@@ -585,9 +618,7 @@ export function WeekViewAgenda({
                           <p className="font-semibold text-sm leading-snug">
                             {positionedEvent.event.title}
                           </p>
-                          {timeLabel && (
-                            <p className="text-xs opacity-90">{timeLabel}</p>
-                          )}
+                          <p className="text-xs opacity-90">{timeLabel}</p>
                           {positionedEvent.event.location && (
                             <p className="text-xs flex items-center gap-2">
                               <MapPinIcon size={15} />{" "}

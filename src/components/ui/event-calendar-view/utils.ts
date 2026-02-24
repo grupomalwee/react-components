@@ -1,17 +1,53 @@
-import { isSameDay } from "date-fns";
+import { differenceInCalendarDays, format, isSameDay } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 import type {
   CalendarEventAgenda,
   EventColorAgenda,
 } from "@/components/ui/event-calendar-view/types";
 
-/**
- * Get CSS classes for event colors
- */
+export function getAutoColorAgenda(id: string): EventColorAgenda {
+  const colors: EventColorAgenda[] = [
+    "sky",
+    "amber",
+    "violet",
+    "rose",
+    "emerald",
+    "orange",
+    "green",
+    "blue",
+    "red",
+    "purple",
+    "indigo",
+    "teal",
+    "pink",
+    "cyan",
+    "lime",
+    "fuchsia",
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+
 export function getEventColorClassesAgenda(
   color?: EventColorAgenda | string,
+  eventId?: string,
 ): string {
-  const eventColor = color || "sky";
+  let eventColor = color;
+
+  if (!eventColor && eventId) {
+    eventColor = getAutoColorAgenda(eventId);
+  }
+
+  if (!eventColor) {
+    eventColor = "sky";
+  }
 
   switch (eventColor) {
     case "sky":
@@ -247,4 +283,37 @@ export function addMinutesToDateAgenda(date: Date, minutes: number): Date {
 // Backwards-compatible helper in case other code relied on addHoursToDateAgenda
 export function addHoursToDateAgenda(date: Date, hours: number): Date {
   return addMinutesToDateAgenda(date, Math.round(hours * 60));
+}
+
+/**
+ * Format event duration for tooltips
+ */
+export function formatDurationAgenda(event: CalendarEventAgenda): string {
+  const start = getEventStartDate(event);
+  const end = getEventEndDate(event);
+  if (!start) return "";
+  const fmt = (d: Date) => format(d, "d 'de' MMM", { locale: ptBR });
+  if (!end || isSameDay(start, end)) {
+    return (
+      fmt(start) +
+      (event.allDay ? " · Dia todo" : " · " + format(start, "HH:mm"))
+    );
+  }
+  const days = differenceInCalendarDays(end, start) + 1;
+  return `${fmt(start)} → ${fmt(end)} · ${days} dias`;
+}
+
+export function formatDurationAgendaDays(event: CalendarEventAgenda): string {
+  const start = getEventStartDate(event);
+  const end = getEventEndDate(event);
+  if (!start) return "";
+  const fmt = (d: Date) => format(d, "d 'de' MMM", { locale: ptBR });
+  if (!end || isSameDay(start, end)) {
+    return (
+      fmt(start) +
+      (event.allDay ? " · Dia todo" : " · " + format(start, "HH:mm"))
+    );
+  }
+  const days = differenceInCalendarDays(end, start) + 1;
+  return `${days} dias`;
 }

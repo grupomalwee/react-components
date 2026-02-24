@@ -7,7 +7,6 @@ import {
   max,
   min,
 } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import type React from "react";
 
 import {
@@ -16,6 +15,7 @@ import {
   getEventStartDate,
   getEventEndDate,
   isMultiDayEventAgenda,
+  formatDurationAgenda,
 } from "@/components/ui/event-calendar-view/";
 import { cn } from "@/lib/utils";
 import {
@@ -24,7 +24,11 @@ import {
   TooltipProviderBase,
   TooltipTriggerBase,
 } from "@/components/ui/feedback/TooltipBase";
-import { CaretLeftIcon, CaretRightIcon, MapPinIcon } from "@phosphor-icons/react";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  MapPinIcon,
+} from "@phosphor-icons/react";
 
 export interface MultiDayBar {
   event: CalendarEventAgenda;
@@ -111,21 +115,6 @@ export function computeMultiDayBars(
   return bars;
 }
 
-function formatDuration(event: CalendarEventAgenda): string {
-  const start = getEventStartDate(event);
-  const end = getEventEndDate(event);
-  if (!start) return "";
-  const fmt = (d: Date) => format(d, "d 'de' MMM", { locale: ptBR });
-  if (!end || isSameDay(start, end)) {
-    return (
-      fmt(start) +
-      (event.allDay ? " · Dia todo" : " · " + format(start, "HH:mm"))
-    );
-  }
-  const days = differenceInCalendarDays(end, start) + 1;
-  return `${fmt(start)} → ${fmt(end)} · ${days} dias`;
-}
-
 interface MultiDayOverlayProps {
   bars: MultiDayBar[];
   weekIndex: number;
@@ -161,7 +150,7 @@ export function MultiDayOverlay({
             <TooltipBase>
               <TooltipTriggerBase asChild>
                 <div
-                  className="absolute pointer-events-auto px-1.5"
+                  className="absolute pointer-events-auto px-[5px]"
                   style={{
                     left: continuesFromPrev
                       ? `${(colStart / 7) * 100}%`
@@ -184,7 +173,10 @@ export function MultiDayOverlay({
                       onEventSelect(event, e);
                     }}
                     view="month"
-                    className={cn("w-full", isHovered && "[filter:brightness(0.92)]")}
+                    className={cn(
+                      "w-full",
+                      isHovered && "[filter:brightness(0.92)]",
+                    )}
                   >
                     <span className="flex items-center gap-0.5 w-full min-w-0">
                       {continuesFromPrev && (
@@ -232,7 +224,7 @@ export function MultiDayOverlay({
                   {event.title}
                 </p>
                 <p className="opacity-80 mt-0.5 leading-snug">
-                  {formatDuration(event)}
+                  {formatDurationAgenda(event)}
                 </p>
                 {event.location && (
                   <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px]">

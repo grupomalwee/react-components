@@ -31,6 +31,7 @@ import {
   getEventStartDate,
   getEventEndDate,
   isMultiDayEventAgenda,
+  formatDurationAgenda,
 } from "@/components/ui/event-calendar-view/";
 import { DefaultStartHourAgenda } from "@/components/ui/event-calendar-view/constants";
 import {
@@ -41,6 +42,13 @@ import {
 import { twMerge } from "tailwind-merge";
 import { cn } from "@/lib/utils";
 import { computeMultiDayBars, MultiDayOverlay } from "./MonthMultiDayOverlay";
+import {
+  TooltipBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+  TooltipTriggerBase,
+} from "@/components/ui/feedback";
+import { MapPinIcon } from "@phosphor-icons/react";
 
 interface MonthViewProps {
   currentDate: Date;
@@ -284,24 +292,48 @@ export function MonthViewAgenda({
                               aria-hidden={isHidden ? "true" : undefined}
                               className="aria-hidden:hidden"
                             >
-                              <EventItemAgenda
-                                event={event}
-                                isFirstDay
-                                isLastDay
-                                onClick={(e) => handleEventClick(event, e)}
-                                view="month"
-                              >
-                                <span className="flex items-center gap-1 sm:gap-1.5 truncate text-[11px] relative z-10">
-                                  {!event.allDay && (
-                                    <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
-                                      {format(eventStart, "HH:mm")}
-                                    </span>
-                                  )}
-                                  <span className="font-semibold truncate">
-                                    {event.title}
-                                  </span>
-                                </span>
-                              </EventItemAgenda>
+                              <TooltipProviderBase delayDuration={400}>
+                                <TooltipBase>
+                                  <TooltipTriggerBase asChild>
+                                    <div className="w-full">
+                                      <EventItemAgenda
+                                        event={event}
+                                        isFirstDay
+                                        isLastDay
+                                        onClick={(e) =>
+                                          handleEventClick(event, e)
+                                        }
+                                        view="month"
+                                      >
+                                        <span className="flex items-center gap-1 sm:gap-1.5 truncate text-[11px] relative z-10">
+                                          {!event.allDay && (
+                                            <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
+                                              {format(eventStart, "HH:mm")}
+                                            </span>
+                                          )}
+                                          <span className="font-semibold truncate">
+                                            {event.title}
+                                          </span>
+                                        </span>
+                                      </EventItemAgenda>
+                                    </div>
+                                  </TooltipTriggerBase>
+                                  <TooltipContentBase side="top">
+                                    <p className="font-semibold truncate max-w-[200px]">
+                                      {event.title}
+                                    </p>
+                                    <p className="opacity-80 mt-0.5 leading-snug">
+                                      {formatDurationAgenda(event)}
+                                    </p>
+                                    {event.location && (
+                                      <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px] flex items-center gap-1">
+                                        <MapPinIcon size={14} />{" "}
+                                        {event.location}
+                                      </p>
+                                    )}
+                                  </TooltipContentBase>
+                                </TooltipBase>
+                              </TooltipProviderBase>
                             </div>
                           );
                         })}

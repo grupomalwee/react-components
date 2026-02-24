@@ -74,7 +74,7 @@ function EventWrapper({
   const isEventInPast = displayEnd ? isPast(displayEnd) : false;
 
   const colorClasses = hasValidTimeForWrapper
-    ? getEventColorClassesAgenda(event.color)
+    ? getEventColorClassesAgenda(event.color, event.id)
     : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none ";
 
   return (
@@ -144,7 +144,7 @@ export function EventItemAgenda({
   const hasValidTime = !!startDate || !!endDate;
 
   const colorClasses = hasValidTime
-    ? getEventColorClassesAgenda(eventColor)
+    ? getEventColorClassesAgenda(eventColor, event.id)
     : "bg-gray-200/50 hover:bg-gray-200/40 text-gray-900/80 dark:bg-gray-700/25 dark:text-gray-200/90 shadow-none";
 
   const displayStart = useMemo(() => {
@@ -344,7 +344,7 @@ export function EventItemAgenda({
       <button
         className={cn(
           "flex w-full flex-col gap-2 rounded-lg p-3 text-left outline-none transition-shadow duration-150 ease-out hover:bg-white/3 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-past-event:line-through data-past-event:opacity-90 border-2 border-border",
-          getEventColorClassesAgenda(eventColor),
+          getEventColorClassesAgenda(eventColor, event.id),
           className,
         )}
         aria-label={ariaLabel}
