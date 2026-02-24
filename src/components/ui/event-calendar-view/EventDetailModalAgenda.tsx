@@ -47,32 +47,6 @@ const colorBannerMap: Record<string, string> = {
   fuchsia: "from-fuchsia-400 to-fuchsia-500",
 };
 
-const colorPillMap: Record<string, string> = {
-  sky: "bg-sky-100/80 text-sky-700 border-border dark:bg-sky-500/20 dark:text-sky-200",
-  amber:
-    "bg-amber-100/80 text-amber-700 border-border dark:bg-amber-500/20 dark:text-amber-200",
-  violet:
-    "bg-violet-100/80 text-violet-700 border-border dark:bg-violet-500/20 dark:text-violet-200",
-  rose: "bg-rose-100/80 text-rose-700 border-border dark:bg-rose-500/20 dark:text-rose-200",
-  emerald:
-    "bg-emerald-100/80 text-emerald-700 border-border dark:bg-emerald-500/20 dark:text-emerald-200",
-  orange:
-    "bg-orange-100/80 text-orange-700 border-border dark:bg-orange-500/20 dark:text-orange-200",
-  green:
-    "bg-green-100/80 text-green-700 border-border dark:bg-green-500/20 dark:text-green-200",
-  blue: "bg-blue-100/80 text-blue-700 border-border dark:bg-blue-500/20 dark:text-blue-200",
-  red: "bg-red-100/80 text-red-700 border-border dark:bg-red-500/20 dark:text-red-200",
-  purple:
-    "bg-purple-100/80 text-purple-700 border-border dark:bg-purple-500/20 dark:text-purple-200",
-  indigo:
-    "bg-indigo-100/80 text-indigo-700 border-border dark:bg-indigo-500/20 dark:text-indigo-200",
-  teal: "bg-teal-100/80 text-teal-700 border-border dark:bg-teal-500/20 dark:text-teal-200",
-  pink: "bg-pink-100/80 text-pink-700 border-border dark:bg-pink-500/20 dark:text-pink-200",
-  cyan: "bg-cyan-100/80 text-cyan-700 border-border dark:bg-cyan-500/20 dark:text-cyan-200",
-  lime: "bg-lime-100/80 text-lime-700 border-border dark:bg-lime-500/20 dark:text-lime-200",
-  fuchsia:
-    "bg-fuchsia-100/80 text-fuchsia-700 border-border dark:bg-fuchsia-500/20 dark:text-fuchsia-200",
-};
 
 function formatDuration(minutes: number): string {
   if (minutes <= 0) return "";

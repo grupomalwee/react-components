@@ -13,12 +13,6 @@ import {
   getEventEndDate,
 } from "@/components/ui/event-calendar-view/";
 import { cn } from "@/lib/utils";
-import {
-  TooltipBase,
-  TooltipTriggerBase,
-  TooltipContentBase,
-  TooltipProviderBase,
-} from "@/components/ui/feedback";
 
 const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, "HH:mm");

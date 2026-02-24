@@ -79,11 +79,6 @@ export function WeekViewAgenda({
     return eachDayOfInterval({ end: weekEnd, start: weekStart });
   }, [currentDate]);
 
-  const weekStart = useMemo(
-    () => startOfWeek(currentDate, { weekStartsOn: 0 }),
-    [currentDate],
-  );
-
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
     return eachHourOfInterval({
