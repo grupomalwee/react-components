@@ -11,6 +11,14 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.0",
+    date: "2026-02-24",
+    shortTitle: "Event Calendar View",
+    added: [
+      "Event Calendar View: novo componente de calendário de eventos interativo e personalizável, ideal para interfaces modernas e acesso rápido a ações.",
+    ],
+  },
+  {
     version: "1.9.16",
     date: "2026-02-23",
     shortTitle: "Sonner",
