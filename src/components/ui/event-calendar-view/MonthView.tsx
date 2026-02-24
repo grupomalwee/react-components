@@ -40,7 +40,6 @@ import {
 } from "../overlays/PopoverBase";
 import { twMerge } from "tailwind-merge";
 import { cn } from "@/lib/utils";
-import { MonthNowBadge } from "./MonthNowBadge";
 import { computeMultiDayBars, MultiDayOverlay } from "./MonthMultiDayOverlay";
 
 interface MonthViewProps {
@@ -166,11 +165,6 @@ export function MonthViewAgenda({
       <div className="grid flex-1 auto-rows-fr">
         {weeks.map((week, weekIndex) => {
           const multiDayBars = computeMultiDayBars(eventsWithStart, week);
-          const maxSlot =
-            multiDayBars.length > 0
-              ? Math.max(...multiDayBars.map((b) => b.slot))
-              : -1;
-          const multiDayRowCount = maxSlot + 1;
 
           return (
             <div
@@ -194,17 +188,30 @@ export function MonthViewAgenda({
                 const allEvents = getAllEventsForDayAgenda(events, day);
                 const isReferenceCell = weekIndex === 0 && dayIndex === 0;
 
-                const visibleCount = isMounted
-                  ? getVisibleEventCount(allDayEvents.length + multiDayRowCount)
-                  : undefined;
-                const visibleAfterMultiday =
-                  visibleCount !== undefined
-                    ? Math.max(0, visibleCount - multiDayRowCount)
-                    : undefined;
+                const dayBars = multiDayBars.filter(
+                  (b) =>
+                    dayIndex >= b.colStart && dayIndex < b.colStart + b.colSpan,
+                );
+                const dayMaxSlot =
+                  dayBars.length > 0
+                    ? Math.max(...dayBars.map((b) => b.slot))
+                    : -1;
+                const dayMultiDayRowCount = dayMaxSlot + 1;
 
                 const singleEvents = sortEventsAgenda(allDayEvents).filter(
                   (e) => !isMultiDayEventAgenda(e),
                 );
+
+                const visibleCount = isMounted
+                  ? getVisibleEventCount(
+                      singleEvents.length + dayMultiDayRowCount,
+                    )
+                  : undefined;
+                const visibleAfterMultiday =
+                  visibleCount !== undefined
+                    ? Math.max(0, visibleCount - dayMultiDayRowCount)
+                    : undefined;
+
                 const hasMore =
                   visibleAfterMultiday !== undefined &&
                   singleEvents.length > visibleAfterMultiday;
@@ -246,14 +253,11 @@ export function MonthViewAgenda({
                       >
                         {format(day, "d")}
                       </div>
-
-                      {isTodayCell && <MonthNowBadge />}
-
                       <div
                         ref={isReferenceCell ? contentRef : null}
                         className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-0.5 sm:py-1"
                       >
-                        {Array.from({ length: multiDayRowCount }).map(
+                        {Array.from({ length: dayMultiDayRowCount }).map(
                           (_, si) => (
                             <div
                               key={`spacer-${si}`}
@@ -313,7 +317,8 @@ export function MonthViewAgenda({
                               className="mt-[var(--event-gap)] flex h-[var(--event-height)] w-full select-none items-center overflow-hidden px-2 text-left text-[10px] text-muted-foreground outline-none rounded-md transition hover:bg-muted/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:text-xs"
                             >
                               <span className="font-semibold">
-                                + {remainingCount} mais
+                                + {remainingCount}{" "}
+                                <span className="hidden sm:inline">mais</span>
                               </span>
                             </button>
                           </PopoverTriggerBase>

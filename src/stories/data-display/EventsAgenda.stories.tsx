@@ -806,15 +806,7 @@ export const BusyWeek: Story = {
       setMinutes(setHours(d(day), h), m);
 
     const events: CalendarEventAgenda[] = [
-      {
-        id: "ad1",
-        title: "Sprint 42",
-        allDay: true,
-        start: d(0),
-        end: d(4),
-        color: "violet",
-        description: "Backend & Mobile sprint",
-      },
+
       {
         id: "ad2",
         title: "Onboarding — Ana Lima",

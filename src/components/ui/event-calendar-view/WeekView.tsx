@@ -295,368 +295,378 @@ export function WeekViewAgenda({
     useCurrentTimeIndicatorAgenda(currentDate, "week");
 
   return (
-    <div className="flex h-full flex-col" data-slot="week-view">
-      <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background">
-        <div className="py-2 text-center text-muted-foreground/70 text-sm">
-          <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
-        </div>
-        {days.map((day) => (
-          <div
-            className="py-2 text-center text-muted-foreground/70 text-sm data-today:font-medium data-today:text-foreground"
-            data-today={isToday(day) || undefined}
-            key={day.toString()}
-          >
-            <span aria-hidden="true" className="sm:hidden">
-              {format(day, "EEE", { locale: ptBR })[0]}{" "}
-              {format(day, "d", { locale: ptBR })}
-            </span>
-            <span className="max-sm:hidden">
-              {format(day, "EEE dd", { locale: ptBR })}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {showAllDaySection && (
-        <div className="border-border/70 border-b bg-muted/50">
-          {trueAllDayEvents.length > 0 && (
-            <div className="grid grid-cols-8">
-              <div className="relative border-border/70 border-r">
-                <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
-                  Todo dia
-                </span>
-              </div>
-
-              <div
-                className="col-span-7 relative"
-                style={{ height: allDayBarData.sectionH }}
-              >
-                <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
-                  {days.map((day) => (
-                    <div
-                      key={day.toString()}
-                      className="border-r last:border-r-0 border-border/70"
-                      data-today={isToday(day) || undefined}
-                    />
-                  ))}
-                </div>
-
-                {allDayBarData.bars.map((bar) => {
-                  const {
-                    event,
-                    colStart,
-                    colSpan,
-                    isFirstDay,
-                    isLastDay,
-                    slot,
-                  } = bar;
-                  const showTitle =
-                    isFirstDay || (!isFirstDay && colStart === 0);
-
-                  return (
-                    <div
-                      key={event.id}
-                      className="absolute px-0.5"
-                      style={{
-                        left: `calc(${(colStart / 7) * 100}% + 2px)`,
-                        width: `calc(${(colSpan / 7) * 100}% - 4px)`,
-                        top: EventGapAgenda + slot * rowH,
-                        height: EventHeightAgenda,
-                      }}
-                    >
-                      <EventItemAgenda
-                        event={event}
-                        isFirstDay={isFirstDay}
-                        isLastDay={isLastDay}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEventClick(event, e);
-                        }}
-                        view="month"
-                        className="h-full"
-                      >
-                        <span className="flex items-center gap-1 min-w-0 w-full">
-                          {!isFirstDay && colStart === 0 && (
-                            <span className="shrink-0 text-[11px] font-bold opacity-60">
-                              <CaretLeftIcon />
-                            </span>
-                          )}
-                          {showTitle && (
-                            <span className="truncate text-xs font-medium">
-                              {event.title}
-                            </span>
-                          )}
-                          {!isLastDay && colStart + colSpan === 7 && (
-                            <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
-                              <CaretRightIcon />
-                            </span>
-                          )}
-                        </span>
-                      </EventItemAgenda>
-                    </div>
-                  );
-                })}
-              </div>
+    <div className="flex h-full flex-col overflow-hidden" data-slot="week-view">
+      <div className="flex-1 overflow-auto">
+        <div className="min-w-[600px] sm:min-w-full flex flex-col h-full">
+          <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background">
+            <div className="py-2 text-center text-muted-foreground/70 text-[10px] sm:text-sm">
+              <span className="max-[479px]:sr-only">
+                {format(new Date(), "O")}
+              </span>
             </div>
-          )}
-
-          {multiDayTimedEvents.length > 0 && (
-            <div
-              className={cn(
-                "grid grid-cols-8",
-                trueAllDayEvents.length > 0 && "border-t border-border/40",
-              )}
-            >
-              <div className="relative border-border/70 border-r">
-                <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full px-1 text-muted-foreground/70 sm:text-xs">
-                  Evento
+            {days.map((day) => (
+              <div
+                className="py-2 text-center text-muted-foreground/70 text-[10px] sm:text-sm data-today:font-medium data-today:text-foreground"
+                data-today={isToday(day) || undefined}
+                key={day.toString()}
+              >
+                <span aria-hidden="true" className="sm:hidden">
+                  {format(day, "EEE", { locale: ptBR })[0]}{" "}
+                  {format(day, "d", { locale: ptBR })}
+                </span>
+                <span className="hidden sm:inline md:hidden">
+                  {format(day, "EEE d", { locale: ptBR })}
+                </span>
+                <span className="max-md:hidden">
+                  {format(day, "EEE dd", { locale: ptBR })}
                 </span>
               </div>
+            ))}
+          </div>
 
-              <div
-                className="col-span-7 relative"
-                style={{ height: multiDayBarData.sectionH }}
-              >
-                <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
-                  {days.map((day) => (
-                    <div
-                      key={day.toString()}
-                      className="border-r last:border-r-0 border-border/70"
-                      data-today={isToday(day) || undefined}
-                    />
-                  ))}
-                </div>
+          {showAllDaySection && (
+            <div className="border-border/70 border-b bg-muted/50">
+              {trueAllDayEvents.length > 0 && (
+                <div className="grid grid-cols-8">
+                  <div className="relative border-border/70 border-r">
+                    <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
+                      Todo dia
+                    </span>
+                  </div>
 
-                {multiDayBarData.bars.map((bar) => {
-                  const {
-                    event,
-                    colStart,
-                    colSpan,
-                    isFirstDay,
-                    isLastDay,
-                    slot,
-                  } = bar;
-                  const eventStart = getEventStartDate(event) ?? new Date();
-                  const showTitle =
-                    isFirstDay || (!isFirstDay && colStart === 0);
+                  <div
+                    className="col-span-7 relative"
+                    style={{ height: allDayBarData.sectionH }}
+                  >
+                    <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
+                      {days.map((day) => (
+                        <div
+                          key={day.toString()}
+                          className="border-r last:border-r-0 border-border/70"
+                          data-today={isToday(day) || undefined}
+                        />
+                      ))}
+                    </div>
 
-                  return (
-                    <div
-                      key={event.id}
-                      className="absolute px-0.5"
-                      style={{
-                        left: `calc(${(colStart / 7) * 100}% + 2px)`,
-                        width: `calc(${(colSpan / 7) * 100}% - 4px)`,
-                        top: EventGapAgenda + slot * rowH,
-                        height: EventHeightAgenda,
-                      }}
-                    >
-                      <EventItemAgenda
-                        event={event}
-                        isFirstDay={isFirstDay}
-                        isLastDay={isLastDay}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEventClick(event, e);
-                        }}
-                        view="month"
-                        className="h-full border-dashed"
-                      >
-                        <span className="flex items-center gap-1 min-w-0 w-full">
-                          {!isFirstDay && colStart === 0 && (
-                            <span className="shrink-0 text-[11px] font-bold opacity-60">
-                              <CaretLeftIcon />
-                            </span>
-                          )}
-                          {showTitle && (
-                            <>
-                              {isFirstDay && (
-                                <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
-                                  {format(eventStart, "HH:mm")}
+                    {allDayBarData.bars.map((bar) => {
+                      const {
+                        event,
+                        colStart,
+                        colSpan,
+                        isFirstDay,
+                        isLastDay,
+                        slot,
+                      } = bar;
+                      const showTitle =
+                        isFirstDay || (!isFirstDay && colStart === 0);
+
+                      return (
+                        <div
+                          key={event.id}
+                          className="absolute px-0.5"
+                          style={{
+                            left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                            width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                            top: EventGapAgenda + slot * rowH,
+                            height: EventHeightAgenda,
+                          }}
+                        >
+                          <EventItemAgenda
+                            event={event}
+                            isFirstDay={isFirstDay}
+                            isLastDay={isLastDay}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEventClick(event, e);
+                            }}
+                            view="month"
+                            className="h-full"
+                          >
+                            <span className="flex items-center gap-1 min-w-0 w-full">
+                              {!isFirstDay && colStart === 0 && (
+                                <span className="shrink-0 text-[11px] font-bold opacity-60">
+                                  <CaretLeftIcon />
                                 </span>
                               )}
-                              <span className="truncate text-xs font-medium">
-                                {event.title}
-                              </span>
-                              {isFirstDay &&
-                                (() => {
-                                  const evStart = getEventStartDate(event);
-                                  const evEnd = getEventEndDate(event);
-                                  if (!evStart || !evEnd) return null;
-                                  const d =
-                                    Math.round(
-                                      (evEnd.getTime() - evStart.getTime()) /
-                                        86400000,
-                                    ) + 1;
-                                  if (d < 2) return null;
-                                  return (
-                                    <span className="shrink-0 inline-flex items-end font-bold leading-none px-1 py-0.5 text-[10px]">
-                                      {d}d
-                                    </span>
-                                  );
-                                })()}
-                            </>
-                          )}
-                          {!isLastDay && colStart + colSpan === 7 && (
-                            <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
-                              <CaretRightIcon />
+                              {showTitle && (
+                                <span className="truncate text-xs font-medium">
+                                  {event.title}
+                                </span>
+                              )}
+                              {!isLastDay && colStart + colSpan === 7 && (
+                                <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                                  <CaretRightIcon />
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
-                      </EventItemAgenda>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+                          </EventItemAgenda>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-      <div className="grid flex-1 grid-cols-8 overflow-hidden">
-        <div className="grid auto-cols-fr border-border/70 border-r">
-          {hours.map((hour, index) => (
-            <div
-              className="relative min-h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
-              key={hour.toString()}
-            >
-              {index > 0 && (
-                <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-2 text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
-                  {format(hour, "HH:mm")}
-                </span>
+              {multiDayTimedEvents.length > 0 && (
+                <div
+                  className={cn(
+                    "grid grid-cols-8",
+                    trueAllDayEvents.length > 0 && "border-t border-border/40",
+                  )}
+                >
+                  <div className="relative border-border/70 border-r">
+                    <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full px-1 text-muted-foreground/70 sm:text-xs">
+                      Evento
+                    </span>
+                  </div>
+
+                  <div
+                    className="col-span-7 relative"
+                    style={{ height: multiDayBarData.sectionH }}
+                  >
+                    <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
+                      {days.map((day) => (
+                        <div
+                          key={day.toString()}
+                          className="border-r last:border-r-0 border-border/70"
+                          data-today={isToday(day) || undefined}
+                        />
+                      ))}
+                    </div>
+
+                    {multiDayBarData.bars.map((bar) => {
+                      const {
+                        event,
+                        colStart,
+                        colSpan,
+                        isFirstDay,
+                        isLastDay,
+                        slot,
+                      } = bar;
+                      const eventStart = getEventStartDate(event) ?? new Date();
+                      const showTitle =
+                        isFirstDay || (!isFirstDay && colStart === 0);
+
+                      return (
+                        <div
+                          key={event.id}
+                          className="absolute px-0.5"
+                          style={{
+                            left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                            width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                            top: EventGapAgenda + slot * rowH,
+                            height: EventHeightAgenda,
+                          }}
+                        >
+                          <EventItemAgenda
+                            event={event}
+                            isFirstDay={isFirstDay}
+                            isLastDay={isLastDay}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEventClick(event, e);
+                            }}
+                            view="month"
+                            className="h-full border-dashed"
+                          >
+                            <span className="flex items-center gap-1 min-w-0 w-full">
+                              {!isFirstDay && colStart === 0 && (
+                                <span className="shrink-0 text-[11px] font-bold opacity-60">
+                                  <CaretLeftIcon />
+                                </span>
+                              )}
+                              {showTitle && (
+                                <>
+                                  {isFirstDay && (
+                                    <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
+                                      {format(eventStart, "HH:mm")}
+                                    </span>
+                                  )}
+                                  <span className="truncate text-xs font-medium">
+                                    {event.title}
+                                  </span>
+                                  {isFirstDay &&
+                                    (() => {
+                                      const evStart = getEventStartDate(event);
+                                      const evEnd = getEventEndDate(event);
+                                      if (!evStart || !evEnd) return null;
+                                      const d =
+                                        Math.round(
+                                          (evEnd.getTime() -
+                                            evStart.getTime()) /
+                                            86400000,
+                                        ) + 1;
+                                      if (d < 2) return null;
+                                      return (
+                                        <span className="shrink-0 inline-flex items-end font-bold leading-none px-1 py-0.5 text-[10px]">
+                                          {d}d
+                                        </span>
+                                      );
+                                    })()}
+                                </>
+                              )}
+                              {!isLastDay && colStart + colSpan === 7 && (
+                                <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                                  <CaretRightIcon />
+                                </span>
+                              )}
+                            </span>
+                          </EventItemAgenda>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
-          ))}
-        </div>
+          )}
 
-        {days.map((day, dayIndex) => (
-          <div
-            className="relative grid auto-cols-fr border-border/70 border-r last:border-r-0"
-            data-today={isToday(day) || undefined}
-            key={day.toString()}
-          >
-            {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => {
-              const evStart = getEventStartDate(positionedEvent.event);
-              const evEnd = getEventEndDate(positionedEvent.event);
-              const timeLabel = evStart
-                ? evEnd
-                  ? `${format(evStart, "HH:mm")} – ${format(evEnd, "HH:mm")}`
-                  : format(evStart, "HH:mm")
-                : undefined;
-
-              return (
-                <TooltipProviderBase key={positionedEvent.event.id}>
-                  <TooltipBase delayDuration={250}>
-                    <div
-                      className="absolute z-10 px-0.5"
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        height: `${positionedEvent.height}px`,
-                        left: `${positionedEvent.left * 100}%`,
-                        top: `${positionedEvent.top}px`,
-                        width: `${positionedEvent.width * 100}%`,
-                        zIndex: positionedEvent.zIndex,
-                      }}
-                    >
-                      <TooltipTriggerBase asChild>
-                        <div className="size-full">
-                          <DraggableEvent
-                            event={positionedEvent.event}
-                            height={positionedEvent.height}
-                            onClick={(e) =>
-                              handleEventClick(positionedEvent.event, e)
-                            }
-                            draggable={false}
-                            showTime
-                            view="week"
-                            totalCols={positionedEvent.totalCols}
-                          />
-                        </div>
-                      </TooltipTriggerBase>
-                    </div>
-                    <TooltipContentBase
-                      side="right"
-                      sideOffset={6}
-                      className="max-w-[220px] space-y-0.5"
-                    >
-                      <p className="font-semibold text-sm leading-snug">
-                        {positionedEvent.event.title}
-                      </p>
-                      {timeLabel && (
-                        <p className="text-xs opacity-90">{timeLabel}</p>
-                      )}
-                      {positionedEvent.event.location && (
-                        <p className="text-xs flex items-center gap-2">
-                          <MapPinIcon size={15} />{" "}
-                          {positionedEvent.event.location}
-                        </p>
-                      )}
-                      {positionedEvent.event.description && (
-                        <p className="text-xs opacity-75 line-clamp-2">
-                          {positionedEvent.event.description}
-                        </p>
-                      )}
-                    </TooltipContentBase>
-                  </TooltipBase>
-                </TooltipProviderBase>
-              );
-            })}
-            {currentTimeVisible && isToday(day) && (
-              <div
-                className="pointer-events-none absolute right-0 left-0 z-20"
-                style={{ top: `${currentTimePosition}%` }}
-              >
-                <div className="relative flex items-center">
-                  <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
-                  <div className="h-[2px] w-full bg-primary" />
-                </div>
-              </div>
-            )}
-            {hours.map((hour) => {
-              const hourValue = getHours(hour);
-              return (
+          <div className="grid flex-1 grid-cols-8">
+            <div className="grid auto-cols-fr border-border/70 border-r">
+              {hours.map((hour, index) => (
                 <div
                   className="relative min-h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
                   key={hour.toString()}
                 >
-                  {[0, 1, 2, 3].map((quarter) => {
-                    const quarterHourTime = hourValue + quarter * 0.25;
-                    return (
-                      <DroppableCellAgenda
-                        className={cn(
-                          "absolute h-[calc(var(--week-cells-height)/4)] w-full",
-                          quarter === 0 && "top-0",
-                          quarter === 1 &&
-                            "top-[calc(var(--week-cells-height)/4)]",
-                          quarter === 2 &&
-                            "top-[calc(var(--week-cells-height)/4*2)]",
-                          quarter === 3 &&
-                            "top-[calc(var(--week-cells-height)/4*)]",
-                        )}
-                        date={day}
-                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
-                        key={`${hour.toString()}-${quarter}`}
-                        onClick={() => {
-                          const startTime = new Date(day);
-                          startTime.setHours(hourValue);
-                          startTime.setMinutes(quarter * 15);
-                          if (onEventCreate) onEventCreate(startTime);
-                        }}
-                        time={quarterHourTime}
-                      />
-                    );
-                  })}
+                  {index > 0 && (
+                    <span className="-top-3 absolute left-0 flex h-6 w-16 max-w-full items-center justify-end bg-background pe-1 sm:pe-4 text-[9px] sm:text-xs text-muted-foreground/70">
+                      {format(hour, "HH:mm")}
+                    </span>
+                  )}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {days.map((day, dayIndex) => (
+              <div
+                className="relative grid auto-cols-fr border-border/70 border-r last:border-r-0"
+                data-today={isToday(day) || undefined}
+                key={day.toString()}
+              >
+                {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => {
+                  const evStart = getEventStartDate(positionedEvent.event);
+                  const evEnd = getEventEndDate(positionedEvent.event);
+                  const timeLabel = evStart
+                    ? evEnd
+                      ? `${format(evStart, "HH:mm")} – ${format(evEnd, "HH:mm")}`
+                      : format(evStart, "HH:mm")
+                    : undefined;
+
+                  return (
+                    <TooltipProviderBase key={positionedEvent.event.id}>
+                      <TooltipBase delayDuration={250}>
+                        <div
+                          className="absolute z-10 px-0.5"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            height: `${positionedEvent.height}px`,
+                            left: `${positionedEvent.left * 100}%`,
+                            top: `${positionedEvent.top}px`,
+                            width: `${positionedEvent.width * 100}%`,
+                            zIndex: positionedEvent.zIndex,
+                          }}
+                        >
+                          <TooltipTriggerBase asChild>
+                            <div className="size-full">
+                              <DraggableEvent
+                                event={positionedEvent.event}
+                                height={positionedEvent.height}
+                                onClick={(e) =>
+                                  handleEventClick(positionedEvent.event, e)
+                                }
+                                draggable={false}
+                                showTime
+                                view="week"
+                                totalCols={positionedEvent.totalCols}
+                              />
+                            </div>
+                          </TooltipTriggerBase>
+                        </div>
+                        <TooltipContentBase
+                          side="right"
+                          sideOffset={6}
+                          className="max-w-[220px] space-y-0.5"
+                        >
+                          <p className="font-semibold text-sm leading-snug">
+                            {positionedEvent.event.title}
+                          </p>
+                          {timeLabel && (
+                            <p className="text-xs opacity-90">{timeLabel}</p>
+                          )}
+                          {positionedEvent.event.location && (
+                            <p className="text-xs flex items-center gap-2">
+                              <MapPinIcon size={15} />{" "}
+                              {positionedEvent.event.location}
+                            </p>
+                          )}
+                          {positionedEvent.event.description && (
+                            <p className="text-xs opacity-75 line-clamp-2">
+                              {positionedEvent.event.description}
+                            </p>
+                          )}
+                        </TooltipContentBase>
+                      </TooltipBase>
+                    </TooltipProviderBase>
+                  );
+                })}
+                {currentTimeVisible && isToday(day) && (
+                  <div
+                    className="pointer-events-none absolute right-0 left-0 z-20"
+                    style={{ top: `${currentTimePosition}%` }}
+                  >
+                    <div className="relative flex items-center">
+                      <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
+                      <div className="h-[2px] w-full bg-primary" />
+                    </div>
+                  </div>
+                )}
+                {hours.map((hour) => {
+                  const hourValue = getHours(hour);
+                  return (
+                    <div
+                      className="relative min-h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
+                      key={hour.toString()}
+                    >
+                      {[0, 1, 2, 3].map((quarter) => {
+                        const quarterHourTime = hourValue + quarter * 0.25;
+                        return (
+                          <DroppableCellAgenda
+                            className={cn(
+                              "absolute h-[calc(var(--week-cells-height)/4)] w-full",
+                              quarter === 0 && "top-0",
+                              quarter === 1 &&
+                                "top-[calc(var(--week-cells-height)/4)]",
+                              quarter === 2 &&
+                                "top-[calc(var(--week-cells-height)/4*2)]",
+                              quarter === 3 &&
+                                "top-[calc(var(--week-cells-height)/4*3)]",
+                            )}
+                            date={day}
+                            id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
+                            key={`${hour.toString()}-${quarter}`}
+                            onClick={() => {
+                              const startTime = new Date(day);
+                              startTime.setHours(hourValue);
+                              startTime.setMinutes(quarter * 15);
+                              if (onEventCreate) onEventCreate(startTime);
+                            }}
+                            time={quarterHourTime}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
       <UndatedEvents
         events={events}
         onEventSelect={onEventSelect}
         show={showUndatedEvents}
-        className="my-"
+        className="my-4"
       />
     </div>
   );

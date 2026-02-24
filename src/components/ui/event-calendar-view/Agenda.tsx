@@ -43,12 +43,12 @@ export function Agenda({
 
   const datedEvents = useMemo(
     () => events.filter((e) => isValidDate(e.start) || isValidDate(e.end)),
-    [events]
+    [events],
   );
 
   const undatedEvents = useMemo(
     () => events.filter((e) => !(isValidDate(e.start) || isValidDate(e.end))),
-    [events]
+    [events],
   );
 
   const days = useMemo(() => {
@@ -59,14 +59,14 @@ export function Agenda({
 
   const handleEventClick = (
     event: CalendarEventAgenda,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.stopPropagation();
     if (onEventSelect) onEventSelect(event, e);
   };
 
   const hasEvents = days.some(
-    (day) => getAgendaEventsForDayAgenda(datedEvents, day).length > 0
+    (day) => getAgendaEventsForDayAgenda(datedEvents, day).length > 0,
   );
 
   return (
@@ -92,14 +92,14 @@ export function Agenda({
               <div
                 className={twMerge(
                   "relative my-12 border-border/70 border-t",
-                  isToday(day) ? "border-blue-200" : ""
+                  isToday(day) ? "border-blue-200" : "",
                 )}
                 key={day.toString()}
               >
                 <span
                   className={twMerge(
-                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-4 border  data-today:font-extrabold sm:pe-4 text-sm sm:text-md md:text-md font-bold min-w-0",
-                    isToday(day) ? "text-blue-500" : ""
+                    "-top-3 absolute left-0 flex h-6 items-center bg-background pe-2 data-today:font-extrabold sm:pe-4 text-xs sm:text-sm md:text-base font-bold min-w-0",
+                    isToday(day) ? "text-blue-500" : "",
                   )}
                   data-today={isToday(day) || undefined}
                 >

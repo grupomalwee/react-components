@@ -161,7 +161,7 @@ export function MultiDayOverlay({
             <TooltipBase>
               <TooltipTriggerBase asChild>
                 <div
-                  className="absolute pointer-events-auto px-1"
+                  className="absolute pointer-events-auto px-1.5"
                   style={{
                     left: continuesFromPrev
                       ? `${(colStart / 7) * 100}%`

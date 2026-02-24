@@ -212,7 +212,7 @@ export function EventItemAgenda({
     return (
       <EventWrapper
         className={cn(
-          "mt-[var(--event-gap)] h-[var(--event-height)] items-center px-3 py-1 sm:text-xs",
+          "mt-[var(--event-gap)] h-[var(--event-height)] items-center px-1.5 sm:px-3 py-1 sm:text-xs",
           className,
         )}
         currentTime={currentTime}

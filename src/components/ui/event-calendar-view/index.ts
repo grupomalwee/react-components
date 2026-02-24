@@ -20,5 +20,4 @@ export type {
 export * from "./utils";
 export { WeekViewAgenda } from "./WeekView";
 export { MultiDayOverlay } from "./MonthMultiDayOverlay";
-export { MonthNowBadge } from "./MonthNowBadge";
 export { EventDetailModalAgenda } from "./EventDetailModalAgenda";
