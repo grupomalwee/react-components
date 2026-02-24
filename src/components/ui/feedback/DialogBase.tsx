@@ -58,7 +58,8 @@ const DialogContentBase = React.forwardRef<
           onWheel={userOnWheel}
         >
           {children}
-          <DialogPrimitive.Close className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-10 touch-manipulation">
+          <DialogPrimitive.Close className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-n
+          0 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-10 touch-manipulation">
             <XIcon className="h-6 w-6 sm:h-4 sm:w-4 hover:text-red-500 font-extrabold" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>

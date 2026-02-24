@@ -27,6 +27,7 @@ interface DraggableEventProps {
   isLastDay?: boolean;
   "aria-hidden"?: boolean | "true" | "false";
   draggable?: boolean;
+  totalCols?: number;
 }
 
 export function DraggableEvent({
@@ -41,6 +42,7 @@ export function DraggableEvent({
   isLastDay = true,
   "aria-hidden": ariaHidden,
   draggable = true,
+  totalCols,
 }: DraggableEventProps) {
   const { activeId } = useCalendarDndAgenda();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -144,6 +146,7 @@ export function DraggableEvent({
         onTouchStart={handleTouchStart}
         showTime={showTime}
         view={view}
+        totalCols={totalCols}
       />
     </div>
   );

@@ -15,19 +15,39 @@ export function getEventColorClassesAgenda(
 
   switch (eventColor) {
     case "sky":
-      return "bg-sky-100 hover:bg-sky-200 text-sky-900 border dark:bg-sky-500/30 dark:hover:bg-sky-500/40 dark:text-sky-50 dark:border-sky-400/40 shadow-sky-500/15  hover:shadow-sky-500/25 transition-all duration-200";
+      return "bg-sky-100 hover:bg-sky-200/80 text-sky-900 border border-sky-200/70 dark:bg-sky-500/25 dark:hover:bg-sky-500/35 dark:text-sky-50 dark:border-sky-400/30 transition-colors duration-150";
     case "amber":
-      return "bg-amber-100 hover:bg-amber-200 text-amber-900 border dark:bg-amber-500/30 dark:hover:bg-amber-500/40 dark:text-amber-50 dark:border-amber-400/40 shadow-amber-500/15  hover:shadow-amber-500/25 transition-all duration-200";
+      return "bg-amber-100 hover:bg-amber-200/80 text-amber-900 border border-amber-200/70 dark:bg-amber-500/25 dark:hover:bg-amber-500/35 dark:text-amber-50 dark:border-amber-400/30 transition-colors duration-150";
     case "violet":
-      return "bg-violet-100 hover:bg-violet-200 text-violet-900 border dark:bg-violet-500/30 dark:hover:bg-violet-500/40 dark:text-violet-50 dark:border-violet-400/40 shadow-violet-500/15  hover:shadow-violet-500/25 transition-all duration-200";
+      return "bg-violet-100 hover:bg-violet-200/80 text-violet-900 border border-violet-200/70 dark:bg-violet-500/25 dark:hover:bg-violet-500/35 dark:text-violet-50 dark:border-violet-400/30 transition-colors duration-150";
     case "rose":
-      return "bg-rose-100 hover:bg-rose-200 text-rose-900 border dark:bg-rose-500/30 dark:hover:bg-rose-500/40 dark:text-rose-50 dark:border-rose-400/40  shadow-rose-500/15  hover:shadow-rose-500/25 transition-all duration-200";
+      return "bg-rose-100 hover:bg-rose-200/80 text-rose-900 border border-rose-200/70 dark:bg-rose-500/25 dark:hover:bg-rose-500/35 dark:text-rose-50 dark:border-rose-400/30 transition-colors duration-150";
     case "emerald":
-      return "bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border dark:bg-emerald-500/30 dark:hover:bg-emerald-500/40 dark:text-emerald-50 dark:border-emerald-400/40  shadow-emerald-500/15  hover:shadow-emerald-500/25 transition-all duration-200";
+      return "bg-emerald-100 hover:bg-emerald-200/80 text-emerald-900 border border-emerald-200/70 dark:bg-emerald-500/25 dark:hover:bg-emerald-500/35 dark:text-emerald-50 dark:border-emerald-400/30 transition-colors duration-150";
     case "orange":
-      return "bg-orange-100 hover:bg-orange-200 text-orange-900 border dark:bg-orange-500/30 dark:hover:bg-orange-500/40 dark:text-orange-50 dark:border-orange-400/40  shadow-orange-500/15  hover:shadow-orange-500/25 transition-all duration-200";
+      return "bg-orange-100 hover:bg-orange-200/80 text-orange-900 border border-orange-200/70 dark:bg-orange-500/25 dark:hover:bg-orange-500/35 dark:text-orange-50 dark:border-orange-400/30 transition-colors duration-150";
+    case "green":
+      return "bg-green-100 hover:bg-green-200/80 text-green-900 border border-green-200/70 dark:bg-green-500/25 dark:hover:bg-green-500/35 dark:text-green-50 dark:border-green-400/30 transition-colors duration-150";
+    case "blue":
+      return "bg-blue-100 hover:bg-blue-200/80 text-blue-900 border border-blue-200/70 dark:bg-blue-500/25 dark:hover:bg-blue-500/35 dark:text-blue-50 dark:border-blue-400/30 transition-colors duration-150";
+    case "red":
+      return "bg-red-100 hover:bg-red-200/80 text-red-900 border border-red-200/70 dark:bg-red-500/25 dark:hover:bg-red-500/35 dark:text-red-50 dark:border-red-400/30 transition-colors duration-150";
+    case "purple":
+      return "bg-purple-100 hover:bg-purple-200/80 text-purple-900 border border-purple-200/70 dark:bg-purple-500/25 dark:hover:bg-purple-500/35 dark:text-purple-50 dark:border-purple-400/30 transition-colors duration-150";
+    case "indigo":
+      return "bg-indigo-100 hover:bg-indigo-200/80 text-indigo-900 border border-indigo-200/70 dark:bg-indigo-500/25 dark:hover:bg-indigo-500/35 dark:text-indigo-50 dark:border-indigo-400/30 transition-colors duration-150";
+    case "teal":
+      return "bg-teal-100 hover:bg-teal-200/80 text-teal-900 border border-teal-200/70 dark:bg-teal-500/25 dark:hover:bg-teal-500/35 dark:text-teal-50 dark:border-teal-400/30 transition-colors duration-150";
+    case "pink":
+      return "bg-pink-100 hover:bg-pink-200/80 text-pink-900 border border-pink-200/70 dark:bg-pink-500/25 dark:hover:bg-pink-500/35 dark:text-pink-50 dark:border-pink-400/30 transition-colors duration-150";
+    case "cyan":
+      return "bg-cyan-100 hover:bg-cyan-200/80 text-cyan-900 border border-cyan-200/70 dark:bg-cyan-500/25 dark:hover:bg-cyan-500/35 dark:text-cyan-50 dark:border-cyan-400/30 transition-colors duration-150";
+    case "lime":
+      return "bg-lime-100 hover:bg-lime-200/80 text-lime-900 border border-lime-200/70 dark:bg-lime-500/25 dark:hover:bg-lime-500/35 dark:text-lime-50 dark:border-lime-400/30 transition-colors duration-150";
+    case "fuchsia":
+      return "bg-fuchsia-100 hover:bg-fuchsia-200/80 text-fuchsia-900 border border-fuchsia-200/70 dark:bg-fuchsia-500/25 dark:hover:bg-fuchsia-500/35 dark:text-fuchsia-50 dark:border-fuchsia-400/30 transition-colors duration-150";
     default:
-      return "bg-sky-100 hover:bg-sky-200 text-sky-900 border dark:bg-sky-500/30 dark:hover:bg-sky-500/40 dark:text-sky-50 dark:border-sky-400/40  shadow-sky-500/15  hover:shadow-sky-500/25 transition-all duration-200";
+      return "bg-sky-100 hover:bg-sky-200/80 text-sky-900 border border-sky-200/70 dark:bg-sky-500/25 dark:hover:bg-sky-500/35 dark:text-sky-50 dark:border-sky-400/30 transition-colors duration-150";
   }
 }
 
@@ -164,12 +184,17 @@ export function getEventStartDate(
 /**
  * Return the event end as a Date. If `end` is not provided but `duration` (minutes) is,
  * compute end = start + duration minutes.
+ * If neither `end` nor `duration` is provided, defaults to start + 60 minutes (1 hour).
  */
 export function getEventEndDate(event: CalendarEventAgenda): Date | undefined {
   if (isValidDate(event.end)) return new Date(event.end as Date);
   const start = getEventStartDate(event);
   if (start && typeof event.duration === "number" && !isNaN(event.duration)) {
     return addMinutesToDateAgenda(start, event.duration);
+  }
+  // Default: 1 hour after start
+  if (start && !event.allDay) {
+    return addMinutesToDateAgenda(start, 60);
   }
   return undefined;
 }

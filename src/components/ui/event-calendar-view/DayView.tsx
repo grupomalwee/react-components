@@ -74,7 +74,7 @@ export function DayViewAgenda({
       .sort(
         (a, b) =>
           new Date(a.start as Date | string | number).getTime() -
-          new Date(b.start as Date | string | number).getTime()
+          new Date(b.start as Date | string | number).getTime(),
       );
   }, [currentDate, events]);
 
@@ -91,7 +91,6 @@ export function DayViewAgenda({
   }, [dayEvents]);
 
   const positionedEvents = useMemo(() => {
-    const result: PositionedEvent[] = [];
     const dayStart = startOfDay(currentDate);
 
     const sortedEvents = [...timeEvents].sort((a, b) => {
@@ -108,14 +107,29 @@ export function DayViewAgenda({
       return bDuration - aDuration;
     });
 
-    const columns: { event: CalendarEventAgenda; start: Date; end: Date }[][] =
-      [];
+    // --- 2-pass algorithm ---
+    type EventLayout = {
+      event: CalendarEventAgenda;
+      adjustedStart: Date;
+      adjustedEnd: Date;
+      top: number;
+      height: number;
+      col: number;
+      totalCols: number;
+    };
+
+    const columns: { start: Date; end: Date }[][] = [];
+    const layouts: EventLayout[] = [];
 
     for (const event of sortedEvents) {
       const eventStart =
         getEventStartDate(event) ?? getEventEndDate(event) ?? new Date();
-      const eventEnd =
+      const rawEnd =
         getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
+      const eventEnd =
+        rawEnd <= eventStart
+          ? new Date(eventStart.getTime() + 30 * 60 * 1000)
+          : rawEnd;
 
       const adjustedStart = isSameDay(currentDate, eventStart)
         ? eventStart
@@ -129,67 +143,71 @@ export function DayViewAgenda({
       const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
 
       const top = (startHour - StartHourAgenda) * WeekCellsHeightAgenda;
-      const height = (endHour - startHour) * WeekCellsHeightAgenda;
+      const height = Math.max(
+        (endHour - startHour) * WeekCellsHeightAgenda,
+        24,
+      );
 
-      let columnIndex = 0;
-      let placed = false;
-
-      while (!placed) {
-        const col = columns[columnIndex] || [];
-        if (col.length === 0) {
-          columns[columnIndex] = col;
-          placed = true;
-        } else {
-          const overlaps = col.some((c) => {
-            const cStart =
-              getEventStartDate(c.event) ??
-              getEventEndDate(c.event) ??
-              new Date();
-            const cEnd =
-              getEventEndDate(c.event) ??
-              getEventStartDate(c.event) ??
-              new Date();
-            return areIntervalsOverlapping(
-              { end: adjustedEnd, start: adjustedStart },
-              { end: cEnd, start: cStart }
-            );
-          });
-
-          if (!overlaps) {
-            placed = true;
-          } else {
-            columnIndex++;
-          }
-        }
+      let col = 0;
+      while (true) {
+        const colSlots = columns[col] ?? [];
+        const hasConflict = colSlots.some((slot) =>
+          areIntervalsOverlapping(
+            { start: adjustedStart, end: adjustedEnd },
+            { start: slot.start, end: slot.end },
+            { inclusive: false },
+          ),
+        );
+        if (!hasConflict) break;
+        col++;
       }
-
-      const currentColumn = columns[columnIndex] || [];
-      columns[columnIndex] = currentColumn;
-      currentColumn.push({
-        end: adjustedEnd,
+      if (!columns[col]) columns[col] = [];
+      columns[col].push({ start: adjustedStart, end: adjustedEnd });
+      layouts.push({
         event,
-        start: adjustedStart,
-      });
-
-      const width = columnIndex === 0 ? 1 : 0.9;
-      const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
-
-      result.push({
-        event,
-        height,
-        left,
+        adjustedStart,
+        adjustedEnd,
         top,
-        width,
-        zIndex: 10 + columnIndex,
+        height,
+        col,
+        totalCols: 0,
       });
     }
 
-    return result;
+    // Pass 2: determine totalCols per cluster
+    for (const layout of layouts) {
+      let maxCol = layout.col;
+      for (const other of layouts) {
+        if (other === layout) continue;
+        if (
+          areIntervalsOverlapping(
+            { start: layout.adjustedStart, end: layout.adjustedEnd },
+            { start: other.adjustedStart, end: other.adjustedEnd },
+            { inclusive: false },
+          )
+        ) {
+          maxCol = Math.max(maxCol, other.col);
+        }
+      }
+      layout.totalCols = maxCol + 1;
+    }
+
+    return layouts.map(
+      ({ event, top, height, col, totalCols }) =>
+        ({
+          event,
+          top,
+          height,
+          left: col / totalCols,
+          width: 1 / totalCols,
+          zIndex: 10 + col,
+        }) as PositionedEvent,
+    );
   }, [currentDate, timeEvents]);
 
   const handleEventClick = (
     event: CalendarEventAgenda,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.stopPropagation();
     onEventSelect(event, e);
@@ -318,7 +336,7 @@ export function DayViewAgenda({
                         quarter === 2 &&
                           "top-[calc(var(--week-cells-height)/4*2)]",
                         quarter === 3 &&
-                          "top-[calc(var(--week-cells-height)/4*3)]"
+                          "top-[calc(var(--week-cells-height)/4*3)]",
                       )}
                       date={currentDate}
                       id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}

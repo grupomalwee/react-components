@@ -23,6 +23,8 @@ import { useMemo } from "react";
 import {
   type CalendarEventAgenda,
   DroppableCellAgenda,
+  EventHeightAgenda,
+  EventGapAgenda,
   EventItemAgenda,
   isMultiDayEventAgenda,
   UndatedEvents,
@@ -34,6 +36,18 @@ import {
 import { EndHour, StartHour } from "@/components/ui/event-calendar/constants";
 import { cn } from "@/lib/utils";
 import { DraggableEvent } from "./DraggablaEvent";
+import { computeMultiDayBars } from "./MonthMultiDayOverlay";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  MapPinIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import {
+  TooltipBase,
+  TooltipTriggerBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+} from "@/components/ui/feedback";
 
 interface WeekViewProps {
   currentDate: Date;
@@ -50,6 +64,7 @@ interface PositionedEvent {
   left: number;
   width: number;
   zIndex: number;
+  totalCols: number;
 }
 
 export function WeekViewAgenda({
@@ -67,7 +82,7 @@ export function WeekViewAgenda({
 
   const weekStart = useMemo(
     () => startOfWeek(currentDate, { weekStartsOn: 0 }),
-    [currentDate]
+    [currentDate],
   );
 
   const hours = useMemo(() => {
@@ -111,6 +126,30 @@ export function WeekViewAgenda({
       });
   }, [events, days]);
 
+  const trueAllDayEvents = useMemo(
+    () => allDayEvents.filter((e) => e.allDay),
+    [allDayEvents],
+  );
+
+  const multiDayTimedEvents = useMemo(
+    () => allDayEvents.filter((e) => !e.allDay),
+    [allDayEvents],
+  );
+
+  const rowH = EventHeightAgenda + EventGapAgenda;
+
+  const allDayBarData = useMemo(() => {
+    const bars = computeMultiDayBars(trueAllDayEvents, days);
+    const maxSlot = bars.length > 0 ? Math.max(...bars.map((b) => b.slot)) : 0;
+    return { bars, sectionH: (maxSlot + 1) * rowH + EventGapAgenda * 2 };
+  }, [trueAllDayEvents, days, rowH]);
+
+  const multiDayBarData = useMemo(() => {
+    const bars = computeMultiDayBars(multiDayTimedEvents, days);
+    const maxSlot = bars.length > 0 ? Math.max(...bars.map((b) => b.slot)) : 0;
+    return { bars, sectionH: (maxSlot + 1) * rowH + EventGapAgenda * 2 };
+  }, [multiDayTimedEvents, days, rowH]);
+
   const processedDayEvents = useMemo(() => {
     const result = days.map((day) => {
       const dayEvents = events.filter((event) => {
@@ -140,16 +179,33 @@ export function WeekViewAgenda({
         return bDuration - aDuration;
       });
 
-      const positionedEvents: PositionedEvent[] = [];
       const dayStart = startOfDay(day);
 
-      const columns: { event: CalendarEventAgenda; end: Date }[][] = [];
+      // --- 2-pass algorithm ---
+      // Pass 1: assign column index greedily
+      type EventLayout = {
+        event: CalendarEventAgenda;
+        adjustedStart: Date;
+        adjustedEnd: Date;
+        top: number;
+        height: number;
+        col: number;
+        totalCols: number;
+      };
+
+      const columns: { start: Date; end: Date }[][] = [];
+      const layouts: EventLayout[] = [];
 
       for (const event of sortedEvents) {
         const eventStart =
           getEventStartDate(event) ?? getEventEndDate(event) ?? new Date();
-        const eventEnd =
+        const rawEnd =
           getEventEndDate(event) ?? getEventStartDate(event) ?? new Date();
+        // Ensure minimum height of 30 min
+        const eventEnd =
+          rawEnd <= eventStart
+            ? new Date(eventStart.getTime() + 30 * 60 * 1000)
+            : rawEnd;
 
         const adjustedStart = isSameDay(day, eventStart)
           ? eventStart
@@ -163,58 +219,65 @@ export function WeekViewAgenda({
         const endHour = getHours(adjustedEnd) + getMinutes(adjustedEnd) / 60;
 
         const top = (startHour - StartHour) * WeekCellsHeightAgenda;
-        const height = (endHour - startHour) * WeekCellsHeightAgenda;
+        const height = Math.max(
+          (endHour - startHour) * WeekCellsHeightAgenda,
+          24,
+        );
 
-        let columnIndex = 0;
-        let placed = false;
-
-        while (!placed) {
-          const col = columns[columnIndex] || [];
-          if (col.length === 0) {
-            columns[columnIndex] = col;
-            placed = true;
-          } else {
-            const overlaps = col.some((c) => {
-              const cStart =
-                getEventStartDate(c.event) ??
-                getEventEndDate(c.event) ??
-                new Date();
-              const cEnd =
-                getEventEndDate(c.event) ??
-                getEventStartDate(c.event) ??
-                new Date();
-              return areIntervalsOverlapping(
-                { end: adjustedEnd, start: adjustedStart },
-                { end: cEnd, start: cStart }
-              );
-            });
-
-            if (!overlaps) {
-              placed = true;
-            } else {
-              columnIndex++;
-            }
-          }
+        let col = 0;
+        while (true) {
+          const colSlots = columns[col] ?? [];
+          const hasConflict = colSlots.some((slot) =>
+            areIntervalsOverlapping(
+              { start: adjustedStart, end: adjustedEnd },
+              { start: slot.start, end: slot.end },
+              { inclusive: false },
+            ),
+          );
+          if (!hasConflict) break;
+          col++;
         }
+        if (!columns[col]) columns[col] = [];
+        columns[col].push({ start: adjustedStart, end: adjustedEnd });
 
-        const currentColumn = columns[columnIndex] || [];
-        columns[columnIndex] = currentColumn;
-        currentColumn.push({ end: adjustedEnd, event });
-
-        const width = columnIndex === 0 ? 1 : 0.9;
-        const left = columnIndex === 0 ? 0 : columnIndex * 0.1;
-
-        positionedEvents.push({
+        layouts.push({
           event,
-          height,
-          left,
+          adjustedStart,
+          adjustedEnd,
           top,
-          width,
-          zIndex: 10 + columnIndex,
+          height,
+          col,
+          totalCols: 0,
         });
       }
 
-      return positionedEvents;
+      // Pass 2: for each event, determine how many columns its time-slot spans
+      // by finding the cluster max column
+      for (const layout of layouts) {
+        let maxCol = layout.col;
+        for (const other of layouts) {
+          if (other === layout) continue;
+          if (
+            areIntervalsOverlapping(
+              { start: layout.adjustedStart, end: layout.adjustedEnd },
+              { start: other.adjustedStart, end: other.adjustedEnd },
+              { inclusive: false },
+            )
+          ) {
+            maxCol = Math.max(maxCol, other.col);
+          }
+        }
+        layout.totalCols = maxCol + 1;
+      }
+
+      return layouts.map(({ event, top, height, col, totalCols }) => ({
+        event,
+        top,
+        height,
+        left: col / totalCols,
+        width: 1 / totalCols,
+        zIndex: 10 + col,
+      })) as PositionedEvent[];
     });
 
     return result;
@@ -222,7 +285,7 @@ export function WeekViewAgenda({
 
   const handleEventClick = (
     event: CalendarEventAgenda,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.stopPropagation();
     onEventSelect(event, e);
@@ -257,77 +320,197 @@ export function WeekViewAgenda({
 
       {showAllDaySection && (
         <div className="border-border/70 border-b bg-muted/50">
-          <div className="grid grid-cols-8">
-            <div className="relative border-border/70 border-r">
-              <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
-                Todo Dia
-              </span>
-            </div>
-            {days.map((day, dayIndex) => {
-              const dayAllDayEvents = allDayEvents.filter((event) => {
-                const eventStart = getEventStartDate(event);
-                const eventEnd =
-                  getEventEndDate(event) ?? getEventStartDate(event);
+          {trueAllDayEvents.length > 0 && (
+            <div className="grid grid-cols-8">
+              <div className="relative border-border/70 border-r">
+                <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
+                  Todo dia
+                </span>
+              </div>
 
-                if (!eventStart && !eventEnd) return false;
+              <div
+                className="col-span-7 relative"
+                style={{ height: allDayBarData.sectionH }}
+              >
+                <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
+                  {days.map((day) => (
+                    <div
+                      key={day.toString()}
+                      className="border-r last:border-r-0 border-border/70"
+                      data-today={isToday(day) || undefined}
+                    />
+                  ))}
+                </div>
 
-                return (
-                  (eventStart && isSameDay(day, eventStart)) ||
-                  (eventStart &&
-                    eventEnd &&
-                    day > eventStart &&
-                    day < eventEnd) ||
-                  (eventEnd && isSameDay(day, eventEnd))
-                );
-              });
+                {allDayBarData.bars.map((bar) => {
+                  const {
+                    event,
+                    colStart,
+                    colSpan,
+                    isFirstDay,
+                    isLastDay,
+                    slot,
+                  } = bar;
+                  const showTitle =
+                    isFirstDay || (!isFirstDay && colStart === 0);
 
-              return (
-                <div
-                  className="relative border-border/70 border-r p-1 last:border-r-0"
-                  data-today={isToday(day) || undefined}
-                  key={day.toString()}
-                >
-                  {dayAllDayEvents.map((event) => {
-                    const eventStart = getEventStartDate(event);
-                    const eventEnd =
-                      getEventEndDate(event) ?? getEventStartDate(event);
-                    const isFirstDay = eventStart
-                      ? isSameDay(day, eventStart)
-                      : false;
-                    const isLastDay = eventEnd
-                      ? isSameDay(day, eventEnd)
-                      : false;
-
-                    const isFirstVisibleDay = eventStart
-                      ? dayIndex === 0 && isBefore(eventStart, weekStart)
-                      : false;
-                    const shouldShowTitle = isFirstDay || isFirstVisibleDay;
-
-                    return (
+                  return (
+                    <div
+                      key={event.id}
+                      className="absolute px-0.5"
+                      style={{
+                        left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                        width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                        top: EventGapAgenda + slot * rowH,
+                        height: EventHeightAgenda,
+                      }}
+                    >
                       <EventItemAgenda
                         event={event}
                         isFirstDay={isFirstDay}
                         isLastDay={isLastDay}
-                        key={`spanning-${event.id}`}
-                        onClick={(e) => handleEventClick(event, e)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEventClick(event, e);
+                        }}
                         view="month"
+                        className="h-full"
                       >
-                        <div
-                          aria-hidden={!shouldShowTitle}
-                          className={cn(
-                            "truncate",
-                            !shouldShowTitle && "invisible"
+                        <span className="flex items-center gap-1 min-w-0 w-full">
+                          {!isFirstDay && colStart === 0 && (
+                            <span className="shrink-0 text-[11px] font-bold opacity-60">
+                              <CaretLeftIcon />
+                            </span>
                           )}
-                        >
-                          {event.title}
-                        </div>
+                          {showTitle && (
+                            <span className="truncate text-xs font-medium">
+                              {event.title}
+                            </span>
+                          )}
+                          {!isLastDay && colStart + colSpan === 7 && (
+                            <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                              <CaretRightIcon />
+                            </span>
+                          )}
+                        </span>
                       </EventItemAgenda>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {multiDayTimedEvents.length > 0 && (
+            <div
+              className={cn(
+                "grid grid-cols-8",
+                trueAllDayEvents.length > 0 && "border-t border-border/40",
+              )}
+            >
+              <div className="relative border-border/70 border-r">
+                <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full px-1 text-muted-foreground/70 sm:text-xs">
+                  Evento
+                </span>
+              </div>
+
+              <div
+                className="col-span-7 relative"
+                style={{ height: multiDayBarData.sectionH }}
+              >
+                <div className="absolute inset-0 grid grid-cols-7 pointer-events-none">
+                  {days.map((day) => (
+                    <div
+                      key={day.toString()}
+                      className="border-r last:border-r-0 border-border/70"
+                      data-today={isToday(day) || undefined}
+                    />
+                  ))}
                 </div>
-              );
-            })}
-          </div>
+
+                {multiDayBarData.bars.map((bar) => {
+                  const {
+                    event,
+                    colStart,
+                    colSpan,
+                    isFirstDay,
+                    isLastDay,
+                    slot,
+                  } = bar;
+                  const eventStart = getEventStartDate(event) ?? new Date();
+                  const showTitle =
+                    isFirstDay || (!isFirstDay && colStart === 0);
+
+                  return (
+                    <div
+                      key={event.id}
+                      className="absolute px-0.5"
+                      style={{
+                        left: `calc(${(colStart / 7) * 100}% + 2px)`,
+                        width: `calc(${(colSpan / 7) * 100}% - 4px)`,
+                        top: EventGapAgenda + slot * rowH,
+                        height: EventHeightAgenda,
+                      }}
+                    >
+                      <EventItemAgenda
+                        event={event}
+                        isFirstDay={isFirstDay}
+                        isLastDay={isLastDay}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEventClick(event, e);
+                        }}
+                        view="month"
+                        className="h-full border-dashed"
+                      >
+                        <span className="flex items-center gap-1 min-w-0 w-full">
+                          {!isFirstDay && colStart === 0 && (
+                            <span className="shrink-0 text-[11px] font-bold opacity-60">
+                              <CaretLeftIcon />
+                            </span>
+                          )}
+                          {showTitle && (
+                            <>
+                              {isFirstDay && (
+                                <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
+                                  {format(eventStart, "HH:mm")}
+                                </span>
+                              )}
+                              <span className="truncate text-xs font-medium">
+                                {event.title}
+                              </span>
+                              {isFirstDay &&
+                                (() => {
+                                  const evStart = getEventStartDate(event);
+                                  const evEnd = getEventEndDate(event);
+                                  if (!evStart || !evEnd) return null;
+                                  const d =
+                                    Math.round(
+                                      (evEnd.getTime() - evStart.getTime()) /
+                                        86400000,
+                                    ) + 1;
+                                  if (d < 2) return null;
+                                  return (
+                                    <span className="shrink-0 inline-flex items-end font-bold leading-none px-1 py-0.5 text-[10px]">
+                                      {d}d
+                                    </span>
+                                  );
+                                })()}
+                            </>
+                          )}
+                          {!isLastDay && colStart + colSpan === 7 && (
+                            <span className="shrink-0 ml-auto text-[11px] font-bold opacity-60">
+                              <CaretRightIcon />
+                            </span>
+                          )}
+                        </span>
+                      </EventItemAgenda>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -353,31 +536,72 @@ export function WeekViewAgenda({
             data-today={isToday(day) || undefined}
             key={day.toString()}
           >
-            {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
-              <div
-                className="absolute z-10 px-0.5"
-                key={positionedEvent.event.id}
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  height: `${positionedEvent.height}px`,
-                  left: `${positionedEvent.left * 100}%`,
-                  top: `${positionedEvent.top}px`,
-                  width: `${positionedEvent.width * 100}%`,
-                  zIndex: positionedEvent.zIndex,
-                }}
-              >
-                <div className="size-full">
-                  <DraggableEvent
-                    event={positionedEvent.event}
-                    height={positionedEvent.height}
-                    onClick={(e) => handleEventClick(positionedEvent.event, e)}
-                    draggable={false}
-                    showTime
-                    view="week"
-                  />
-                </div>
-              </div>
-            ))}
+            {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => {
+              const evStart = getEventStartDate(positionedEvent.event);
+              const evEnd = getEventEndDate(positionedEvent.event);
+              const timeLabel = evStart
+                ? evEnd
+                  ? `${format(evStart, "HH:mm")} – ${format(evEnd, "HH:mm")}`
+                  : format(evStart, "HH:mm")
+                : undefined;
+
+              return (
+                <TooltipProviderBase key={positionedEvent.event.id}>
+                  <TooltipBase delayDuration={250}>
+                    <div
+                      className="absolute z-10 px-0.5"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        height: `${positionedEvent.height}px`,
+                        left: `${positionedEvent.left * 100}%`,
+                        top: `${positionedEvent.top}px`,
+                        width: `${positionedEvent.width * 100}%`,
+                        zIndex: positionedEvent.zIndex,
+                      }}
+                    >
+                      <TooltipTriggerBase asChild>
+                        <div className="size-full">
+                          <DraggableEvent
+                            event={positionedEvent.event}
+                            height={positionedEvent.height}
+                            onClick={(e) =>
+                              handleEventClick(positionedEvent.event, e)
+                            }
+                            draggable={false}
+                            showTime
+                            view="week"
+                            totalCols={positionedEvent.totalCols}
+                          />
+                        </div>
+                      </TooltipTriggerBase>
+                    </div>
+                    <TooltipContentBase
+                      side="right"
+                      sideOffset={6}
+                      className="max-w-[220px] space-y-0.5"
+                    >
+                      <p className="font-semibold text-sm leading-snug">
+                        {positionedEvent.event.title}
+                      </p>
+                      {timeLabel && (
+                        <p className="text-xs opacity-90">{timeLabel}</p>
+                      )}
+                      {positionedEvent.event.location && (
+                        <p className="text-xs flex items-center gap-2">
+                          <MapPinIcon size={15} />{" "}
+                          {positionedEvent.event.location}
+                        </p>
+                      )}
+                      {positionedEvent.event.description && (
+                        <p className="text-xs opacity-75 line-clamp-2">
+                          {positionedEvent.event.description}
+                        </p>
+                      )}
+                    </TooltipContentBase>
+                  </TooltipBase>
+                </TooltipProviderBase>
+              );
+            })}
             {currentTimeVisible && isToday(day) && (
               <div
                 className="pointer-events-none absolute right-0 left-0 z-20"
@@ -408,7 +632,7 @@ export function WeekViewAgenda({
                           quarter === 2 &&
                             "top-[calc(var(--week-cells-height)/4*2)]",
                           quarter === 3 &&
-                            "top-[calc(var(--week-cells-height)/4*)]"
+                            "top-[calc(var(--week-cells-height)/4*)]",
                         )}
                         date={day}
                         id={`week-cell-${day.toISOString()}-${quarterHourTime}`}

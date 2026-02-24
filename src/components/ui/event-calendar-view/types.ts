@@ -24,7 +24,13 @@ export type EventColorAgenda =
   | "green"
   | "blue"
   | "red"
-  | "purple";
+  | "purple"
+  | "indigo"
+  | "teal"
+  | "pink"
+  | "cyan"
+  | "lime"
+  | "fuchsia";
 
 export enum EventColorAgendaEnum {
   sky = "sky",
@@ -37,4 +43,10 @@ export enum EventColorAgendaEnum {
   blue = "blue",
   red = "red",
   purple = "purple",
+  indigo = "indigo",
+  teal = "teal",
+  pink = "pink",
+  cyan = "cyan",
+  lime = "lime",
+  fuchsia = "fuchsia",
 }

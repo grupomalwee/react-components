@@ -14,7 +14,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   DroppableCellAgenda,
@@ -30,6 +30,7 @@ import {
   CalendarEventAgenda,
   getEventStartDate,
   getEventEndDate,
+  isMultiDayEventAgenda,
 } from "@/components/ui/event-calendar-view/";
 import { DefaultStartHourAgenda } from "@/components/ui/event-calendar-view/constants";
 import {
@@ -38,6 +39,9 @@ import {
   PopoverTriggerBase,
 } from "../overlays/PopoverBase";
 import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
+import { MonthNowBadge } from "./MonthNowBadge";
+import { computeMultiDayBars, MultiDayOverlay } from "./MonthMultiDayOverlay";
 
 interface MonthViewProps {
   currentDate: Date;
@@ -57,22 +61,22 @@ export function MonthViewAgenda({
     const monthEnd = endOfMonth(monthStart);
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
     const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
-
     return eachDayOfInterval({ end: calendarEnd, start: calendarStart });
   }, [currentDate]);
 
-  const weekdays = useMemo(() => {
-    return Array.from({ length: 7 }).map((_, i) => {
-      const date = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), i);
-      const short = format(date, "EEE", { locale: ptBR });
-      return short.charAt(0).toUpperCase() + short.slice(1);
-    });
-  }, []);
+  const weekdays = useMemo(
+    () =>
+      Array.from({ length: 7 }).map((_, i) => {
+        const date = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), i);
+        const short = format(date, "EEE", { locale: ptBR });
+        return short.charAt(0).toUpperCase() + short.slice(1);
+      }),
+    [],
+  );
 
   const weeks = useMemo(() => {
     const result: Date[][] = [];
     let week: Date[] = [];
-
     for (let i = 0; i < days.length; i++) {
       week.push(days[i]);
       if (week.length === 7 || i === days.length - 1) {
@@ -80,19 +84,29 @@ export function MonthViewAgenda({
         week = [];
       }
     }
-
     return result;
   }, [days]);
 
-  const handleEventClick = (
-    event: CalendarEventAgenda,
-    e: React.MouseEvent,
-  ) => {
-    e.stopPropagation();
-    onEventSelect(event, e);
-  };
+  const todayColIndex = useMemo(() => new Date().getDay(), []);
 
   const [isMounted, setIsMounted] = useState(false);
+  const [hoveredEventId, setHoveredEventId] = useState<string | null>(null);
+  const hoverLeaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleHover = useCallback((id: string | null) => {
+    if (id !== null) {
+      if (hoverLeaveTimerRef.current) {
+        clearTimeout(hoverLeaveTimerRef.current);
+        hoverLeaveTimerRef.current = null;
+      }
+      setHoveredEventId(id);
+    } else {
+      hoverLeaveTimerRef.current = setTimeout(() => {
+        setHoveredEventId(null);
+        hoverLeaveTimerRef.current = null;
+      }, 150);
+    }
+  }, []);
   const { contentRef, getVisibleEventCount } = useEventVisibilityAgenda({
     eventGap: EventGapAgenda,
     eventHeight: EventHeightAgenda,
@@ -102,179 +116,205 @@ export function MonthViewAgenda({
     setIsMounted(true);
   }, []);
 
+  const eventsWithStart = useMemo(
+    () =>
+      events.filter((ev) => {
+        try {
+          if (ev.start == null) return false;
+          const t =
+            ev.start instanceof Date
+              ? ev.start.getTime()
+              : new Date(String(ev.start)).getTime();
+          return !isNaN(t);
+        } catch {
+          return false;
+        }
+      }),
+    [events],
+  );
+
+  const handleEventClick = (
+    event: CalendarEventAgenda,
+    e: React.MouseEvent,
+  ) => {
+    e.stopPropagation();
+    onEventSelect(event, e);
+  };
+
   return (
     <div className="contents" data-slot="month-view">
       <div className="grid grid-cols-7 border-border/70 border-b">
-        {weekdays.map((day) => (
-          <div
-            className="py-1 px-1 text-center text-muted-foreground/70 text-xs uppercase sm:tracking-wide bg-muted/5 leading-none"
-            key={day}
-          >
-            <span className="hidden sm:inline">{day}</span>
-            <span className="inline sm:hidden">{day.charAt(0)}</span>
-          </div>
-        ))}
+        {weekdays.map((day, i) => {
+          const isTodayCol = i === todayColIndex;
+          return (
+            <div
+              key={day}
+              className={cn(
+                "py-1.5 px-1 text-center text-xs uppercase sm:tracking-wide leading-none transition-colors",
+                isTodayCol
+                  ? "bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-bold"
+                  : "bg-muted/5 text-muted-foreground/70",
+              )}
+            >
+              <span className="hidden sm:inline">{day}</span>
+              <span className="inline sm:hidden">{day.charAt(0)}</span>
+            </div>
+          );
+        })}
       </div>
+
       <div className="grid flex-1 auto-rows-fr">
-        {weeks.map((week, weekIndex) => (
-          <div
-            className="grid grid-cols-7 [&:last-child>*]:border-b-0"
-            key={`week-${weekIndex}`}
-          >
-            {week.map((day, dayIndex) => {
-              if (!day) return null;
+        {weeks.map((week, weekIndex) => {
+          const multiDayBars = computeMultiDayBars(eventsWithStart, week);
+          const maxSlot =
+            multiDayBars.length > 0
+              ? Math.max(...multiDayBars.map((b) => b.slot))
+              : -1;
+          const multiDayRowCount = maxSlot + 1;
 
-              const eventsWithStart = events.filter((ev) => {
-                try {
-                  if (ev.start == null) return false;
-                  const t =
-                    ev.start instanceof Date
-                      ? ev.start.getTime()
-                      : new Date(String(ev.start)).getTime();
-                  return !isNaN(t);
-                } catch {
-                  return false;
-                }
-              });
+          return (
+            <div
+              key={`week-${weekIndex}`}
+              className="grid grid-cols-7 [&:last-child>*]:border-b-0 relative p-0"
+            >
+              {week.map((day, dayIndex) => {
+                if (!day) return null;
 
-              const dayEvents = getEventsForDayAgenda(eventsWithStart, day);
-              const spanningEvents = getSpanningEventsForDayAgenda(
-                eventsWithStart,
-                day,
-              );
-              const isCurrentMonth = isSameMonth(day, currentDate);
-              const cellId = `month-cell-${day.toISOString()}`;
-              const allDayEvents = [...spanningEvents, ...dayEvents];
-              const allEvents = getAllEventsForDayAgenda(events, day);
+                const isTodayCell = isToday(day);
+                const isTodayCol = dayIndex === todayColIndex;
+                const isCurrentMonth = isSameMonth(day, currentDate);
+                const cellId = `month-cell-${day.toISOString()}`;
 
-              const isReferenceCell = weekIndex === 0 && dayIndex === 0;
-              const visibleCount = isMounted
-                ? getVisibleEventCount(allDayEvents.length)
-                : undefined;
-              const hasMore =
-                visibleCount !== undefined &&
-                allDayEvents.length > visibleCount;
-              const remainingCount = hasMore
-                ? allDayEvents.length - visibleCount
-                : 0;
+                const dayEvents = getEventsForDayAgenda(eventsWithStart, day);
+                const spanningEvents = getSpanningEventsForDayAgenda(
+                  eventsWithStart,
+                  day,
+                );
+                const allDayEvents = [...spanningEvents, ...dayEvents];
+                const allEvents = getAllEventsForDayAgenda(events, day);
+                const isReferenceCell = weekIndex === 0 && dayIndex === 0;
 
-              return (
-                <div
-                  className="group border-border/70 border-r border-b last:border-r-0 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 hover:bg-muted/5 transition-colors p-1 sm:p-2"
-                  data-outside-cell={!isCurrentMonth || undefined}
-                  data-today={isToday(day) || undefined}
-                  key={day.toString()}
-                >
-                  <DroppableCellAgenda
-                    date={day}
-                    id={cellId}
-                    onClick={() => {
-                      const startTime = new Date(day);
-                      startTime.setHours(DefaultStartHourAgenda, 0, 0);
-                    }}
+                const visibleCount = isMounted
+                  ? getVisibleEventCount(allDayEvents.length + multiDayRowCount)
+                  : undefined;
+                const visibleAfterMultiday =
+                  visibleCount !== undefined
+                    ? Math.max(0, visibleCount - multiDayRowCount)
+                    : undefined;
+
+                const singleEvents = sortEventsAgenda(allDayEvents).filter(
+                  (e) => !isMultiDayEventAgenda(e),
+                );
+                const hasMore =
+                  visibleAfterMultiday !== undefined &&
+                  singleEvents.length > visibleAfterMultiday;
+                const remainingCount = hasMore
+                  ? singleEvents.length - (visibleAfterMultiday ?? 0)
+                  : 0;
+
+                return (
+                  <div
+                    key={day.toString()}
+                    data-outside-cell={!isCurrentMonth || undefined}
+                    data-today={isTodayCell || undefined}
+                    className={cn(
+                      "group border-border/70 border-r border-b last:border-r-0 transition-colors py-0.5",
+                      !isCurrentMonth && "bg-muted/20 text-muted-foreground/60",
+                      isTodayCol &&
+                        isCurrentMonth &&
+                        !isTodayCell &&
+                        "bg-blue-50/20 dark:bg-blue-950/10",
+                      isTodayCell && "bg-blue-50/50 dark:bg-blue-950/20",
+                      "hover:bg-muted/5",
+                    )}
                   >
-                    <div
-                      className={twMerge(
-                        `mt-1 inline-flex w-6 h-6 sm:w-7 sm:h-7 items-center justify-center border rounded-md text-xs sm:text-sm font-semibold text-muted-foreground`,
-                        isToday(day) ? "bg-blue-500 text-white" : "",
-                      )}
+                    <DroppableCellAgenda
+                      date={day}
+                      id={cellId}
+                      onClick={() => {
+                        const t = new Date(day);
+                        t.setHours(DefaultStartHourAgenda, 0, 0);
+                      }}
                     >
-                      {format(day, "d")}
-                    </div>
-                    <div
-                      className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-0.5 sm:py-1"
-                      ref={isReferenceCell ? contentRef : null}
-                    >
-                      {sortEventsAgenda(allDayEvents).map((event, index) => {
-                        const eventStart =
-                          getEventStartDate(event) ??
-                          getEventEndDate(event) ??
-                          new Date();
-                        const eventEnd =
-                          getEventEndDate(event) ??
-                          getEventStartDate(event) ??
-                          new Date();
-                        const isFirstDay = isSameDay(day, eventStart);
-                        const isLastDay = isSameDay(day, eventEnd);
+                      <div
+                        className={twMerge(
+                          "mt-1 inline-flex w-6 h-6 sm:w-7 sm:h-7 items-center justify-center rounded-lg text-xs sm:text-sm font-semibold border",
+                          isTodayCell
+                            ? "bg-blue-500 text-white border-blue-500 shadow-sm shadow-blue-400/40"
+                            : "text-muted-foreground border-transparent",
+                        )}
+                      >
+                        {format(day, "d")}
+                      </div>
 
-                        const isHidden =
-                          isMounted && visibleCount && index >= visibleCount;
+                      {isTodayCell && <MonthNowBadge />}
 
-                        if (!visibleCount) return null;
+                      <div
+                        ref={isReferenceCell ? contentRef : null}
+                        className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-0.5 sm:py-1"
+                      >
+                        {Array.from({ length: multiDayRowCount }).map(
+                          (_, si) => (
+                            <div
+                              key={`spacer-${si}`}
+                              aria-hidden="true"
+                              className="mt-[var(--event-gap)] h-[var(--event-height)] w-full"
+                              style={{ opacity: 0, pointerEvents: "none" }}
+                            />
+                          ),
+                        )}
 
-                        if (!isFirstDay) {
+                        {singleEvents.map((event, index) => {
+                          if (!isMounted) return null;
+                          const isHidden =
+                            visibleAfterMultiday !== undefined &&
+                            index >= visibleAfterMultiday;
+                          const eventStart =
+                            getEventStartDate(event) ??
+                            getEventEndDate(event) ??
+                            new Date();
+
                           return (
                             <div
+                              key={event.id}
                               aria-hidden={isHidden ? "true" : undefined}
                               className="aria-hidden:hidden"
-                              key={`spanning-${event.id}-${day
-                                .toISOString()
-                                .slice(0, 10)}`}
                             >
                               <EventItemAgenda
                                 event={event}
-                                isFirstDay={isFirstDay}
-                                isLastDay={isLastDay}
+                                isFirstDay
+                                isLastDay
                                 onClick={(e) => handleEventClick(event, e)}
                                 view="month"
                               >
-                                <div className="flex items-center gap-1 truncate text-[12px] text-foreground">
-                                </div>
+                                <span className="flex items-center gap-1 sm:gap-1.5 truncate text-[11px] relative z-10">
+                                  {!event.allDay && (
+                                    <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
+                                      {format(eventStart, "HH:mm")}
+                                    </span>
+                                  )}
+                                  <span className="font-semibold truncate">
+                                    {event.title}
+                                  </span>
+                                </span>
                               </EventItemAgenda>
                             </div>
                           );
-                        }
-
-                        const isMultiDay = !isLastDay;
-
-                        return (
-                          <div
-                            aria-hidden={isHidden ? "true" : undefined}
-                            className="aria-hidden:hidden relative"
-                            key={event.id}
-                          >
-                            <EventItemAgenda
-                              event={event}
-                              isFirstDay={isFirstDay}
-                              isLastDay={isLastDay}
-                              onClick={(e) => handleEventClick(event, e)}
-                              view="month"
-                              className={isMultiDay ? "overflow-visible" : ""}
-                            >
-                              <span className="flex items-center gap-1 sm:gap-2 truncate text-[12px] text-foreground relative z-10">
-                                {!event.allDay && (
-                                  <span className="truncate font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
-                                    {format(eventStart, "HH:mm")}
-                                  </span>
-                                )}
-                                <span
-                                  className={`font-medium text-xs sm:text-sm ${isMultiDay ? "whitespace-nowrap" : "truncate"}`}
-                                >
-                                  {event.title}
-                                </span>
-                              </span>
-                            </EventItemAgenda>
-                          </div>
-                        );
-                      })}
+                        })}
+                      </div>
 
                       {hasMore && (
                         <PopoverBase modal>
                           <PopoverTriggerBase asChild>
                             <button
-                              className="mt-[var(--event-gap)] flex h-[var(--event-height)] w-full select-none items-center overflow-hidden px-2 text-left text-[10px] text-muted-foreground outline-none backdrop-blur-md rounded-md transition hover:bg-muted/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:text-xs"
-                              onClick={(e) => e.stopPropagation()}
                               type="button"
-                              aria-label={`Show ${remainingCount} more events on ${format(
-                                day,
-                                "PPP",
-                                { locale: ptBR },
-                              )}`}
+                              onClick={(e) => e.stopPropagation()}
+                              aria-label={`Mostrar mais ${remainingCount} eventos`}
+                              className="mt-[var(--event-gap)] flex h-[var(--event-height)] w-full select-none items-center overflow-hidden px-2 text-left text-[10px] text-muted-foreground outline-none rounded-md transition hover:bg-muted/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:text-xs"
                             >
-                              <span className="font-medium">
-                                + {remainingCount}
+                              <span className="font-semibold">
+                                + {remainingCount} mais
                               </span>
-                              <span className="sr-only"> more</span>
                             </button>
                           </PopoverTriggerBase>
                           <PopoverContentBase
@@ -283,32 +323,29 @@ export function MonthViewAgenda({
                             style={
                               {
                                 "--event-height": `${EventHeightAgenda}px`,
-                              } as Record<string, string>
+                              } as React.CSSProperties
                             }
                           >
                             <div className="space-y-2">
-                              <div className="font-medium text-sm">
+                              <p className="font-semibold text-sm">
                                 {format(day, "EEE d", { locale: ptBR })}
-                              </div>
+                              </p>
                               <div className="space-y-1">
                                 {sortEventsAgenda(allEvents).map((event) => {
-                                  const eventStart =
+                                  const s =
                                     getEventStartDate(event) ??
                                     getEventEndDate(event) ??
                                     new Date();
-                                  const eventEnd =
+                                  const e2 =
                                     getEventEndDate(event) ??
                                     getEventStartDate(event) ??
                                     new Date();
-                                  const isFirstDay = isSameDay(day, eventStart);
-                                  const isLastDay = isSameDay(day, eventEnd);
-
                                   return (
                                     <EventItemAgenda
-                                      event={event}
-                                      isFirstDay={isFirstDay}
-                                      isLastDay={isLastDay}
                                       key={event.id}
+                                      event={event}
+                                      isFirstDay={isSameDay(day, s)}
+                                      isLastDay={isSameDay(day, e2)}
                                       onClick={(e) =>
                                         handleEventClick(event, e)
                                       }
@@ -321,14 +358,23 @@ export function MonthViewAgenda({
                           </PopoverContentBase>
                         </PopoverBase>
                       )}
-                    </div>
-                  </DroppableCellAgenda>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                    </DroppableCellAgenda>
+                  </div>
+                );
+              })}
+
+              <MultiDayOverlay
+                bars={multiDayBars}
+                weekIndex={weekIndex}
+                hoveredEventId={hoveredEventId}
+                onHover={handleHover}
+                onEventSelect={onEventSelect}
+              />
+            </div>
+          );
+        })}
       </div>
+
       <UndatedEvents
         events={events}
         onEventSelect={onEventSelect}

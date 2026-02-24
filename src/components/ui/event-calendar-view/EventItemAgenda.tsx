@@ -13,6 +13,12 @@ import {
   getEventEndDate,
 } from "@/components/ui/event-calendar-view/";
 import { cn } from "@/lib/utils";
+import {
+  TooltipBase,
+  TooltipTriggerBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+} from "@/components/ui/feedback";
 
 const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, "HH:mm");
@@ -80,7 +86,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "flex w-full select-none px-3 py-1 text-left font-medium outline-none transition-transform duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg sm:px-3 rounded-lg shadow-sm hover:shadow-md border ",
+        "flex w-full select-none text-left font-medium outline-none transition-colors duration-150 ease-out backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:border-ring data-dragging:cursor-grabbing data-past-event:line-through data-dragging:shadow-lg rounded-lg border",
         className?.includes("overflow-visible") ? "" : "overflow-hidden",
         colorClasses,
         getBorderRadiusClassesAgenda(isFirstDay, isLastDay),
@@ -117,6 +123,8 @@ interface EventItemProps {
   dndAttributes?: DraggableAttributes;
   onMouseDown?: (e: React.MouseEvent) => void;
   onTouchStart?: (e: React.TouchEvent) => void;
+  /** Number of overlapping columns in this time slot (week view only) */
+  totalCols?: number;
 }
 
 export function EventItemAgenda({
@@ -134,6 +142,7 @@ export function EventItemAgenda({
   onMouseDown,
   onTouchStart,
   agendaOnly = false,
+  totalCols = 1,
 }: EventItemProps) {
   const eventColor = event.color;
   const startDate = getEventStartDate(event);
@@ -203,7 +212,7 @@ export function EventItemAgenda({
     return (
       <EventWrapper
         className={cn(
-          "mt-[var(--event-gap)] h-[var(--event-height)] items-center sm:text-xs",
+          "mt-[var(--event-gap)] h-[var(--event-height)] items-center px-3 py-1 sm:text-xs",
           className,
         )}
         currentTime={currentTime}
@@ -239,12 +248,64 @@ export function EventItemAgenda({
   }
 
   if (view === "week" || view === "day") {
+    const isCompact = durationMinutes < 45;
+    const isDay = view === "day";
+
+    const tier = isDay ? 1 : totalCols >= 5 ? 3 : totalCols >= 3 ? 2 : 1;
+
+    if (tier === 3) {
+      return (
+        <button
+          type="button"
+          className={cn(
+            "h-full w-full rounded border overflow-hidden cursor-pointer",
+            colorClasses,
+            className,
+          )}
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+          aria-label={ariaLabel}
+          {...dndListeners}
+          {...dndAttributes}
+        />
+      );
+    }
+
+    // Tier 2: compact pill – title only in tiny text
+    if (tier === 2) {
+      return (
+        <EventWrapper
+          className={cn(
+            "h-full px-1 py-0.5 overflow-hidden text-[9px]",
+            isCompact ? "flex-row items-center" : "flex-col items-start",
+            className,
+          )}
+          currentTime={currentTime}
+          dndAttributes={dndAttributes}
+          dndListeners={dndListeners}
+          event={event}
+          ariaLabel={ariaLabel}
+          isFirstDay={isFirstDay}
+          isLastDay={isLastDay}
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+        >
+          <span className="font-semibold leading-none truncate w-full block">
+            {event.title}
+          </span>
+        </EventWrapper>
+      );
+    }
+
+    // Tier 1: full layout
     return (
       <EventWrapper
         className={cn(
-          "py-1",
-          durationMinutes < 45 ? "items-center" : "flex-col",
-          view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
+          "h-full py-0.5 px-1.5 overflow-hidden",
+          isCompact ? "items-center flex-row" : "flex-col items-start",
+          isDay ? "text-xs" : "text-[10px]",
           className,
         )}
         currentTime={currentTime}
@@ -255,37 +316,31 @@ export function EventItemAgenda({
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
         onClick={onClick}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
       >
-        {durationMinutes < 45 ? (
-          <div className="flex items-center justify-between w-full">
-            <div
-              className={cn("truncate text-sm sm:text-base md:text-lg min-w-0")}
-            >
+        {isCompact ? (
+          <div className="flex items-center gap-1 w-full min-w-0 overflow-hidden">
+            <span className="truncate font-semibold leading-none min-w-0">
               {event.title}
-            </div>
+            </span>
             {showTime && hasValidTime && displayStart && (
-              <span className="ml-2 flex items-center gap-3 bg-white/10  py-0.5 rounded-full opacity-90 text-sm sm:text-base md:text-lg min-w-0">
+              <span className="shrink-0 opacity-75 leading-none">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
             )}
           </div>
         ) : (
-          <>
-            <div
-              className={cn(
-                "truncate font-medium text-sm sm:text-base md:text-lg min-w-0",
-              )}
-            >
+          <div className="flex flex-col gap-0.5 w-full min-w-0 overflow-hidden h-full">
+            <span className="font-semibold leading-snug truncate">
               {event.title}
-            </div>
+            </span>
             {showTime && hasValidTime && (
-              <div className="truncate font-normal opacity-70 text-sm sm:text-base">
-                <span className="inline-block bg-white/5 px-0.5 py-0.5 rounded-full">
-                  {getEventTime()}
-                </span>
-              </div>
+              <span className="opacity-75 leading-none truncate">
+                {getEventTime()}
+              </span>
             )}
-          </>
+          </div>
         )}
       </EventWrapper>
     );

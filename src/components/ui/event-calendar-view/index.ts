@@ -12,6 +12,13 @@ export { UndatedEvents } from "./UndatedEvents";
 export * from "./hooks/use-current-time-indicator";
 export * from "./hooks/use-event-visibility";
 export { MonthViewAgenda } from "./MonthView";
-export type { CalendarEventAgenda, CalendarViewAgenda, EventColorAgenda } from "./types";
+export type {
+  CalendarEventAgenda,
+  CalendarViewAgenda,
+  EventColorAgenda,
+} from "./types";
 export * from "./utils";
 export { WeekViewAgenda } from "./WeekView";
+export { MultiDayOverlay } from "./MonthMultiDayOverlay";
+export { MonthNowBadge } from "./MonthNowBadge";
+export { EventDetailModalAgenda } from "./EventDetailModalAgenda";
