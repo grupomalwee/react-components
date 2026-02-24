@@ -218,7 +218,7 @@ export function MonthViewAgenda({
                     data-outside-cell={!isCurrentMonth || undefined}
                     data-today={isTodayCell || undefined}
                     className={cn(
-                      "group border-border/70 border-r border-b last:border-r-0 transition-colors py-0.5",
+                      "group border-border/70 border-r border-b last:border-r-0 transition-colors py-0.5 relative",
                       !isCurrentMonth && "bg-muted/20 text-muted-foreground/60",
                       isTodayCol &&
                         isCurrentMonth &&

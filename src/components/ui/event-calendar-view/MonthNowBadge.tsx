@@ -1,17 +1,32 @@
 "use client";
 
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export function MonthNowBadge() {
-  const [time, setTime] = useState(() => format(new Date(), "HH:mm"));
+  const [position, setPosition] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setTime(format(new Date(), "HH:mm")), 60_000);
+    const calculatePosition = () => {
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      const totalMinutes = 24 * 60;
+      setPosition((minutes / totalMinutes) * 100);
+    };
+
+    calculatePosition();
+    const id = setInterval(calculatePosition, 60_000);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <div className="inline-flex items-center gap-1 mt-1 px-1.5 z-50 rounded-full bg-blue-500/10 dark:bg-blue-400 border border-blue-300 dark:border-blue-500" />
+    <div
+      className="pointer-events-none absolute left-0 right-0 z-20"
+      style={{ top: `${position}%` }}
+    >
+      <div className="relative flex items-center">
+        <div className="-left-[3px] absolute size-1.5 rounded-full bg-blue-500" />
+        <div className="h-px w-full bg-blue-500" />
+      </div>
+    </div>
   );
 }
