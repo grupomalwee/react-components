@@ -296,9 +296,7 @@ export function WeekViewAgenda({
         <div className="min-w-[600px] sm:min-w-full flex flex-col h-full">
           <div className="sticky top-0 z-30 grid grid-cols-8 border-border/70 border-b bg-background">
             <div className="py-2 text-center text-muted-foreground/70 text-[10px] sm:text-sm">
-              <span className="max-[479px]:sr-only">
-                {format(new Date(), "O")}
-              </span>
+              <span className="">Horários</span>
             </div>
             {days.map((day) => (
               <div
@@ -313,7 +311,7 @@ export function WeekViewAgenda({
                 <span className="hidden sm:inline md:hidden">
                   {format(day, "EEE d", { locale: ptBR })}
                 </span>
-                <span className="max-md:hidden">
+                <span className="hidden md:inline">
                   {format(day, "EEE dd", { locale: ptBR })}
                 </span>
               </div>
@@ -324,8 +322,8 @@ export function WeekViewAgenda({
             <div className="border-border/70 border-b bg-muted/50">
               {trueAllDayEvents.length > 0 && (
                 <div className="grid grid-cols-8">
-                  <div className="relative border-border/70 border-r">
-                    <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-muted-foreground/70 sm:pe-4 sm:text-xs">
+                  <div className="relative border-border/70 border-r flex items-center justify-center p-1">
+                    <span className="text-center text-[10px] text-muted-foreground/70 sm:text-xs">
                       Todo dia
                     </span>
                   </div>
@@ -428,8 +426,8 @@ export function WeekViewAgenda({
                     trueAllDayEvents.length > 0 && "border-t border-border/40",
                   )}
                 >
-                  <div className="relative border-border/70 border-r">
-                    <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full px-1 text-muted-foreground/70 sm:text-xs">
+                  <div className="relative border-border/70 border-r flex items-center justify-center p-1">
+                    <span className="text-center text-[10px] text-muted-foreground/70 sm:text-xs">
                       Evento
                     </span>
                   </div>

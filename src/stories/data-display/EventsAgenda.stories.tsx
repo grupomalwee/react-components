@@ -4,6 +4,7 @@ import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
+import { toast } from "sonner";
 import {
   CalendarEventAgenda,
   CalendarViewAgenda,
@@ -806,7 +807,6 @@ export const BusyWeek: Story = {
       setMinutes(setHours(d(day), h), m);
 
     const events: CalendarEventAgenda[] = [
-
       {
         id: "ad2",
         title: "Onboarding — Ana Lima",
@@ -1087,43 +1087,398 @@ export const BusyMonth: Story = {
     const mt = (day: number, h: number, m = 0) => new Date(y, mo, day, h, m);
 
     const events: CalendarEventAgenda[] = [
-      { id: "ML-conf", title: "TechConf 2025", allDay: true, start: md(3), end: md(5), color: "violet" as EventColorAgenda, location: "Centro de Convenções SP" },
-      { id: "ML-sprint1", title: "Sprint 43", allDay: true, start: md(6), end: md(17), color: "sky" as EventColorAgenda },
-      { id: "ML-ferias", title: "Férias — Carlos Mendes", allDay: true, start: md(10), end: md(16), color: "emerald" as EventColorAgenda },
-      { id: "ML-feriado1", title: "Feriado Nacional", allDay: true, start: md(15), end: md(15), color: "rose" as EventColorAgenda },
-      { id: "ML-sprint2", title: "Sprint 44", allDay: true, start: md(20), end: md(28), color: "sky" as EventColorAgenda },
-      { id: "ML-hackathon", title: "Hackathon Interno", allDay: true, start: md(22), end: md(23), color: "amber" as EventColorAgenda, location: "Escritório - Andar 4" },
-      { id: "w1-1", title: "Kickoff do Mês", start: mt(2, 9), end: mt(2, 10), color: "amber" as EventColorAgenda, location: "Sala Grande" },
-      { id: "w1-2", title: "1:1 Liderança", start: mt(2, 10, 30), end: mt(2, 11, 15), color: "rose" as EventColorAgenda },
-      { id: "w1-3", title: "TechConf: Abertura", start: mt(3, 9), end: mt(3, 12), color: "violet" as EventColorAgenda, location: "Auditório A" },
-      { id: "w1-4", title: "TechConf: Workshop IA", start: mt(3, 14), end: mt(3, 17), color: "violet" as EventColorAgenda },
-      { id: "w1-5", title: "Almoço Executivo", start: mt(4, 12), end: mt(4, 13, 30), color: "orange" as EventColorAgenda, location: "Restaurante Varanda" },
-      { id: "w1-6", title: "Revisão de Orçamento Q1", start: mt(5, 9), end: mt(5, 11), color: "rose" as EventColorAgenda },
-      { id: "w2-1", title: "Planning Sprint 43", start: mt(6, 9), end: mt(6, 11), color: "sky" as EventColorAgenda, location: "Sala Ágil" },
-      { id: "w2-2", title: "Entrevista Técnica — Dev Sênior", start: mt(7, 10), end: mt(7, 11), color: "emerald" as EventColorAgenda, location: "Sala RH" },
-      { id: "w2-3", title: "Reunião de Produto", start: mt(7, 14), end: mt(7, 15, 30), color: "amber" as EventColorAgenda },
-      { id: "w2-4", title: "Consulta Médica", start: mt(8, 9, 30), end: mt(8, 10, 30), color: "rose" as EventColorAgenda, description: "Check-up anual" },
-      { id: "w2-5", title: "Workshop Design System", start: mt(8, 14), end: mt(8, 17), color: "violet" as EventColorAgenda, location: "Figma + Meet" },
-      { id: "w2-6", title: "Apresentação para Parceiros", start: mt(9, 10), end: mt(9, 12), color: "orange" as EventColorAgenda },
-      { id: "w2-7", title: "Alinhamento de Roadmap", start: mt(9, 15), end: mt(9, 17), color: "indigo" as EventColorAgenda },
-      { id: "w2-8", title: "Happy Hour de Boas-vindas", start: mt(10, 18), end: mt(10, 20), color: "emerald" as EventColorAgenda, location: "Rooftop" },
-      { id: "w3-1", title: "Mentoria Grupo", start: mt(13, 10), end: mt(13, 11, 30), color: "violet" as EventColorAgenda },
-      { id: "w3-2", title: "Curso Liderança Ágil — Módulo 2", start: mt(14, 9), end: mt(14, 12), color: "amber" as EventColorAgenda },
-      { id: "w3-3", title: "Demo para Cliente Varejo", start: mt(14, 14), end: mt(14, 15, 30), color: "orange" as EventColorAgenda, location: "Zoom" },
-      { id: "w3-4", title: "Retrospectiva Sprint 43", start: mt(17, 14), end: mt(17, 15), color: "emerald" as EventColorAgenda },
-      { id: "w4-1", title: "Planning Sprint 44", start: mt(20, 9), end: mt(20, 11), color: "sky" as EventColorAgenda },
-      { id: "w4-2", title: "Reunião Board", start: mt(21, 9), end: mt(21, 11, 30), color: "rose" as EventColorAgenda, location: "Sala Conselho" },
-      { id: "w4-3", title: "Almoço com Investidor", start: mt(21, 12), end: mt(21, 13, 30), color: "orange" as EventColorAgenda },
-      { id: "w4-4", title: "Hackathon — Abertura", start: mt(22, 9), end: mt(22, 10), color: "amber" as EventColorAgenda },
-      { id: "w4-5", title: "Hackathon — Pitches Finais", start: mt(22, 16), end: mt(22, 18), color: "amber" as EventColorAgenda, location: "Auditório" },
-      { id: "w4-6", title: "Hackathon — Premiação", start: mt(23, 16), end: mt(23, 18), color: "amber" as EventColorAgenda },
-      { id: "w4-7", title: "Workshop Segurança & LGPD", start: mt(24, 9), end: mt(24, 12), color: "indigo" as EventColorAgenda },
-      { id: "w5-1", title: "Apresentação de Resultados do Mês", start: mt(27, 10), end: mt(27, 12), color: "rose" as EventColorAgenda },
-      { id: "w5-2", title: "Deploy Final do Mês", start: mt(28, 16, 30), end: mt(28, 17), color: "emerald" as EventColorAgenda },
-      { id: "w5-3", title: "Happy Hour de Encerramento", start: mt(28, 18), end: mt(28, 20), color: "rose" as EventColorAgenda, location: "Rooftop" },
+      {
+        id: "ML-conf",
+        title: "TechConf 2025",
+        allDay: true,
+        start: md(3),
+        end: md(5),
+        color: "violet" as EventColorAgenda,
+        location: "Centro de Convenções SP",
+      },
+      {
+        id: "ML-sprint1",
+        title: "Sprint 43",
+        allDay: true,
+        start: md(6),
+        end: md(17),
+        color: "sky" as EventColorAgenda,
+      },
+      {
+        id: "ML-ferias",
+        title: "Férias — Carlos Mendes",
+        allDay: true,
+        start: md(10),
+        end: md(16),
+        color: "emerald" as EventColorAgenda,
+      },
+      {
+        id: "ML-feriado1",
+        title: "Feriado Nacional",
+        allDay: true,
+        start: md(15),
+        end: md(15),
+        color: "rose" as EventColorAgenda,
+      },
+      {
+        id: "ML-sprint2",
+        title: "Sprint 44",
+        allDay: true,
+        start: md(20),
+        end: md(28),
+        color: "sky" as EventColorAgenda,
+      },
+      {
+        id: "ML-hackathon",
+        title: "Hackathon Interno",
+        allDay: true,
+        start: md(22),
+        end: md(23),
+        color: "amber" as EventColorAgenda,
+        location: "Escritório - Andar 4",
+      },
+      {
+        id: "w1-1",
+        title: "Kickoff do Mês",
+        start: mt(2, 9),
+        end: mt(2, 10),
+        color: "amber" as EventColorAgenda,
+        location: "Sala Grande",
+      },
+      {
+        id: "w1-2",
+        title: "1:1 Liderança",
+        start: mt(2, 10, 30),
+        end: mt(2, 11, 15),
+        color: "rose" as EventColorAgenda,
+      },
+      {
+        id: "w1-3",
+        title: "TechConf: Abertura",
+        start: mt(3, 9),
+        end: mt(3, 12),
+        color: "violet" as EventColorAgenda,
+        location: "Auditório A",
+      },
+      {
+        id: "w1-4",
+        title: "TechConf: Workshop IA",
+        start: mt(3, 14),
+        end: mt(3, 17),
+        color: "violet" as EventColorAgenda,
+      },
+      {
+        id: "w1-5",
+        title: "Almoço Executivo",
+        start: mt(4, 12),
+        end: mt(4, 13, 30),
+        color: "orange" as EventColorAgenda,
+        location: "Restaurante Varanda",
+      },
+      {
+        id: "w1-6",
+        title: "Revisão de Orçamento Q1",
+        start: mt(5, 9),
+        end: mt(5, 11),
+        color: "rose" as EventColorAgenda,
+      },
+      {
+        id: "w2-1",
+        title: "Planning Sprint 43",
+        start: mt(6, 9),
+        end: mt(6, 11),
+        color: "sky" as EventColorAgenda,
+        location: "Sala Ágil",
+      },
+      {
+        id: "w2-2",
+        title: "Entrevista Técnica — Dev Sênior",
+        start: mt(7, 10),
+        end: mt(7, 11),
+        color: "emerald" as EventColorAgenda,
+        location: "Sala RH",
+      },
+      {
+        id: "w2-3",
+        title: "Reunião de Produto",
+        start: mt(7, 14),
+        end: mt(7, 15, 30),
+        color: "amber" as EventColorAgenda,
+      },
+      {
+        id: "w2-4",
+        title: "Consulta Médica",
+        start: mt(8, 9, 30),
+        end: mt(8, 10, 30),
+        color: "rose" as EventColorAgenda,
+        description: "Check-up anual",
+      },
+      {
+        id: "w2-5",
+        title: "Workshop Design System",
+        start: mt(8, 14),
+        end: mt(8, 17),
+        color: "violet" as EventColorAgenda,
+        location: "Figma + Meet",
+      },
+      {
+        id: "w2-6",
+        title: "Apresentação para Parceiros",
+        start: mt(9, 10),
+        end: mt(9, 12),
+        color: "orange" as EventColorAgenda,
+      },
+      {
+        id: "w2-7",
+        title: "Alinhamento de Roadmap",
+        start: mt(9, 15),
+        end: mt(9, 17),
+        color: "indigo" as EventColorAgenda,
+      },
+      {
+        id: "w2-8",
+        title: "Happy Hour de Boas-vindas",
+        start: mt(10, 18),
+        end: mt(10, 20),
+        color: "emerald" as EventColorAgenda,
+        location: "Rooftop",
+      },
+      {
+        id: "w3-1",
+        title: "Mentoria Grupo",
+        start: mt(13, 10),
+        end: mt(13, 11, 30),
+        color: "violet" as EventColorAgenda,
+      },
+      {
+        id: "w3-2",
+        title: "Curso Liderança Ágil — Módulo 2",
+        start: mt(14, 9),
+        end: mt(14, 12),
+        color: "amber" as EventColorAgenda,
+      },
+      {
+        id: "w3-3",
+        title: "Demo para Cliente Varejo",
+        start: mt(14, 14),
+        end: mt(14, 15, 30),
+        color: "orange" as EventColorAgenda,
+        location: "Zoom",
+      },
+      {
+        id: "w3-4",
+        title: "Retrospectiva Sprint 43",
+        start: mt(17, 14),
+        end: mt(17, 15),
+        color: "emerald" as EventColorAgenda,
+      },
+      {
+        id: "w4-1",
+        title: "Planning Sprint 44",
+        start: mt(20, 9),
+        end: mt(20, 11),
+        color: "sky" as EventColorAgenda,
+      },
+      {
+        id: "w4-2",
+        title: "Reunião Board",
+        start: mt(21, 9),
+        end: mt(21, 11, 30),
+        color: "rose" as EventColorAgenda,
+        location: "Sala Conselho",
+      },
+      {
+        id: "w4-3",
+        title: "Almoço com Investidor",
+        start: mt(21, 12),
+        end: mt(21, 13, 30),
+        color: "orange" as EventColorAgenda,
+      },
+      {
+        id: "w4-4",
+        title: "Hackathon — Abertura",
+        start: mt(22, 9),
+        end: mt(22, 10),
+        color: "amber" as EventColorAgenda,
+      },
+      {
+        id: "w4-5",
+        title: "Hackathon — Pitches Finais",
+        start: mt(22, 16),
+        end: mt(22, 18),
+        color: "amber" as EventColorAgenda,
+        location: "Auditório",
+      },
+      {
+        id: "w4-6",
+        title: "Hackathon — Premiação",
+        start: mt(23, 16),
+        end: mt(23, 18),
+        color: "amber" as EventColorAgenda,
+      },
+      {
+        id: "w4-7",
+        title: "Workshop Segurança & LGPD",
+        start: mt(24, 9),
+        end: mt(24, 12),
+        color: "indigo" as EventColorAgenda,
+      },
+      {
+        id: "w5-1",
+        title: "Apresentação de Resultados do Mês",
+        start: mt(27, 10),
+        end: mt(27, 12),
+        color: "rose" as EventColorAgenda,
+      },
+      {
+        id: "w5-2",
+        title: "Deploy Final do Mês",
+        start: mt(28, 16, 30),
+        end: mt(28, 17),
+        color: "emerald" as EventColorAgenda,
+      },
+      {
+        id: "w5-3",
+        title: "Happy Hour de Encerramento",
+        start: mt(28, 18),
+        end: mt(28, 20),
+        color: "rose" as EventColorAgenda,
+        location: "Rooftop",
+      },
     ];
 
-    return <EventAgenda events={events} initialView="month" initialDate={md(1)}  onClick={<EventDetailModalAgenda/>}/>;
+    return (
+      <EventAgenda
+        events={events}
+        initialView="month"
+        initialDate={md(1)}
+        onClick={<EventDetailModalAgenda />}
+      />
+    );
   },
   name: "Mês Agitado",
+};
+
+export const BusyYear: Story = {
+  render: () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const colors: EventColorAgenda[] = [
+      "sky",
+      "amber",
+      "violet",
+      "rose",
+      "emerald",
+      "orange",
+      "blue",
+      "indigo",
+      "pink",
+    ];
+
+    const generateEventsForYear = () => {
+      const yearEvents: CalendarEventAgenda[] = [];
+      // Generate 60 major projects (multiple days)
+      for (let i = 0; i < 60; i++) {
+        const month = i % 12;
+        const startDay = 1 + ((i * 3) % 25);
+        const duration = 2 + (i % 10);
+        yearEvents.push({
+          id: `year-proj-${i}`,
+          title: `Projeto Estratégico ${String.fromCharCode(65 + (i % 26))}-${i}`,
+          start: new Date(currentYear, month, startDay),
+          end: new Date(currentYear, month, startDay + duration),
+          allDay: true,
+          color: colors[i % colors.length],
+          location: "Escritório Central",
+          description: `Acompanhamento do projeto estratégico com stakeholders.`,
+        });
+      }
+
+      // Generate 300 timed events spread throughout the year
+      for (let i = 0; i < 300; i++) {
+        const month = i % 12;
+        const day = 1 + (Math.floor(i / 10) % 28);
+        const hour = 8 + (i % 12);
+        const minute = (i % 4) * 15;
+        yearEvents.push({
+          id: `year-meeting-${i}`,
+          title: `Reunião Recorrente #${i + 1}`,
+          start: new Date(currentYear, month, day, hour, minute),
+          end: new Date(currentYear, month, day, hour + 1, minute + 30),
+          color: colors[(i + 2) % colors.length],
+          location: i % 2 === 0 ? "Meet" : "Sala de Reuniões",
+          description: "Sync de alinhamento periódico para controle de metas.",
+        });
+      }
+
+      // Generate 150 all-day events (single day)
+      for (let i = 0; i < 150; i++) {
+        const month = i % 12;
+        const day = 1 + (i % 28);
+        yearEvents.push({
+          id: `year-allday-${i}`,
+          title: `Marco/Feriado ${i + 1}`,
+          start: new Date(currentYear, month, day),
+          end: new Date(currentYear, month, day),
+          allDay: true,
+          color: colors[(i + 5) % colors.length],
+        });
+      }
+
+      // Generate 40 timed multiday events (labeled as "Evento")
+      for (let i = 0; i < 40; i++) {
+        const month = i % 12;
+        const day = 1 + ((i * 5) % 25);
+        yearEvents.push({
+          id: `year-multiday-timed-${i}`,
+          title: `Evento Especial Multi-dia ${i + 1}`,
+          start: new Date(currentYear, month, day, 10, 0),
+          end: new Date(currentYear, month, day + 2, 16, 30),
+          color: colors[(i + 8) % colors.length],
+          location: "Híbrido",
+          description:
+            "Evento que atravessa múltiplos dias mantendo horários específicos.",
+        });
+      }
+
+      // 30 Undated events
+      for (let i = 0; i < 30; i++) {
+        yearEvents.push({
+          id: `year-undated-${i}`,
+          title: `Pendência Urgente #${i + 1}`,
+          description: "Aguardando definição de cronograma.",
+          color: "rose",
+        });
+      }
+
+      return yearEvents;
+    };
+
+    const FullDemoWrapper = () => {
+      const [events, setEvents] = useState<CalendarEventAgenda[]>(
+        generateEventsForYear(),
+      );
+
+      const handleUpdate = (updated: CalendarEventAgenda) => {
+        setEvents((prev) =>
+          prev.map((ev) => (ev.id === updated.id ? updated : ev)),
+        );
+        toast.success(`Evento "${updated.title}" atualizado com sucesso!`);
+      };
+
+      return (
+        <div className="space-y-4">
+          <EventAgenda
+            events={events}
+            onEventUpdate={handleUpdate}
+            onClick={<EventDetailModalAgenda />}
+            initialView="month"
+          />
+        </div>
+      );
+    };
+
+    return <FullDemoWrapper />;
+  },
+  name: "Ano Completo (API Full)",
 };
