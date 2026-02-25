@@ -11,11 +11,14 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
-    version: "1.10.1",
-    date: "2026-02-24",
+    version: "1.10.2",
+    date: "2026-02-25",
     shortTitle: "Event Calendar View",
     fixed: [
-      "Event Calendar View: arrumado uso no mobile.",
+      "Event Calendar View: novas props para melhor controle da exibição.",
+    ],
+    added: [
+      "Integration Tooltip: card de informações adicionais para o Tooltip.",
     ],
   },
   {
