@@ -7,10 +7,12 @@ import { addDays, setHours, setMinutes, subDays } from "date-fns";
 import { toast } from "sonner";
 import {
   CalendarEventAgenda,
-  CalendarViewAgenda,
-  EventAgenda,
   EventDetailModalAgenda,
 } from "@/components/ui/event-calendar-view/";
+import {
+  EventAgenda,
+  type EventCalendarProps,
+} from "@/components/ui/event-calendar-view/EventAgenda";
 import type { EventColorAgenda } from "@/components/ui/event-calendar-view/types";
 
 const sampleEvents: CalendarEventAgenda[] = [
@@ -204,7 +206,7 @@ export default function Example() {
   argTypes: {
     initialView: {
       control: { type: "select" },
-      options: ["month", "week", "day", "agenda"],
+      options: ["year", "month", "week", "day", "agenda"],
       description: "View inicial do calendário",
     },
     onEventUpdate: { action: "onEventUpdate" },
@@ -215,27 +217,31 @@ export default meta;
 
 type Story = StoryObj<typeof EventAgenda>;
 
-function Wrapper(
-  props: {
-    initialView?: CalendarViewAgenda;
-    mode?: "agenda-only" | "default";
-  } = {},
-) {
+const Wrapper = ({
+  initialView = "week",
+  showYearView = false,
+  ...args
+}: Partial<EventCalendarProps>) => {
   const [events, setEvents] = useState<CalendarEventAgenda[]>(sampleEvents);
 
-  const handleEventUpdate = (updatedEvent: CalendarEventAgenda) =>
-    setEvents((s) =>
-      s.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)),
+  const handleUpdate = (updatedEvent: CalendarEventAgenda) => {
+    setEvents((prev) =>
+      prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)),
     );
+  };
 
   return (
-    <EventAgenda
-      events={events}
-      initialView={props.initialView || undefined}
-      onEventUpdate={(ev) => handleEventUpdate(ev)}
-    />
+    <div className="h-[600px] p-4 text-foreground bg-background">
+      <EventAgenda
+        events={events}
+        onEventUpdate={handleUpdate}
+        initialView={initialView}
+        showYearView={showYearView}
+        {...args}
+      />
+    </div>
   );
-}
+};
 
 export const Playground: Story = {
   parameters: {
@@ -431,6 +437,35 @@ export default function AgendaViewExample() {
   },
   render: () => <Wrapper initialView="agenda" />,
   name: "Agenda",
+};
+
+export const YearViewExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
+
+export default function YearViewExample() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  return (
+    <EventAgenda
+      events={events}
+      initialView="year"
+      showYearView={true}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  args: {
+    showYearView: true,
+  },
+  render: (args) => <Wrapper initialView="year" {...args} />,
+  name: "Ano",
 };
 
 export const ManyEvents: Story = {
@@ -1473,6 +1508,7 @@ export const BusyYear: Story = {
             onEventUpdate={handleUpdate}
             onClick={<EventDetailModalAgenda />}
             initialView="month"
+            showYearView={true}
           />
         </div>
       );
@@ -1480,5 +1516,5 @@ export const BusyYear: Story = {
 
     return <FullDemoWrapper />;
   },
-  name: "Ano Completo (API Full)",
+  name: "Ano Completo",
 };

@@ -11,7 +11,7 @@ import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
-import type { SystemData } from "./systemTooltipUtils";
+import type { SystemData } from "./utils/systemTooltipUtils";
 
 const tooltipVariants = {
   hidden: {

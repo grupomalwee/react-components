@@ -1,3 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
 export * from "./components";
-export * from "./hooks"
+export * from "./hooks";
+export * from "./components/ui/charts/components/tooltips/integration";

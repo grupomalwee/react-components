@@ -4,12 +4,14 @@ import {
   addDays,
   addMonths,
   addWeeks,
+  addYears,
   endOfWeek,
   format,
   isSameMonth,
   startOfWeek,
   subMonths,
   subWeeks,
+  subYears,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -28,6 +30,7 @@ import {
   MonthViewAgenda,
   WeekCellsHeightAgenda,
   WeekViewAgenda,
+  YearViewAgenda,
 } from "@/components/ui/event-calendar-view/";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +47,7 @@ export interface EventCalendarProps {
   onClick?:
     | ((event: CalendarEventAgenda, e?: React.MouseEvent) => void)
     | React.ReactElement<ModalLikeProps>;
+  showYearView?: boolean;
 }
 
 export interface ModalLikeProps {
@@ -59,9 +63,10 @@ export function EventAgenda({
   initialView = "month",
   initialDate,
   onClick,
+  showYearView = false,
 }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(
-    (initialDate && new Date(initialDate)) || new Date()
+    (initialDate && new Date(initialDate)) || new Date(),
   );
   const [view, setView] = useState<CalendarViewAgenda>(initialView);
   const [selectedEvent, setSelectedEvent] =
@@ -73,6 +78,7 @@ export function EventAgenda({
     else if (view === "day") setCurrentDate((d) => addDays(d, -1));
     else if (view === "agenda")
       setCurrentDate((d) => addDays(d, -AgendaDaysToShowAgenda));
+    else if (view === "year") setCurrentDate((d) => subYears(d, 1));
   };
 
   const goNext = () => {
@@ -81,17 +87,18 @@ export function EventAgenda({
     else if (view === "day") setCurrentDate((d) => addDays(d, 1));
     else if (view === "agenda")
       setCurrentDate((d) => addDays(d, AgendaDaysToShowAgenda));
+    else if (view === "year") setCurrentDate((d) => addYears(d, 1));
   };
 
   const handleEventSelect = (
     event: CalendarEventAgenda,
-    e?: React.MouseEvent
+    e?: React.MouseEvent,
   ) => {
     try {
       if (typeof onClick === "function") {
         (onClick as (ev: CalendarEventAgenda, e?: React.MouseEvent) => void)(
           event,
-          e
+          e,
         );
         return;
       }
@@ -108,7 +115,7 @@ export function EventAgenda({
   const handleEventUpdate = (updatedEvent: CalendarEventAgenda) => {
     if (updatedEvent.start == null) {
       console.warn(
-        `Ignored update for event ${updatedEvent.id} because start is null`
+        `Ignored update for event ${updatedEvent.id} because start is null`,
       );
       return;
     }
@@ -126,6 +133,7 @@ export function EventAgenda({
       week: { full: "Semana", short: "S" },
       day: { full: "Dia", short: "D" },
       agenda: { full: "Agenda", short: "A" },
+      year: { full: "Ano", short: "An" },
     };
     const entry = labels[v] || { full: v, short: v };
     return condensed ? entry.short : entry.full;
@@ -151,20 +159,27 @@ export function EventAgenda({
       const start = currentDate;
       return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
     }
+    if (view === "year") {
+      return format(currentDate, "yyyy");
+    }
     return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
   }, [currentDate, view]);
 
-  const selectItems: SelectItem<CalendarViewAgenda>[] = (
-    ["month", "week", "day", "agenda"] as CalendarViewAgenda[]
-  ).map((v) => ({
-    label: viewLabel(v),
-    value: v,
-  }));
+  const availableViews: CalendarViewAgenda[] = showYearView
+    ? ["year", "month", "week", "day", "agenda"]
+    : ["month", "week", "day", "agenda"];
+
+  const selectItems: SelectItem<CalendarViewAgenda>[] = availableViews.map(
+    (v) => ({
+      label: viewLabel(v),
+      value: v,
+    }),
+  );
   return (
     <div
       className={cn(
         "flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1 px-6 py-2 border-border",
-        className
+        className,
       )}
       style={
         {
@@ -214,9 +229,7 @@ export function EventAgenda({
           </div>
         </div>
 
-        <div
-          className="flex flex-col transition-all duration-200 ease-in-out"
-        >
+        <div className="flex flex-col transition-all duration-200 ease-in-out">
           {view === "month" && (
             <MonthViewAgenda
               currentDate={currentDate}
@@ -243,6 +256,16 @@ export function EventAgenda({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+            />
+          )}
+          {view === "year" && (
+            <YearViewAgenda
+              currentDate={currentDate}
+              events={events}
+              onMonthSelect={(monthDate: Date) => {
+                setCurrentDate(monthDate);
+                setView("month");
+              }}
             />
           )}
         </div>

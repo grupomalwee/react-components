@@ -263,7 +263,7 @@ export function MonthViewAgenda({
                       </div>
                       <div
                         ref={isReferenceCell ? contentRef : null}
-                        className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-0.5 sm:py-1"
+                        className="flex-1 min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)] px-1 py-1"
                       >
                         {Array.from({ length: dayMultiDayRowCount }).map(
                           (_, si) => (
@@ -346,7 +346,7 @@ export function MonthViewAgenda({
                               type="button"
                               onClick={(e) => e.stopPropagation()}
                               aria-label={`Mostrar mais ${remainingCount} eventos`}
-                              className="mt-[var(--event-gap)] flex h-[var(--event-height)] w-full select-none items-center overflow-hidden px-2 text-left text-[10px] text-muted-foreground outline-none rounded-md transition hover:bg-muted/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:text-xs"
+                              className="mt-auto flex h-[var(--event-height)] w-full select-none items-center overflow-hidden px-2 text-left text-[10px] text-muted-foreground outline-none rounded-md transition hover:bg-muted/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:text-xs"
                             >
                               <span className="font-semibold">
                                 + {remainingCount}{" "}

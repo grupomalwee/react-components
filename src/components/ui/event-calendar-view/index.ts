@@ -19,5 +19,6 @@ export type {
 } from "./types";
 export * from "./utils";
 export { WeekViewAgenda } from "./WeekView";
+export { YearViewAgenda } from "./YearViewAgenda";
 export { MultiDayOverlay } from "./MonthMultiDayOverlay";
 export { EventDetailModalAgenda } from "./EventDetailModalAgenda";
