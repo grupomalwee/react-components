@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   FileUploader,
   FileWithPreview,
+  FileTypes,
 } from "@/components/ui/data/FileUploader";
 import { useState } from "react";
 
@@ -29,11 +30,12 @@ const meta: Meta<typeof FileUploader> = {
   argTypes: {
     accept: {
       control: "object",
-      description: "Array de tipos de arquivo aceitos",
+      description:
+        "Array de tipos de arquivo (use FileTypes para opções comuns)",
     },
     maxSize: {
       control: "number",
-      description: "Tamanho máximo do arquivo em bytes",
+      description: "Tamanho máximo do arquivo em MB",
     },
     maxFiles: {
       control: "number",
@@ -62,8 +64,8 @@ const meta: Meta<typeof FileUploader> = {
     },
   },
   args: {
-    accept: [],
-    maxSize: 10 * 1024 * 1024,
+    accept: FileTypes.All,
+    maxSize: 10,
     maxFiles: 5,
     disabled: false,
     showPreview: true,
@@ -77,12 +79,12 @@ export default meta;
 type Story = StoryObj<typeof FileUploader>;
 
 const FileUploaderWrapper = (
-  args: React.ComponentProps<typeof FileUploader>
+  args: React.ComponentProps<typeof FileUploader>,
 ) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
 
   const handleUpload = async (
-    uploadFiles: FileWithPreview[]
+    uploadFiles: FileWithPreview[],
   ): Promise<void> => {
     console.log("Uploading files:", uploadFiles);
     return new Promise((resolve) => {
@@ -94,6 +96,7 @@ const FileUploaderWrapper = (
     <div style={{ width: "400px", maxWidth: "100%" }}>
       <FileUploader
         {...args}
+        accept={[]}
         value={files}
         onValueChange={setFiles}
         onUpload={handleUpload}
@@ -110,7 +113,7 @@ export const ImagesOnly: Story = {
   render: (args) => (
     <FileUploaderWrapper
       {...args}
-      accept={["image/*"]}
+      accept={FileTypes.Image}
       dropzoneText="Apenas imagens"
       dropzoneSubtext="PNG, JPEG, GIF, WebP até 10MB"
     />
@@ -133,7 +136,7 @@ meta.parameters = {
   docs: {
     ...meta.parameters?.docs,
     source: {
-      code: `import { FileUploader } from '@mlw-packages/react-components';
+      code: `import { FileUploader, FileTypes } from '@mlw-packages/react-components';
 
 function Example() {
   const [files, setFiles] = React.useState([]);
@@ -146,8 +149,8 @@ function Example() {
   return (
     <div style={{ width: 400 }}>
       <FileUploader
-        accept={[]}
-        maxSize={10 * 1024 * 1024}
+        accept={FileTypes.All}
+        maxSize={10}
         maxFiles={5}
         showPreview
         onValueChange={setFiles}
@@ -189,7 +192,7 @@ ImagesOnly.parameters = {
   docs: {
     ...ImagesOnly.parameters?.docs,
     source: {
-      code: `import { FileUploader } from '@mlw-packages/react-components';
+      code: `import { FileUploader, FileTypes } from '@mlw-packages/react-components';
 
 function Example() {
   const [files, setFiles] = React.useState([]);
@@ -197,7 +200,7 @@ function Example() {
   return (
     <div style={{ width: 400 }}>
       <FileUploader
-        accept={["image/*"]}
+        accept={FileTypes.Image}
         dropzoneText='Apenas imagens'
         dropzoneSubtext='PNG, JPEG, GIF, WebP até 10MB'
         value={files}

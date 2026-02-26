@@ -37,6 +37,11 @@ const sampleItems: CarouselItem[] = [
     title: "DONM FLY",
   },
   {
+    id: 6,
+    url: "/pwa-512x512.png",
+    title: "DONM FLY",
+  },
+  {
     id: 7,
     url: "/pwa-512x512.png",
     title: "Snowy Mountain Highway",
@@ -45,6 +50,45 @@ const sampleItems: CarouselItem[] = [
     id: 8,
     url: "/pwa-512x512.png",
     title: "FOGGY FOLS",
+  },
+];
+
+const themedItems: CarouselItem[] = [
+  {
+    id: 1,
+    url: "/pwa-512x512.png",
+    title: "Malwee Theme",
+    theme: "malwee",
+  },
+  {
+    id: 2,
+    url: "/pwa-512x512.png",
+    title: "Enfim Theme",
+    theme: "enfim",
+  },
+  {
+    id: 3,
+    url: "/pwa-512x512.png",
+    title: "Carinhoso Theme",
+    theme: "carinhoso",
+  },
+  {
+    id: 4,
+    url: "/pwa-512x512.png",
+    title: "Kids Theme",
+    theme: "malwee-kids",
+  },
+  {
+    id: 5,
+    url: "/pwa-512x512.png",
+    title: "Malwee Theme 2",
+    theme: "malwee",
+  },
+  {
+    id: 6,
+    url: "/pwa-512x512.png",
+    title: "Enfim Theme 2",
+    theme: "enfim",
   },
 ];
 
@@ -157,6 +201,22 @@ export default function Default() {
   );
 }
 `,
+      },
+    },
+  },
+};
+
+export const Themed: Story = {
+  args: {
+    items: themedItems,
+    showControls: true,
+    showIndicators: true,
+    onChange: (index) => console.log("Slide changed to index: ", index, "theme: ", themedItems[index].theme),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Carousel com suporte a temas por slide ('malwee', 'enfim', 'carinhoso', 'malwee-kids'). O container, botões e indicadores mudam de cor dinamicamente conforme o tema do slide autal.",
       },
     },
   },

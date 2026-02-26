@@ -12,6 +12,17 @@ export type ChangeItem = {
 export const changelogData: ChangeItem[] = [
   {
     version: "1.10.2",
+    date: "2026-02-26",
+    shortTitle: "Carousel e FileUploader",
+    fixed: [
+      "Carousel: novas props para melhor controle da exibição.",
+    ],
+    added: [  
+      "FileUploader: novas props para melhor controle da exibição.",
+    ],
+  },
+  {
+    version: "1.10.2",
     date: "2026-02-25",
     shortTitle: "Event Calendar View",
     fixed: [

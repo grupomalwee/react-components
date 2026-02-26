@@ -19,16 +19,30 @@ import {
 } from "@phosphor-icons/react";
 import { ButtonBase } from "../form/ButtonBase";
 
+export const FileTypes = {
+  Image: ["image/*", ".jpeg", ".jpg", ".png", ".gif", ".webp", ".svg"],
+  Document: [".pdf", ".doc", ".docx", ".txt", ".rtf"],
+  Spreadsheet: [".xls", ".xlsx", ".csv"],
+  Presentation: [".ppt", ".pptx"],
+  Video: ["video/*", ".mp4", ".webm", ".mkv", ".avi"],
+  Audio: ["audio/*", ".mp3", ".wav", ".ogg"],
+  All: [] as string[],
+} as const;
+
+export type FileTypeValues = (typeof FileTypes)[keyof typeof FileTypes];
+
 export interface FileWithPreview extends File {
   id?: string;
   error?: string;
   preview?: string;
 }
 
-export interface FileUploaderProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onDrop"> {
-  accept: string[];
-  maxSize: number;
+export interface FileUploaderProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onDrop"
+> {
+  accept?: string[] | readonly string[];
+  maxSize?: number;
   maxFiles?: number;
   onValueChange: (files: FileWithPreview[]) => void;
   disabled?: boolean;
@@ -76,7 +90,7 @@ const getFileTypeIcon = (file: File) => {
   }
   if (
     ["txt", "md", "json", "xml", "js", "ts", "html", "css"].includes(
-      extension
+      extension,
     ) ||
     mimeType.includes("text")
   ) {
@@ -122,8 +136,8 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
   (
     {
       className,
-      accept,
-      maxSize,
+      accept = FileTypes.All,
+      maxSize = 10,
       maxFiles = 1,
       disabled = false,
       value = [],
@@ -135,7 +149,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       animate = true,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [isDragging, setIsDragging] = React.useState(false);
     const [files, setFiles] = React.useState<FileWithPreview[]>(value);
@@ -160,8 +174,9 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     }, [files]);
 
     const validateFile = (file: File): string | null => {
-      if (file.size > maxSize) {
-        return `Arquivo muito grande. Máximo: ${formatFileSize(maxSize)}`;
+      const maxSizeBytes = maxSize * 1024 * 1024;
+      if (file.size > maxSizeBytes) {
+        return `Arquivo muito grande. Máximo: ${maxSize} MB`;
       }
 
       if (accept.length > 0) {
@@ -187,7 +202,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     };
 
     const createFileWithPreview = async (
-      file: File
+      file: File,
     ): Promise<FileWithPreview> => {
       const fileWithPreview = file as FileWithPreview;
       fileWithPreview.id = `${file.name}-${Date.now()}-${Math.random()}`;
@@ -221,7 +236,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
         : [newFiles[0]];
 
       const filesWithPreview = await Promise.all(
-        filesToAdd.map((file) => createFileWithPreview(file))
+        filesToAdd.map((file) => createFileWithPreview(file)),
       );
 
       const updatedFiles = multiple
@@ -302,26 +317,37 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     };
 
     const acceptString = accept.join(",");
+
+    const getFormatText = () => {
+      if (accept === FileTypes.All || accept.length === 0)
+        return "Qualquer formato";
+      if (accept === FileTypes.Image) return "Apenas imagens";
+      if (accept === FileTypes.Document) return "Apenas documentos";
+      if (accept === FileTypes.Video) return "Apenas vídeos";
+      if (accept === FileTypes.Audio) return "Apenas áudio";
+      if (accept === FileTypes.Spreadsheet) return "Apenas planilhas";
+      if (accept === FileTypes.Presentation) return "Apenas apresentações";
+      return "Formatos específicos válidos";
+    };
+
     const defaultSubtext =
-      dropzoneSubtext ||
-      `Formatos: ${accept.join(", ")}. Máximo: ${formatFileSize(maxSize)}`;
+      dropzoneSubtext || `${getFormatText()} (Máx: ${maxSize}MB)`;
 
     return (
       <div ref={ref} className={cn("w-full", className)} {...props}>
         <motion.div
           className={cn(
-            "relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-all duration-300 dark:shadow-black/20",
+            "relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-5 transition-all duration-300 dark:shadow-black/20",
             isDragging && "border-primary bg-primary/10 scale-[1.02]",
             !isDragging &&
               "border-border hover:border-primary/60 hover:bg-muted/50",
-            disabled && "cursor-not-allowed opacity-50 hover:scale-100"
+            disabled && "cursor-not-allowed opacity-50",
           )}
           onDragEnter={handleDragEnter}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={handleClick}
-          whileHover={!disabled ? { scale: 1.01 } : undefined}
           whileTap={!disabled ? { scale: 0.99 } : undefined}
           animate={
             isDragging
@@ -367,7 +393,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
             <motion.div
               className={cn(
                 "mb-4 h-16 w-16 text-muted-foreground transition-colors duration-300 drop-shadow-lg flex items-center justify-center",
-                isDragging && "text-primary"
+                isDragging && "text-primary",
               )}
               initial={false}
               animate={{
@@ -382,7 +408,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           </motion.div>
 
           <motion.p
-            className="mb-2 text-base font-semibold text-foreground"
+            className="mb-2 text-xs font-semibold text-foreground"
             initial={animate ? { opacity: 0, y: -10 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -391,60 +417,25 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           </motion.p>
 
           <motion.p
-            className="text-sm text-muted-foreground"
+            className="text-xs text-muted-foreground"
             initial={animate ? { opacity: 0, y: -10 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             {defaultSubtext}
           </motion.p>
-
-          <AnimatePresence>
-            {files.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  y: 0,
-                  backgroundColor: `hsl(var(--primary) / 0.1)`,
-                  borderColor: `hsl(var(--primary) / 0.2)`,
-                }}
-                exit={{ opacity: 0, scale: 0.8, y: 10 }}
-                className={cn(
-                  "mt-4 flex items-center gap-2 rounded-full border px-4 py-2 backdrop-blur-sm bg-primary/20 border-primary/30 shadow-lg"
-                )}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="h-4 w-4 text-primary flex items-center justify-center">
-                  <CheckIcon size={16} className="text-emerald-500" />
-                </div>
-                <motion.span
-                  className="text-sm font-semibold text-primary"
-                  animate={{ color: `hsl(var(--primary))` }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {files.length}{" "}
-                  {files.length === 1
-                    ? "arquivo selecionado"
-                    : "arquivos selecionados"}
-                </motion.span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {showPreview && files.length > 0 && (
             <motion.div
-              className="mt-6 w-full"
+              className="py-2 w-full"
               initial={animate ? { opacity: 0, y: 10 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
               <div>
-                <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                <h4 className="text-xs font-medium text-muted-foreground pb-0.5">
                   Arquivos selecionados ({files.length}/{maxFiles})
                 </h4>
-                <div className="space-y-2 overflow-y-auto max-h-44">
+                <div className="space-y-2 overflow-y-auto max-h-36">
                   <AnimatePresence mode="popLayout">
                     {files.map((file, index) => (
                       <motion.div
@@ -462,22 +453,20 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                           layout: { duration: 0.2 },
                         }}
                         className={cn(
-                          "flex items-center gap-3 rounded-md border p-3 transition-all duration-300",
+                          "group flex items-center gap-3 rounded-md border p-2 transition-all duration-300",
                           file.error
                             ? "border-destructive/50 bg-destructive/5"
-                            : "border-border bg-background/80 hover:bg-muted/50 hover:shadow-md hover:shadow-primary/10 hover:border-primary/30"
+                            : "border-border bg-background/80 hover:bg-muted/50 hover:shadow-md hover:shadow-primary/10 hover:border-primary/30",
                         )}
                       >
                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-muted overflow-hidden">
                           {file.preview ? (
-                            // Preview de imagem
                             <img
                               src={file.preview}
                               alt={file.name}
                               className="h-full w-full object-cover rounded-md"
                             />
                           ) : (
-                            // Ícone baseado no tipo de arquivo
                             getFileTypeIcon(file)
                           )}
                         </div>
@@ -515,15 +504,15 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                         </div>
 
                         <ButtonBase
-                          variant="destructive"
                           size="icon"
+                          variant="ghost"
                           onClick={(e) => {
                             e?.stopPropagation();
                             handleRemoveFile(file.id!);
                           }}
-                          className=""
+                          className="opacity-0 transition-opacity group-hover:opacity-100"
                         >
-                          <XIcon size={12} />
+                          <XIcon size={12} className="text-red-500" />
                         </ButtonBase>
                       </motion.div>
                     ))}
@@ -535,7 +524,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
         </motion.div>
       </div>
     );
-  }
+  },
 );
 
 FileUploader.displayName = "FileUploader";

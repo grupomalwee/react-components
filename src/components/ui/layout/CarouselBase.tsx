@@ -10,6 +10,7 @@ export interface CarouselItem {
   id: number | string;
   url: string;
   title: string;
+  theme?: "malwee" | "malwee-kids" | "enfim" | "carinhoso";
 }
 
 export interface CarouselBaseProps {
@@ -29,7 +30,58 @@ export interface CarouselBaseProps {
   zoomEffect?: "lens" | "scale" | null;
   download?: boolean;
   isLoading?: boolean;
+  onChange?: (index: number) => void;
 }
+
+const carouselThemes: Record<
+  string,
+  {
+    foreground: string;
+    primary: string;
+    primaryForeground: string;
+    muted: string;
+    mutedForeground: string;
+    border: string;
+    font: string;
+  }
+> = {
+  malwee: {
+    foreground: "text-[#222222]",
+    primary: "bg-[#0b5430]",
+    primaryForeground: "text-white",
+    muted: "bg-[#f0eacc]",
+    mutedForeground: "text-[#6b665c]",
+    border: "!border-[#0b5430]",
+    font: "font-[family-name:var(--font-playfair)]",
+  },
+  enfim: {
+    foreground: "text-black",
+    primary: "bg-black",
+    primaryForeground: "text-white",
+    muted: "bg-gray-100",
+    mutedForeground: "text-gray-600",
+    border: "!border-black",
+    font: "font-[family-name:var(--font-libre-caslon)]",
+  },
+  carinhoso: {
+    foreground: "text-[#222222]",
+    primary: "bg-[#d9d0c0]",
+    primaryForeground: "text-[#222222]",
+    muted: "bg-[#e2ddd6]",
+    mutedForeground: "text-[#5e5b56]",
+    border: "!border-[#d9d0c0]",
+    font: "font-[family-name:var(--font-josefin)]",
+  },
+  "malwee-kids": {
+    foreground: "text-[#005bbf]",
+    primary: "bg-[#005bbf]",
+    primaryForeground: "text-white",
+    muted: "bg-[#fcf5c2]",
+    mutedForeground: "text-[#004a9e]",
+    border: "!border-[#005bbf]",
+    font: "font-[family-name:var(--font-poppins)]",
+  },
+};
 
 function CarouselSkeleton({ className }: { className?: string }) {
   return (
@@ -118,6 +170,7 @@ export function CarouselBase({
   zoomEffect = null,
   download = false,
   isLoading = false,
+  onChange,
 }: CarouselBaseProps) {
   const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
@@ -130,7 +183,9 @@ export function CarouselBase({
     if (!emblaApi) return;
 
     const onSelect = () => {
-      setIndex(emblaApi.selectedScrollSnap());
+      const newIndex = emblaApi.selectedScrollSnap();
+      setIndex(newIndex);
+      onChange?.(newIndex);
     };
 
     emblaApi.on("select", onSelect);
@@ -140,7 +195,11 @@ export function CarouselBase({
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
     };
-  }, [emblaApi]);
+  }, [emblaApi, onChange]);
+
+  const currentItem = items[index];
+  const themeKey = currentItem?.theme || "malwee";
+  const currentTheme = carouselThemes[themeKey] || carouselThemes.malwee;
 
   useEffect(() => {
     if (!autoPlay || items.length <= 1 || !emblaApi) return;
@@ -204,7 +263,12 @@ export function CarouselBase({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className={cn("w-full lg:p-10 sm:p-4 p-2", className)}
+        className={cn(
+          "w-full lg:p-10 sm:p-4 p-2 transition-colors duration-500",
+          currentTheme.foreground,
+          currentTheme.font,
+          className,
+        )}
         style={{ width }}
       >
         <div className="flex flex-col gap-3 h-full">
@@ -349,12 +413,14 @@ export function CarouselBase({
                   onPointerDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
-                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-50
-                    ${
-                      !emblaApi?.canScrollPrev()
-                        ? "opacity-40 cursor-not-allowed"
-                        : "bg-secondary hover:scale-110 hover:opacity-100 opacity-70"
-                    }`}
+                  className={cn(
+                    "absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all z-50",
+                    !emblaApi?.canScrollPrev()
+                      ? "opacity-40 cursor-not-allowed"
+                      : "hover:scale-110 hover:opacity-100 opacity-70",
+                    currentTheme.primary,
+                    currentTheme.primaryForeground,
+                  )}
                 >
                   <svg
                     className="w-6 h-6"
@@ -377,12 +443,14 @@ export function CarouselBase({
                   onPointerDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
-                  className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-50
-                    ${
-                      !emblaApi?.canScrollNext()
-                        ? "opacity-40 cursor-not-allowed"
-                        : "bg-secondary hover:scale-110 hover:opacity-100 opacity-70"
-                    }`}
+                  className={cn(
+                    "absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all z-50",
+                    !emblaApi?.canScrollNext()
+                      ? "opacity-40 cursor-not-allowed"
+                      : "hover:scale-110 hover:opacity-100 opacity-70",
+                    currentTheme.primary,
+                    currentTheme.primaryForeground,
+                  )}
                 >
                   <svg
                     className="w-6 h-6"
@@ -410,9 +478,16 @@ export function CarouselBase({
                     onPointerDown={(e) => e.stopPropagation()}
                     onTouchStart={(e) => e.stopPropagation()}
                     onMouseDown={(e) => e.stopPropagation()}
-                    className={`h-2 rounded-full transition-all ${
-                      i === index ? "w-8 bg-white" : "w-2 bg-white/50"
-                    }`}
+                    className={cn(
+                      "h-2 rounded-full transition-all duration-300",
+                      i === index
+                        ? cn("w-8", currentTheme.primary)
+                        : cn(
+                            "w-2 hover:opacity-80",
+                            currentTheme.primary,
+                            "opacity-40",
+                          ),
+                    )}
                   />
                 ))}
               </div>
