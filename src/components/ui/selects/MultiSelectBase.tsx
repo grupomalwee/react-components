@@ -19,7 +19,7 @@ import {
   PopoverTriggerBase,
 } from "../overlays/PopoverBase";
 import ErrorMessage from "@/components/ui/shared/ErrorMessage";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ButtonBase } from "../form/ButtonBase";
 import { Badge } from "../data/Badge";
 import LabelBase from "../form/LabelBase";
@@ -32,6 +32,13 @@ import {
   CommandListBase,
   CommandSeparatorBase,
 } from "../navigation/CommandBase";
+import {
+  TooltipBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+  TooltipTriggerBase,
+} from "../feedback/TooltipBase";
+import { Toaster } from "../feedback";
 
 export type MultiSelectContextType = {
   open: boolean;
@@ -195,50 +202,58 @@ export function MultiSelectValueBase({
 
     const containerElement = valueRef.current;
     const overflowElement = overflowRef.current;
-    const items = containerElement.querySelectorAll<HTMLElement>(
+    const badgeItems = containerElement.querySelectorAll<HTMLElement>(
       "[data-selected-item]",
     );
 
     if (overflowElement != null) overflowElement.style.display = "none";
-    items.forEach((child) => child.style.removeProperty("display"));
-    let amount = 0;
-    for (let i = items.length - 1; i >= 0; i--) {
-      const child = items[i]!;
-      if (containerElement.scrollWidth <= containerElement.clientWidth) {
-        break;
-      }
-      amount = items.length - i;
-      child.style.display = "none";
-      overflowElement?.style.removeProperty("display");
+    badgeItems.forEach((child) => child.style.removeProperty("display"));
+
+    if (shouldWrap) {
+      setOverflowAmount(0);
+      return;
     }
+    let amount = 0;
+    for (let i = badgeItems.length - 1; i >= 0; i--) {
+      if (containerElement.scrollWidth <= containerElement.clientWidth) break;
+
+      const child = badgeItems[i]!;
+      amount = badgeItems.length - i;
+      child.style.display = "none";
+
+      if (overflowElement != null) {
+        overflowElement.style.removeProperty("display");
+      }
+    }
+
     setOverflowAmount(amount);
+  }, [shouldWrap]);
+
+  useEffect(() => {
+    if (overflowRef.current) {
+      overflowRef.current.style.display = "none";
+    }
   }, []);
+
+  useEffect(() => {
+    checkOverflow();
+  }, [open, shouldWrap, checkOverflow]);
 
   const handleResize = useCallback(
     (node: HTMLDivElement | null) => {
       if (node == null) {
         valueRef.current = null;
-        if (resizeObserverRef.current) {
-          resizeObserverRef.current.disconnect();
-          resizeObserverRef.current = null;
-        }
-        if (mutationObserverRef.current) {
-          mutationObserverRef.current.disconnect();
-          mutationObserverRef.current = null;
-        }
+        resizeObserverRef.current?.disconnect();
+        resizeObserverRef.current = null;
+        mutationObserverRef.current?.disconnect();
+        mutationObserverRef.current = null;
         return;
       }
 
       valueRef.current = node;
 
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect();
-        resizeObserverRef.current = null;
-      }
-      if (mutationObserverRef.current) {
-        mutationObserverRef.current.disconnect();
-        mutationObserverRef.current = null;
-      }
+      resizeObserverRef.current?.disconnect();
+      mutationObserverRef.current?.disconnect();
 
       const mo = new MutationObserver(checkOverflow);
       const ro = new ResizeObserver(debounce(checkOverflow, 100));
@@ -257,6 +272,8 @@ export function MultiSelectValueBase({
     },
     [checkOverflow],
   );
+
+  const [overflowHovered, setOverflowHovered] = useState(false);
 
   const visibleSelected = [...selectedValues]
     .filter((value) => items.has(value))
@@ -291,7 +308,7 @@ export function MultiSelectValueBase({
         <Badge
           data-selected-item
           size="sm"
-          className="group flex items-center gap-1  border-border"
+          className="group flex items-center gap-1 border-border shrink-0"
           key={value}
           onClick={
             clickToRemove
@@ -308,14 +325,45 @@ export function MultiSelectValueBase({
           )}
         </Badge>
       ))}
-      <Badge
-        style={{
-          display: overflowAmount > 0 && !shouldWrap ? "block" : "none",
-        }}
-        ref={overflowRef}
-      >
-        +{overflowAmount}
-      </Badge>
+
+      {overflowAmount > 0 && (
+        <TooltipProviderBase>
+          <TooltipBase open={overflowHovered}>
+            <TooltipTriggerBase asChild>
+              <div
+                ref={overflowRef}
+                className="inline-flex"
+                onMouseEnter={() => setOverflowHovered(true)}
+                onMouseLeave={() => setOverflowHovered(false)}
+              >
+                <Badge size="sm" className="shrink-0 cursor-default">
+                  +{overflowAmount}
+                </Badge>
+              </div>
+            </TooltipTriggerBase>
+            <TooltipContentBase className="p-2 max-w-xs">
+              <p className="text-xs font-medium text-primary-foreground/60 mb-1.5 px-1">
+                {overflowAmount} item{overflowAmount > 1 ? "s" : ""} oculto
+                {overflowAmount > 1 ? "s" : ""}
+              </p>
+              <div className="flex flex-wrap gap-1">
+                {visibleSelected
+                  .slice(visibleSelected.length - overflowAmount)
+                  .map((value) => (
+                    <span
+                      key={value}
+                      className="inline-flex items-center rounded-md bg-primary-foreground/15 px-2 py-0.5 text-xs font-medium text-primary-foreground"
+                    >
+                      {typeof items.get(value) === "string"
+                        ? items.get(value)
+                        : value}
+                    </span>
+                  ))}
+              </div>
+            </TooltipContentBase>
+          </TooltipBase>
+        </TooltipProviderBase>
+      )}
     </div>
   );
 }
@@ -392,7 +440,7 @@ export function MultiSelectItemBase({
   value: string;
 } & Omit<ComponentPropsWithoutRef<typeof CommandItemBase>, "value">) {
   const { toggleValue, selectedValues, onItemAdded } = useMultiSelectContext();
-  const isSelected = selectedValues.has(value);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     onItemAdded(value, badgeLabel ?? children);
@@ -406,18 +454,38 @@ export function MultiSelectItemBase({
         onSelect?.(value);
       }}
     >
-      <motion.div transition={{ duration: 0.1 }}>
-        <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: isSelected ? 1 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
-            <CheckIcon className="size-4" />
-          </motion.div>
-        </span>
-        {children}
-      </motion.div>
+      <div className="flex w-full items-center justify-between gap-2">
+        <span className="min-w-0 truncate">{children}</span>
+
+        <div
+          className="relative flex h-4 w-4 shrink-0 items-center justify-center"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <AnimatePresence mode="wait">
+            {selectedValues.has(value) &&
+              (hovered ? (
+                <motion.div
+                  key="x"
+                  initial={{ scale: 0, rotate: -90, opacity: 0 }}
+                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                  transition={{ duration: 0.05, ease: "easeOut" }}
+                >
+                  <XIcon className="size-4 text-destructive" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="check"
+                  initial={{ scale: 0, rotate: 90, opacity: 0 }}
+                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                  transition={{ duration: 0.05, ease: "easeOut" }}
+                >
+                  <CheckIcon className="size-4" />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        </div>
+      </div>
     </CommandItemBase>
   );
 }

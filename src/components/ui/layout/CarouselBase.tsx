@@ -10,7 +10,6 @@ export interface CarouselItem {
   id: number | string;
   url: string;
   title: string;
-  theme?: "malwee" | "malwee-kids" | "enfim" | "carinhoso";
 }
 
 export interface CarouselBaseProps {
@@ -30,58 +29,9 @@ export interface CarouselBaseProps {
   zoomEffect?: "lens" | "scale" | null;
   download?: boolean;
   isLoading?: boolean;
+  fernando?: string;
   onChange?: (index: number) => void;
 }
-
-const carouselThemes: Record<
-  string,
-  {
-    foreground: string;
-    primary: string;
-    primaryForeground: string;
-    muted: string;
-    mutedForeground: string;
-    border: string;
-    font: string;
-  }
-> = {
-  malwee: {
-    foreground: "text-[#222222]",
-    primary: "bg-[#0b5430]",
-    primaryForeground: "text-white",
-    muted: "bg-[#f0eacc]",
-    mutedForeground: "text-[#6b665c]",
-    border: "!border-[#0b5430]",
-    font: "font-[family-name:var(--font-playfair)]",
-  },
-  enfim: {
-    foreground: "text-black",
-    primary: "bg-black",
-    primaryForeground: "text-white",
-    muted: "bg-gray-100",
-    mutedForeground: "text-gray-600",
-    border: "!border-black",
-    font: "font-[family-name:var(--font-libre-caslon)]",
-  },
-  carinhoso: {
-    foreground: "text-[#222222]",
-    primary: "bg-[#d9d0c0]",
-    primaryForeground: "text-[#222222]",
-    muted: "bg-[#e2ddd6]",
-    mutedForeground: "text-[#5e5b56]",
-    border: "!border-[#d9d0c0]",
-    font: "font-[family-name:var(--font-josefin)]",
-  },
-  "malwee-kids": {
-    foreground: "text-[#005bbf]",
-    primary: "bg-[#005bbf]",
-    primaryForeground: "text-white",
-    muted: "bg-[#fcf5c2]",
-    mutedForeground: "text-[#004a9e]",
-    border: "!border-[#005bbf]",
-    font: "font-[family-name:var(--font-poppins)]",
-  },
-};
 
 function CarouselSkeleton({ className }: { className?: string }) {
   return (
@@ -171,6 +121,7 @@ export function CarouselBase({
   download = false,
   isLoading = false,
   onChange,
+  fernando,
 }: CarouselBaseProps) {
   const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
@@ -198,8 +149,6 @@ export function CarouselBase({
   }, [emblaApi, onChange]);
 
   const currentItem = items[index];
-  const themeKey = currentItem?.theme || "malwee";
-  const currentTheme = carouselThemes[themeKey] || carouselThemes.malwee;
 
   useEffect(() => {
     if (!autoPlay || items.length <= 1 || !emblaApi) return;
@@ -265,8 +214,6 @@ export function CarouselBase({
         transition={{ duration: 0.4 }}
         className={cn(
           "w-full lg:p-10 sm:p-4 p-2 transition-colors duration-500",
-          currentTheme.foreground,
-          currentTheme.font,
           className,
         )}
         style={{ width }}
@@ -328,6 +275,7 @@ export function CarouselBase({
                   downloadSuccess
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-black/50 hover:bg-black/70",
+                  className,
                 )}
                 title="Download image"
                 initial={false}
@@ -418,9 +366,10 @@ export function CarouselBase({
                     !emblaApi?.canScrollPrev()
                       ? "opacity-40 cursor-not-allowed"
                       : "hover:scale-110 hover:opacity-100 opacity-70",
-                    currentTheme.primary,
-                    currentTheme.primaryForeground,
+                    "bg-primary text-primary-foreground",
+                    className,
                   )}
+                  style={fernando ? { backgroundColor: fernando } : undefined}
                 >
                   <svg
                     className="w-6 h-6"
@@ -448,9 +397,10 @@ export function CarouselBase({
                     !emblaApi?.canScrollNext()
                       ? "opacity-40 cursor-not-allowed"
                       : "hover:scale-110 hover:opacity-100 opacity-70",
-                    currentTheme.primary,
-                    currentTheme.primaryForeground,
+                    "bg-primary text-primary-foreground",
+                    className,
                   )}
+                  style={fernando ? { backgroundColor: fernando } : undefined}
                 >
                   <svg
                     className="w-6 h-6"
@@ -481,13 +431,11 @@ export function CarouselBase({
                     className={cn(
                       "h-2 rounded-full transition-all duration-300",
                       i === index
-                        ? cn("w-8", currentTheme.primary)
-                        : cn(
-                            "w-2 hover:opacity-80",
-                            currentTheme.primary,
-                            "opacity-40",
-                          ),
+                        ? cn("w-8 bg-primary")
+                        : cn("w-2 hover:opacity-80 bg-primary opacity-40"),
+                      className,
                     )}
+                    style={fernando ? { backgroundColor: fernando } : undefined}
                   />
                 ))}
               </div>

@@ -53,45 +53,6 @@ const sampleItems: CarouselItem[] = [
   },
 ];
 
-const themedItems: CarouselItem[] = [
-  {
-    id: 1,
-    url: "/pwa-512x512.png",
-    title: "Malwee Theme",
-    theme: "malwee",
-  },
-  {
-    id: 2,
-    url: "/pwa-512x512.png",
-    title: "Enfim Theme",
-    theme: "enfim",
-  },
-  {
-    id: 3,
-    url: "/pwa-512x512.png",
-    title: "Carinhoso Theme",
-    theme: "carinhoso",
-  },
-  {
-    id: 4,
-    url: "/pwa-512x512.png",
-    title: "Kids Theme",
-    theme: "malwee-kids",
-  },
-  {
-    id: 5,
-    url: "/pwa-512x512.png",
-    title: "Malwee Theme 2",
-    theme: "malwee",
-  },
-  {
-    id: 6,
-    url: "/pwa-512x512.png",
-    title: "Enfim Theme 2",
-    theme: "enfim",
-  },
-];
-
 const meta: Meta<typeof CarouselBase> = {
   title: "layout/Carousel",
   component: CarouselBase,
@@ -151,6 +112,10 @@ const meta: Meta<typeof CarouselBase> = {
       control: { type: "boolean" },
       description: "Estado de carregamento (skeleton)",
     },
+    fernando: {
+      control: { type: "color" },
+      description: "Cor customizada para os controles e indicadores",
+    },
   },
   parameters: {
     docs: {
@@ -201,22 +166,6 @@ export default function Default() {
   );
 }
 `,
-      },
-    },
-  },
-};
-
-export const Themed: Story = {
-  args: {
-    items: themedItems,
-    showControls: true,
-    showIndicators: true,
-    onChange: (index) => console.log("Slide changed to index: ", index, "theme: ", themedItems[index].theme),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "Carousel com suporte a temas por slide ('malwee', 'enfim', 'carinhoso', 'malwee-kids'). O container, botões e indicadores mudam de cor dinamicamente conforme o tema do slide autal.",
       },
     },
   },
@@ -557,6 +506,42 @@ export default function Loading() {
     <CarouselBase
       items={[]}
       isLoading={true}
+      height="400px"
+    />
+  );
+}
+`,
+      },
+    },
+  },
+};
+
+export const ComPropFernando: Story = {
+  args: {
+    items: sampleItems,
+    showControls: true,
+    showIndicators: true,
+    fernando: "#8b5cf6", // Um tom de roxo (Violet 500)
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Carousel utilizando a prop 'fernando' para customizar a cor dos controles e indicadores.",
+      },
+      source: {
+        code: `import React from 'react';
+import { CarouselBase } from '@mlw-packages/react-components';
+
+const items = [ ... ];
+
+export default function ComPropFernando() {
+  return (
+    <CarouselBase
+      items={items}
+      showControls={true}
+      showIndicators={true}
+      fernando="#8b5cf6"
       height="400px"
     />
   );

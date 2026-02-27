@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   FileUploader,
   FileWithPreview,
-  FileTypes,
+  FileAccept,
 } from "@/components/ui/data/FileUploader";
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ const meta: Meta<typeof FileUploader> = {
     docs: {
       description: {
         component:
-          "Componente para upload de arquivos com drag & drop, preview de imagens e ícones específicos por tipo de arquivo. O comportamento múltiplo é determinado automaticamente pelo valor de maxFiles (1 = único, >1 = múltiplo).",
+          "Componente para upload de arquivos com drag & drop, preview de imagens e ícones específicos por tipo de arquivo.",
       },
     },
     backgrounds: {
@@ -29,9 +29,9 @@ const meta: Meta<typeof FileUploader> = {
   },
   argTypes: {
     accept: {
-      control: "object",
+      control: "text",
       description:
-        "Array de tipos de arquivo (use FileTypes para opções comuns)",
+        "String de tipos aceitos no formato nativo do input: `.pdf`, `.xlsx,.docx`, `image/*`. Use `FileAccept.*` para atalhos comuns.",
     },
     maxSize: {
       control: "number",
@@ -64,7 +64,7 @@ const meta: Meta<typeof FileUploader> = {
     },
   },
   args: {
-    accept: FileTypes.All,
+    accept: FileAccept.All,
     maxSize: 10,
     maxFiles: 5,
     disabled: false,
@@ -87,16 +87,13 @@ const FileUploaderWrapper = (
     uploadFiles: FileWithPreview[],
   ): Promise<void> => {
     console.log("Uploading files:", uploadFiles);
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), 2000);
-    });
+    return new Promise((resolve) => setTimeout(resolve, 2000));
   };
 
   return (
     <div style={{ width: "400px", maxWidth: "100%" }}>
       <FileUploader
         {...args}
-        accept={[]}
         value={files}
         onValueChange={setFiles}
         onUpload={handleUpload}
@@ -107,17 +104,91 @@ const FileUploaderWrapper = (
 
 export const Default: Story = {
   render: (args) => <FileUploaderWrapper {...args} />,
+  parameters: {
+    docs: {
+      source: {
+        code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader value={files} onValueChange={setFiles} onUpload={() => {}} />
+    </div>
+  );
+}`,
+      },
+    },
+  },
 };
 
 export const ImagesOnly: Story = {
   render: (args) => (
     <FileUploaderWrapper
       {...args}
-      accept={FileTypes.Image}
+      accept={FileAccept.Image}
       dropzoneText="Apenas imagens"
       dropzoneSubtext="PNG, JPEG, GIF, WebP até 10MB"
     />
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { FileUploader, FileAccept } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        accept={FileAccept.Image}
+        dropzoneText="Apenas imagens"
+        dropzoneSubtext="PNG, JPEG, GIF, WebP até 10MB"
+        value={files}
+        onValueChange={setFiles}
+      />
+    </div>
+  );
+}`,
+      },
+    },
+  },
+};
+
+export const DocumentsAndSpreadsheets: Story = {
+  render: (args) => (
+    <FileUploaderWrapper
+      {...args}
+      accept=".pdf,.xlsx,.docx"
+      dropzoneText="Documentos e planilhas"
+      dropzoneSubtext=".pdf, .xlsx, .docx até 10MB"
+    />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        accept=".pdf,.xlsx,.docx"
+        dropzoneText="Documentos e planilhas"
+        dropzoneSubtext=".pdf, .xlsx, .docx até 10MB"
+        value={files}
+        onValueChange={setFiles}
+      />
+    </div>
+  );
+}`,
+      },
+    },
+  },
 };
 
 export const SingleFile: Story = {
@@ -129,98 +200,10 @@ export const SingleFile: Story = {
       dropzoneSubtext="Apenas um arquivo por vez"
     />
   ),
-};
-
-meta.parameters = {
-  ...meta.parameters,
-  docs: {
-    ...meta.parameters?.docs,
-    source: {
-      code: `import { FileUploader, FileTypes } from '@mlw-packages/react-components';
-
-function Example() {
-  const [files, setFiles] = React.useState([]);
-
-  async function handleUpload(uploadFiles) {
-    // enviar para o servidor
-    console.log('Uploading', uploadFiles);
-  }
-
-  return (
-    <div style={{ width: 400 }}>
-      <FileUploader
-        accept={FileTypes.All}
-        maxSize={10}
-        maxFiles={5}
-        showPreview
-        onValueChange={setFiles}
-        onUpload={handleUpload}
-      />
-    </div>
-  );
-}
-
-export default Example;`,
-    },
-  },
-};
-
-Default.parameters = {
-  ...Default.parameters,
-  docs: {
-    ...Default.parameters?.docs,
-    source: {
-      code: `import { FileUploader } from '@mlw-packages/react-components';
-
-function Example() {
-  const [files, setFiles] = React.useState([]);
-
-  return (
-    <div style={{ width: 400 }}>
-      <FileUploader value={files} onValueChange={setFiles} onUpload={() => {}} />
-    </div>
-  );
-}
-
-export default Example;`,
-    },
-  },
-};
-
-ImagesOnly.parameters = {
-  ...ImagesOnly.parameters,
-  docs: {
-    ...ImagesOnly.parameters?.docs,
-    source: {
-      code: `import { FileUploader, FileTypes } from '@mlw-packages/react-components';
-
-function Example() {
-  const [files, setFiles] = React.useState([]);
-
-  return (
-    <div style={{ width: 400 }}>
-      <FileUploader
-        accept={FileTypes.Image}
-        dropzoneText='Apenas imagens'
-        dropzoneSubtext='PNG, JPEG, GIF, WebP até 10MB'
-        value={files}
-        onValueChange={setFiles}
-      />
-    </div>
-  );
-}
-
-export default Example;`,
-    },
-  },
-};
-
-SingleFile.parameters = {
-  ...SingleFile.parameters,
-  docs: {
-    ...SingleFile.parameters?.docs,
-    source: {
-      code: `import { FileUploader } from '@mlw-packages/react-components';
+  parameters: {
+    docs: {
+      source: {
+        code: `import { FileUploader } from '@mlw-packages/react-components';
 
 function Example() {
   const [files, setFiles] = React.useState([]);
@@ -229,16 +212,78 @@ function Example() {
     <div style={{ width: 400 }}>
       <FileUploader
         maxFiles={1}
-        dropzoneText='Selecione um arquivo'
-        dropzoneSubtext='Apenas um arquivo por vez'
+        dropzoneText="Selecione um arquivo"
+        dropzoneSubtext="Apenas um arquivo por vez"
         value={files}
         onValueChange={setFiles}
       />
     </div>
   );
-}
+}`,
+      },
+    },
+  },
+};
 
-export default Example;`,
+export const Disabled: Story = {
+  render: (args) => (
+    <FileUploaderWrapper
+      {...args}
+      disabled
+      dropzoneText="Upload desabilitado"
+    />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import { FileUploader } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        disabled
+        dropzoneText="Upload desabilitado"
+        value={files}
+        onValueChange={setFiles}
+      />
+    </div>
+  );
+}`,
+      },
+    },
+  },
+};
+
+meta.parameters = {
+  ...meta.parameters,
+  docs: {
+    ...meta.parameters?.docs,
+    source: {
+      code: `import { FileUploader, FileAccept } from '@mlw-packages/react-components';
+
+function Example() {
+  const [files, setFiles] = React.useState([]);
+
+  async function handleUpload(uploadFiles) {
+    console.log('Uploading', uploadFiles);
+  }
+
+  return (
+    <div style={{ width: 400 }}>
+      <FileUploader
+        accept={FileAccept.All}
+        maxSize={10}
+        maxFiles={5}
+        showPreview
+        onValueChange={setFiles}
+        onUpload={handleUpload}
+      />
+    </div>
+  );
+}`,
     },
   },
 };

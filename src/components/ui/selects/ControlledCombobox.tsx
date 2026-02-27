@@ -46,9 +46,9 @@ export interface ControlledComboboxProps<
   T extends string,
 > extends ErrorMessageProps {
   items: ControlledComboboxItem<T>[];
-  renderSelected: ReactNode;
-  handleSelection: (value: T) => void;
-  checkIsSelected: (value: T) => boolean;
+  value?: T;
+  onChange?: (value: T) => void;
+  placeholder?: ReactNode;
   disabled?: boolean;
   keepOpen?: boolean;
   closeAll?: ReactNode;
@@ -58,7 +58,6 @@ export interface ControlledComboboxProps<
   onClear?: () => void;
   testIds?: ControlledComboboxTestIds;
   isMulti?: boolean;
-  hasSelected?: boolean;
   onSearchChange?: (value: string) => void;
   search?: string;
   onEndReached?: () => void;
@@ -69,9 +68,9 @@ export interface ControlledComboboxProps<
 
 export function ControlledCombobox<T extends string>({
   items,
-  renderSelected,
-  handleSelection,
-  checkIsSelected,
+  value,
+  onChange,
+  placeholder = "Selecione uma opção",
   disabled = false,
   keepOpen = false,
   searchPlaceholder,
@@ -81,7 +80,6 @@ export function ControlledCombobox<T extends string>({
   labelClassname,
   testIds = {},
   onClear,
-  hasSelected = false,
   hideClear = false,
   onSearchChange,
   search,
@@ -89,6 +87,12 @@ export function ControlledCombobox<T extends string>({
   loading = false,
 }: ControlledComboboxProps<T>) {
   const [open, setOpen] = useState(false);
+
+  const selectedItem = items.find((item) => item.value === value);
+  const renderSelected = selectedItem?.label ?? placeholder;
+  const hasSelected = Boolean(value);
+  const checkIsSelected = (v: T) => v === value;
+  const handleSelection = (v: T) => onChange?.(v);
 
   return (
     <div
@@ -154,11 +158,11 @@ export function ControlledCombobox<T extends string>({
             filter={
               onSearchChange
                 ? () => 1
-                : (value, search) => {
-                    const label =
-                      items.find((item) => item.value === value)?.label ||
-                      value;
-                    if (label.toLowerCase().includes(search.toLowerCase()))
+                : (itemValue, search) => {
+                    const itemLabel =
+                      items.find((item) => item.value === itemValue)?.label ||
+                      itemValue;
+                    if (itemLabel.toLowerCase().includes(search.toLowerCase()))
                       return 1;
                     return 0;
                   }
@@ -189,9 +193,9 @@ export function ControlledCombobox<T extends string>({
                       key={item.value}
                       keywords={[item.label]}
                       value={item.value}
-                      onSelect={(value) => {
+                      onSelect={(v) => {
                         if (disabled) return;
-                        handleSelection(value as T);
+                        handleSelection(v as T);
                         if (!keepOpen) setOpen(false);
                       }}
                       disabled={disabled}
@@ -206,7 +210,7 @@ export function ControlledCombobox<T extends string>({
                           stiffness: 500,
                           damping: 30,
                         }}
-                        className="ml-auto "
+                        className="ml-auto"
                       >
                         <CheckIcon
                           className={cn(

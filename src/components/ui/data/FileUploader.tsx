@@ -18,17 +18,50 @@ import {
 } from "@phosphor-icons/react";
 import { ButtonBase } from "../form/ButtonBase";
 
-export const FileTypes = {
-  Image: ["image/*", ".jpeg", ".jpg", ".png", ".gif", ".webp", ".svg"],
-  Document: [".pdf", ".doc", ".docx", ".txt", ".rtf"],
-  Spreadsheet: [".xls", ".xlsx", ".csv"],
-  Presentation: [".ppt", ".pptx"],
-  Video: ["video/*", ".mp4", ".webm", ".mkv", ".avi"],
-  Audio: ["audio/*", ".mp3", ".wav", ".ogg"],
-  All: [] as string[],
-} as const;
+export type FilesAccepted =
+  | "image/*"
+  | "video/*"
+  | "audio/*"
+  | "pdf"
+  | "doc"
+  | "docx"
+  | "txt"
+  | "rtf"
+  | "xls"
+  | "xlsx"
+  | "csv"
+  | "ppt"
+  | "pptx"
+  | "jpeg"
+  | "jpg"
+  | "png"
+  | "gif"
+  | "webp"
+  | "svg"
+  | "mp4"
+  | "webm"
+  | "mkv"
+  | "avi"
+  | "mp3"
+  | "wav"
+  | "ogg"
+  | "zip"
+  | "rar"
+  | "7z"
+  | "tar"
+  | "gz"
+  | "*"
+  | (string & {});
 
-export type FileTypeValues = (typeof FileTypes)[keyof typeof FileTypes];
+export const FileAccept = {
+  Image: "image/*" satisfies FilesAccepted,
+  Document: "pdf,doc,docx,txt,rtf" satisfies FilesAccepted,
+  Spreadsheet: "xls,xlsx,csv" satisfies FilesAccepted,
+  Presentation: "ppt,pptx" satisfies FilesAccepted,
+  Video: "video/*" satisfies FilesAccepted,
+  Audio: "audio/*" satisfies FilesAccepted,
+  All: "*" satisfies FilesAccepted,
+} as const;
 
 export interface FileWithPreview extends File {
   id?: string;
@@ -40,7 +73,7 @@ export interface FileUploaderProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "onDrop"
 > {
-  accept?: string[] | readonly string[];
+  accept?: FilesAccepted;
   maxSize?: number;
   maxFiles?: number;
   onValueChange: (files: FileWithPreview[]) => void;
@@ -61,81 +94,84 @@ const formatFileSize = (bytes: number): string => {
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
 };
 
-const getFileExtension = (filename: string): string => {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+const getFileExtension = (filename: string): string =>
+  filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+
+const parseAcceptTokens = (accept: string): string[] =>
+  accept
+    .split(",")
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean);
+
+const validateFileAgainstAccept = (file: File, accept: string): boolean => {
+  if (!accept || accept === "*") return true;
+
+  const tokens = parseAcceptTokens(accept);
+  const ext = getFileExtension(file.name).toLowerCase();
+  const mime = file.type.toLowerCase();
+
+  return tokens.some((token) => {
+    if (token.endsWith("/*")) return mime.startsWith(token.replace("/*", ""));
+    const tokenExt = token.startsWith(".") ? token.substring(1) : token;
+    if (!token.includes("/")) return ext === tokenExt;
+    return mime === token;
+  });
+};
+
+const formatAcceptForInput = (accept?: string): string | undefined => {
+  if (!accept || accept === "*") return undefined;
+  return parseAcceptTokens(accept)
+    .map((t) => (t.includes("/") || t.startsWith(".") ? t : `.${t}`))
+    .join(",");
 };
 
 const getFileTypeIcon = (file: File) => {
   const extension = getFileExtension(file.name).toLowerCase();
   const mimeType = file.type.toLowerCase();
 
-  if (extension === "pdf" || mimeType === "application/pdf") {
+  if (extension === "pdf" || mimeType === "application/pdf")
     return <FilePdfIcon size={20} className="text-red-500" />;
-  }
-  if (["doc", "docx"].includes(extension) || mimeType.includes("word")) {
+  if (["doc", "docx"].includes(extension) || mimeType.includes("word"))
     return <FileDocIcon size={20} className="text-blue-500" />;
-  }
-  if (["xls", "xlsx"].includes(extension) || mimeType.includes("sheet")) {
+  if (["xls", "xlsx"].includes(extension) || mimeType.includes("sheet"))
     return <FileXlsIcon size={20} className="text-green-500" />;
-  }
-  if (
-    ["ppt", "pptx"].includes(extension) ||
-    mimeType.includes("presentation")
-  ) {
+  if (["ppt", "pptx"].includes(extension) || mimeType.includes("presentation"))
     return <FilePptIcon size={20} className="text-orange-500" />;
-  }
-  if (extension === "csv" || mimeType === "text/csv") {
+  if (extension === "csv" || mimeType === "text/csv")
     return <FileCsvIcon size={20} className="text-green-600" />;
-  }
   if (
     ["txt", "md", "json", "xml", "js", "ts", "html", "css"].includes(
       extension,
     ) ||
     mimeType.includes("text")
-  ) {
+  )
     return <FileTextIcon size={20} className="text-gray-500" />;
-  }
-
-  if (mimeType.startsWith("image/")) {
+  if (mimeType.startsWith("image/"))
     return <FileImageIcon size={20} className="text-purple-500" />;
-  }
-  if (mimeType.startsWith("video/")) {
+  if (mimeType.startsWith("video/"))
     return <FileVideoIcon size={20} className="text-pink-500" />;
-  }
-  if (mimeType.startsWith("audio/")) {
+  if (mimeType.startsWith("audio/"))
     return <FileAudioIcon size={20} className="text-indigo-500" />;
-  }
-
-  if (["zip", "rar", "7z", "tar", "gz"].includes(extension)) {
+  if (["zip", "rar", "7z", "tar", "gz"].includes(extension))
     return <FileZipIcon size={20} className="text-yellow-600" />;
-  }
 
   return <FileIcon size={20} className="text-muted-foreground" />;
 };
 
-const createImagePreview = (file: File): Promise<string | null> => {
-  return new Promise((resolve) => {
-    if (!file.type.startsWith("image/")) {
-      resolve(null);
-      return;
-    }
-
+const createImagePreview = (file: File): Promise<string | null> =>
+  new Promise((resolve) => {
+    if (!file.type.startsWith("image/")) return resolve(null);
     const reader = new FileReader();
-    reader.onload = (e) => {
-      resolve(e.target?.result as string);
-    };
-    reader.onerror = () => {
-      resolve(null);
-    };
+    reader.onload = (e) => resolve(e.target?.result as string);
+    reader.onerror = () => resolve(null);
     reader.readAsDataURL(file);
   });
-};
 
 const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
   (
     {
       className,
-      accept = FileTypes.All,
+      accept = "*",
       maxSize = 10,
       maxFiles = 1,
       disabled = false,
@@ -155,7 +191,6 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     const inputRef = React.useRef<HTMLInputElement>(null);
     const dragCounterRef = React.useRef(0);
 
-    // Determina automaticamente se é múltiplo baseado em maxFiles
     const multiple = maxFiles > 1;
 
     React.useEffect(() => {
@@ -164,38 +199,18 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
 
     React.useEffect(() => {
       return () => {
-        files.forEach((file) => {
-          if (file.preview) {
-            URL.revokeObjectURL(file.preview);
-          }
+        files.forEach((f) => {
+          if (f.preview) URL.revokeObjectURL(f.preview);
         });
       };
     }, [files]);
 
     const validateFile = (file: File): string | null => {
-      const maxSizeBytes = maxSize * 1024 * 1024;
-      if (file.size > maxSizeBytes) {
-        return `Arquivo muito grande. Máximo: ${maxSize} MB`;
-      }
+      if (file.size > maxSize * 1024 * 1024)
+        return `Arquivo muito grande. Máximo: ${maxSize}MB`;
 
-      if (accept.length > 0) {
-        const fileExtension = `.${getFileExtension(file.name)}`;
-        const fileType = file.type;
-
-        const isAccepted = accept.some((acceptItem) => {
-          if (acceptItem.startsWith(".")) {
-            return fileExtension.toLowerCase() === acceptItem.toLowerCase();
-          }
-          if (acceptItem.endsWith("/*")) {
-            return fileType.startsWith(acceptItem.replace("/*", ""));
-          }
-          return fileType === acceptItem;
-        });
-
-        if (!isAccepted) {
-          return `Tipo de arquivo não permitido. Aceitos: ${accept.join(", ")}`;
-        }
-      }
+      if (!validateFileAgainstAccept(file, accept))
+        return `Tipo não permitido. Aceitos: ${accept}`;
 
       return null;
     };
@@ -203,54 +218,43 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     const createFileWithPreview = async (
       file: File,
     ): Promise<FileWithPreview> => {
-      const fileWithPreview = file as FileWithPreview;
-      fileWithPreview.id = `${file.name}-${Date.now()}-${Math.random()}`;
+      const f = file as FileWithPreview;
+      f.id = `${file.name}-${Date.now()}-${Math.random()}`;
+      f.error = validateFile(file) ?? undefined;
 
-      const error = validateFile(file);
-      if (error) {
-        fileWithPreview.error = error;
-      }
-
-      // Criar preview para imagens
-      if (file.type.startsWith("image/")) {
+      if (!f.error && file.type.startsWith("image/")) {
         try {
           const preview = await createImagePreview(file);
-          if (preview) {
-            fileWithPreview.preview = preview;
-          }
-        } catch (error) {
-          console.warn("Erro ao criar preview da imagem:", error);
+          if (preview) f.preview = preview;
+        } catch (err) {
+          console.warn("Erro ao criar preview:", err);
         }
       }
 
-      return fileWithPreview;
+      return f;
     };
 
     const handleFiles = async (newFiles: File[]) => {
       if (disabled) return;
 
-      const availableSlots = maxFiles - files.length;
-      const filesToAdd = multiple
-        ? newFiles.slice(0, availableSlots)
-        : [newFiles[0]];
+      const slots = maxFiles - files.length;
+      const filesToAdd = multiple ? newFiles.slice(0, slots) : [newFiles[0]];
 
-      const filesWithPreview = await Promise.all(
-        filesToAdd.map((file) => createFileWithPreview(file)),
+      const processed = await Promise.all(
+        filesToAdd.map(createFileWithPreview),
       );
+      const updated = multiple ? [...files, ...processed] : processed;
 
-      const updatedFiles = multiple
-        ? [...files, ...filesWithPreview]
-        : filesWithPreview;
-      setFiles(updatedFiles);
-      onValueChange(updatedFiles);
+      setFiles(updated);
+      onValueChange(updated);
 
       if (onUpload) {
-        const validFiles = filesWithPreview.filter((f) => !f.error);
-        if (validFiles.length > 0) {
+        const valid = processed.filter((f) => !f.error);
+        if (valid.length > 0) {
           try {
-            await onUpload(validFiles);
-          } catch (error) {
-            console.error("Erro no upload:", error);
+            await onUpload(valid);
+          } catch (err) {
+            console.error("Erro no upload:", err);
           }
         }
       }
@@ -260,18 +264,13 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       e.preventDefault();
       e.stopPropagation();
       dragCounterRef.current++;
-      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-        setIsDragging(true);
-      }
+      if (e.dataTransfer.items?.length > 0) setIsDragging(true);
     };
 
     const handleDragLeave = (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      dragCounterRef.current--;
-      if (dragCounterRef.current === 0) {
-        setIsDragging(false);
-      }
+      if (--dragCounterRef.current === 0) setIsDragging(false);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -284,53 +283,24 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
       e.stopPropagation();
       setIsDragging(false);
       dragCounterRef.current = 0;
-
-      if (disabled) return;
-
-      const droppedFiles = Array.from(e.dataTransfer.files);
-      handleFiles(droppedFiles);
+      if (!disabled) handleFiles(Array.from(e.dataTransfer.files));
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        const selectedFiles = Array.from(e.target.files);
-        handleFiles(selectedFiles);
-      }
+      if (e.target.files) handleFiles(Array.from(e.target.files));
     };
 
     const handleRemoveFile = (fileId: string) => {
-      const fileToRemove = files.find((f) => f.id === fileId);
-      if (fileToRemove?.preview) {
-        URL.revokeObjectURL(fileToRemove.preview);
-      }
-
-      const updatedFiles = files.filter((f) => f.id !== fileId);
-      setFiles(updatedFiles);
-      onValueChange(updatedFiles);
-    };
-
-    const handleClick = () => {
-      if (!disabled) {
-        inputRef.current?.click();
-      }
-    };
-
-    const acceptString = accept.join(",");
-
-    const getFormatText = () => {
-      if (accept === FileTypes.All || accept.length === 0)
-        return "Qualquer formato";
-      if (accept === FileTypes.Image) return "Apenas imagens";
-      if (accept === FileTypes.Document) return "Apenas documentos";
-      if (accept === FileTypes.Video) return "Apenas vídeos";
-      if (accept === FileTypes.Audio) return "Apenas áudio";
-      if (accept === FileTypes.Spreadsheet) return "Apenas planilhas";
-      if (accept === FileTypes.Presentation) return "Apenas apresentações";
-      return "Formatos específicos válidos";
+      const target = files.find((f) => f.id === fileId);
+      if (target?.preview) URL.revokeObjectURL(target.preview);
+      const updated = files.filter((f) => f.id !== fileId);
+      setFiles(updated);
+      onValueChange(updated);
     };
 
     const defaultSubtext =
-      dropzoneSubtext || `${getFormatText()} (Máx: ${maxSize}MB)`;
+      dropzoneSubtext ??
+      `${accept === "*" ? "Qualquer formato" : accept} (Máx: ${maxSize}MB)`;
 
     return (
       <div ref={ref} className={cn("w-full", className)} {...props}>
@@ -346,7 +316,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={handleClick}
+          onClick={() => !disabled && inputRef.current?.click()}
           whileTap={!disabled ? { scale: 0.99 } : undefined}
           animate={
             isDragging
@@ -361,18 +331,13 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
                   scale: 1,
                 }
           }
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 25,
-            duration: 0.3,
-          }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
         >
           <input
             ref={inputRef}
             type="file"
             className="hidden"
-            accept={acceptString}
+            accept={formatAcceptForInput(accept)}
             multiple={multiple}
             disabled={disabled}
             onChange={handleInputChange}
@@ -382,19 +347,10 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
             animate={
               isDragging ? { scale: 1.2, rotate: 10 } : { scale: 1, rotate: 0 }
             }
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-              duration: 0.3,
-            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
             <motion.div
-              className={cn(
-                "mb-4 h-16 w-16 text-muted-foreground transition-colors duration-300 drop-shadow-lg flex items-center justify-center",
-                isDragging && "text-primary",
-              )}
-              initial={false}
+              className="mb-4 h-16 w-16 drop-shadow-lg flex items-center justify-center"
               animate={{
                 color: isDragging
                   ? `hsl(var(--primary))`
@@ -423,6 +379,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
           >
             {defaultSubtext}
           </motion.p>
+
           {showPreview && files.length > 0 && (
             <motion.div
               className="py-2 w-full"
@@ -430,93 +387,88 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <div>
-                <h4 className="text-xs font-medium text-muted-foreground pb-0.5">
-                  Arquivos selecionados ({files.length}/{maxFiles})
-                </h4>
-                <div className="space-y-2 overflow-y-auto max-h-36">
-                  <AnimatePresence mode="popLayout">
-                    {files.map((file, index) => (
-                      <motion.div
-                        key={file.id}
-                        layout
-                        initial={animate ? { opacity: 0, x: -20 } : false}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{
-                          opacity: 0,
-                          x: -20,
-                          transition: { duration: 0.2 },
-                        }}
-                        transition={{
-                          delay: animate ? index * 0.05 : 0,
-                          layout: { duration: 0.2 },
-                        }}
-                        className={cn(
-                          "group flex items-center gap-3 rounded-md border p-2 transition-all duration-300",
-                          file.error
-                            ? "border-destructive/50 bg-destructive/5"
-                            : "border-border bg-background/80 hover:bg-muted/50 hover:shadow-md hover:shadow-primary/10 hover:border-primary/30",
+              <h4 className="text-xs font-medium text-muted-foreground pb-0.5">
+                Arquivos selecionados ({files.length}/{maxFiles})
+              </h4>
+              <div className="space-y-2 overflow-y-auto max-h-36">
+                <AnimatePresence mode="popLayout">
+                  {files.map((file, index) => (
+                    <motion.div
+                      key={file.id}
+                      layout
+                      initial={animate ? { opacity: 0, x: -20 } : false}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{
+                        opacity: 0,
+                        x: -20,
+                        transition: { duration: 0.2 },
+                      }}
+                      transition={{
+                        delay: animate ? index * 0.05 : 0,
+                        layout: { duration: 0.2 },
+                      }}
+                      className={cn(
+                        "group flex items-center gap-3 rounded-md border p-2 transition-all duration-300",
+                        file.error
+                          ? "border-destructive/50 bg-destructive/5"
+                          : "border-border bg-background/80 hover:bg-muted/50 hover:shadow-md hover:shadow-primary/10 hover:border-primary/30",
+                      )}
+                    >
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-muted overflow-hidden">
+                        {file.preview ? (
+                          <img
+                            src={file.preview}
+                            alt={file.name}
+                            className="h-full w-full object-cover rounded-md"
+                          />
+                        ) : (
+                          getFileTypeIcon(file)
                         )}
-                      >
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-muted overflow-hidden">
-                          {file.preview ? (
-                            <img
-                              src={file.preview}
-                              alt={file.name}
-                              className="h-full w-full object-cover rounded-md"
-                            />
-                          ) : (
-                            getFileTypeIcon(file)
-                          )}
-                        </div>
+                      </div>
 
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className="truncate text-sm font-medium text-foreground"
-                            title={`${file.name} (${
-                              file.type || "Tipo desconhecido"
-                            })`}
-                          >
-                            {file.name}
-                          </p>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>{formatFileSize(file.size)}</span>
-                            {file.type && (
-                              <>
-                                <span>•</span>
-                                <span className="uppercase">
-                                  {getFileExtension(file.name)}
-                                </span>
-                              </>
-                            )}
-                          </div>
-
-                          {file.error && (
-                            <motion.p
-                              className="mt-1 text-xs text-destructive"
-                              initial={{ opacity: 0, y: -5 }}
-                              animate={{ opacity: 1, y: 0 }}
-                            >
-                              {file.error}
-                            </motion.p>
-                          )}
-                        </div>
-
-                        <ButtonBase
-                          size="icon"
-                          variant="ghost"
-                          onClick={(e) => {
-                            e?.stopPropagation();
-                            handleRemoveFile(file.id!);
-                          }}
-                          className="opacity-0 transition-opacity group-hover:opacity-100"
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="truncate text-sm font-medium text-foreground"
+                          title={`${file.name} (${file.type || "Tipo desconhecido"})`}
                         >
-                          <XIcon size={12} className="text-red-500" />
-                        </ButtonBase>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
+                          {file.name}
+                        </p>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <span>{formatFileSize(file.size)}</span>
+                          {file.type && (
+                            <>
+                              <span>•</span>
+                              <span className="uppercase">
+                                {getFileExtension(file.name)}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        {file.error && (
+                          <motion.p
+                            className="mt-1 text-xs text-destructive"
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                          >
+                            {file.error}
+                          </motion.p>
+                        )}
+                      </div>
+
+                      <ButtonBase
+                        size="icon"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e?.stopPropagation();
+                          handleRemoveFile(file.id!);
+                        }}
+                        className="opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        <XIcon size={12} className="text-red-500" />
+                      </ButtonBase>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </motion.div>
           )}

@@ -59,7 +59,7 @@ export function Combobox<T extends string>({
         className={cn(
           "truncate",
           disabled && "opacity-60 cursor-not-allowed",
-          !selectedItem && "text-gray-500",
+          !selectedItem && "text-muted-foreground",
         )}
       >
         {selectedItem?.label ?? placeholder ?? "Selecione uma opção..."}

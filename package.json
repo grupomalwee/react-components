@@ -5,7 +5,7 @@
     "access": "public",
     "type":"module"
   },
-  "version": "1.10.3",
+  "version": "1.10.4",
   "homepage": "https://main--68e80310a069c2f10b546ef3.chromatic.com/",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     "deploy:major": "npm version major && npm publish",
     "test": "echo \"No tests yet\" && exit 0",
     "prepare": "husky install",
-    "storybook": "storybook dev -p 6006",
+    "st": "storybook dev -p 6006",
     "build-storybook": "storybook build --stats-json",
     "chromatic": "npx chromatic --project-token=chpt_7cc3bb72f356543 --only-changed"
   },

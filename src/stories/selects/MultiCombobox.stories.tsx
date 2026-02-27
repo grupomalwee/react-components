@@ -96,7 +96,6 @@ export const Default: Story = {
       { label: "MM_SHOWROOM", value: "tag2" },
       { label: "GRANDES_REDES", value: "tag3" },
       { label: "AQUI_TEM_MALWEE", value: "tag4" },
-
     ];
     const [selected, setSelected] = React.useState<string[]>([items[0].value]);
     return (
@@ -108,7 +107,7 @@ export const Default: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10 w-64">
+        <div className="flex flex-col items-center justify-center p-10 w-72">
           <MultiCombobox
             items={items}
             selected={selected}
@@ -170,7 +169,7 @@ export const Empty: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10  w-72">
           <MultiCombobox
             items={items}
             selected={selected}
@@ -233,7 +232,7 @@ export const Error: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10  w-72">
           <MultiCombobox
             items={items}
             selected={selected}
@@ -241,7 +240,6 @@ export const Error: Story = {
             placeholder="Selecione frameworks..."
             error="Erro"
           />
-
         </div>
       </div>
     );
@@ -280,7 +278,7 @@ export const MultipleSelected: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10  w-72">
           <MultiCombobox
             items={items}
             selected={selected}
@@ -374,7 +372,7 @@ export const LargeList: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10  w-72">
           <MultiCombobox
             items={items}
             selected={selected}
@@ -433,7 +431,7 @@ export const SpecialCharacters: Story = {
           padding: "32px 0",
         }}
       >
-        <div className="flex flex-col items-center justify-center p-10">
+        <div className="flex flex-col items-center justify-center p-10  w-72">
           <MultiCombobox
             items={items}
             selected={selected}

@@ -177,6 +177,7 @@ export function Select<T extends string>({
         <SelectTriggerBase
           className={cn(
             "flex items-center gap-2 justify-between [&>div]:line-clamp-1 [&>span]:line-clamp-1 relative",
+            !selected && "text-muted-foreground",
             error && "border-red-500",
             className,
           )}
