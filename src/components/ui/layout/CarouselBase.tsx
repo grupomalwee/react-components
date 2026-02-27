@@ -148,7 +148,6 @@ export function CarouselBase({
     };
   }, [emblaApi, onChange]);
 
-  const currentItem = items[index];
 
   useEffect(() => {
     if (!autoPlay || items.length <= 1 || !emblaApi) return;

@@ -175,12 +175,6 @@ function StatesTemplate() {
     multiComboFilled: ["b", "c"] as string[],
   });
 
-  const SectionLabel = ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">
-      {children}
-    </h3>
-  );
-
   return (
     <div className="flex flex-col gap-12 p-8 w-full max-w-6xl mx-auto">
       <section>
@@ -188,11 +182,41 @@ function StatesTemplate() {
           Estado — Vazio (Placeholder)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected={null} onChange={() => {}} label="Select Básico" placeholder="Selecione..." />
-          <Combobox items={simpleItems} selected={null} onChange={() => {}} label="Combobox" placeholder="Busque..." />
-          <AvatarCombobox items={avatarItems} selected={null} onChange={() => {}} label="Avatar Combobox" placeholder="Selecione usuário..." />
-          <MultiSelect items={simpleItems} selected={[]} onChange={() => {}} label="Multi Select" placeholder="Selecione vários..." />
-          <MultiCombobox items={simpleItems} selected={[]} onChange={() => {}} label="Multi Combobox" placeholder="Busque vários..." />
+          <Select
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Select Básico"
+            placeholder="Selecione..."
+          />
+          <Combobox
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Combobox"
+            placeholder="Busque..."
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected={null}
+            onChange={() => {}}
+            label="Avatar Combobox"
+            placeholder="Selecione usuário..."
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Select"
+            placeholder="Selecione vários..."
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+          />
         </div>
       </section>
 
@@ -201,11 +225,43 @@ function StatesTemplate() {
           Estado — Preenchido (Filled)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected={vals.selectFilled} onChange={(v) => setVals((p) => ({ ...p, selectFilled: v }))} label="Select Básico" placeholder="Selecione..." />
-          <Combobox items={simpleItems} selected={vals.comboFilled} onChange={(v) => { if (v) setVals((p) => ({ ...p, comboFilled: v })); }} label="Combobox" placeholder="Busque..." />
-          <AvatarCombobox items={avatarItems} selected={vals.avatarFilled} onChange={(v) => setVals((p) => ({ ...p, avatarFilled: v }))} label="Avatar Combobox" placeholder="Selecione usuário..." />
-          <MultiSelect items={simpleItems} selected={vals.multiSelectFilled} onChange={(v) => setVals((p) => ({ ...p, multiSelectFilled: v }))} label="Multi Select" placeholder="Selecione vários..." />
-          <MultiCombobox items={simpleItems} selected={vals.multiComboFilled} onChange={(v) => setVals((p) => ({ ...p, multiComboFilled: v }))} label="Multi Combobox" placeholder="Busque vários..." />
+          <Select
+            items={simpleItems}
+            selected={vals.selectFilled}
+            onChange={(v) => setVals((p) => ({ ...p, selectFilled: v }))}
+            label="Select Básico"
+            placeholder="Selecione..."
+          />
+          <Combobox
+            items={simpleItems}
+            selected={vals.comboFilled}
+            onChange={(v) => {
+              if (v) setVals((p) => ({ ...p, comboFilled: v }));
+            }}
+            label="Combobox"
+            placeholder="Busque..."
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected={vals.avatarFilled}
+            onChange={(v) => setVals((p) => ({ ...p, avatarFilled: v }))}
+            label="Avatar Combobox"
+            placeholder="Selecione usuário..."
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={vals.multiSelectFilled}
+            onChange={(v) => setVals((p) => ({ ...p, multiSelectFilled: v }))}
+            label="Multi Select"
+            placeholder="Selecione vários..."
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={vals.multiComboFilled}
+            onChange={(v) => setVals((p) => ({ ...p, multiComboFilled: v }))}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+          />
         </div>
       </section>
 
@@ -214,11 +270,46 @@ function StatesTemplate() {
           Estado — Desabilitado (Disabled)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected={null} onChange={() => {}} label="Select Básico" placeholder="Selecione..." disabled />
-          <Combobox items={simpleItems} selected={null} onChange={() => {}} label="Combobox" placeholder="Busque..." disabled />
-          <AvatarCombobox items={avatarItems} selected={null} onChange={() => {}} label="Avatar Combobox" placeholder="Selecione usuário..." disabled />
-          <MultiSelect items={simpleItems} selected={[]} onChange={() => {}} label="Multi Select" placeholder="Selecione vários..." disabled />
-          <MultiCombobox items={simpleItems} selected={[]} onChange={() => {}} label="Multi Combobox" placeholder="Busque vários..." disabled />
+          <Select
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Select Básico"
+            placeholder="Selecione..."
+            disabled
+          />
+          <Combobox
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Combobox"
+            placeholder="Busque..."
+            disabled
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected={null}
+            onChange={() => {}}
+            label="Avatar Combobox"
+            placeholder="Selecione usuário..."
+            disabled
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Select"
+            placeholder="Selecione vários..."
+            disabled
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+            disabled
+          />
         </div>
       </section>
 
@@ -227,11 +318,46 @@ function StatesTemplate() {
           Estado — Erro (Error)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected={null} onChange={() => {}} label="Select Básico" placeholder="Selecione..." error="Campo obrigatório" />
-          <Combobox items={simpleItems} selected={null} onChange={() => {}} label="Combobox" placeholder="Busque..." error="Campo obrigatório" />
-          <AvatarCombobox items={avatarItems} selected={null} onChange={() => {}} label="Avatar Combobox" placeholder="Selecione usuário..." error="Campo obrigatório" />
-          <MultiSelect items={simpleItems} selected={[]} onChange={() => {}} label="Multi Select" placeholder="Selecione vários..." error="Campo obrigatório" />
-          <MultiCombobox items={simpleItems} selected={[]} onChange={() => {}} label="Multi Combobox" placeholder="Busque vários..." error="Campo obrigatório" />
+          <Select
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Select Básico"
+            placeholder="Selecione..."
+            error="Campo obrigatório"
+          />
+          <Combobox
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Combobox"
+            placeholder="Busque..."
+            error="Campo obrigatório"
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected={null}
+            onChange={() => {}}
+            label="Avatar Combobox"
+            placeholder="Selecione usuário..."
+            error="Campo obrigatório"
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Select"
+            placeholder="Selecione vários..."
+            error="Campo obrigatório"
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={[]}
+            onChange={() => {}}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+            error="Campo obrigatório"
+          />
         </div>
       </section>
     </div>
@@ -270,30 +396,66 @@ function SingleVsMultiTemplate() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Seleção Única</span>
-              <Select items={simpleItems} selected={singleSelect} onChange={setSingleSelect} label="Select Básico" placeholder="Selecione..." />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Seleção Única
+              </span>
+              <Select
+                items={simpleItems}
+                selected={singleSelect}
+                onChange={setSingleSelect}
+                label="Select Básico"
+                placeholder="Selecione..."
+              />
             </div>
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Seleção Múltipla</span>
-              <MultiSelect items={simpleItems} selected={multiSelect} onChange={setMultiSelect} label="Multi Select" placeholder="Selecione vários..." />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Seleção Múltipla
+              </span>
+              <MultiSelect
+                items={simpleItems}
+                selected={multiSelect}
+                onChange={setMultiSelect}
+                label="Multi Select"
+                placeholder="Selecione vários..."
+              />
             </div>
           </div>
         </div>
 
         {/* Combobox vs MultiCombobox */}
         <div className="mb-10">
-          <h3 className="text-lg font-semibold mb-1">Combobox vs Multi Combobox</h3>
+          <h3 className="text-lg font-semibold mb-1">
+            Combobox vs Multi Combobox
+          </h3>
           <p className="text-sm text-gray-400 mb-4">
             Com busca por texto — seleção simples versus múltipla.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Seleção Única</span>
-              <Combobox items={simpleItems} selected={singleCombo} onChange={(v) => { if (v) setSingleCombo(v); }} label="Combobox" placeholder="Busque..." />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Seleção Única
+              </span>
+              <Combobox
+                items={simpleItems}
+                selected={singleCombo}
+                onChange={(v) => {
+                  if (v) setSingleCombo(v);
+                }}
+                label="Combobox"
+                placeholder="Busque..."
+              />
             </div>
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Seleção Múltipla</span>
-              <MultiCombobox items={simpleItems} selected={multiCombo} onChange={setMultiCombo} label="Multi Combobox" placeholder="Busque vários..." />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Seleção Múltipla
+              </span>
+              <MultiCombobox
+                items={simpleItems}
+                selected={multiCombo}
+                onChange={setMultiCombo}
+                label="Multi Combobox"
+                placeholder="Busque vários..."
+              />
             </div>
           </div>
         </div>
@@ -306,12 +468,24 @@ function SingleVsMultiTemplate() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Com Avatar (Único)</span>
-              <AvatarCombobox items={avatarItems} selected={singleAvatar} onChange={setSingleAvatar} label="Avatar Combobox" placeholder="Selecione usuário..." />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Com Avatar (Único)
+              </span>
+              <AvatarCombobox
+                items={avatarItems}
+                selected={singleAvatar}
+                onChange={setSingleAvatar}
+                label="Avatar Combobox"
+                placeholder="Selecione usuário..."
+              />
             </div>
             <div className="border rounded-lg p-5 flex flex-col gap-3 bg-gray-50 dark:bg-gray-900 opacity-40 pointer-events-none select-none">
-              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Com Avatar (Múltiplo)</span>
-              <div className="text-sm text-gray-400 italic mt-2">Não disponível — use MultiCombobox com avatares customizados.</div>
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Com Avatar (Múltiplo)
+              </span>
+              <div className="text-sm text-gray-400 italic mt-2">
+                Não disponível — use MultiCombobox com avatares customizados.
+              </div>
             </div>
           </div>
         </div>
@@ -346,14 +520,23 @@ function WidthsTemplate() {
           Larguras Fixas — Select Básico
         </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Verificação de como o componente se comporta em diferentes larguras definidas pelo container pai.
+          Verificação de como o componente se comporta em diferentes larguras
+          definidas pelo container pai.
         </p>
         <div className="flex flex-col gap-6">
           {widths.map(({ label, cls }) => (
             <div key={cls} className="flex items-center gap-6">
-              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">{label}</span>
+              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">
+                {label}
+              </span>
               <div className={cls}>
-                <Select items={simpleItems} selected={val} onChange={setVal} label="Select Básico" placeholder="Selecione..." />
+                <Select
+                  items={simpleItems}
+                  selected={val}
+                  onChange={setVal}
+                  label="Select Básico"
+                  placeholder="Selecione..."
+                />
               </div>
             </div>
           ))}
@@ -370,9 +553,17 @@ function WidthsTemplate() {
         <div className="flex flex-col gap-6">
           {widths.map(({ label, cls }) => (
             <div key={cls} className="flex items-center gap-6">
-              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">{label}</span>
+              <span className="text-xs font-mono text-gray-400 w-32 shrink-0">
+                {label}
+              </span>
               <div className={cls}>
-                <MultiCombobox items={simpleItems} selected={multiVal} onChange={setMultiVal} label="Multi Combobox" placeholder="Busque vários..." />
+                <MultiCombobox
+                  items={simpleItems}
+                  selected={multiVal}
+                  onChange={setMultiVal}
+                  label="Multi Combobox"
+                  placeholder="Busque vários..."
+                />
               </div>
             </div>
           ))}
@@ -405,7 +596,10 @@ function DensityTemplate() {
     m6: [] as string[],
   });
 
-  const set = (key: keyof typeof vals) => (v: any) => setVals((p) => ({ ...p, [key]: v }));
+  const set =
+    <K extends keyof typeof vals>(key: K) =>
+    (v: (typeof vals)[K]) =>
+      setVals((p) => ({ ...p, [key]: v }));
 
   return (
     <div className="flex flex-col gap-12 p-8 w-full max-w-6xl mx-auto">
@@ -414,27 +608,78 @@ function DensityTemplate() {
           Alta Densidade — Formulário com muitos campos
         </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Simula um formulário real com múltiplos selects lado a lado, validando alinhamento e espaçamento visual.
+          Simula um formulário real com múltiplos selects lado a lado, validando
+          alinhamento e espaçamento visual.
         </p>
 
         <div className="border rounded-xl p-6 flex flex-col gap-6 bg-white dark:bg-gray-950 shadow-sm">
-          <h3 className="font-semibold text-gray-700 dark:text-gray-300">Dados do Projeto</h3>
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300">
+            Dados do Projeto
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Select items={simpleItems} selected={vals.s1} onChange={set("s1")} label="Tipo de Projeto" placeholder="Selecione..." />
-            <Select items={simpleItems} selected={vals.s2} onChange={set("s2")} label="Prioridade" placeholder="Selecione..." />
-            <Select items={simpleItems} selected={vals.s3} onChange={set("s3")} label="Status" placeholder="Selecione..." />
+            <Select
+              items={simpleItems}
+              selected={vals.s1}
+              onChange={set("s1")}
+              label="Tipo de Projeto"
+              placeholder="Selecione..."
+            />
+            <Select
+              items={simpleItems}
+              selected={vals.s2}
+              onChange={set("s2")}
+              label="Prioridade"
+              placeholder="Selecione..."
+            />
+            <Select
+              items={simpleItems}
+              selected={vals.s3}
+              onChange={set("s3")}
+              label="Status"
+              placeholder="Selecione..."
+            />
           </div>
 
-          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-2">Equipe</h3>
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-2">
+            Equipe
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <AvatarCombobox items={avatarItems} selected={vals.s4} onChange={set("s4")} label="Responsável" placeholder="Selecione usuário..." />
-            <MultiCombobox items={simpleItems} selected={vals.m1} onChange={set("m1")} label="Colaboradores" placeholder="Busque vários..." />
+            <AvatarCombobox
+              items={avatarItems}
+              selected={vals.s4}
+              onChange={set("s4")}
+              label="Responsável"
+              placeholder="Selecione usuário..."
+            />
+            <MultiCombobox
+              items={simpleItems}
+              selected={vals.m1}
+              onChange={set("m1")}
+              label="Colaboradores"
+              placeholder="Busque vários..."
+            />
           </div>
 
-          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-2">Categorização</h3>
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-2">
+            Categorização
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <MultiSelect items={simpleItems} selected={vals.m2} onChange={set("m2")} label="Tags" placeholder="Selecione vários..." />
-            <Combobox items={simpleItems} selected={vals.s5} onChange={(v) => { if (v) set("s5")(v); }} label="Departamento" placeholder="Busque..." />
+            <MultiSelect
+              items={simpleItems}
+              selected={vals.m2}
+              onChange={set("m2")}
+              label="Tags"
+              placeholder="Selecione vários..."
+            />
+            <Combobox
+              items={simpleItems}
+              selected={vals.s5}
+              onChange={(v) => {
+                if (v) set("s5")(v);
+              }}
+              label="Departamento"
+              placeholder="Busque..."
+            />
           </div>
         </div>
       </section>
@@ -444,21 +689,66 @@ function DensityTemplate() {
           Espaçamento Mínimo vs Generoso
         </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Comparação visual entre gap-2 (mínimo) e gap-10 (generoso) para verificar respiração dos componentes.
+          Comparação visual entre gap-2 (mínimo) e gap-10 (generoso) para
+          verificar respiração dos componentes.
         </p>
 
-        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">gap-2 (8px)</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">
+          gap-2 (8px)
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 border rounded-lg p-4 bg-gray-50 dark:bg-gray-900 mb-8">
-          <Select items={simpleItems} selected={vals.s1} onChange={set("s1")} label="Select" placeholder="Selecione..." />
-          <Combobox items={simpleItems} selected={vals.s5} onChange={(v) => { if (v) set("s5")(v); }} label="Combobox" placeholder="Busque..." />
-          <MultiCombobox items={simpleItems} selected={vals.m3} onChange={set("m3")} label="Multi Combobox" placeholder="Busque vários..." />
+          <Select
+            items={simpleItems}
+            selected={vals.s1}
+            onChange={set("s1")}
+            label="Select"
+            placeholder="Selecione..."
+          />
+          <Combobox
+            items={simpleItems}
+            selected={vals.s5}
+            onChange={(v) => {
+              if (v) set("s5")(v);
+            }}
+            label="Combobox"
+            placeholder="Busque..."
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={vals.m3}
+            onChange={set("m3")}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+          />
         </div>
 
-        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">gap-10 (40px)</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">
+          gap-10 (40px)
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 border rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
-          <Select items={simpleItems} selected={vals.s1} onChange={set("s1")} label="Select" placeholder="Selecione..." />
-          <Combobox items={simpleItems} selected={vals.s5} onChange={(v) => { if (v) set("s5")(v); }} label="Combobox" placeholder="Busque..." />
-          <MultiCombobox items={simpleItems} selected={vals.m4} onChange={set("m4")} label="Multi Combobox" placeholder="Busque vários..." />
+          <Select
+            items={simpleItems}
+            selected={vals.s1}
+            onChange={set("s1")}
+            label="Select"
+            placeholder="Selecione..."
+          />
+          <Combobox
+            items={simpleItems}
+            selected={vals.s5}
+            onChange={(v) => {
+              if (v) set("s5")(v);
+            }}
+            label="Combobox"
+            placeholder="Busque..."
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={vals.m4}
+            onChange={set("m4")}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+          />
         </div>
       </section>
     </div>
@@ -481,7 +771,10 @@ function MixedStatesTemplate() {
     m2: [] as string[],
     m3: ["a", "b", "c"] as string[],
   });
-  const set = (key: keyof typeof vals) => (v: any) => setVals((p) => ({ ...p, [key]: v }));
+  const set =
+    <K extends keyof typeof vals>(key: K) =>
+    (v: (typeof vals)[K]) =>
+      setVals((p) => ({ ...p, [key]: v }));
 
   return (
     <div className="flex flex-col gap-12 p-8 w-full max-w-6xl mx-auto">
@@ -490,18 +783,78 @@ function MixedStatesTemplate() {
           Estados Mistos em Grid
         </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Simula um formulário parcialmente preenchido — mistura de campos vazios, preenchidos, com erro e desabilitados.
+          Simula um formulário parcialmente preenchido — mistura de campos
+          vazios, preenchidos, com erro e desabilitados.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected={vals.s1} onChange={set("s1")} label="Preenchido" placeholder="Selecione..." />
-          <Select items={simpleItems} selected={vals.s2} onChange={set("s2")} label="Vazio" placeholder="Selecione..." />
-          <Select items={simpleItems} selected={null} onChange={() => {}} label="Com erro" placeholder="Selecione..." error="Seleção obrigatória" />
-          <Combobox items={simpleItems} selected={vals.s3} onChange={(v) => { if (v) set("s3")(v); }} label="Preenchido" placeholder="Busque..." />
-          <Combobox items={simpleItems} selected={null} onChange={() => {}} label="Desabilitado" placeholder="Busque..." disabled />
-          <AvatarCombobox items={avatarItems} selected={null} onChange={() => {}} label="Com erro" placeholder="Selecione usuário..." error="Responsável obrigatório" />
-          <MultiSelect items={simpleItems} selected={vals.m1} onChange={set("m1")} label="1 selecionado" placeholder="Selecione vários..." />
-          <MultiSelect items={simpleItems} selected={vals.m2} onChange={set("m2")} label="Vazio" placeholder="Selecione vários..." />
-          <MultiCombobox items={simpleItems} selected={vals.m3} onChange={set("m3")} label="3 selecionados" placeholder="Busque vários..." />
+          <Select
+            items={simpleItems}
+            selected={vals.s1}
+            onChange={set("s1")}
+            label="Preenchido"
+            placeholder="Selecione..."
+          />
+          <Select
+            items={simpleItems}
+            selected={vals.s2}
+            onChange={set("s2")}
+            label="Vazio"
+            placeholder="Selecione..."
+          />
+          <Select
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Com erro"
+            placeholder="Selecione..."
+            error="Seleção obrigatória"
+          />
+          <Combobox
+            items={simpleItems}
+            selected={vals.s3}
+            onChange={(v) => {
+              if (v) set("s3")(v);
+            }}
+            label="Preenchido"
+            placeholder="Busque..."
+          />
+          <Combobox
+            items={simpleItems}
+            selected={null}
+            onChange={() => {}}
+            label="Desabilitado"
+            placeholder="Busque..."
+            disabled
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected={null}
+            onChange={() => {}}
+            label="Com erro"
+            placeholder="Selecione usuário..."
+            error="Responsável obrigatório"
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={vals.m1}
+            onChange={set("m1")}
+            label="1 selecionado"
+            placeholder="Selecione vários..."
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={vals.m2}
+            onChange={set("m2")}
+            label="Vazio"
+            placeholder="Selecione vários..."
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={vals.m3}
+            onChange={set("m3")}
+            label="3 selecionados"
+            placeholder="Busque vários..."
+          />
         </div>
       </section>
 
@@ -510,14 +863,50 @@ function MixedStatesTemplate() {
           Todos Desabilitados — Filled
         </h2>
         <p className="text-sm text-gray-500 mb-8">
-          Verifica a aparência visual de todos os componentes desabilitados mas com valor pré-selecionado (modo somente leitura).
+          Verifica a aparência visual de todos os componentes desabilitados mas
+          com valor pré-selecionado (modo somente leitura).
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Select items={simpleItems} selected="a" onChange={() => {}} label="Select Básico" placeholder="Selecione..." disabled />
-          <Combobox items={simpleItems} selected="b" onChange={() => {}} label="Combobox" placeholder="Busque..." disabled />
-          <AvatarCombobox items={avatarItems} selected="a" onChange={() => {}} label="Avatar Combobox" placeholder="Selecione usuário..." disabled />
-          <MultiSelect items={simpleItems} selected={["a", "b"]} onChange={() => {}} label="Multi Select" placeholder="Selecione vários..." disabled />
-          <MultiCombobox items={simpleItems} selected={["a", "c"]} onChange={() => {}} label="Multi Combobox" placeholder="Busque vários..." disabled />
+          <Select
+            items={simpleItems}
+            selected="a"
+            onChange={() => {}}
+            label="Select Básico"
+            placeholder="Selecione..."
+            disabled
+          />
+          <Combobox
+            items={simpleItems}
+            selected="b"
+            onChange={() => {}}
+            label="Combobox"
+            placeholder="Busque..."
+            disabled
+          />
+          <AvatarCombobox
+            items={avatarItems}
+            selected="a"
+            onChange={() => {}}
+            label="Avatar Combobox"
+            placeholder="Selecione usuário..."
+            disabled
+          />
+          <MultiSelect
+            items={simpleItems}
+            selected={["a", "b"]}
+            onChange={() => {}}
+            label="Multi Select"
+            placeholder="Selecione vários..."
+            disabled
+          />
+          <MultiCombobox
+            items={simpleItems}
+            selected={["a", "c"]}
+            onChange={() => {}}
+            label="Multi Combobox"
+            placeholder="Busque vários..."
+            disabled
+          />
         </div>
       </section>
     </div>

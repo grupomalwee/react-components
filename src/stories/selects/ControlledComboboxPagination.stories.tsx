@@ -112,7 +112,6 @@ function PublicAPI() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    const [selected, setSelected] = useState<string | null>(null);
     const [total, setTotal] = useState(0);
 
     const fetchItems = useCallback(
@@ -169,14 +168,6 @@ function PublicAPI() {
         <ControlledCombobox
           items={items}
           loading={loading}
-          renderSelected={
-            selected
-              ? items.find((i) => i.value === selected)?.label ||
-                "Item Selected"
-              : "Search in 120k+ artworks..."
-          }
-          handleSelection={(val) => setSelected(val)}
-          checkIsSelected={(val) => selected === val}
           onSearchChange={handleSearch}
           search={search}
           onEndReached={() => {
@@ -184,8 +175,6 @@ function PublicAPI() {
               fetchItems(false, search);
             }
           }}
-          hasSelected={!!selected}
-          onClear={() => setSelected(null)}
           searchPlaceholder="Type to search artworks..."
           label="Artworks"
         />
@@ -271,7 +260,6 @@ function PublicUserAPI() {
     const [lastId, setLastId] = useState(0);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    const [selected, setSelected] = useState<string | null>(null);
     const [total] = useState(100000000);
 
     const fetchItems = useCallback(
@@ -341,14 +329,6 @@ function PublicUserAPI() {
         <ControlledCombobox
           items={items}
           loading={loading}
-          renderSelected={
-            selected
-              ? items.find((i) => i.value === selected)?.label ||
-                "User Selected"
-              : "Search massive GitHub dataset..."
-          }
-          handleSelection={(val) => setSelected(val)}
-          checkIsSelected={(val) => selected === val}
           onSearchChange={handleSearch}
           search={search}
           onEndReached={() => {
@@ -356,8 +336,6 @@ function PublicUserAPI() {
               fetchItems(false, search);
             }
           }}
-          hasSelected={!!selected}
-          onClear={() => setSelected(null)}
           searchPlaceholder="Type to filter results..."
         />
       </div>
@@ -444,7 +422,6 @@ function LargeUserDataset() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    const [selected, setSelected] = useState<string | null>(null);
     const [total, setTotal] = useState(100001);
 
     const currentSearchRef = useRef("");
@@ -532,22 +509,12 @@ function LargeUserDataset() {
         <ControlledCombobox
           items={items}
           loading={loading}
-          renderSelected={
-            selected
-              ? items.find((i) => i.value === selected)?.label ||
-                "User Selected"
-              : "Search 100k+ users..."
-          }
-          handleSelection={(val) => setSelected(val)}
-          checkIsSelected={(val) => selected === val}
           onSearchChange={(val) => setSearch(val)}
           onEndReached={() => {
             if (!loading && items.length < total) {
               fetchItems(false, search);
             }
           }}
-          hasSelected={!!selected}
-          onClear={() => setSelected(null)}
           searchPlaceholder="Type 'User 99999'..."
         />
       </div>

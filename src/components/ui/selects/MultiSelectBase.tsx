@@ -38,7 +38,6 @@ import {
   TooltipProviderBase,
   TooltipTriggerBase,
 } from "../feedback/TooltipBase";
-import { Toaster } from "../feedback";
 
 export type MultiSelectContextType = {
   open: boolean;

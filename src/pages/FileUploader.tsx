@@ -19,7 +19,7 @@ export const FileUploaderPage = () => {
     <>
       <div className="mt-5 ml-5 grid grid-cols-2 gap-5 p-3 rounded-sm">
         <FileUploader
-          accept={["image/*", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt"]}
+          accept={"image/*, .pdf, .doc, .docx, .xls, .xlsx, .txt"}
           maxSize={10 * 1024 * 1024}
           maxFiles={10}
           value={files}
@@ -30,7 +30,7 @@ export const FileUploaderPage = () => {
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
         />
         <FileUploader
-          accept={["image/*", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt"]}
+          accept={"image/*, .pdf, .doc, .docx, .xls, .xlsx, .txt"}
           maxSize={10 * 1024 * 1024}
           maxFiles={10}
           value={files}
@@ -41,7 +41,7 @@ export const FileUploaderPage = () => {
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
         />
         <FileUploader
-          accept={["image/*", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt"]}
+          accept={"image/*, .pdf, .doc, .docx, .xls, .xlsx, .txt"}
           maxSize={10 * 1024 * 1024}
           maxFiles={10}
           value={files}
@@ -52,7 +52,7 @@ export const FileUploaderPage = () => {
           dropzoneSubtext="Suporta imagens, documentos e mais tipos de arquivo"
         />
         <FileUploader
-          accept={["image/*", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt"]}
+          accept={"image/*, .pdf, .doc, .docx, .xls, .xlsx, .txt"}
           maxSize={10 * 1024 * 1024}
           maxFiles={10}
           value={files}
