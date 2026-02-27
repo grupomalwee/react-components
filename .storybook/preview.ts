@@ -1,5 +1,4 @@
 import type { Preview } from "@storybook/react-vite";
-import { withPerformance } from "storybook-addon-performance";
 import "../src/style/global.css";
 
 const preview: Preview = {
@@ -62,8 +61,7 @@ const preview: Preview = {
       }
 
       return Story();
-    },
-    withPerformance,
+    }
   ],
 };
 

@@ -79,19 +79,19 @@ export function ThemeProviderBase({
     }
   }, [theme]);
 
-useEffect(() => {
-  const stored = localStorage.getItem(storageKey) as Theme | null;
-  if (stored) setThemeState(stored);
-}, [storageKey]);
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKey) as Theme | null;
+    if (stored) setThemeState(stored);
+  }, [storageKey]);
 
-const setTheme = (newTheme: Theme) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(storageKey, newTheme);
-  }
-  setThemeState(newTheme);
-};
+  const setTheme = (newTheme: Theme) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(storageKey, newTheme);
+    }
+    setThemeState(newTheme);
+  };
 
-const value = { theme, setTheme };
+  const value = { theme, setTheme };
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
