@@ -15,9 +15,7 @@ interface ZoomImageProps extends Omit<HTMLMotionProps<"div">, "ref"> {
   alt: string;
   maxZoom?: number;
   transitionDuration?: number;
-  /** The border radius of the component. Defaults to 12. */
   borderRadius?: number;
-  /** Class name for the underlying image element */
   imageClassName?: string;
 }
 
@@ -40,12 +38,10 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
     const zoomLevel = useMotionValue(1);
 
     const springConfig = { damping: 20, stiffness: 150, mass: 0.5 };
-    const smoothMouseX = useSpring(mouseX, springConfig);
-    const smoothMouseY = useSpring(mouseY, springConfig);
     const smoothZoomLevel = useSpring(zoomLevel, springConfig);
 
     const transformOrigin = useTransform(
-      [smoothMouseX, smoothMouseY],
+      [mouseX, mouseY],
       ([latestX, latestY]) => `${latestX}% ${latestY}%`,
     );
 
@@ -152,11 +148,10 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
         className={cn(
           "relative w-full h-full overflow-hidden touch-none",
           className,
-        )} // Added touch-none
+        )}
         style={{ borderRadius: `${borderRadius}px` }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        // onWheel removed in favor of native listener
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -165,7 +160,7 @@ const ZoomImage = React.forwardRef<HTMLDivElement, ZoomImageProps>(
         <motion.img
           src={src}
           alt={alt}
-          className={cn("w-full h-full object-cover", imageClassName)}
+          className={cn("w-full h-full object-contain", imageClassName)}
           style={{
             borderRadius: `${borderRadius}px`,
             transformOrigin: transformOrigin,

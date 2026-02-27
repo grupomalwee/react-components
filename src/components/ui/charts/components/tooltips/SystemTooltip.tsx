@@ -6,12 +6,12 @@ import React, {
   useMemo,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DotsSixVerticalIcon, ArrowRight } from "@phosphor-icons/react";
-import { XIcon } from "@phosphor-icons/react/dist/ssr";
+import { DotsSixVerticalIcon, ArrowRightIcon } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
-import type { SystemData } from "./utils/systemTooltipUtils";
+import type { SystemData, Connection} from "./utils/systemTooltipUtils";
 
 const tooltipVariants = {
   hidden: {
@@ -45,6 +45,8 @@ interface SystemTooltipProps {
   onMouseDown?: (id: string, e: React.MouseEvent | React.TouchEvent) => void;
   onClose: (id: string) => void;
   onPositionChange?: (id: string, position: Position) => void;
+  onConnectionClick?: (conn: Connection, pos: { x: number; y: number }) => void;
+  onProcessClick?: (conn: Connection, pos: { x: number; y: number }) => void;
 }
 
 const SystemTooltip: React.FC<SystemTooltipProps> = ({
@@ -56,10 +58,11 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
   onMouseDown,
   onClose,
   onPositionChange,
+  onConnectionClick,
+  onProcessClick,
 }) => {
   const [localPos, setLocalPos] = useState<Position>(position);
   const [dragging, setDragging] = useState(false);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const offsetRef = useRef({ x: 0, y: 0 });
   const lastMouse = useRef({ x: 0, y: 0 });
 
@@ -141,6 +144,21 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
     [id, onMouseDown],
   );
 
+  const handleConnClick = useCallback(
+    (e: React.MouseEvent, conn: Connection) => {
+      e.stopPropagation();
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      const pos = { x: rect.right + 8, y: rect.top };
+
+      if (conn.integration?.Nome) {
+        onProcessClick?.(conn, pos);
+      } else {
+        onConnectionClick?.(conn, pos);
+      }
+    },
+    [onConnectionClick, onProcessClick],
+  );
+
   const entries = useMemo(
     () => data.connections.filter((c) => c.type === "entrada"),
     [data.connections],
@@ -149,6 +167,33 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
     () => data.connections.filter((c) => c.type === "saida"),
     [data.connections],
   );
+
+  const renderConnections = (
+    connections: Connection[],
+    color: "emerald" | "blue",
+  ) => {
+    const isEmerald = color === "emerald";
+    return connections.map((conn) => (
+      <div
+        key={conn.id}
+        className={`group flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all
+          ${
+            isEmerald
+              ? "bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30"
+              : "bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30"
+          }`}
+        onClick={(e) => handleConnClick(e, conn)}
+      >
+        <div className="flex items-center gap-2 overflow-hidden">
+          <span className="text-sm font-medium truncate">{conn.name}</span>
+        </div>
+        <ArrowRightIcon
+          size={14}
+          className={`shrink-0 ${isEmerald ? "text-emerald-500 rotate-180" : "text-blue-500"}`}
+        />
+      </div>
+    ));
+  };
 
   return (
     <AnimatePresence>
@@ -166,7 +211,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center justify-between py-1 border-b border-border/10 bg-muted/30 "
+          className="flex items-center justify-between py-1 border-b border-border/10 bg-muted/30"
           onMouseDown={handleMouseDownLocal}
           onTouchStart={handleTouchStartLocal}
           style={{
@@ -213,7 +258,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
           )}
         </div>
 
-        <div className="px-3 pb-4 space-y-4 max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w- [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
+        <div className="px-3 pb-4 space-y-4 max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
           <SeparatorBase className="w-full" />
 
           {isLoading ? (
@@ -252,79 +297,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
                     </span>
                   </div>
                   <div className="space-y-1">
-                    {entries.map((conn) => (
-                      <div key={conn.id} className="space-y-1">
-                        <div
-                          className="group flex items-center justify-between p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all cursor-pointer"
-                          onClick={() =>
-                            setExpandedId(
-                              expandedId === conn.id ? null : conn.id,
-                            )
-                          }
-                        >
-                          <div className="flex items-center gap-2 overflow-hidden">
-                            <span className="text-sm font-medium truncate">
-                              {conn.name}
-                            </span>
-                          </div>
-                          <ArrowRight
-                            size={14}
-                            className="text-emerald-500 shrink-0 rotate-180"
-                          />
-                        </div>
-                        {expandedId === conn.id && conn.integration && (
-                          <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
-                            {conn.integration.Nome && (
-                              <div>
-                                <span className="font-semibold">Nome:</span>{" "}
-                                {conn.integration.Nome}
-                              </div>
-                            )}
-                            {(conn.integration.tipo ||
-                              conn.integration.Tipo) && (
-                              <div>
-                                <span className="font-semibold">Tipo:</span>{" "}
-                                {conn.integration.tipo || conn.integration.Tipo}
-                              </div>
-                            )}
-                            {conn.integration.Protocolos && (
-                              <div>
-                                <span className="font-semibold">
-                                  Protocolos:
-                                </span>{" "}
-                                {conn.integration.Protocolos}
-                              </div>
-                            )}
-                            {conn.integration.Ambiente && (
-                              <div>
-                                <span className="font-semibold">Ambiente:</span>{" "}
-                                {conn.integration.Ambiente}
-                              </div>
-                            )}
-                            {conn.integration.Setor && (
-                              <div>
-                                <span className="font-semibold">Setor:</span>{" "}
-                                {conn.integration.Setor}
-                              </div>
-                            )}
-                            {conn.integration.Contato && (
-                              <div>
-                                <span className="font-semibold">Contato:</span>{" "}
-                                {conn.integration.Contato}
-                              </div>
-                            )}
-                            {conn.integration.Sustentacao && (
-                              <div>
-                                <span className="font-semibold">
-                                  Sustentação:
-                                </span>{" "}
-                                {conn.integration.Sustentacao}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {renderConnections(entries, "emerald")}
                   </div>
                 </div>
               )}
@@ -338,79 +311,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
                     </span>
                   </div>
                   <div className="space-y-1">
-                    {exits.map((conn) => (
-                      <div key={conn.id} className="space-y-1">
-                        <div
-                          className="group flex items-center justify-between p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 hover:border-blue-500/30 transition-all cursor-pointer"
-                          onClick={() =>
-                            setExpandedId(
-                              expandedId === conn.id ? null : conn.id,
-                            )
-                          }
-                        >
-                          <div className="flex items-center gap-2 overflow-hidden">
-                            <span className="text-sm font-medium truncate">
-                              {conn.name}
-                            </span>
-                          </div>
-                          <ArrowRight
-                            size={14}
-                            className="text-blue-500 shrink-0"
-                          />
-                        </div>
-                        {expandedId === conn.id && conn.integration && (
-                          <div className="ml-2 p-2 rounded-lg bg-muted/30 border border-border/20 text-xs space-y-1">
-                            {conn.integration.Nome && (
-                              <div>
-                                <span className="font-semibold">Nome:</span>{" "}
-                                {conn.integration.Nome}
-                              </div>
-                            )}
-                            {(conn.integration.tipo ||
-                              conn.integration.Tipo) && (
-                              <div>
-                                <span className="font-semibold">Tipo:</span>{" "}
-                                {conn.integration.tipo || conn.integration.Tipo}
-                              </div>
-                            )}
-                            {conn.integration.Protocolos && (
-                              <div>
-                                <span className="font-semibold">
-                                  Protocolos:
-                                </span>{" "}
-                                {conn.integration.Protocolos}
-                              </div>
-                            )}
-                            {conn.integration.Ambiente && (
-                              <div>
-                                <span className="font-semibold">Ambiente:</span>{" "}
-                                {conn.integration.Ambiente}
-                              </div>
-                            )}
-                            {conn.integration.Setor && (
-                              <div>
-                                <span className="font-semibold">Setor:</span>{" "}
-                                {conn.integration.Setor}
-                              </div>
-                            )}
-                            {conn.integration.Contato && (
-                              <div>
-                                <span className="font-semibold">Contato:</span>{" "}
-                                {conn.integration.Contato}
-                              </div>
-                            )}
-                            {conn.integration.Sustentacao && (
-                              <div>
-                                <span className="font-semibold">
-                                  Sustentação:
-                                </span>{" "}
-                                {conn.integration.Sustentacao}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {renderConnections(exits, "blue")}
                   </div>
                 </div>
               )}

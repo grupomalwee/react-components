@@ -148,7 +148,6 @@ export function CarouselBase({
     };
   }, [emblaApi, onChange]);
 
-
   useEffect(() => {
     if (!autoPlay || items.length <= 1 || !emblaApi) return;
 
@@ -241,7 +240,7 @@ export function CarouselBase({
                           src={item.url}
                           alt={item.title}
                           className={cn(
-                            "w-full h-full object-cover rounded-lg select-none pointer-events-none",
+                            "w-full h-full object-contain rounded-lg select-none pointer-events-none",
                             imageClassName,
                           )}
                           draggable={false}
@@ -252,7 +251,7 @@ export function CarouselBase({
                         src={item.url}
                         alt={item.title}
                         className={cn(
-                          "w-full h-full object-cover rounded-lg select-none pointer-events-none",
+                          "w-full h-full object-contain rounded-lg select-none pointer-events-none",
                           imageClassName,
                         )}
                         draggable={false}
@@ -274,7 +273,6 @@ export function CarouselBase({
                   downloadSuccess
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-black/50 hover:bg-black/70",
-                  className,
                 )}
                 title="Download image"
                 initial={false}
@@ -366,7 +364,6 @@ export function CarouselBase({
                       ? "opacity-40 cursor-not-allowed"
                       : "hover:scale-110 hover:opacity-100 opacity-70",
                     "bg-primary text-primary-foreground",
-                    className,
                   )}
                   style={fernando ? { backgroundColor: fernando } : undefined}
                 >
@@ -397,7 +394,6 @@ export function CarouselBase({
                       ? "opacity-40 cursor-not-allowed"
                       : "hover:scale-110 hover:opacity-100 opacity-70",
                     "bg-primary text-primary-foreground",
-                    className,
                   )}
                   style={fernando ? { backgroundColor: fernando } : undefined}
                 >
@@ -432,7 +428,6 @@ export function CarouselBase({
                       i === index
                         ? cn("w-8 bg-primary")
                         : cn("w-2 hover:opacity-80 bg-primary opacity-40"),
-                      className,
                     )}
                     style={fernando ? { backgroundColor: fernando } : undefined}
                   />

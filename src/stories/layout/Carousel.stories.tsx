@@ -59,7 +59,7 @@ const meta: Meta<typeof CarouselBase> = {
   tags: ["autodocs"],
   args: {
     items: sampleItems,
-
+    className: "h-[500px]",
     showControls: true,
     showIndicators: true,
     autoPlay: false,

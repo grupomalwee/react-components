@@ -33,7 +33,7 @@ const mockData: IntegrationData = {
 };
 
 const meta: Meta<typeof IntegrationTooltip> = {
-  title: "feedback/IntegrationTooltip",
+  title: "Charts/IntegrationTooltip",
   component: IntegrationTooltip,
   parameters: {
     layout: "fullscreen",
@@ -46,9 +46,7 @@ const meta: Meta<typeof IntegrationTooltip> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-full h-screen p-10 bg-slate-50">
         <Story />
-      </div>
     ),
   ],
 };
