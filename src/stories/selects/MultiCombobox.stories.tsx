@@ -559,3 +559,49 @@ export const Disabled: Story = {
   //   );
   // },
 };
+
+export const RestrictedWidth: Story = {
+  name: "Container Restrito (150px)",
+  render: () => {
+    const items = [
+      { label: "Representante A", value: "rep-a" },
+      { label: "Representante B", value: "rep-b" },
+      { label: "Representante C", value: "rep-c" },
+      { label: "Representante D", value: "rep-d" },
+    ];
+    const [selected, setSelected] = React.useState<string[]>([
+      "rep-a",
+      "rep-b",
+      "rep-c",
+    ]);
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
+        }}
+      >
+        <div className="w-[150px] border border-dashed border-red-500 p-2">
+          <p className="text-xs mb-2 text-red-500 font-bold">150px limit</p>
+          <MultiCombobox
+            items={items}
+            selected={selected}
+            onChange={setSelected}
+            label="Representantes"
+            placeholder="Selecione..."
+          />
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Exemplo do MultiCombobox restrito a um container de 150px para testar vazamento (overflow) de tags longas.",
+      },
+    },
+  },
+};

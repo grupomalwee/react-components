@@ -298,7 +298,7 @@ export function MultiSelectValueBase({
       {...props}
       ref={handleResize}
       className={cn(
-        "flex w-full gap-1.5 overflow-hidden",
+        "flex flex-1 w-full gap-1.5 overflow-hidden min-w-0",
         shouldWrap && "h-full flex-wrap",
         className,
       )}

@@ -149,8 +149,8 @@ const TooltipContentBase = React.forwardRef<
           id="tooltip-content"
           role="tooltip"
           className={cn(
-            "z-50 overflow-hidden rounded-lg bg-secondary px-3 py-2 text-sm text-foreground",
-            "shadow-lg border border-secondary/20",
+            "z-50 overflow-hidden rounded-lg bg-primary px-3 py-2 text-sm text-foreground",
+            "shadow-lg border border-primary/20",
             "animate-in fade-in-0 zoom-in-95 duration-200 ease-out",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150",
             "data-[side=bottom]:slide-in-from-top-2",
@@ -162,7 +162,7 @@ const TooltipContentBase = React.forwardRef<
           {...props}
         >
           {props.children}
-          <TooltipPrimitive.Arrow className="fill-secondary h-1.5 w-3" />
+          <TooltipPrimitive.Arrow className="fill-primary h-1.5 w-3" />
         </TooltipPrimitive.Content>
       </TooltipPrimitive.Portal>
     );
