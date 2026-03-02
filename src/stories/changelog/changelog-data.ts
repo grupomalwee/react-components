@@ -11,6 +11,15 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.5",
+    date: "2026-02-27",
+    shortTitle: " Multi Select/Combobox e FileUploader",
+    fixed: [
+      "Multi Select/Combobox: arrumado uso de options e value e visualização de itens selecionados.",
+      "FileUploader: arrumado visual e tipagem",
+    ],
+  },
+  {
     version: "1.10.4",
     date: "2026-02-26",
     shortTitle: " Multi Select/Combobox e FileUploader",
