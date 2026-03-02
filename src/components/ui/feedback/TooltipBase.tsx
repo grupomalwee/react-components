@@ -149,20 +149,20 @@ const TooltipContentBase = React.forwardRef<
           id="tooltip-content"
           role="tooltip"
           className={cn(
-            "z-50 overflow-hidden rounded-lg bg-primary px-3 py-2 text-sm text-foreground",
-            "shadow-lg border border-primary/20",
-            "animate-in fade-in-0 zoom-in-95 duration-200 ease-out",
-            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150",
-            "data-[side=bottom]:slide-in-from-top-2",
-            "data-[side=left]:slide-in-from-right-2",
-            "data-[side=right]:slide-in-from-left-2",
-            "data-[side=top]:slide-in-from-bottom-2",
+            "z-50 rounded-lg bg-popover px-3 py-1.5 text-sm leading-snug text-popover-foreground",
+            "[filter:drop-shadow(0_0_0.5px_hsl(var(--border)))_drop-shadow(0_4px_12px_hsl(var(--foreground)/0.08))]",
+            "animate-in fade-in-0 zoom-in-95 duration-150 ease-out",
+            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-100",
+            "data-[side=bottom]:slide-in-from-top-1.5",
+            "data-[side=left]:slide-in-from-right-1.5",
+            "data-[side=right]:slide-in-from-left-1.5",
+            "data-[side=top]:slide-in-from-bottom-1.5",
             className,
           )}
           {...props}
         >
           {props.children}
-          <TooltipPrimitive.Arrow className="fill-primary h-1.5 w-3" />
+          <TooltipPrimitive.Arrow className="fill-popover h-2 w-3.5" />
         </TooltipPrimitive.Content>
       </TooltipPrimitive.Portal>
     );
