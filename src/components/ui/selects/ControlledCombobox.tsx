@@ -117,12 +117,13 @@ export function ControlledCombobox<T extends string>({
             aria-disabled={disabled || undefined}
             disabled={disabled}
             className={cn(
-              `flex items-center gap-2 justify-between [&>div]:line-clamp-1 relative h-9 no-active-animation`,
+              `flex items-center gap-2 justify-between [&>div]:line-clamp-1 relative h-9 no-active-animation font-light`,
               error && "border-red-500",
+              placeholder && !hasSelected && "text-muted-foreground",
             )}
             data-testid={testIds.trigger ?? "combobox-trigger"}
           >
-            {renderSelected}
+            <div className="truncate min-w-0">{renderSelected}</div>
 
             <motion.span className="flex items-center">
               <div className="flex flex-row gap-0 items-center ">
@@ -193,9 +194,9 @@ export function ControlledCombobox<T extends string>({
                       key={item.value}
                       keywords={[item.label]}
                       value={item.value}
-                      onSelect={(v) => {
+                      onSelect={() => {
                         if (disabled) return;
-                        handleSelection(v as T);
+                        handleSelection(item.value);
                         if (!keepOpen) setOpen(false);
                       }}
                       disabled={disabled}

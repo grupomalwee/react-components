@@ -284,15 +284,16 @@ const Beam: React.FC<{
     if (leftRef.current) ro.observe(leftRef.current);
     if (rightRef.current) ro.observe(rightRef.current);
 
+    // Watch only the tooltip container for class/style changes (e.g. theme toggle)
+    // Avoid observing document.body/html — those fire on every drag cursor change
     const mo = new MutationObserver(schedule);
-    mo.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "style"],
-    });
-    mo.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "style"],
-    });
+    if (containerRef.current) {
+      mo.observe(containerRef.current, {
+        attributes: true,
+        attributeFilter: ["class", "style"],
+        subtree: true,
+      });
+    }
 
     return () => {
       cancelAnimationFrame(rafId);
@@ -497,8 +498,13 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
   const [dragging, setDragging] = useState(false);
   const offsetRef = useRef({ x: 0, y: 0 });
   const lastMouse = useRef({ x: 0, y: 0 });
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const currentPosRef = useRef<Position>(position);
 
-  useEffect(() => setLocalPos(position), [position]);
+  useEffect(() => {
+    currentPosRef.current = position;
+    setLocalPos(position);
+  }, [position]);
 
   useEffect(() => {
     let rafId: number | null = null;
@@ -513,13 +519,20 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
           top: Math.max(0, Math.min(newTop, window.innerHeight - 200)),
           left: Math.max(0, Math.min(newLeft, window.innerWidth - 320)),
         };
-        setLocalPos(p);
+        currentPosRef.current = p;
+        // Directly update DOM — bypasses React re-render on every frame
+        if (tooltipRef.current) {
+          tooltipRef.current.style.top = `${p.top}px`;
+          tooltipRef.current.style.left = `${p.left}px`;
+        }
         onPositionChange?.(id, p);
       });
     };
     const handleMouseUp = () => {
       if (dragging) {
         setDragging(false);
+        // Sync React state once after drag ends
+        setLocalPos(currentPosRef.current);
         if (rafId) cancelAnimationFrame(rafId);
       }
     };
@@ -655,6 +668,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
   return (
     <AnimatePresence>
       <motion.div
+        ref={tooltipRef}
         key={id}
         className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden flex flex-col"
         variants={tooltipVariants}

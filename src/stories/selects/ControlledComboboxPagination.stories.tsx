@@ -23,6 +23,32 @@ export default meta;
 
 type Story = StoryObj<typeof ControlledCombobox>;
 
+export const Basic: Story = {
+  name: "Basic",
+  render: () => {
+    const [value, setValue] = useState<string | undefined>(undefined);
+    const items = [
+      { label: "JavaScript", value: "js" },
+      { label: "TypeScript", value: "ts" },
+      { label: "Python", value: "py" },
+      { label: "Rust", value: "rs" },
+      { label: "Go", value: "go" },
+    ];
+    return (
+      <div className="w-[300px]">
+        <ControlledCombobox
+          items={items}
+          value={value}
+          onChange={setValue}
+          onClear={() => setValue(undefined)}
+          label="Linguagem"
+          placeholder="Selecione uma linguagem"
+        />
+      </div>
+    );
+  },
+};
+
 // API response types
 interface ArtworkItem {
   id: number;
@@ -113,6 +139,7 @@ function PublicAPI() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total, setTotal] = useState(0);
+    const [selected, setSelected] = useState<string | undefined>(undefined);
 
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
@@ -177,6 +204,9 @@ function PublicAPI() {
           }}
           searchPlaceholder="Type to search artworks..."
           label="Artworks"
+          value={selected}
+          onChange={setSelected}
+          onClear={() => setSelected(undefined)}
         />
       </div>
     );
@@ -261,6 +291,7 @@ function PublicUserAPI() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total] = useState(100000000);
+    const [selected, setSelected] = useState<string | undefined>(undefined);
 
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
@@ -337,6 +368,9 @@ function PublicUserAPI() {
             }
           }}
           searchPlaceholder="Type to filter results..."
+          value={selected}
+          onChange={setSelected}
+          onClear={() => setSelected(undefined)}
         />
       </div>
     );
@@ -423,6 +457,7 @@ function LargeUserDataset() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total, setTotal] = useState(100001);
+    const [selected, setSelected] = useState<string | undefined>(undefined);
 
     const currentSearchRef = useRef("");
 
@@ -516,6 +551,9 @@ function LargeUserDataset() {
             }
           }}
           searchPlaceholder="Type 'User 99999'..."
+          value={selected}
+          onChange={setSelected}
+          onClear={() => setSelected(undefined)}
         />
       </div>
     );
