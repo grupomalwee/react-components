@@ -11,6 +11,12 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.7",
+    date: "2026-03-03",
+    shortTitle: "Controled Combobox e Circular Progress",
+    fixed: ["Integration Tooltip: arrumado tipagem."],
+  },
+  {
     version: "1.10.6",
     date: "2026-03-03",
     shortTitle: "Controled Combobox e Circular Progress",
