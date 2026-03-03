@@ -36,3 +36,4 @@ export * from "./event-calendar-view/utils";
 export * from "./event-calendar-view/MonthMultiDayOverlay";
 export * from "./event-calendar-view/EventDetailModalAgenda";
 export * from "./event-calendar-view/EventAgenda";
+export * from "./data/CircularProgress"

@@ -24,9 +24,8 @@ export default meta;
 type Story = StoryObj<typeof ControlledCombobox>;
 
 export const Basic: Story = {
-  name: "Basic",
   render: () => {
-    const [value, setValue] = useState<string | undefined>(undefined);
+    const [value, setValue] = useState<string | null>(null);
     const items = [
       { label: "JavaScript", value: "js" },
       { label: "TypeScript", value: "ts" },
@@ -40,7 +39,7 @@ export const Basic: Story = {
           items={items}
           value={value}
           onChange={setValue}
-          onClear={() => setValue(undefined)}
+          onClear={() => setValue(null)}
           label="Linguagem"
           placeholder="Selecione uma linguagem"
         />
@@ -49,7 +48,6 @@ export const Basic: Story = {
   },
 };
 
-// API response types
 interface ArtworkItem {
   id: number;
   title: string;
@@ -63,7 +61,6 @@ interface GitHubUser {
 const PAGE_SIZE = 20;
 
 export const PublicAPI: Story = {
-  name: "Public API",
   parameters: {
     docs: {
       source: {
@@ -139,7 +136,7 @@ function PublicAPI() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total, setTotal] = useState(0);
-    const [selected, setSelected] = useState<string | undefined>(undefined);
+    const [selected, setSelected] = useState<string | null>(null);
 
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
@@ -206,7 +203,7 @@ function PublicAPI() {
           label="Artworks"
           value={selected}
           onChange={setSelected}
-          onClear={() => setSelected(undefined)}
+          onClear={() => setSelected(null)}
         />
       </div>
     );
@@ -214,7 +211,6 @@ function PublicAPI() {
 };
 
 export const PublicUserAPI: Story = {
-  name: "Public User API",
   parameters: {
     docs: {
       source: {
@@ -291,7 +287,7 @@ function PublicUserAPI() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total] = useState(100000000);
-    const [selected, setSelected] = useState<string | undefined>(undefined);
+    const [selected, setSelected] = useState<string | null>(null);
 
     const fetchItems = useCallback(
       async (isInitial = false, query = "") => {
@@ -338,7 +334,7 @@ function PublicUserAPI() {
           setLoading(false);
         }
       },
-      [loading, lastId],
+      [loading, lastId, items.length],
     );
 
     useEffect(() => {
@@ -370,7 +366,7 @@ function PublicUserAPI() {
           searchPlaceholder="Type to filter results..."
           value={selected}
           onChange={setSelected}
-          onClear={() => setSelected(undefined)}
+          onClear={() => setSelected(null)}
         />
       </div>
     );
@@ -378,7 +374,6 @@ function PublicUserAPI() {
 };
 
 export const LargeUserDataset: Story = {
-  name: "Large User Dataset",
   parameters: {
     docs: {
       source: {
@@ -457,7 +452,7 @@ function LargeUserDataset() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [total, setTotal] = useState(100001);
-    const [selected, setSelected] = useState<string | undefined>(undefined);
+    const [selected, setSelected] = useState<string | null>(null);
 
     const currentSearchRef = useRef("");
 
@@ -553,7 +548,7 @@ function LargeUserDataset() {
           searchPlaceholder="Type 'User 99999'..."
           value={selected}
           onChange={setSelected}
-          onClear={() => setSelected(undefined)}
+          onClear={() => setSelected(null)}
         />
       </div>
     );

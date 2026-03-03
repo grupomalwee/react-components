@@ -46,8 +46,8 @@ export interface ControlledComboboxProps<
   T extends string,
 > extends ErrorMessageProps {
   items: ControlledComboboxItem<T>[];
-  value?: T;
-  onChange?: (value: T) => void;
+  value: T | null;
+  onChange: (value: T | null) => void;
   placeholder?: ReactNode;
   disabled?: boolean;
   keepOpen?: boolean;

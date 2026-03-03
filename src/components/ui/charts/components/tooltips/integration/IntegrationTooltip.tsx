@@ -395,7 +395,7 @@ const TooltipBodyComponent: React.FC<{
   isInput: boolean;
   externalSystem: string;
 }> = ({ data, isLoading, connections, isInput, externalSystem }) => (
-  <ScrollAreaBase className="flex-1 min-h-0">
+  <ScrollAreaBase className="h-full">
     <div className="px-3 py-3 space-y-3 max-w-xs">
       {isLoading ? (
         <div className="space-y-1.5">
@@ -656,7 +656,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
               <div className="w-10 h-1 rounded-full bg-border" />
             </div>
             {header}
-            <div className="overflow-y-auto flex-1 min-h-0 pb-[env(safe-area-inset-bottom)] max-w-xs">
+            <div className="flex-1 min-h-0">
               <TooltipBody {...bodyProps} />
             </div>
           </motion.div>
@@ -670,7 +670,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
       <motion.div
         ref={tooltipRef}
         key={id}
-        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden flex flex-col"
+        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden flex flex-col max-h-[60vh] sm:max-h-[520px]"
         variants={tooltipVariants}
         initial="hidden"
         animate="visible"
@@ -679,7 +679,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {header}
-        <div className="max-h-[60vh] sm:max-h-[520px] overflow-hidden flex flex-col min-h-0">
+        <div className="flex-1 min-h-0">
           <TooltipBody {...bodyProps} />
         </div>
       </motion.div>

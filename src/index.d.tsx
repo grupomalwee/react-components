@@ -2,3 +2,4 @@
 export * from "./components";
 export * from "./hooks";
 export * from "./components/ui/charts/components/tooltips/integration";
+export * from "./components/ui/data/CircularProgress"

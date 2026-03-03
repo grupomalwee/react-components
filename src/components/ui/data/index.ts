@@ -7,3 +7,4 @@ export * from "./StatusIndicator";
 export * from "./Banner";
 // export * from "./Price";
 export * from "./utils";
+export * from "./CircularProgress";
