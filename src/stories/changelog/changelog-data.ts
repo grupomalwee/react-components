@@ -11,6 +11,13 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.6",
+    date: "2026-03-03",
+    shortTitle: "Controled Combobox e Circular Progress",
+    fixed: ["Controled Combobox: arrumado tipagem de value."],
+    added: ["Circular Progress: novo componentes de visualizacao de dados"],
+  },
+  {
     version: "1.10.5",
     date: "2026-02-27",
     shortTitle: " Multi Select/Combobox e FileUploader",
@@ -32,12 +39,8 @@ export const changelogData: ChangeItem[] = [
     version: "1.10.3",
     date: "2026-02-26",
     shortTitle: "Carousel e FileUploader",
-    fixed: [
-      "Carousel: novas props para melhor controle da exibição.",
-    ],
-    added: [  
-      "FileUploader: novas props para melhor controle da exibição.",
-    ],
+    fixed: ["Carousel: novas props para melhor controle da exibição."],
+    added: ["FileUploader: novas props para melhor controle da exibição."],
   },
   {
     version: "1.10.2",
@@ -62,17 +65,13 @@ export const changelogData: ChangeItem[] = [
     version: "1.9.16",
     date: "2026-02-23",
     shortTitle: "Sonner",
-    changed: [
-      "Sonner: arrumado uso no mobile",
-    ],
+    changed: ["Sonner: arrumado uso no mobile"],
   },
   {
     version: "1.9.15",
     date: "2026-02-23",
     shortTitle: "Controlled Combobox",
-    changed: [
-      "Controlled Combobox: arrumado export * from.",
-    ],
+    changed: ["Controlled Combobox: arrumado export * from."],
   },
   {
     version: "1.9.14",
