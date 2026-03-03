@@ -11,7 +11,7 @@ import { XIcon } from "@phosphor-icons/react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
-import type { SystemData, Connection} from "./utils/systemTooltipUtils";
+import type { SystemData, Connection } from "./utils/systemTooltipUtils";
 
 const tooltipVariants = {
   hidden: {
@@ -150,7 +150,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       const pos = { x: rect.right + 8, y: rect.top };
 
-      if (conn.integration?.Nome) {
+      if ((conn.integration as { processName?: string })?.processName) {
         onProcessClick?.(conn, pos);
       } else {
         onConnectionClick?.(conn, pos);
