@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import IntegrationTooltip from "@/components/ui/data/IntegrationModal";
+import IntegrationModal from "@/components/ui/data/IntegrationModal";
 import { IntegrationData } from "@/components/ui/charts/components/tooltips/utils/integrationTooltipUtils";
 
 const mockData: IntegrationData = {
@@ -32,9 +32,9 @@ const mockData: IntegrationData = {
   ],
 };
 
-const meta: Meta<typeof IntegrationTooltip> = {
-  title: "data/IntegrationTooltip",
-  component: IntegrationTooltip,
+const meta: Meta<typeof IntegrationModal> = {
+  title: "data/Integration Modal",
+  component: IntegrationModal,
   parameters: {
     layout: "fullscreen",
   },

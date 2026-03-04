@@ -131,7 +131,7 @@ const sampleSystemData: SystemData = {
 };
 
 const meta: Meta<typeof SystemTooltip> = {
-  title: "charts/SystemTooltip",
+  title: "data/System Tooltip",
   component: SystemTooltip,
   tags: ["autodocs"],
   args: {

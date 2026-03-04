@@ -17,7 +17,6 @@ import {
 } from "@phosphor-icons/react";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { SkeletonBase } from "@/components/ui/feedback/SkeletonBase";
-import { ScrollAreaBase } from "@/components/ui/layout/ScrollareaBase";
 import {
   TooltipProviderBase,
   TooltipBase,
@@ -201,12 +200,18 @@ const Name: React.FC<{ name: string; description?: string }> = ({
   );
 };
 
-const SystemNode: React.FC<{ label: string }> = ({ label }) => {
+const SystemNode = React.forwardRef<
+  HTMLDivElement,
+  { label: string }
+>(({ label }, ref) => {
   const truncated = label.length > 9 ? label.substring(0, 9) + "…" : label;
   const needsTooltip = label.length > 9;
 
   const circle = (
-    <div className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default max-w-xs">
+    <div
+      ref={ref}
+      className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default"
+    >
       <span className="text-[10px] font-bold text-primary-foreground text-center px-2 leading-tight select-none">
         {truncated}
       </span>
@@ -224,7 +229,8 @@ const SystemNode: React.FC<{ label: string }> = ({ label }) => {
       </TooltipBase>
     </TooltipProviderBase>
   );
-};
+});
+SystemNode.displayName = "SystemNode";
 
 const Beam: React.FC<{
   isInput: boolean;
@@ -369,12 +375,8 @@ const SystemsDiagram: React.FC<{
       ref={containerRef}
       className="relative flex items-center justify-between py-1 px-6 max-w-xs"
     >
-      <div ref={leftRef}>
-        <SystemNode label={isInput ? externalSystem : currentSystem} />
-      </div>
-      <div ref={rightRef}>
-        <SystemNode label={isInput ? currentSystem : externalSystem} />
-      </div>
+      <SystemNode ref={leftRef} label={isInput ? externalSystem : currentSystem} />
+      <SystemNode ref={rightRef} label={isInput ? currentSystem : externalSystem} />
       <Beam
         isInput={isInput}
         containerRef={containerRef}
@@ -392,71 +394,69 @@ const BodyComponent: React.FC<{
   isInput: boolean;
   externalSystem: string;
 }> = ({ data, isLoading, connections, isInput, externalSystem }) => (
-  <ScrollAreaBase className="h-full">
-    <div className="px-3 py-3 space-y-3 max-w-xs">
-      {isLoading ? (
-        <div className="space-y-1.5">
-          <SkeletonBase className="h-6 w-3/4" />
-          <SkeletonBase className="h-3.5 w-1/2" />
+  <div className="px-3 py-3 space-y-3 max-w-xs max-h-[460px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
+    {isLoading ? (
+      <div className="space-y-1.5">
+        <SkeletonBase className="h-6 w-3/4" />
+        <SkeletonBase className="h-3.5 w-1/2" />
+      </div>
+    ) : (
+      <Name name={data.name} description={data.description} />
+    )}
+
+    <div className="border-t border-border/20" />
+
+    {isLoading ? (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between py-1">
+          <SkeletonBase className="w-[76px] h-[76px] rounded-full" />
+          <SkeletonBase className="w-[76px] h-[76px] rounded-full" />
         </div>
-      ) : (
-        <Name name={data.name} description={data.description} />
-      )}
-
-      <div className="border-t border-border/20" />
-
-      {isLoading ? (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between py-1">
-            <SkeletonBase className="w-[76px] h-[76px] rounded-full" />
-            <SkeletonBase className="w-[76px] h-[76px] rounded-full" />
-          </div>
-          <div className="border-t border-border/20" />
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-border/20 overflow-hidden"
-            >
-              <SkeletonBase className="h-8 w-full" />
-              {[1, 2, 3].map((j) => (
-                <SkeletonBase key={j} className="h-7 w-full mt-px" />
-              ))}
-            </div>
-          ))}
-        </div>
-      ) : connections.length === 0 ? (
-        <p className="text-xs text-muted-foreground text-center">
-          Nenhuma conexão encontrada
-        </p>
-      ) : (
-        <>
-          <SystemsDiagram
-            isInput={isInput}
-            currentSystem={data.name}
-            externalSystem={externalSystem}
-          />
-
-          <div className="border-t border-border/20" />
-
-          <div className="flex items-center ">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase -mb-2">
-              {isInput ? "Informações de Entrada" : "Informações de Saída"}
-            </span>
-          </div>
-
-          <div>
-            {connections.map((conn) => (
-              <IntegrationCard
-                key={conn.id}
-                title={conn.name}
-                details={conn.integration}
-              />
+        <div className="border-t border-border/20" />
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="rounded-lg border border-border/20 overflow-hidden"
+          >
+            <SkeletonBase className="h-8 w-full" />
+            {[1, 2, 3].map((j) => (
+              <SkeletonBase key={j} className="h-7 w-full mt-px" />
             ))}
           </div>
-        </>
-      )}
-    </div>
-  </ScrollAreaBase>
+        ))}
+      </div>
+    ) : connections.length === 0 ? (
+      <p className="text-xs text-muted-foreground text-center">
+        Nenhuma conexão encontrada
+      </p>
+    ) : (
+      <>
+        <SystemsDiagram
+          isInput={isInput}
+          currentSystem={data.name}
+          externalSystem={externalSystem}
+        />
+
+        <div className="border-t border-border/20" />
+
+        <div className="flex items-center">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase -mb-2">
+            {isInput ? "Informações de Entrada" : "Informações de Saída"}
+          </span>
+        </div>
+
+        <div>
+          {connections.map((conn) => (
+            <IntegrationCard
+              key={conn.id}
+              title={conn.name}
+              details={conn.integration}
+            />
+          ))}
+        </div>
+      </>
+    )}
+  </div>
 );
 
 const Body = React.memo(BodyComponent);
@@ -532,9 +532,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
       }
     };
     if (dragging) {
-      document.addEventListener("mousemove", handleMouseMove, {
-        passive: true,
-      });
+      document.addEventListener("mousemove", handleMouseMove, { passive: true });
       document.addEventListener("mouseup", handleMouseUp);
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
@@ -651,7 +649,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
               <div className="w-10 h-1 rounded-full bg-border" />
             </div>
             {header}
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
               <Body {...bodyProps} />
             </div>
           </motion.div>
@@ -665,7 +663,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
       <motion.div
         ref={tooltipRef}
         key={id}
-        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden flex flex-col max-h-[60vh] sm:max-h-[520px]"
+        className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden"
         variants={modalVariants}
         initial="hidden"
         animate="visible"
@@ -674,9 +672,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {header}
-        <div className="flex-1 min-h-0">
-          <Body {...bodyProps} />
-        </div>
+        <Body {...bodyProps} />
       </motion.div>
     </AnimatePresence>
   );
