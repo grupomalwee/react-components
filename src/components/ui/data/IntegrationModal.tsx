@@ -24,17 +24,17 @@ import {
   TooltipTriggerBase,
   TooltipContentBase,
 } from "@/components/ui/feedback/TooltipBase";
-import { IntegrationData } from "../utils/integrationTooltipUtils";
+import { IntegrationData } from "../charts/components/tooltips/utils/integrationTooltipUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIsTruncated } from "./hooks/useIsTruncated";
-import { IntegrationProperties } from "../utils";
+import { IntegrationProperties } from "../charts/components/tooltips/utils";
 
 export interface Position {
   top: number;
   left: number;
 }
 
-export interface IntegrationTooltipProps {
+export interface IntegrationModalProps {
   id: string;
   data: IntegrationData;
   position: Position;
@@ -157,7 +157,7 @@ const IntegrationCard: React.FC<{
   );
 };
 
-const NameTooltip: React.FC<{ name: string; description?: string }> = ({
+const Name: React.FC<{ name: string; description?: string }> = ({
   name,
   description,
 }) => {
@@ -283,9 +283,6 @@ const Beam: React.FC<{
     if (containerRef.current) ro.observe(containerRef.current);
     if (leftRef.current) ro.observe(leftRef.current);
     if (rightRef.current) ro.observe(rightRef.current);
-
-    // Watch only the tooltip container for class/style changes (e.g. theme toggle)
-    // Avoid observing document.body/html — those fire on every drag cursor change
     const mo = new MutationObserver(schedule);
     if (containerRef.current) {
       mo.observe(containerRef.current, {
@@ -388,7 +385,7 @@ const SystemsDiagram: React.FC<{
   );
 };
 
-const TooltipBodyComponent: React.FC<{
+const BodyComponent: React.FC<{
   data: IntegrationData;
   isLoading: boolean;
   connections: IntegrationData["connections"];
@@ -403,7 +400,7 @@ const TooltipBodyComponent: React.FC<{
           <SkeletonBase className="h-3.5 w-1/2" />
         </div>
       ) : (
-        <NameTooltip name={data.name} description={data.description} />
+        <Name name={data.name} description={data.description} />
       )}
 
       <div className="border-t border-border/20" />
@@ -462,9 +459,9 @@ const TooltipBodyComponent: React.FC<{
   </ScrollAreaBase>
 );
 
-const TooltipBody = React.memo(TooltipBodyComponent);
+const Body = React.memo(BodyComponent);
 
-const tooltipVariants = {
+const modalVariants = {
   hidden: {
     opacity: 0,
     scale: 0.96,
@@ -482,7 +479,7 @@ const tooltipVariants = {
   },
 };
 
-const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
+const IntegrationModal: React.FC<IntegrationModalProps> = ({
   id,
   data,
   position,
@@ -520,7 +517,6 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
           left: Math.max(0, Math.min(newLeft, window.innerWidth - 320)),
         };
         currentPosRef.current = p;
-        // Directly update DOM — bypasses React re-render on every frame
         if (tooltipRef.current) {
           tooltipRef.current.style.top = `${p.top}px`;
           tooltipRef.current.style.left = `${p.left}px`;
@@ -531,7 +527,6 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
     const handleMouseUp = () => {
       if (dragging) {
         setDragging(false);
-        // Sync React state once after drag ends
         setLocalPos(currentPosRef.current);
         if (rafId) cancelAnimationFrame(rafId);
       }
@@ -657,7 +652,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
             </div>
             {header}
             <div className="flex-1 min-h-0">
-              <TooltipBody {...bodyProps} />
+              <Body {...bodyProps} />
             </div>
           </motion.div>
         </>
@@ -671,7 +666,7 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
         ref={tooltipRef}
         key={id}
         className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-lg shadow-2xl z-[10000] w-[calc(100vw-32px)] max-w-sm sm:w-80 overflow-hidden flex flex-col max-h-[60vh] sm:max-h-[520px]"
-        variants={tooltipVariants}
+        variants={modalVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -680,11 +675,11 @@ const IntegrationTooltip: React.FC<IntegrationTooltipProps> = ({
       >
         {header}
         <div className="flex-1 min-h-0">
-          <TooltipBody {...bodyProps} />
+          <Body {...bodyProps} />
         </div>
       </motion.div>
     </AnimatePresence>
   );
 };
 
-export default IntegrationTooltip;
+export default IntegrationModal;

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import IntegrationTooltip from "@/components/ui/charts/components/tooltips/integration/IntegrationTooltip";
+import IntegrationTooltip from "@/components/ui/data/IntegrationModal";
 import { IntegrationData } from "@/components/ui/charts/components/tooltips/utils/integrationTooltipUtils";
 
 const mockData: IntegrationData = {
@@ -44,11 +44,7 @@ const meta: Meta<typeof IntegrationTooltip> = {
     onPositionChange: { action: "position changed" },
     onMouseDown: { action: "mouse down" },
   },
-  decorators: [
-    (Story) => (
-        <Story />
-    ),
-  ],
+  decorators: [(Story) => <Story />],
 };
 
 export default meta;

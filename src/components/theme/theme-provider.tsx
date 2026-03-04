@@ -16,7 +16,7 @@ export type Theme =
 type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: Theme;
-  storageKey?: string;
+  storageKey: string;
 };
 
 type ThemeProviderState = {
@@ -41,8 +41,6 @@ export function ThemeProviderBase({
 
   useEffect(() => {
     const root = window.document.documentElement;
-
-    // Remove todas as classes de tema
     root.classList.remove(
       "light",
       "light-purple",
@@ -63,16 +61,13 @@ export function ThemeProviderBase({
 
       root.classList.add(systemTheme);
       
-      // Forçar re-render dos estilos
       document.body.style.backgroundColor = '';
       document.body.style.color = '';
       return;
     }
 
-    // Aplicar o tema selecionado
     root.classList.add(theme);
     
-    // Forçar re-render dos estilos para temas dark
     if (theme.includes('dark')) {
       document.body.style.backgroundColor = '';
       document.body.style.color = '';
