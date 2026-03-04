@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Lightbulb, Warning, CopySimple } from "@phosphor-icons/react";
 
 const meta: Meta = {
-  title: "Dicas úteis",
+  title: "documentation/Tips",
     tags: ["!autodocs"],
 
   parameters: {

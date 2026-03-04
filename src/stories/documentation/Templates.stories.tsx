@@ -1,9 +1,8 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import DashboardTemplate from "@/pages/DashboardTemplate";
 
 const meta: Meta<typeof DashboardTemplate> = {
-  title: "Documentação/Templates",
+  title: "documentation/Templates",
   component: DashboardTemplate,
   tags: ["autodocs"],
   parameters: {

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SystemTooltip from "@/components/ui/charts/components/tooltips/SystemTooltip";
 import type { SystemData } from "@/components/ui/charts/components/tooltips/utils/systemTooltipUtils";
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const sampleSystemData: SystemData = {
@@ -132,7 +131,7 @@ const sampleSystemData: SystemData = {
 };
 
 const meta: Meta<typeof SystemTooltip> = {
-  title: "Charts/SystemTooltip",
+  title: "charts/SystemTooltip",
   component: SystemTooltip,
   tags: ["autodocs"],
   args: {

@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
 import { LoadingBase } from "@/components/ui/feedback/LoadingBase";

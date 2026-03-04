@@ -1,11 +1,10 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ModeToggleBase } from "@/components/theme/mode-toggle";
 import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import ThemeColorTest from "@/pages/ThemeColorTest";
 
 const meta: Meta<typeof ModeToggleBase> = {
-  title: "Theme/Mode Toggle",
+  title: "theme/ModeToggle",
   component: ModeToggleBase,
   tags: ["autodocs"],
   parameters: {
@@ -50,7 +49,7 @@ export const Default: Story = {
         padding: "32px 0",
       }}
     >
-      <ThemeProviderBase>
+      <ThemeProviderBase storageKey="vite-ui">
         <ThemeColorTest />
       </ThemeProviderBase>
     </div>

@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 

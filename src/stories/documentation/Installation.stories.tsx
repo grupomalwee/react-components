@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CodeBlock as OriginalCodeBlock } from "@/components/ui/CodeBlock";
@@ -29,7 +28,7 @@ const CodeBlock = (props: any) => {
 };
 
 const meta: Meta = {
-  title: "Instalação",
+  title: "documentation/Installation",
   tags: ["!autodocs"],
   parameters: {
     layout: "fullscreen",

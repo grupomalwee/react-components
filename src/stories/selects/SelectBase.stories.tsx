@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   SelectBase,
@@ -24,7 +23,7 @@ type SelectStoryArgs = {
 };
 
 const meta: Meta<typeof SelectBase> = {
-  title: "selects/SelectBase",
+  title: "Selects/SelectBase",
   component: SelectBase,
   tags: ["autodocs"],
   parameters: {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CopySimple, Check } from "@phosphor-icons/react";
 
 export default {
-  title: "Theme/Cores",
+  title: "theme/Colors",
   
   parameters: {
     layout: "fullscreen",

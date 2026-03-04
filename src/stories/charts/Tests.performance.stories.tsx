@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Chart from "@/components/ui/charts/Chart";
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 
@@ -48,7 +47,7 @@ const generateMultiSeriesData = (dataPoints: number, seriesCount: number) => {
 };
 
 const meta: Meta<typeof Chart> = {
-  title: "charts/Performance",
+  title: "charts/Tests.performance",
   component: Chart,
   parameters: {
     docs: {

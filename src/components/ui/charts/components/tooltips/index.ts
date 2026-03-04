@@ -4,4 +4,3 @@ export { default as TooltipSimple } from "./TooltipSimple";
 export { default as SystemTooltip } from "./SystemTooltip";
 export { default as IntegrationTooltip } from "../../../data/IntegrationModal";
 export * from "./utils";
-export * from "./integration";

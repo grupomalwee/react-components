@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   CarouselBase,
@@ -9,7 +8,7 @@ const sampleItems: CarouselItem[] = [
   {
     id: 1,
     url: "/pwa-512x512.png",
-    title: "MAXX PHAM",
+    title: "layout/Carousel",
   },
   {
     id: 2,

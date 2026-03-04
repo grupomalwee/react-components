@@ -6,7 +6,7 @@ const preview: Preview = {
     options: {
       storySort: {
         method: "alphabetical",
-        order: ["Home", "*"],
+        order: ["documentation", "*"],
       },
     },
     controls: {
@@ -61,7 +61,7 @@ const preview: Preview = {
       }
 
       return Story();
-    }
+    },
   ],
 };
 

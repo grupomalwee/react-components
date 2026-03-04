@@ -3,7 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-vite/*";
 import { gerarDadosCidades } from "./cidades-brasil";
 
 const meta = {
-  title: "Charts/HorizontalChart",
+  title: "charts/HorizontalChart",
   component: HorizontalChart,
   parameters: {
     layout: "padded",

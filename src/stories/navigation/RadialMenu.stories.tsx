@@ -10,7 +10,7 @@ interface ModalFormContentProps {
 }
 
 const meta: Meta<typeof RadialMenu> = {
-  title: "Navigation/RadialMenu",
+  title: "navigation/RadialMenu",
   component: RadialMenu,
   parameters: {
     layout: "centered",

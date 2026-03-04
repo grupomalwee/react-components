@@ -1,5 +1,4 @@
-import "../../style/global.css";
-import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   DialogBase,
@@ -14,7 +13,7 @@ import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { WarningCircleIcon } from "@phosphor-icons/react";
 
 const meta: Meta<typeof DialogBase> = {
-  title: "feedback/Dialog Base",
+  title: "feedback/DialogBase",
   component: DialogBase,
   tags: ["autodocs"],
   parameters: {

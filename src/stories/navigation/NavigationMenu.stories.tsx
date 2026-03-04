@@ -1,4 +1,3 @@
-import "../../style/global.css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   NavigationMenuBase,
@@ -11,7 +10,7 @@ import {
 } from "@/components/ui/navigation/NavigationMenuBase";
 
 const meta: Meta<typeof NavigationMenuBase> = {
-  title: "navigation/Navigation Menu",
+  title: "navigation/NavigationMenu",
   component: NavigationMenuBase,
   tags: ["autodocs"],
   parameters: {

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const meta: Meta = {
-  title: "Home",
+  title: "documentation/Home",
   tags: ["!autodocs"],
   parameters: {
     layout: "fullscreen",
