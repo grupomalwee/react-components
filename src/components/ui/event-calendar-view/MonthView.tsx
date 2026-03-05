@@ -390,11 +390,9 @@ export function MonthViewAgenda({
                                       noTime={true}
                                       event={event}
                                       isFirstDay={isSameDay(day, s)}
-                                      isLastDay={isSameDay(day, e2)}
-                                      onClick={(e) =>
-                                        handleEventClick(event, e)
-                                      }
+                                      isLastDay={isSameDay(day, e2)}                           
                                       view="month"
+                                      className="pointer-events-none"
                                     />
                                   );
                                 })}
