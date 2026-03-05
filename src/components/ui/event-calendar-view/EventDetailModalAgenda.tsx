@@ -86,7 +86,6 @@ export function EventDetailModalAgenda({
 
   const startDate = getEventStartDate(event);
   const endDate = getEventEndDate(event);
-  const isMultiDay = isMultiDayEventAgenda(event);
   const isRealMultiDay =
     startDate && endDate ? !isSameDay(startDate, endDate) : false;
 
