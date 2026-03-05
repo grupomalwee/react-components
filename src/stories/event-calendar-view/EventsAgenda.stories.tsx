@@ -527,7 +527,7 @@ export default function AgendaOnly() {
     },
   },
   render: () => <Wrapper initialView="agenda" />,
-  name: "Agenda (somente visualização)",
+  name: "Agenda",
 };
 
 export const AgendaWithUndated: Story = {
@@ -602,7 +602,7 @@ export default function AgendaWithUndated() {
       />
     );
   },
-  name: "Agenda — Datas não previstas",
+  name: "Agenda - Datas não previstas",
 };
 
 export const ModalOnClick: Story = {
@@ -1517,4 +1517,31 @@ export const BusyYear: Story = {
     return <FullDemoWrapper />;
   },
   name: "Ano Completo",
+};
+
+export const DynamicRowHeightExample: Story = {
+  render: () => {
+    const today = new Date();
+    const events: CalendarEventAgenda[] = [
+      ...Array.from({ length: 15 }).map(
+        (_, i): CalendarEventAgenda => ({
+          id: `row-height-w1-${i}`,
+          title: `Evento Row 1 #${i + 1}`,
+          start: today,
+          end: today,
+          color: "sky",
+        }),
+      ),
+      {
+        id: "row-height-w2",
+        title: "Evento Row 2 (Não deve crescer)",
+        start: addDays(today, 7),
+        end: addDays(today, 7),
+        color: "amber",
+      },
+    ];
+
+    return <EventAgenda events={events} initialView="month" />;
+  },
+  name: "Altura Dinâmica de Linhas (Mês)",
 };
