@@ -75,3 +75,4 @@ export * from "./ui/layout/CarouselBase";
 export * from "./ui/navigation/RadialMenu";
 export * from "./ui/selects/ControlledCombobox";
 export * from "./ui/data/CircularProgress";
+export {default as IntegrationModal} from "./ui/data/IntegrationModal";
