@@ -39,3 +39,5 @@ export * from "./event-calendar-view/EventAgenda";
 export * from "./data/CircularProgress"
 export {default as IntegrationModal} from "./data/IntegrationModal";
 
+export * from "./data/hooks/useIsTruncated";
+export * from "./data/hooks/integrationTooltipUtils";

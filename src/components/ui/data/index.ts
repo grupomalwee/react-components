@@ -10,3 +10,4 @@ export * from "./utils";
 export * from "./CircularProgress";
 export {default as IntegrationModal} from "./IntegrationModal";
 export * from "./hooks/useIsTruncated";
+export * from "./hooks/integrationTooltipUtils";

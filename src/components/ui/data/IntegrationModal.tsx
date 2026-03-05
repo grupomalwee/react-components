@@ -23,7 +23,7 @@ import {
   TooltipTriggerBase,
   TooltipContentBase,
 } from "@/components/ui/feedback/TooltipBase";
-import { IntegrationData } from "../charts/components/tooltips/utils/integrationTooltipUtils";
+import { IntegrationData } from "./hooks/integrationTooltipUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIsTruncated } from "./hooks/useIsTruncated";
 import { IntegrationProperties } from "../charts";

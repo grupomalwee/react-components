@@ -11,7 +11,13 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
-    version: "1.10.10",
+    version: "1.10.12",
+    date: "2026-03-05",
+    shortTitle: "Integration Modal",
+    fixed: ["Integration Modal: arrumado erro export de Utils ."],
+  },
+  {
+    version: "1.10.11",
     date: "2026-03-05",
     shortTitle: "Integration Modal",
     fixed: ["Integration Modal: arrumado erro de export default."],
