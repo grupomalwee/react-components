@@ -200,36 +200,35 @@ const Name: React.FC<{ name: string; description?: string }> = ({
   );
 };
 
-const SystemNode = React.forwardRef<
-  HTMLDivElement,
-  { label: string }
->(({ label }, ref) => {
-  const truncated = label.length > 9 ? label.substring(0, 9) + "…" : label;
-  const needsTooltip = label.length > 9;
+const SystemNode = React.forwardRef<HTMLDivElement, { label: string }>(
+  ({ label }, ref) => {
+    const truncated = label.length > 9 ? label.substring(0, 9) + "…" : label;
+    const needsTooltip = label.length > 9;
 
-  const circle = (
-    <div
-      ref={ref}
-      className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default"
-    >
-      <span className="text-[10px] font-bold text-primary-foreground text-center px-2 leading-tight select-none">
-        {truncated}
-      </span>
-    </div>
-  );
+    const circle = (
+      <div
+        ref={ref}
+        className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default"
+      >
+        <span className="text-[10px] font-bold text-primary-foreground text-center px-2 leading-tight select-none">
+          {truncated}
+        </span>
+      </div>
+    );
 
-  if (!needsTooltip) return circle;
-  return (
-    <TooltipProviderBase>
-      <TooltipBase>
-        <TooltipTriggerBase asChild>{circle}</TooltipTriggerBase>
-        <TooltipContentBase sideOffset={8} className="z-[10001]">
-          {label}
-        </TooltipContentBase>
-      </TooltipBase>
-    </TooltipProviderBase>
-  );
-});
+    if (!needsTooltip) return circle;
+    return (
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild>{circle}</TooltipTriggerBase>
+          <TooltipContentBase sideOffset={8} className="z-[10001]">
+            {label}
+          </TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    );
+  },
+);
 SystemNode.displayName = "SystemNode";
 
 const Beam: React.FC<{
@@ -244,6 +243,7 @@ const Beam: React.FC<{
 
   useEffect(() => {
     let rafId: number;
+    let running = true;
 
     const update = () => {
       const container = containerRef.current;
@@ -260,48 +260,39 @@ const Beam: React.FC<{
       const cx2 = rr.left - cr.left + rr.width / 2;
       const cy2 = rr.top - cr.top + rr.height / 2;
 
-      const dx = cx2 - cx1,
-        dy = cy2 - cy1;
+      const dx = cx2 - cx1;
+      const dy = cy2 - cy1;
       const dist = Math.sqrt(dx * dx + dy * dy);
       if (dist === 0) return;
-      const ux = dx / dist,
-        uy = dy / dist;
 
+      const ux = dx / dist;
+      const uy = dy / dist;
       const r1 = lr.width / 2;
       const r2 = rr.width / 2;
 
-      setSvgSize({ w: cr.width, h: cr.height });
-      setPathD(
+      const newW = cr.width;
+      const newH = cr.height;
+      const newPath =
         `M ${cx1 + ux * r1},${cy1 + uy * r1} ` +
-          `L ${cx2 - ux * r2},${cy2 - uy * r2}`,
+        `L ${cx2 - ux * r2},${cy2 - uy * r2}`;
+
+      setSvgSize((prev) =>
+        prev.w !== newW || prev.h !== newH ? { w: newW, h: newH } : prev,
       );
+      setPathD((prev) => (prev !== newPath ? newPath : prev));
     };
 
-    const schedule = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(update);
+    const loop = () => {
+      if (!running) return;
+      update();
+      rafId = requestAnimationFrame(loop);
     };
 
-    requestAnimationFrame(() => requestAnimationFrame(update));
-    schedule();
-
-    const ro = new ResizeObserver(schedule);
-    if (containerRef.current) ro.observe(containerRef.current);
-    if (leftRef.current) ro.observe(leftRef.current);
-    if (rightRef.current) ro.observe(rightRef.current);
-    const mo = new MutationObserver(schedule);
-    if (containerRef.current) {
-      mo.observe(containerRef.current, {
-        attributes: true,
-        attributeFilter: ["class", "style"],
-        subtree: true,
-      });
-    }
+    rafId = requestAnimationFrame(loop);
 
     return () => {
+      running = false;
       cancelAnimationFrame(rafId);
-      ro.disconnect();
-      mo.disconnect();
     };
   }, [containerRef, leftRef, rightRef]);
 
@@ -375,8 +366,14 @@ const SystemsDiagram: React.FC<{
       ref={containerRef}
       className="relative flex items-center justify-between py-1"
     >
-      <SystemNode ref={leftRef} label={isInput ? externalSystem : currentSystem} />
-      <SystemNode ref={rightRef} label={isInput ? currentSystem : externalSystem} />
+      <SystemNode
+        ref={leftRef}
+        label={isInput ? externalSystem : currentSystem}
+      />
+      <SystemNode
+        ref={rightRef}
+        label={isInput ? currentSystem : externalSystem}
+      />
       <Beam
         isInput={isInput}
         containerRef={containerRef}
@@ -532,7 +529,9 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
       }
     };
     if (dragging) {
-      document.addEventListener("mousemove", handleMouseMove, { passive: true });
+      document.addEventListener("mousemove", handleMouseMove, {
+        passive: true,
+      });
       document.addEventListener("mouseup", handleMouseUp);
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
@@ -649,9 +648,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
               <div className="w-10 h-1 rounded-full bg-border" />
             </div>
             {header}
-            <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
-              <Body {...bodyProps} />
-            </div>
+            <Body {...bodyProps} />
           </motion.div>
         </>
       </AnimatePresence>
