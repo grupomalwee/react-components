@@ -14,6 +14,12 @@ export const changelogData: ChangeItem[] = [
     version: "1.10.10",
     date: "2026-03-05",
     shortTitle: "Integration Modal",
+    fixed: ["Integration Modal: arrumado erro de export default."],
+  },
+  {
+    version: "1.10.10",
+    date: "2026-03-05",
+    shortTitle: "Integration Modal",
     fixed: ["Integration Modal: arrumado visual."],
   },
   {
