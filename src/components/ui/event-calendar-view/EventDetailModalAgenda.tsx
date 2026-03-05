@@ -114,6 +114,13 @@ export function EventDetailModalAgenda({
     }
 
     if (isRealMultiDay && endDate) {
+      if (noTime) {
+        return {
+          primary: `${capitalize(formatDateFull(startDate))}`,
+          secondary: `${capitalize(formatDateFull(endDate))}`,
+          isAllDay: false,
+        };
+      }
       const startStr = capitalize(
         format(startDate, "d MMM yyyy, HH:mm", { locale: ptBR }),
       );
@@ -182,29 +189,30 @@ export function EventDetailModalAgenda({
               />
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-[13px] font-semibold text-foreground leading-snug">
+              <span className="text-[13px] font-semibold text-foreground leading-snug mt-2.5">
                 {dateSection.primary}
               </span>
-              {(!noTime || dateSection.isAllDay) && dateSection.secondary && (
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {(isRealMultiDay && !event.allDay) ||
-                  (isRealMultiDay && dateSection.isAllDay) ? (
-                    <>
-                      <ArrowRightIcon
-                        size={11}
-                        className="shrink-0 text-muted-foreground/60"
-                      />
+              {(!noTime || dateSection.isAllDay || isRealMultiDay) &&
+                dateSection.secondary && (
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {(isRealMultiDay && !event.allDay) ||
+                    (isRealMultiDay && dateSection.isAllDay) ? (
+                      <>
+                        <ArrowRightIcon
+                          size={11}
+                          className="shrink-0 text-muted-foreground/60"
+                        />
+                        <span className="text-[12px] font-medium text-muted-foreground">
+                          {dateSection.secondary}
+                        </span>
+                      </>
+                    ) : (
                       <span className="text-[12px] font-medium text-muted-foreground">
                         {dateSection.secondary}
                       </span>
-                    </>
-                  ) : (
-                    <span className="text-[12px] font-medium text-muted-foreground">
-                      {dateSection.secondary}
-                    </span>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
             </div>
           </div>
 

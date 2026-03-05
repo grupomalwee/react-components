@@ -55,7 +55,6 @@ interface MonthViewProps {
   events: CalendarEventAgenda[];
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
-  /** When true, hides event times */
   noTime?: boolean;
 }
 
