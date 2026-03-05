@@ -39,13 +39,19 @@ export interface MultiDayBar {
   slot: number;
 }
 
+function startOfDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 function clampToWeek(date: Date, weekStart: Date, weekEnd: Date): Date {
   return max([min([date, weekEnd]), weekStart]);
 }
 
 function dayCol(date: Date, weekStart: Date): number {
+  const dateDay = startOfDay(date);
+  const weekStartDay = startOfDay(weekStart);
   const diff = Math.round(
-    (date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24),
+    (dateDay.getTime() - weekStartDay.getTime()) / (1000 * 60 * 60 * 24),
   );
   return Math.max(0, Math.min(6, diff));
 }
@@ -62,7 +68,10 @@ export function computeMultiDayBars(
     const start = getEventStartDate(ev);
     const end = getEventEndDate(ev) ?? start;
     if (!start || !end) return false;
-    return start <= weekEnd && end >= weekStart;
+    return (
+      startOfDay(start) <= startOfDay(weekEnd) &&
+      startOfDay(end) >= startOfDay(weekStart)
+    );
   });
 
   const sorted = [...multiDayEvents].sort((a, b) => {
@@ -121,6 +130,7 @@ interface MultiDayOverlayProps {
   hoveredEventId: string | null;
   onHover: (id: string | null) => void;
   onEventSelect: (event: CalendarEventAgenda, e: React.MouseEvent) => void;
+  noTime?: boolean;
 }
 
 export function MultiDayOverlay({
@@ -129,6 +139,7 @@ export function MultiDayOverlay({
   hoveredEventId,
   onHover,
   onEventSelect,
+  noTime = false,
 }: MultiDayOverlayProps) {
   if (bars.length === 0) return null;
 
@@ -185,7 +196,7 @@ export function MultiDayOverlay({
                         </span>
                       )}
 
-                      {!event.allDay && isFirstDay && (
+                      {!noTime && !event.allDay && isFirstDay && (
                         <span className="shrink-0 font-normal opacity-75 text-[10px] bg-white/15 px-1 py-0.5 rounded-full leading-none">
                           {format(eventStart, "HH:mm")}
                         </span>
@@ -227,7 +238,7 @@ export function MultiDayOverlay({
                   {formatDurationAgenda(event)}
                 </p>
                 {event.location && (
-                  <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px]">
+                  <p className="opacity-60 mt-0.5 truncate text-[11px] max-w-[200px] flex items-center">
                     <MapPinIcon size={15} /> {event.location}
                   </p>
                 )}

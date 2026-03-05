@@ -26,7 +26,7 @@ import {
 import { IntegrationData } from "../charts/components/tooltips/utils/integrationTooltipUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useIsTruncated } from "./hooks/useIsTruncated";
-import { IntegrationProperties } from "../charts/components/tooltips/utils";
+import { IntegrationProperties } from "../charts";
 
 export interface Position {
   top: number;
@@ -373,7 +373,7 @@ const SystemsDiagram: React.FC<{
   return (
     <div
       ref={containerRef}
-      className="relative flex items-center justify-between py-1 px-6 max-w-xs"
+      className="relative flex items-center justify-between py-1"
     >
       <SystemNode ref={leftRef} label={isInput ? externalSystem : currentSystem} />
       <SystemNode ref={rightRef} label={isInput ? currentSystem : externalSystem} />
@@ -394,7 +394,7 @@ const BodyComponent: React.FC<{
   isInput: boolean;
   externalSystem: string;
 }> = ({ data, isLoading, connections, isInput, externalSystem }) => (
-  <div className="px-3 py-3 space-y-3 max-w-xs max-h-[460px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
+  <div className="px-3 py-3 space-y-3 max-h-[460px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 transition-colors">
     {isLoading ? (
       <div className="space-y-1.5">
         <SkeletonBase className="h-6 w-3/4" />

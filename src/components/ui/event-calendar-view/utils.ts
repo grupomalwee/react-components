@@ -6,6 +6,10 @@ import type {
   EventColorAgenda,
 } from "@/components/ui/event-calendar-view/types";
 
+export function startOfLocalDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 export function getAutoColorAgenda(id: string): EventColorAgenda {
   const colors: EventColorAgenda[] = [
     "sky",
@@ -156,17 +160,16 @@ export function getSpanningEventsForDayAgenda(
     const eventEnd = getEventEndDate(event);
     if (!eventStart || !eventEnd) return false;
 
-    // Only include if it's not the start day but is either the end day or a middle day
+    const startDay = startOfLocalDay(eventStart);
+    const endDay = startOfLocalDay(eventEnd);
+
     return (
       !isSameDay(day, eventStart) &&
-      (isSameDay(day, eventEnd) || (day > eventStart && day < eventEnd))
+      (isSameDay(day, eventEnd) || (day > startDay && day < endDay))
     );
   });
 }
 
-/**
- * Get all events visible on a specific day (starting, ending, or spanning)
- */
 export function getAllEventsForDayAgenda(
   events: CalendarEventAgenda[],
   day: Date,
@@ -175,10 +178,12 @@ export function getAllEventsForDayAgenda(
     const eventStart = getEventStartDate(event);
     const eventEnd = getEventEndDate(event);
     if (!eventStart) return false;
+    const startDay = startOfLocalDay(eventStart);
+    const endDay = eventEnd ? startOfLocalDay(eventEnd) : null;
     return (
       isSameDay(day, eventStart) ||
-      (eventEnd ? isSameDay(day, eventEnd) : false) ||
-      (eventEnd ? day > eventStart && day < eventEnd : false)
+      (endDay ? isSameDay(day, eventEnd!) : false) ||
+      (endDay ? day > startDay && day < endDay : false)
     );
   });
 }
@@ -198,10 +203,13 @@ export function getAgendaEventsForDayAgenda(
 
       if (!eventStart) return false;
 
+      const startDay = startOfLocalDay(eventStart);
+      const endDay = eventEnd ? startOfLocalDay(eventEnd) : null;
+
       return (
         isSameDay(day, eventStart) ||
         (eventEnd ? isSameDay(day, eventEnd) : false) ||
-        (eventEnd ? day > eventStart && day < eventEnd : false)
+        (endDay ? day > startDay && day < endDay : false)
       );
     })
     .sort((a, b) => getEventStartTimestamp(a) - getEventStartTimestamp(b));

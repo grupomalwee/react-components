@@ -55,6 +55,8 @@ interface MonthViewProps {
   events: CalendarEventAgenda[];
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
+  /** When true, hides event times */
+  noTime?: boolean;
 }
 
 export function MonthViewAgenda({
@@ -62,6 +64,7 @@ export function MonthViewAgenda({
   events,
   onEventSelect,
   showUndatedEvents,
+  noTime = false,
 }: MonthViewProps) {
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
@@ -304,9 +307,10 @@ export function MonthViewAgenda({
                                           handleEventClick(event, e)
                                         }
                                         view="month"
+                                        noTime={noTime}
                                       >
                                         <span className="flex items-center gap-1 sm:gap-1.5 truncate text-[11px] relative z-10">
-                                          {!event.allDay && (
+                                          {!noTime && !event.allDay && (
                                             <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
                                               {format(eventStart, "HH:mm")}
                                             </span>
@@ -356,14 +360,17 @@ export function MonthViewAgenda({
                           </PopoverTriggerBase>
                           <PopoverContentBase
                             align="center"
-                            className="max-w-52 p-3"
+                            className="max-w-52 p-3 border-border"
                             style={
                               {
                                 "--event-height": `${EventHeightAgenda}px`,
                               } as React.CSSProperties
                             }
                           >
-                            <div className="space-y-2">
+                            <div
+                              className="space-y-2 "
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <p className="font-semibold text-sm">
                                 {format(day, "EEE d", { locale: ptBR })}
                               </p>
@@ -380,6 +387,7 @@ export function MonthViewAgenda({
                                   return (
                                     <EventItemAgenda
                                       key={event.id}
+                                      noTime={true}
                                       event={event}
                                       isFirstDay={isSameDay(day, s)}
                                       isLastDay={isSameDay(day, e2)}
@@ -406,6 +414,7 @@ export function MonthViewAgenda({
                 hoveredEventId={hoveredEventId}
                 onHover={handleHover}
                 onEventSelect={onEventSelect}
+                noTime={noTime}
               />
             </div>
           );

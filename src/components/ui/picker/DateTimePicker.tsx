@@ -205,7 +205,6 @@ export function DateTimePicker({
                 className={cn("w-full rounded-none border-none")}
               />
             </TabsContentBase>
-
             <TabsContentBase value="time" className="mt-0">
               <div className="flex flex-col items-center justify-center gap-4 py-2">
                 <TimeScrollPicker

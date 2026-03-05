@@ -5,4 +5,3 @@ export { default as ChartTotalLegend } from "./ChartTotalLegend";
 export { default as HorizontalLegend } from "./HorizontalLegend";
 export { default as ChartControls } from "./ChartControls";
 export { default as ChartHeader } from "./ChartHeader";
-export * from "./tooltips/utils";

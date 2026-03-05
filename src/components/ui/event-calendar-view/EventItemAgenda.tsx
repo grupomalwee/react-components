@@ -32,6 +32,7 @@ interface EventWrapperProps {
   onMouseDown?: (e: React.MouseEvent) => void;
   onTouchStart?: (e: React.TouchEvent) => void;
   ariaLabel?: string;
+  noTime?: boolean;
 }
 
 function EventWrapper({
@@ -108,6 +109,7 @@ interface EventItemProps {
   isDragging?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   showTime?: boolean;
+  noTime?: boolean;
   currentTime?: Date;
   isFirstDay?: boolean;
   isLastDay?: boolean;
@@ -126,6 +128,7 @@ export function EventItemAgenda({
   view,
   onClick,
   showTime,
+  noTime = false,
   currentTime,
   isFirstDay = true,
   isLastDay = true,
@@ -216,11 +219,12 @@ export function EventItemAgenda({
         ariaLabel={ariaLabel}
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
+        noTime={noTime}
         onClick={onClick}
       >
         {children || (
           <span className="flex items-center gap-2 truncate min-w-0">
-            {!event.allDay && hasValidTime && displayStart && (
+            {!noTime && !event.allDay && hasValidTime && displayStart && (
               <span className="truncate text-sm sm:text-base md:text-lg lg:text-xl opacity-80 bg-white/10 px-2 rounded-full min-w-0">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
@@ -282,6 +286,7 @@ export function EventItemAgenda({
           ariaLabel={ariaLabel}
           isFirstDay={isFirstDay}
           isLastDay={isLastDay}
+          noTime={noTime}
           onClick={onClick}
           onMouseDown={onMouseDown}
           onTouchStart={onTouchStart}
@@ -309,6 +314,7 @@ export function EventItemAgenda({
         ariaLabel={ariaLabel}
         isFirstDay={isFirstDay}
         isLastDay={isLastDay}
+        noTime={noTime}
         onClick={onClick}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
@@ -318,7 +324,7 @@ export function EventItemAgenda({
             <span className="truncate font-semibold leading-none min-w-0">
               {event.title}
             </span>
-            {showTime && hasValidTime && displayStart && (
+            {!noTime && showTime && hasValidTime && displayStart && (
               <span className="shrink-0 opacity-75 leading-none">
                 {formatTimeWithOptionalMinutes(displayStart as Date)}
               </span>
@@ -329,7 +335,7 @@ export function EventItemAgenda({
             <span className="font-semibold leading-snug truncate">
               {event.title}
             </span>
-            {showTime && hasValidTime && (
+            {!noTime && showTime && hasValidTime && (
               <span className="opacity-75 leading-none truncate">
                 {getEventTime()}
               </span>
@@ -412,19 +418,21 @@ export function EventItemAgenda({
         >
           {event.title}
         </div>
-        <div
-          className={cn(
-            "opacity-90 flex items-center gap-2 text-sm sm:text-base md:text-lg min-w-0",
-          )}
-        >
-          {event.allDay ? (
-            <span>Dia todo</span>
-          ) : (
-            <span className="uppercase font-semibold flex items-center gap-2 ">
-              {formatTimeWithOptionalMinutes(displayStart as Date)}
-            </span>
-          )}
-        </div>
+        {!noTime && (
+          <div
+            className={cn(
+              "opacity-90 flex items-center gap-2 text-sm sm:text-base md:text-lg min-w-0",
+            )}
+          >
+            {event.allDay ? (
+              <span>Dia todo</span>
+            ) : (
+              <span className="uppercase font-semibold flex items-center gap-2 ">
+                {formatTimeWithOptionalMinutes(displayStart as Date)}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {event.description && (

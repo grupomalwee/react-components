@@ -32,6 +32,7 @@ import {
   getEventEndDate,
   formatDurationAgenda,
   WeekCellsHeightAgenda,
+  startOfLocalDay,
 } from "@/components/ui/event-calendar-view/";
 import { EndHour, StartHour } from "@/components/ui/event-calendar/constants";
 import { cn } from "@/lib/utils";
@@ -55,6 +56,8 @@ interface WeekViewProps {
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   onEventCreate?: (startTime: Date) => void;
   showUndatedEvents?: boolean;
+  /** When true, hides event times */
+  noTime?: boolean;
 }
 
 interface PositionedEvent {
@@ -73,6 +76,7 @@ export function WeekViewAgenda({
   onEventSelect,
   onEventCreate,
   showUndatedEvents,
+  noTime = false,
 }: WeekViewProps) {
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -114,7 +118,12 @@ export function WeekViewAgenda({
         return days.some((day) => {
           if (eventStart && isSameDay(day, eventStart)) return true;
           if (eventEnd && isSameDay(day, eventEnd)) return true;
-          if (eventStart && eventEnd && day > eventStart && day < eventEnd)
+          if (
+            eventStart &&
+            eventEnd &&
+            day > startOfLocalDay(eventStart) &&
+            day < startOfLocalDay(eventEnd)
+          )
             return true;
           return false;
         });
@@ -156,7 +165,10 @@ export function WeekViewAgenda({
         return (
           (eventStart ? isSameDay(day, eventStart) : false) ||
           (eventEnd ? isSameDay(day, eventEnd) : false) ||
-          (eventStart && eventEnd ? eventStart < day && eventEnd > day : false)
+          (eventStart && eventEnd
+            ? day > startOfLocalDay(eventStart) &&
+              day < startOfLocalDay(eventEnd)
+            : false)
         );
       });
 
@@ -491,7 +503,7 @@ export function WeekViewAgenda({
                                     )}
                                     {showTitle && (
                                       <>
-                                        {isFirstDay && (
+                                        {isFirstDay && !noTime && (
                                           <span className="font-normal opacity-80 text-[10px] sm:text-[11px] bg-white/10 px-1 py-0.5 rounded-full">
                                             {format(eventStart, "HH:mm")}
                                           </span>
@@ -602,6 +614,7 @@ export function WeekViewAgenda({
                                 }
                                 draggable={false}
                                 showTime
+                                noTime={noTime}
                                 view="week"
                                 totalCols={positionedEvent.totalCols}
                               />

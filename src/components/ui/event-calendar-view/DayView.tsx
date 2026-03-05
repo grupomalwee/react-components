@@ -44,6 +44,8 @@ interface DayViewProps {
   events: CalendarEventAgenda[];
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
+  /** When true, hides event times */
+  noTime?: boolean;
 }
 
 interface PositionedEvent {
@@ -60,6 +62,7 @@ export function DayViewAgenda({
   events,
   onEventSelect,
   showUndatedEvents,
+  noTime = false,
 }: DayViewProps) {
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
@@ -339,6 +342,7 @@ export function DayViewAgenda({
                           isLastDay={isLastDay}
                           onClick={(e) => handleEventClick(evt, e)}
                           showTime
+                          noTime={noTime}
                         />
                       </div>
                     </TooltipTriggerBase>

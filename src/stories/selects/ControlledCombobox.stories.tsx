@@ -1,19 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { ControlledCombobox } from "@/components/ui/selects/ControlledCombobox";
 
 const meta: Meta<typeof ControlledCombobox> = {
-  title: "selects/ControlledComboboxPagination",
+  title: "selects/Controlled Combobox",
   component: ControlledCombobox,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <ThemeProviderBase storageKey="vite-ui">
-        <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
-          <Story />
-        </div>
-      </ThemeProviderBase>
+      <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
+        <Story />
+      </div>
     ),
   ],
 };

@@ -24,6 +24,8 @@ interface AgendaViewProps {
   events: CalendarEventAgenda[];
   onEventSelect?: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
+  /** When true, hides event times */
+  noTime?: boolean;
 }
 
 export function Agenda({
@@ -31,6 +33,7 @@ export function Agenda({
   events,
   onEventSelect,
   showUndatedEvents = true,
+  noTime = false,
 }: AgendaViewProps) {
   const isValidDate = (d: unknown) => {
     try {
@@ -123,6 +126,7 @@ export function Agenda({
                           : undefined
                       }
                       view="agenda"
+                      noTime={noTime}
                       className={
                         onEventSelect
                           ? undefined

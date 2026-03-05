@@ -31,21 +31,21 @@ import { Badge } from "@/components/ui/data/Badge";
 import { SeparatorBase } from "@/components/ui/layout/SeparatorBase";
 
 const colorBannerMap: Record<string, string> = {
-  sky:     "from-sky-400 via-sky-500 to-cyan-500",
-  amber:   "from-amber-400 via-amber-500 to-orange-400",
-  violet:  "from-violet-400 via-violet-500 to-purple-600",
-  rose:    "from-rose-400 via-rose-500 to-pink-500",
+  sky: "from-sky-400 via-sky-500 to-cyan-500",
+  amber: "from-amber-400 via-amber-500 to-orange-400",
+  violet: "from-violet-400 via-violet-500 to-purple-600",
+  rose: "from-rose-400 via-rose-500 to-pink-500",
   emerald: "from-emerald-400 via-emerald-500 to-teal-500",
-  orange:  "from-orange-400 via-orange-500 to-amber-500",
-  green:   "from-green-400 via-green-500 to-emerald-500",
-  blue:    "from-blue-400 via-blue-500 to-indigo-500",
-  red:     "from-red-400 via-red-500 to-rose-500",
-  purple:  "from-purple-400 via-purple-500 to-violet-600",
-  indigo:  "from-indigo-400 via-indigo-500 to-blue-600",
-  teal:    "from-teal-400 via-teal-500 to-cyan-500",
-  pink:    "from-pink-400 via-pink-500 to-rose-400",
-  cyan:    "from-cyan-400 via-cyan-500 to-sky-500",
-  lime:    "from-lime-400 via-lime-500 to-green-500",
+  orange: "from-orange-400 via-orange-500 to-amber-500",
+  green: "from-green-400 via-green-500 to-emerald-500",
+  blue: "from-blue-400 via-blue-500 to-indigo-500",
+  red: "from-red-400 via-red-500 to-rose-500",
+  purple: "from-purple-400 via-purple-500 to-violet-600",
+  indigo: "from-indigo-400 via-indigo-500 to-blue-600",
+  teal: "from-teal-400 via-teal-500 to-cyan-500",
+  pink: "from-pink-400 via-pink-500 to-rose-400",
+  cyan: "from-cyan-400 via-cyan-500 to-sky-500",
+  lime: "from-lime-400 via-lime-500 to-green-500",
   fuchsia: "from-fuchsia-400 via-fuchsia-500 to-purple-500",
 };
 
@@ -69,11 +69,13 @@ function capitalize(s: string) {
 export interface EventDetailModalAgendaProps {
   event?: CalendarEventAgenda;
   onClose?: () => void;
+  noTime?: boolean;
 }
 
 export function EventDetailModalAgenda({
   event,
   onClose,
+  noTime = false,
 }: EventDetailModalAgendaProps) {
   const [open, setOpen] = useState(true);
 
@@ -136,7 +138,6 @@ export function EventDetailModalAgenda({
       }}
     >
       <DialogContentBase className="p-0 overflow-hidden gap-0 border-none shadow-2xl sm:max-w-md rounded-2xl">
-
         <div
           className={cn(
             "relative bg-gradient-to-br w-full flex flex-col justify-end px-7 pt-14 pb-7 select-none overflow-hidden",
@@ -156,7 +157,7 @@ export function EventDetailModalAgenda({
                 <CalendarDotsIcon size={11} weight="bold" />
                 {formatDurationAgendaDays(event)}
               </Badge>
-            ) : durationMinutes > 0 ? (
+            ) : !noTime && durationMinutes > 0 ? (
               <Badge className="bg-black/20 text-white border border-white/20 backdrop-blur-sm shadow-none gap-1 text-[11px] font-medium">
                 <ClockIcon size={11} weight="bold" />
                 {formatDuration(durationMinutes)}
@@ -170,20 +171,27 @@ export function EventDetailModalAgenda({
         </div>
 
         <div className="flex flex-col px-7 py-6 bg-background">
-
           <div className="flex items-start gap-4 py-4">
             <div className="mt-0.5 p-2 rounded-xl bg-muted border border-border shrink-0">
-              <CalendarDotsIcon size={18} weight="duotone" className="text-primary" />
+              <CalendarDotsIcon
+                size={18}
+                weight="duotone"
+                className="text-primary"
+              />
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
               <span className="text-[13px] font-semibold text-foreground leading-snug">
                 {dateSection.primary}
               </span>
-              {dateSection.secondary && (
+              {!noTime && dateSection.secondary && (
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  {(isMultiDay && !event.allDay) || (isMultiDay && dateSection.isAllDay) ? (
+                  {(isMultiDay && !event.allDay) ||
+                  (isMultiDay && dateSection.isAllDay) ? (
                     <>
-                      <ArrowRightIcon size={11} className="shrink-0 text-muted-foreground/60" />
+                      <ArrowRightIcon
+                        size={11}
+                        className="shrink-0 text-muted-foreground/60"
+                      />
                       <span className="text-[12px] font-medium text-muted-foreground">
                         {dateSection.secondary}
                       </span>
@@ -206,7 +214,11 @@ export function EventDetailModalAgenda({
             <>
               <div className="flex items-start gap-4 py-4">
                 <div className="mt-0.5 p-2 rounded-xl bg-muted border border-border shrink-0">
-                  <MapPinIcon size={18} weight="duotone" className="text-primary" />
+                  <MapPinIcon
+                    size={18}
+                    weight="duotone"
+                    className="text-primary"
+                  />
                 </div>
                 <div className="flex flex-col gap-0.5 min-w-0">
                   <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
@@ -224,7 +236,11 @@ export function EventDetailModalAgenda({
           {event.description && (
             <div className="flex items-start gap-4 py-4">
               <div className="mt-0.5 p-2 rounded-xl bg-muted border border-border shrink-0">
-                <AlignLeftIcon size={18} weight="duotone" className="text-primary" />
+                <AlignLeftIcon
+                  size={18}
+                  weight="duotone"
+                  className="text-primary"
+                />
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
@@ -243,7 +259,6 @@ export function EventDetailModalAgenda({
             </p>
           )}
         </div>
-
       </DialogContentBase>
     </DialogBase>
   );

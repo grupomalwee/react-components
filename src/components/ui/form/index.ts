@@ -9,5 +9,7 @@ export * from "./SliderBase";
 export * from "./SwitchBase";
 export * from "./TextAreaBase";
 export * from "./SmallButtons";
-export * from "./DebouncedInput"
-export * from "./NumericInput"
+export * from "./DebouncedInput";
+export * from "./NumericInput";
+export * from "./ColorPickerBase";
+export * from "./TagInput";

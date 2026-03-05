@@ -48,6 +48,7 @@ export interface EventCalendarProps {
     | ((event: CalendarEventAgenda, e?: React.MouseEvent) => void)
     | React.ReactElement<ModalLikeProps>;
   showYearView?: boolean;
+  noTime?: boolean;
 }
 
 export interface ModalLikeProps {
@@ -64,6 +65,7 @@ export function EventAgenda({
   initialDate,
   onClick,
   showYearView = false,
+  noTime = false,
 }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(
     (initialDate && new Date(initialDate)) || new Date(),
@@ -235,6 +237,7 @@ export function EventAgenda({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+              noTime={noTime}
             />
           )}
           {view === "week" && (
@@ -242,6 +245,7 @@ export function EventAgenda({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+              noTime={noTime}
             />
           )}
           {view === "day" && (
@@ -249,6 +253,7 @@ export function EventAgenda({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+              noTime={noTime}
             />
           )}
           {view === "agenda" && (
@@ -256,6 +261,7 @@ export function EventAgenda({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+              noTime={noTime}
             />
           )}
           {view === "year" && (
@@ -274,6 +280,7 @@ export function EventAgenda({
         ? React.cloneElement(onClick as React.ReactElement<ModalLikeProps>, {
             event: selectedEvent,
             onClose: () => setSelectedEvent(null),
+            noTime,
           })
         : null}
     </div>

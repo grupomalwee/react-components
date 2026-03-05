@@ -59,7 +59,7 @@ const sampleEvents: CalendarEventAgenda[] = [
     end: setMinutes(setHours(addDays(new Date(), 1), 13), 15),
     id: "5",
     location: "Downtown Cafe",
-    start: setMinutes(setHours(addDays(new Date(), 1), 12), 0),
+    start: addDays(new Date(), 1),
     title: "Acme Corp - Lunch with Client",
   },
   {
@@ -68,7 +68,7 @@ const sampleEvents: CalendarEventAgenda[] = [
     description: "New product release",
     end: addDays(new Date(), 6),
     id: "6",
-    start: addDays(new Date(), 3),
+    start: addDays(new Date(), 2),
     title: "Acme Corp - Product Launch",
   },
   {
@@ -219,7 +219,6 @@ type Story = StoryObj<typeof EventAgenda>;
 const Wrapper = ({
   initialView = "week",
   showYearView = false,
-  ...args
 }: Partial<EventCalendarProps>) => {
   const [events, setEvents] = useState<CalendarEventAgenda[]>(sampleEvents);
 
@@ -236,7 +235,8 @@ const Wrapper = ({
         onEventUpdate={handleUpdate}
         initialView={initialView}
         showYearView={showYearView}
-        {...args}
+        noTime={true}
+        onClick={<EventDetailModalAgenda/>}
       />
     </div>
   );
@@ -1508,6 +1508,7 @@ export const BusyYear: Story = {
             onClick={<EventDetailModalAgenda />}
             initialView="month"
             showYearView={true}
+            noTime
           />
         </div>
       );
