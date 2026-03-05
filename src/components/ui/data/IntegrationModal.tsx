@@ -200,36 +200,47 @@ const Name: React.FC<{ name: string; description?: string }> = ({
   );
 };
 
-const SystemNode = React.forwardRef<
-  HTMLDivElement,
-  { label: string }
->(({ label }, ref) => {
-  const truncated = label.length > 9 ? label.substring(0, 9) + "…" : label;
-  const needsTooltip = label.length > 9;
+const SystemNode = React.forwardRef<HTMLDivElement, { label: string }>(
+  ({ label }, ref) => {
+    const innerRef = useRef<HTMLDivElement>(null);
+    const truncated = label.length > 9 ? label.substring(0, 9) + "…" : label;
+    const needsTooltip = label.length > 9;
 
-  const circle = (
-    <div
-      ref={ref}
-      className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default"
-    >
-      <span className="text-[10px] font-bold text-primary-foreground text-center px-2 leading-tight select-none">
-        {truncated}
-      </span>
-    </div>
-  );
+    const setRefs = useCallback(
+      (node: HTMLDivElement | null) => {
+        (innerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node;
+        if (typeof ref === "function") ref(node);
+        else if (ref)
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      },
+      [ref],
+    );
 
-  if (!needsTooltip) return circle;
-  return (
-    <TooltipProviderBase>
-      <TooltipBase>
-        <TooltipTriggerBase asChild>{circle}</TooltipTriggerBase>
-        <TooltipContentBase sideOffset={8} className="z-[10001]">
-          {label}
-        </TooltipContentBase>
-      </TooltipBase>
-    </TooltipProviderBase>
-  );
-});
+    const circle = (
+      <div
+        ref={setRefs}
+        className="w-[76px] h-[76px] rounded-full bg-primary flex items-center justify-center shrink-0 z-10 cursor-default"
+      >
+        <span className="text-[10px] font-bold text-primary-foreground text-center px-2 leading-tight select-none">
+          {truncated}
+        </span>
+      </div>
+    );
+
+    if (!needsTooltip) return circle;
+    return (
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild>{circle}</TooltipTriggerBase>
+          <TooltipContentBase sideOffset={8} className="z-[10001]">
+            {label}
+          </TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    );
+  },
+);
 SystemNode.displayName = "SystemNode";
 
 const Beam: React.FC<{
@@ -312,7 +323,7 @@ const Beam: React.FC<{
 
   return (
     <svg
-      className="pointer-events-none absolute left-0 top-0 right-0"
+      className="pointer-events-none absolute"
       width={svgSize.w}
       height={svgSize.h}
       fill="none"
@@ -327,7 +338,7 @@ const Beam: React.FC<{
       <motion.path
         d={pathD}
         stroke={`url(#${gradientId})`}
-        strokeWidth={2}
+        strokeWidth={4}
         strokeLinecap="round"
         initial={{ strokeOpacity: 0 }}
         animate={{ strokeOpacity: 1 }}
@@ -345,7 +356,7 @@ const Beam: React.FC<{
             y2: ["0%", "0%"],
           }}
           transition={{
-            duration: 4,
+            duration: 2,
             ease: [0.16, 1, 0.3, 1],
             repeat: Infinity,
             repeatDelay: 0,
@@ -375,8 +386,14 @@ const SystemsDiagram: React.FC<{
       ref={containerRef}
       className="relative flex items-center justify-between py-1"
     >
-      <SystemNode ref={leftRef} label={isInput ? externalSystem : currentSystem} />
-      <SystemNode ref={rightRef} label={isInput ? currentSystem : externalSystem} />
+      <SystemNode
+        ref={leftRef}
+        label={isInput ? externalSystem : currentSystem}
+      />
+      <SystemNode
+        ref={rightRef}
+        label={isInput ? currentSystem : externalSystem}
+      />
       <Beam
         isInput={isInput}
         containerRef={containerRef}
@@ -403,8 +420,6 @@ const BodyComponent: React.FC<{
     ) : (
       <Name name={data.name} description={data.description} />
     )}
-
-    <div className="border-t border-border/20" />
 
     {isLoading ? (
       <div className="space-y-3">
@@ -436,8 +451,6 @@ const BodyComponent: React.FC<{
           currentSystem={data.name}
           externalSystem={externalSystem}
         />
-
-        <div className="border-t border-border/20" />
 
         <div className="flex items-center">
           <span className="text-[10px] font-bold text-muted-foreground uppercase -mb-2">
@@ -532,7 +545,9 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
       }
     };
     if (dragging) {
-      document.addEventListener("mousemove", handleMouseMove, { passive: true });
+      document.addEventListener("mousemove", handleMouseMove, {
+        passive: true,
+      });
       document.addEventListener("mouseup", handleMouseUp);
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
@@ -595,7 +610,7 @@ const IntegrationModal: React.FC<IntegrationModalProps> = ({
 
   const header = (
     <div
-      className="flex items-center justify-between py-1 border-b border-border/10 bg-muted/30 shrink-0 max-w-lg"
+      className="flex items-center justify-between py-1 border-b border-border shrink-0 max-w-lg"
       onMouseDown={handleMouseDownLocal}
       onTouchStart={handleTouchStartLocal}
       style={{
