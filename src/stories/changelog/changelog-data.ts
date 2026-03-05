@@ -11,6 +11,12 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.13",
+    date: "2026-03-05",
+    shortTitle: "Dialog",
+    fixed: ["Dialog: z-index arrumado."],
+  },
+  {
     version: "1.10.12",
     date: "2026-03-05",
     shortTitle: "Integration Modal",
