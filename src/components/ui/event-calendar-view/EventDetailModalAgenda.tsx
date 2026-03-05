@@ -21,7 +21,6 @@ import {
 import {
   getEventStartDate,
   getEventEndDate,
-  isMultiDayEventAgenda,
   formatDurationAgendaDays,
   getAutoColorAgenda,
 } from "@/components/ui/event-calendar-view/utils";
