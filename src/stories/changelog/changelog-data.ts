@@ -14,6 +14,12 @@ export const changelogData: ChangeItem[] = [
     version: "1.10.15",
     date: "2026-03-06",
     shortTitle: "Chart",
+    fixed: ["Chart: arrumado line formatter."],
+  },
+  {
+    version: "1.10.15",
+    date: "2026-03-06",
+    shortTitle: "Chart",
     fixed: ["Chart: arrumado data formatter."],
   },
   {
