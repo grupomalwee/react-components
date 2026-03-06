@@ -112,10 +112,7 @@ const RechartTooltipWithTotal: React.FC<Props> = ({
           const isNeg = value < 0;
           const isLine = seriesTypeMap?.[entry.dataKey] === "line";
           const defaultFormatted = isLine
-            ? `${(value / 100).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}%`
+            ? `${value.toFixed(2)}%`
             : value.toLocaleString("pt-BR", {
                 maximumFractionDigits: 0,
               });

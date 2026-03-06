@@ -9,7 +9,7 @@ import { CardBase } from "@/components/ui/data/CardBase";
 const sampleData = [
   { periodo: "Jan/24", receita: 4200, despesas: 2800, churn: 180 },
   { periodo: "Fev/24", receita: 5100, despesas: 3200, churn: 165 },
-  { periodo: "Mar/24", receita: 6800, despesas: 3900, churn: 142 },
+  { periodo: "Mar/24", receita: -6800, despesas: 3900, churn: 142 },
   { periodo: "Abr/24", receita: 7500, despesas: 4300, churn: 128 },
 ];
 
@@ -890,7 +890,7 @@ export const AllThings: Story = {
       },
       {
         periodo: "Mar/24",
-        receita: 6800,
+        receita: -6800,
         despesas: 3900,
         churn: 142,
       },
