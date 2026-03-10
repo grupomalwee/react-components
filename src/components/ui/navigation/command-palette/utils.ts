@@ -99,7 +99,9 @@ function readStorage(): string[] {
 function writeStorage(ids: string[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-  } catch {}
+  } catch {
+    console.error("Failed to write to localStorage");
+  }
 }
 
 export function useRecents(allItems: CommandItem[]) {
