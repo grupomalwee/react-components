@@ -11,7 +11,13 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
-    version: "1.10.15",
+    version: "1.10.17",
+    date: "2026-03-10",
+    shortTitle: "Command Palette",
+    added: ["Command Palette: novo componente de palette de comandos interativo e personalizável, ideal para interfaces modernas e acesso rápido a ações."],
+  },
+  {
+    version: "1.10.16",
     date: "2026-03-06",
     shortTitle: "Chart",
     fixed: ["Chart: arrumado line formatter."],
