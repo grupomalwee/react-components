@@ -79,3 +79,5 @@ export {default as IntegrationModal} from "./ui/data/IntegrationModal";
 
 export * from "./ui/data/hooks/useIsTruncated";
 export * from "./ui/data/hooks/integrationTooltipUtils";
+
+export * from "./ui/navigation/command-palette";

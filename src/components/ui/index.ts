@@ -41,3 +41,5 @@ export {default as IntegrationModal} from "./data/IntegrationModal";
 
 export * from "./data/hooks/useIsTruncated";
 export * from "./data/hooks/integrationTooltipUtils";
+
+export * from "./navigation/command-palette";

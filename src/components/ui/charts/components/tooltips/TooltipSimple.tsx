@@ -69,7 +69,6 @@ const TooltipSimple: React.FC<Props> = ({
               return "left";
             };
             const axis = normalize(yAxisMap[entry.dataKey]);
-            // compute sum for the axis
             const axisSum = payload
               .filter((p) => normalize(yAxisMap[p.dataKey]) === axis)
               .reduce(
