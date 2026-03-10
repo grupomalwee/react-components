@@ -11,6 +11,12 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.18",
+    date: "2026-03-10",
+    shortTitle: "Badge",
+    added: ["Badge: novo modo de visualização de Ranks."],
+  },
+  {
     version: "1.10.17",
     date: "2026-03-10",
     shortTitle: "Command Palette",
