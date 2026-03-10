@@ -45,6 +45,7 @@ interface DateTimePickerProps extends ErrorMessageProps {
   className?: string;
   error?: string;
   hideClear?: boolean;
+  triggerIcon?: boolean;
 }
 
 export function DateTimePicker({
@@ -61,6 +62,7 @@ export function DateTimePicker({
   className,
   error,
   hideClear = true,
+  triggerIcon,
 }: DateTimePickerProps) {
   const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
@@ -121,47 +123,69 @@ export function DateTimePicker({
   const centeredPopoverClass =
     "w-auto max-w-[calc(100vw-16px)] p-0 border-none shadow-none fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50";
 
-  const renderTriggerButton = () => (
-    <ButtonBase
-      variant={"outline"}
-      disabled={disabled}
-      className={cn(
-        "w-full justify-start text-left min-w-0 overflow-hidden",
-        !date && "text-muted-foreground",
-      )}
-    >
-      <span className={cn("truncate flex-1", !date && "text-muted-foreground")}>
-        {date
-          ? format(date, getDisplayFormat(), { locale: ptBR })
-          : "Selecione uma data"}
-      </span>
+  const renderTriggerButton = () => {
+    if (triggerIcon) {
+      return (
+        <ButtonBase
+          variant={"outline"}
+          size="icon"
+          disabled={disabled}
+          className={cn("no-active-animation", error && "border-red-500")}
+        >
+          <CalendarBlankIcon className="h-4 w-4" />
+        </ButtonBase>
+      );
+    }
 
-      <motion.span className="flex items-center">
-        <div className="flex flex-row gap-0 items-center ">
-          {hideClear && (date || internalDate) && (
-            <ClearButton
-              onClick={(e) => {
-                e?.stopPropagation();
-                setInternalDate(null);
-                onChange?.(null);
-                onConfirm?.(null);
-              }}
-            />
-          )}
+    return (
+      <ButtonBase
+        variant={"outline"}
+        disabled={disabled}
+        className={cn(
+          "w-full justify-start text-left min-w-0 overflow-hidden",
+          !date && "text-muted-foreground",
+        )}
+      >
+        <span
+          className={cn("truncate flex-1", !date && "text-muted-foreground")}
+        >
+          {date
+            ? format(date, getDisplayFormat(), { locale: ptBR })
+            : "Selecione uma data"}
+        </span>
 
-          <motion.div
-            animate={{ rotate: open ? 15 : 0 }}
-            transition={{ duration: 0.03 }}
-          >
-            <CalendarBlankIcon className="h-4 w-4" />
-          </motion.div>
-        </div>
-      </motion.span>
-    </ButtonBase>
-  );
+        <motion.span className="flex items-center">
+          <div className="flex flex-row gap-0 items-center ">
+            {hideClear && (date || internalDate) && (
+              <ClearButton
+                onClick={(e) => {
+                  e?.stopPropagation();
+                  setInternalDate(null);
+                  onChange?.(null);
+                  onConfirm?.(null);
+                }}
+              />
+            )}
+
+            <motion.div
+              animate={{ rotate: open ? 15 : 0 }}
+              transition={{ duration: 0.03 }}
+            >
+              <CalendarBlankIcon className="h-4 w-4" />
+            </motion.div>
+          </div>
+        </motion.span>
+      </ButtonBase>
+    );
+  };
 
   const renderPickerContent = () => (
-    <div className="p-2 sm:p-3 border border-border rounded-md">
+    <div
+      className={cn(
+        "p-2 sm:p-3",
+        !isMobile && "border border-border rounded-md",
+      )}
+    >
       {isMobile && !hideTime ? (
         <div className="flex flex-col min-h-0">
           {internalDate && (
@@ -336,7 +360,7 @@ export function DateTimePicker({
 
           <ErrorMessage error={error} />
 
-          <DialogContentBase className="p-0 max-h-[95vh] w-3/6 overflow-hidden flex flex-col">
+          <DialogContentBase className="p-0 max-h-[95vh] w-[95%] sm:max-w-lg overflow-hidden flex flex-col">
             <div className="overflow-y-auto flex-1">
               {renderPickerContent()}
             </div>

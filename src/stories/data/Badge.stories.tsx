@@ -1,16 +1,22 @@
-import { Badge } from "@/components/ui/data/Badge";
+import {
+  Badge,
+  type BadgeColorType,
+  type BadgeRankType,
+} from "@/components/ui/data/Badge";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 type BadgeStoryProps = {
   children?: string;
   size?: "sm" | "md" | "lg";
-  color?: "green" | "gray" | "red" | "yellow" | "blue" | "purple";
+  color?: BadgeColorType;
+  rank?: BadgeRankType;
 };
 
 const BadgeStory = ({
   children = "Badge",
   size = "md",
   color,
+  rank,
 }: BadgeStoryProps) => {
   return (
     <div
@@ -21,7 +27,7 @@ const BadgeStory = ({
         padding: "32px 0",
       }}
     >
-      <Badge size={size} color={color} data-testid="badge">
+      <Badge size={size} color={color} rank={rank} data-testid="badge">
         {children}
       </Badge>
     </div>
@@ -71,6 +77,11 @@ export default function Example() {
       control: "select",
       options: ["green", "gray", "red", "yellow", "purple", "blue"],
       description: "Cor do badge (aplica background e cor do texto)",
+    },
+    rank: {
+      control: "select",
+      options: ["diamant", "gold", "silver", "bronze"],
+      description: "Rank do badge (aplica background e cor do texto temáticos)",
     },
   },
 };
@@ -166,6 +177,46 @@ export default function Variants() {
       <Badge color="yellow">Green</Badge>
       <Badge color="blue">Green</Badge>
       <Badge color="purple">Green</Badge>
+    </div>
+  );
+}
+`,
+      },
+    },
+  },
+};
+
+export const Ranks: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        gap: "12px",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "32px 0",
+        flexWrap: "wrap",
+      }}
+    >
+      <Badge rank="diamond">Diamond</Badge>
+      <Badge rank="gold">Gold</Badge>
+      <Badge rank="silver">Silver</Badge>
+      <Badge rank="bronze">Bronze</Badge>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { Badge } from '@mlw-packages/react-components';
+
+export default function Ranks() {
+  return (
+    <div style={{ display: "flex", gap: "12px" }}>
+      <Badge rank="diamant">Diamant</Badge>
+      <Badge rank="gold">Gold</Badge>
+      <Badge rank="silver">Silver</Badge>
+      <Badge rank="bronze">Bronze</Badge>
     </div>
   );
 }

@@ -28,10 +28,13 @@ export type BadgeColorType =
   | "blue"
   | "purple";
 
+export type BadgeRankType = "diamond" | "gold" | "silver" | "bronze";
+
 interface BadgeBaseProps
   extends ComponentProps<"span">, VariantProps<typeof badgeVariants> {
   asChild?: boolean;
   color?: BadgeColorType;
+  rank?: BadgeRankType;
   size?: "sm" | "md" | "lg";
   status?: string;
 }
@@ -39,6 +42,7 @@ interface BadgeBaseProps
 function Badge({
   className,
   color,
+  rank,
   size = "md",
   asChild = false,
   children,
@@ -49,7 +53,7 @@ function Badge({
 
   const customStyle = style;
 
-  const colorClasses: Record<string, string> = {
+  const colorClasses: Record<BadgeColorType, string> = {
     green: "bg-green-50 text-green-500 border-green-200",
     gray: "bg-gray-50 text-gray-500 border-gray-200",
     red: "bg-red-50 text-red-500 border-red-200",
@@ -58,12 +62,20 @@ function Badge({
     purple: "bg-purple-50 text-purple-500 border-purple-200",
   };
 
+const rankClasses: Record<BadgeRankType, string> = {
+  diamond: "bg-cyan-100 text-cyan-600 border-cyan-300",
+  gold: "bg-yellow-100 text-yellow-500 border-yellow-300",
+  silver: "bg-gray-100 text-gray-500 border-gray-300",
+  bronze: "bg-orange-100 text-orange-700 border-orange-300",
+};
+
   return (
     <Comp
       data-slot="badge"
       className={cn(
         badgeVariants({ size }),
         color ? colorClasses[color] : undefined,
+        rank ? rankClasses[rank] : undefined,
         className,
       )}
       style={customStyle}

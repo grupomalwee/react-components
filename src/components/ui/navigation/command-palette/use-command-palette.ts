@@ -78,7 +78,7 @@ export function useCommandPalette({
     setActiveIndex(0);
   }, [page]);
 
-  const displayedGroups = React.useMemo(() => {
+  const displayedGroups = useMemo(() => {
     const start = page * PAGE_SIZE;
     const end = start + PAGE_SIZE;
     let count = 0;
@@ -100,14 +100,14 @@ export function useCommandPalette({
     return result;
   }, [allMatchedGroups, page]);
 
-  const flatItems = React.useMemo(
+  const flatItems = useMemo(
     () => displayedGroups.flatMap((g) => g.items),
     [displayedGroups],
   );
 
   const pageItemCount = flatItems.length;
 
-  React.useEffect(() => {
+  useEffect(() => {
     setActiveIndex((i) => Math.min(i, Math.max(pageItemCount - 1, 0)));
   }, [pageItemCount]);
 
