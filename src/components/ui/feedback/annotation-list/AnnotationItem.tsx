@@ -24,8 +24,19 @@ export interface AnnotationItemProps {
   onSetDrawMode: (v: boolean) => void;
   color: string;
   brushSize: number;
-  drawTool: "draw" | "erase";
-  onHistoryChange: (has: boolean) => void;
+  drawTool:
+    | "draw"
+    | "erase"
+    | "rectangle"
+    | "circle"
+    | "line"
+    | "arrow"
+    | "highlighter"
+    | "stamp";
+  fill?: boolean;
+  stampType?: "check" | "x" | "star" | "heart" | "warning";
+  opacity?: number;
+  onHistoryChange: (hasUndo: boolean, hasRedo: boolean) => void;
   canvasRef: React.Ref<DrawingCanvasRef>;
 }
 
@@ -40,6 +51,9 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
   color,
   brushSize,
   drawTool,
+  fill,
+  stampType,
+  opacity,
   onHistoryChange,
   canvasRef,
 }) => {
@@ -134,7 +148,17 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
             onChange={onChangeDrawing}
             color={color}
             brushSize={drawTool === "erase" ? brushSize * 6 : brushSize}
-            mode={drawTool}
+            mode={drawTool === "erase" ? "erase" : "draw"}
+            tool={
+              drawTool === "draw"
+                ? "pencil"
+                : drawTool === "erase"
+                  ? "pencil"
+                  : drawTool
+            }
+            fill={fill}
+            stampType={stampType}
+            opacity={opacity}
             onHistoryChange={onHistoryChange}
           />
         </div>
