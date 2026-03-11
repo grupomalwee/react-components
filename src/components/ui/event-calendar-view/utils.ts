@@ -109,7 +109,6 @@ export function getBorderRadiusClassesAgenda(
   }
   return "rounded-none"; // No rounded corners
 }
-
 /**
  * Check if an event is a multi-day event
  */

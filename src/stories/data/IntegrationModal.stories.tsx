@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import IntegrationModal from "@/components/ui/data/IntegrationModal";
-import { IntegrationData } from "@/components/ui/charts/components/tooltips/utils/integrationTooltipUtils";
+import { IntegrationData } from "@/components/ui/data/hooks/integrationTooltipUtils";
 
 const mockData: IntegrationData = {
   name: "Esse sistema tem um nome muito grande meu deus olha isso",

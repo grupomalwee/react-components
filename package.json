@@ -3,9 +3,9 @@
   "developer": "Eduardo Junio",
   "publishConfig": {
     "access": "public",
-    "type":"module"
+    "type": "module"
   },
-  "version": "1.10.9",
+  "version": "1.10.18",
   "homepage": "https://main--68e80310a069c2f10b546ef3.chromatic.com/",
   "repository": {
     "type": "git",
@@ -63,6 +63,7 @@
     "@radix-ui/react-switch": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.7",
+    "@tanstack/react-virtual": "^3.13.21",
     "chromatic": "^13.3.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

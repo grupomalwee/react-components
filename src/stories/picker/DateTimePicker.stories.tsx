@@ -297,3 +297,54 @@ export default function WithOnConfirm() {
     },
   },
 };
+export const Trigger: Story = {
+  render: () => {
+    const [date, setDate] = useState<Date | null>(
+      new Date(2025, 9, 9, 14, 30, 0)
+    );
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <DateTimePicker
+          date={date}
+          triggerIcon
+          onChange={setDate}
+          onConfirm={(d) => {
+            setDate(d);
+            console.log("Data confirmada:", d);
+          }}
+        />
+        <p>Data atual: {date?.toLocaleString("pt-BR")}</p>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `import React, { useState } from 'react';
+import { DateTimePicker } from '@mlw-packages/react-components';
+
+export default function WithOnConfirm() {
+  const [date, setDate] = useState<Date | null>(new Date(2025, 9, 9, 14, 30, 0));
+  const [confirmedDate, setConfirmedDate] = useState<Date | null>();
+
+  return (
+    <>
+      <DateTimePicker
+        label="Selecione e confirme a data"
+        date={date}
+        onChange={setDate}
+        onConfirm={(d) => {
+          setConfirmedDate(d);
+          console.log('Data confirmada:', d);
+        }}
+      />
+      <p>Data atual (onChange): {date?.toLocaleString('pt-BR')}</p>
+      <p>Data confirmada (onConfirm): {confirmedDate?.toLocaleString('pt-BR')}</p>
+    </>
+  );
+}`,
+      },
+    },
+  },
+};

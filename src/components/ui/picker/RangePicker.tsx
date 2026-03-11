@@ -7,11 +7,8 @@ import {
   SelectRangeEventHandler,
 } from "react-day-picker";
 import type { Matcher } from "react-day-picker";
-import ptBR from "date-fns/locale/pt-BR";
 import { format } from "date-fns";
-import type { Locale } from "date-fns";
-const dateFnsLocale = ((ptBR as unknown as { default?: Locale })?.default ??
-  (ptBR as unknown as Locale)) as Locale;
+import { ptBR } from "date-fns/locale";
 import {
   CaretLeftIcon,
   CaretRightIcon,
@@ -107,8 +104,8 @@ export function RangePicker({
             >
               {range?.from && range?.to
                 ? `${format(range.from, "P", {
-                    locale: dateFnsLocale,
-                  })} - ${format(range.to, "P", { locale: dateFnsLocale })}`
+                    locale: ptBR,
+                  })} - ${format(range.to, "P", { locale: ptBR })}`
                 : "Selecione um intervalo"}
             </span>
 
@@ -144,7 +141,6 @@ export function RangePicker({
               side="top"
               align="center"
               sideOffset={-240}
-              
             >
               <motion.div
                 ref={contentRef}
@@ -166,7 +162,7 @@ export function RangePicker({
                       mode="range"
                       selected={range}
                       onSelect={handleSelect}
-                      locale={dateFnsLocale}
+                      locale={ptBR}
                       showOutsideDays
                       fixedWeeks
                       weekStartsOn={1}

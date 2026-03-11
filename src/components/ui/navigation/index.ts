@@ -5,3 +5,4 @@ export * from "./BreadcrumbBase";
 export * from "./ContextMenuBase";
 export * from "./DropDownMenuBase";
 export * from "./RadialMenu";
+export * from "./command-palette";

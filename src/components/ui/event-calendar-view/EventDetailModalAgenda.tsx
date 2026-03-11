@@ -21,7 +21,6 @@ import {
 import {
   getEventStartDate,
   getEventEndDate,
-  isMultiDayEventAgenda,
   formatDurationAgendaDays,
   getAutoColorAgenda,
 } from "@/components/ui/event-calendar-view/utils";
@@ -86,7 +85,8 @@ export function EventDetailModalAgenda({
 
   const startDate = getEventStartDate(event);
   const endDate = getEventEndDate(event);
-  const isMultiDay = isMultiDayEventAgenda(event);
+  const isRealMultiDay =
+    startDate && endDate ? !isSameDay(startDate, endDate) : false;
 
   const durationMinutes =
     startDate && endDate ? differenceInMinutes(endDate, startDate) : 0;
@@ -97,7 +97,7 @@ export function EventDetailModalAgenda({
     }
 
     if (event.allDay) {
-      if (isMultiDay && endDate && !isSameDay(startDate, endDate)) {
+      if (isRealMultiDay && endDate) {
         return {
           primary: `${capitalize(formatDateFull(startDate))}`,
           secondary: `${capitalize(formatDateFull(endDate))}`,
@@ -111,7 +111,14 @@ export function EventDetailModalAgenda({
       };
     }
 
-    if (isMultiDay && endDate) {
+    if (isRealMultiDay && endDate) {
+      if (noTime) {
+        return {
+          primary: `${capitalize(formatDateFull(startDate))}`,
+          secondary: `${capitalize(formatDateFull(endDate))}`,
+          isAllDay: false,
+        };
+      }
       const startStr = capitalize(
         format(startDate, "d MMM yyyy, HH:mm", { locale: ptBR }),
       );
@@ -147,15 +154,15 @@ export function EventDetailModalAgenda({
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10" />
 
           <div className="absolute top-4 left-5 flex items-center gap-2 z-10">
-            {dateSection.isAllDay ? (
-              <Badge className="bg-black/20 text-white border border-white/20 backdrop-blur-sm shadow-none gap-1 text-[11px] font-medium">
-                <SunIcon size={11} weight="bold" />
-                Dia todo
-              </Badge>
-            ) : isMultiDay ? (
+            {isRealMultiDay ? (
               <Badge className="bg-black/20 text-white border border-white/20 backdrop-blur-sm shadow-none gap-1 text-[11px] font-medium">
                 <CalendarDotsIcon size={11} weight="bold" />
                 {formatDurationAgendaDays(event)}
+              </Badge>
+            ) : event.allDay ? (
+              <Badge className="bg-black/20 text-white border border-white/20 backdrop-blur-sm shadow-none gap-1 text-[11px] font-medium">
+                <SunIcon size={11} weight="bold" />
+                Dia todo
               </Badge>
             ) : !noTime && durationMinutes > 0 ? (
               <Badge className="bg-black/20 text-white border border-white/20 backdrop-blur-sm shadow-none gap-1 text-[11px] font-medium">
@@ -180,29 +187,30 @@ export function EventDetailModalAgenda({
               />
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-[13px] font-semibold text-foreground leading-snug">
+              <span className="text-[13px] font-semibold text-foreground leading-snug mt-2.5">
                 {dateSection.primary}
               </span>
-              {!noTime && dateSection.secondary && (
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {(isMultiDay && !event.allDay) ||
-                  (isMultiDay && dateSection.isAllDay) ? (
-                    <>
-                      <ArrowRightIcon
-                        size={11}
-                        className="shrink-0 text-muted-foreground/60"
-                      />
+              {(!noTime || dateSection.isAllDay || isRealMultiDay) &&
+                dateSection.secondary && (
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {(isRealMultiDay && !event.allDay) ||
+                    (isRealMultiDay && dateSection.isAllDay) ? (
+                      <>
+                        <ArrowRightIcon
+                          size={11}
+                          className="shrink-0 text-muted-foreground/60"
+                        />
+                        <span className="text-[12px] font-medium text-muted-foreground">
+                          {dateSection.secondary}
+                        </span>
+                      </>
+                    ) : (
                       <span className="text-[12px] font-medium text-muted-foreground">
                         {dateSection.secondary}
                       </span>
-                    </>
-                  ) : (
-                    <span className="text-[12px] font-medium text-muted-foreground">
-                      {dateSection.secondary}
-                    </span>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
             </div>
           </div>
 

@@ -236,7 +236,7 @@ const Wrapper = ({
         initialView={initialView}
         showYearView={showYearView}
         noTime={true}
-        onClick={<EventDetailModalAgenda/>}
+        onClick={<EventDetailModalAgenda />}
       />
     </div>
   );
@@ -527,7 +527,7 @@ export default function AgendaOnly() {
     },
   },
   render: () => <Wrapper initialView="agenda" />,
-  name: "Agenda (somente visualização)",
+  name: "Agenda",
 };
 
 export const AgendaWithUndated: Story = {
@@ -602,7 +602,7 @@ export default function AgendaWithUndated() {
       />
     );
   },
-  name: "Agenda — Datas não previstas",
+  name: "Agenda - Datas não previstas",
 };
 
 export const ModalOnClick: Story = {
@@ -1517,4 +1517,141 @@ export const BusyYear: Story = {
     return <FullDemoWrapper />;
   },
   name: "Ano Completo",
+};
+
+export const DynamicRowHeightExample: Story = {
+  render: () => {
+    const today = new Date();
+    const events: CalendarEventAgenda[] = [
+      ...Array.from({ length: 15 }).map(
+        (_, i): CalendarEventAgenda => ({
+          id: `row-height-w1-${i}`,
+          title: `Evento Row 1 #${i + 1}`,
+          start: today,
+          end: today,
+          color: "sky",
+        }),
+      ),
+      {
+        id: "row-height-w2",
+        title: "Evento Row 2 (Não deve crescer)",
+        start: addDays(today, 7),
+        end: addDays(today, 7),
+        color: "amber",
+      },
+    ];
+
+    return <EventAgenda events={events} initialView="month" />;
+  },
+  name: "Altura Dinâmica de Linhas (Mês)",
+};
+
+export const AllDaysAndMultiDaysExample: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
+import { addDays, setHours, setMinutes, subDays } from 'date-fns';
+
+export default function AllDaysAndMultiDaysExample() {
+  const today = new Date();
+
+  return (
+    <EventAgenda
+      initialView="month"
+      events={[
+        {
+          id: "evt-allday-1",
+          title: "Feriado",
+          start: today,
+          end: today,
+          allDay: true,
+          color: "rose",
+        },
+        {
+          id: "evt-multiday-1",
+          title: "Conferência",
+          start: addDays(today, 2),
+          end: addDays(today, 5),
+          allDay: true,
+          color: "sky",
+        },
+        {
+          id: "evt-multiday-timed",
+          title: "Hackathon",
+          start: setMinutes(setHours(addDays(today, 1), 18), 0),
+          end: setMinutes(setHours(addDays(today, 3), 20), 0),
+          color: "amber",
+        }
+      ]}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const today = new Date();
+
+    // Eventos que duram o dia inteiro e eventos que duram múltiplos dias
+    const events: CalendarEventAgenda[] = [
+      {
+        id: "evt-allday-1",
+        title: "Feriado Nacional",
+        start: today,
+        end: today,
+        allDay: true,
+        color: "rose",
+        description: "Dia inteiro dedicado a um feriado ou ponto facultativo.",
+      },
+      {
+        id: "evt-allday-2",
+        title: "Planejamento Anual",
+        start: addDays(today, 8),
+        end: addDays(today, 8),
+        allDay: true,
+        color: "violet",
+        description: "Reunião de dia inteiro para planejamento.",
+      },
+      {
+        id: "evt-multiday-1",
+        title: "Conferência de Tecnologia",
+        start: addDays(today, 2),
+        end: addDays(today, 5),
+        allDay: true,
+        color: "sky",
+        description:
+          "Evento com duração de múltiplos dias (sem hora específica).",
+      },
+      {
+        id: "evt-multiday-2",
+        title: "Sprint de Inovação",
+        start: subDays(today, 2),
+        end: addDays(today, 1),
+        allDay: true,
+        color: "emerald",
+        location: "Escritório - Sala Principal",
+      },
+      {
+        id: "evt-multiday-timed",
+        title: "Hackathon de Fim de Semana",
+        start: setMinutes(setHours(addDays(today, 6), 18), 0),
+        end: setMinutes(setHours(addDays(today, 8), 20), 0),
+        color: "amber",
+        description:
+          "Hackathon com horário de início e fim definido em dias diferentes.",
+      },
+    ];
+
+    return (
+      <EventAgenda
+        events={events}
+        initialView="month"
+        onClick={<EventDetailModalAgenda />}
+      />
+    );
+  },
+  name: "Eventos AllDay e MultiDay",
 };

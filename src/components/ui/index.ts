@@ -37,3 +37,9 @@ export * from "./event-calendar-view/MonthMultiDayOverlay";
 export * from "./event-calendar-view/EventDetailModalAgenda";
 export * from "./event-calendar-view/EventAgenda";
 export * from "./data/CircularProgress"
+export {default as IntegrationModal} from "./data/IntegrationModal";
+
+export * from "./data/hooks/useIsTruncated";
+export * from "./data/hooks/integrationTooltipUtils";
+
+export * from "./navigation/command-palette";

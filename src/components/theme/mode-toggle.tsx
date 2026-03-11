@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 type ModeToggleBaseProps = {
   themes?: Theme[];
   className?: string;
+  directToggle?: boolean;
   variant?:
     | "default"
     | "outline"
@@ -69,6 +70,7 @@ const ThemeIcon = ({ theme }: { theme: Theme }) => {
 export function ModeToggleBase({
   themes = ["light", "dark", "system"],
   className,
+  directToggle = false,
   variant = "ghost",
 }: ModeToggleBaseProps) {
   const [mounted, setMounted] = useState(false);
@@ -137,6 +139,42 @@ export function ModeToggleBase({
       setTheme(newTheme);
     }
   };
+
+  const handleDirectToggle = () => {
+    const currentIndex = themes.indexOf(currentTheme as Theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    toggleTheme(themes[nextIndex]);
+  };
+
+  if (directToggle) {
+    return (
+      <ButtonBase
+        ref={buttonRef}
+        variant={variant}
+        size="icon"
+        className={cn("relative overflow-hidden group", className)}
+        onClick={handleDirectToggle}
+      >
+        <>
+          <SunIcon
+            className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+              isDark
+                ? "rotate-90 scale-0 opacity-0"
+                : "rotate-0 scale-100 opacity-100 group-hover:rotate-12"
+            }`}
+          />
+          <MoonIcon
+            className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+              isDark
+                ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
+                : "rotate-90 scale-0 opacity-0"
+            }`}
+          />
+        </>
+        <span className="sr-only">Toggle theme</span>
+      </ButtonBase>
+    );
+  }
 
   return (
     <DropDownMenuBase>

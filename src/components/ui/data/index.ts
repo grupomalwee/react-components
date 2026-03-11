@@ -8,5 +8,6 @@ export * from "./Banner";
 // export * from "./Price";
 export * from "./utils";
 export * from "./CircularProgress";
-export * from "./IntegrationModal";
+export {default as IntegrationModal} from "./IntegrationModal";
 export * from "./hooks/useIsTruncated";
+export * from "./hooks/integrationTooltipUtils";

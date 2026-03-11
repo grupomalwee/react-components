@@ -11,7 +11,61 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
-    version: "1.10.9",
+    version: "1.10.18",
+    date: "2026-03-10",
+    shortTitle: "Badge",
+    added: ["Badge: novo modo de visualização de Ranks."],
+  },
+  {
+    version: "1.10.17",
+    date: "2026-03-10",
+    shortTitle: "Command Palette",
+    added: ["Command Palette: novo componente de palette de comandos interativo e personalizável, ideal para interfaces modernas e acesso rápido a ações."],
+  },
+  {
+    version: "1.10.16",
+    date: "2026-03-06",
+    shortTitle: "Chart",
+    fixed: ["Chart: arrumado line formatter."],
+  },
+  {
+    version: "1.10.15",
+    date: "2026-03-06",
+    shortTitle: "Chart",
+    fixed: ["Chart: arrumado data formatter."],
+  },
+  {
+    version: "1.10.14",
+    date: "2026-03-05",
+    shortTitle: "Event Calendar View",
+    fixed: ["Event Calendar View: arrumado visual."],
+  },
+  {
+    version: "1.10.13",
+    date: "2026-03-05",
+    shortTitle: "Dialog",
+    fixed: ["Dialog: z-index arrumado."],
+  },
+  {
+    version: "1.10.12",
+    date: "2026-03-05",
+    shortTitle: "Integration Modal",
+    fixed: ["Integration Modal: arrumado erro export de Utils ."],
+  },
+  {
+    version: "1.10.11",
+    date: "2026-03-05",
+    shortTitle: "Integration Modal",
+    fixed: ["Integration Modal: arrumado erro de export default."],
+  },
+  {
+    version: "1.10.10",
+    date: "2026-03-05",
+    shortTitle: "Integration Modal",
+    fixed: ["Integration Modal: arrumado visual."],
+  },
+  {
+    version: "1.10.9",  
     date: "2026-03-05",
     shortTitle: "Event Agenda",
     fixed: ["Event Agenda: arrumado geração de dias."],

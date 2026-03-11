@@ -730,10 +730,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
 
                   const isLine = seriesTypeMap?.[key] === "line";
                   const defaultFormatted = isLine
-                    ? `${(val / 100).toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}%`
+                    ? `${val.toFixed(2)}%`
                     : val.toLocaleString("pt-BR", {
                         maximumFractionDigits: 0,
                       });

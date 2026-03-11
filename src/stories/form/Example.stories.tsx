@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/feedback/DialogBase";
 
 const meta: Meta<typeof ButtonBase> = {
-  title: "form/Example",
+  title: "Documentation/Example",
   component: ButtonBase,
   tags: ["autodocs"],
   parameters: {

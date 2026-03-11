@@ -69,7 +69,6 @@ const TooltipSimple: React.FC<Props> = ({
               return "left";
             };
             const axis = normalize(yAxisMap[entry.dataKey]);
-            // compute sum for the axis
             const axisSum = payload
               .filter((p) => normalize(yAxisMap[p.dataKey]) === axis)
               .reduce(
@@ -81,10 +80,7 @@ const TooltipSimple: React.FC<Props> = ({
           }
           const isLine = seriesTypeMap?.[entry.dataKey] === "line";
           const defaultFormatted = isLine
-            ? `${(value / 100).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}%`
+            ? `${value.toFixed(2)}%`
             : value.toLocaleString("pt-BR", {
                 maximumFractionDigits: 0,
               });

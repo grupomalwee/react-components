@@ -55,7 +55,6 @@ interface MonthViewProps {
   events: CalendarEventAgenda[];
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
-  /** When true, hides event times */
   noTime?: boolean;
 }
 
@@ -173,7 +172,7 @@ export function MonthViewAgenda({
         })}
       </div>
 
-      <div className="grid flex-1 auto-rows-fr">
+      <div className="grid flex-1">
         {weeks.map((week, weekIndex) => {
           const multiDayBars = computeMultiDayBars(eventsWithStart, week);
 
@@ -391,10 +390,8 @@ export function MonthViewAgenda({
                                       event={event}
                                       isFirstDay={isSameDay(day, s)}
                                       isLastDay={isSameDay(day, e2)}
-                                      onClick={(e) =>
-                                        handleEventClick(event, e)
-                                      }
                                       view="month"
+                                      className="pointer-events-none"
                                     />
                                   );
                                 })}
