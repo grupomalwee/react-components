@@ -97,21 +97,22 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
         </div>
       </div>
 
-      <div className="relative flex-1 overflow-hidden" style={{ minHeight: 320 }}>
-
+      <div
+        className="relative flex-1 overflow-hidden"
+        style={{ minHeight: 320 }}
+      >
         <div
           className={cn(
             "absolute inset-0 flex flex-col transition-all duration-200",
             drawMode ? "pointer-events-none" : "pointer-events-auto",
           )}
         >
-        
           <TextEditor
             content={annotation.content}
             onChange={onChangeContent}
             autoFocus={autoFocus && !drawMode}
             borderless
-            hideToolbar={drawMode}      
+            hideToolbar={false}
             contentClassName={cn(
               "transition-opacity duration-200",
               drawMode ? "opacity-30" : "opacity-100",
@@ -122,7 +123,9 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
         <div
           className={cn(
             "absolute inset-0 z-10 transition-opacity duration-200",
-            drawMode ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-100",
+            drawMode
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-100",
           )}
         >
           <DrawingCanvas
@@ -135,15 +138,6 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
             onHistoryChange={onHistoryChange}
           />
         </div>
-
-        {drawMode && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-foreground/8 border border-border/30 text-[10px] text-foreground/30 select-none">
-              <PaintBrushIcon className="size-2.5" />
-              modo desenho
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );
