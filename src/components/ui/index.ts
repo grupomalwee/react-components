@@ -43,4 +43,3 @@ export * from "./data/hooks/useIsTruncated";
 export * from "./data/hooks/integrationTooltipUtils";
 
 export * from "./navigation/command-palette";
-export * from "./reservation-calendar";
