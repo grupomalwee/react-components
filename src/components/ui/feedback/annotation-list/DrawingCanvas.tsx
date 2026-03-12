@@ -265,9 +265,7 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(
         }
       } else if (tool === "stamp") {
         drawStamp(ctx, x, y, stampType);
-      } else {
-        // Capture snapshot for shape tools (line, arrow, rectangle, circle)
-        const dpr = window.devicePixelRatio || 1;
+      } else {       
         snapshotRef.current = ctx.getImageData(
           0,
           0,

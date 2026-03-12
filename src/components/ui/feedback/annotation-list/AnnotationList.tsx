@@ -77,7 +77,6 @@ export const AnnotationList: React.FC<AnnotationListProps> = ({
   const [stampType, setStampType] = useState<
     "check" | "x" | "star" | "heart" | "warning"
   >("check");
-  const [opacity, setOpacity] = useState(1);
   const [hasUndo, setHasUndo] = useState(false);
   const [hasRedo, setHasRedo] = useState(false);
   const canvasRef = useRef<DrawingCanvasRef>(null);
@@ -226,7 +225,6 @@ export const AnnotationList: React.FC<AnnotationListProps> = ({
               drawTool={drawTool}
               fill={fill}
               stampType={stampType}
-              opacity={opacity}
               onHistoryChange={(undo, redo) => {
                 setHasUndo(undo);
                 setHasRedo(redo);
