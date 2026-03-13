@@ -24,8 +24,19 @@ export interface AnnotationItemProps {
   onSetDrawMode: (v: boolean) => void;
   color: string;
   brushSize: number;
-  drawTool: "draw" | "erase";
-  onHistoryChange: (has: boolean) => void;
+  drawTool:
+    | "draw"
+    | "erase"
+    | "rectangle"
+    | "circle"
+    | "line"
+    | "arrow"
+    | "highlighter"
+    | "stamp";
+  fill?: boolean;
+  stampType?: "check" | "x" | "star" | "heart" | "warning";
+  opacity?: number;
+  onHistoryChange: (hasUndo: boolean, hasRedo: boolean) => void;
   canvasRef: React.Ref<DrawingCanvasRef>;
 }
 
@@ -40,6 +51,9 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
   color,
   brushSize,
   drawTool,
+  fill,
+  stampType,
+  opacity,
   onHistoryChange,
   canvasRef,
 }) => {
@@ -97,21 +111,22 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
         </div>
       </div>
 
-      <div className="relative flex-1 overflow-hidden" style={{ minHeight: 320 }}>
-
+      <div
+        className="relative flex-1 overflow-hidden"
+        style={{ minHeight: 320 }}
+      >
         <div
           className={cn(
             "absolute inset-0 flex flex-col transition-all duration-200",
             drawMode ? "pointer-events-none" : "pointer-events-auto",
           )}
         >
-        
           <TextEditor
             content={annotation.content}
             onChange={onChangeContent}
             autoFocus={autoFocus && !drawMode}
             borderless
-            hideToolbar={drawMode}      
+            hideToolbar={false}
             contentClassName={cn(
               "transition-opacity duration-200",
               drawMode ? "opacity-30" : "opacity-100",
@@ -122,7 +137,9 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
         <div
           className={cn(
             "absolute inset-0 z-10 transition-opacity duration-200",
-            drawMode ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-100",
+            drawMode
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-100",
           )}
         >
           <DrawingCanvas
@@ -131,19 +148,20 @@ export const AnnotationItem: React.FC<AnnotationItemProps> = ({
             onChange={onChangeDrawing}
             color={color}
             brushSize={drawTool === "erase" ? brushSize * 6 : brushSize}
-            mode={drawTool}
+            mode={drawTool === "erase" ? "erase" : "draw"}
+            tool={
+              drawTool === "draw"
+                ? "pencil"
+                : drawTool === "erase"
+                  ? "pencil"
+                  : drawTool
+            }
+            fill={fill}
+            stampType={stampType}
+            opacity={opacity}
             onHistoryChange={onHistoryChange}
           />
         </div>
-
-        {drawMode && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-foreground/8 border border-border/30 text-[10px] text-foreground/30 select-none">
-              <PaintBrushIcon className="size-2.5" />
-              modo desenho
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -49,6 +49,11 @@ export interface EventCalendarProps {
     | React.ReactElement<ModalLikeProps>;
   showYearView?: boolean;
   noTime?: boolean;
+  onlyDay?: boolean;
+  onlyMonth?: boolean;
+  onlyWeek?: boolean;
+  onlyAgenda?: boolean;
+  onlyYear?: boolean;
 }
 
 export interface ModalLikeProps {
@@ -66,30 +71,51 @@ export function EventAgenda({
   onClick,
   showYearView = false,
   noTime = false,
+  onlyDay,
+  onlyMonth,
+  onlyWeek,
+  onlyAgenda,
+  onlyYear,
 }: EventCalendarProps) {
+  const lockedView: CalendarViewAgenda | undefined = onlyDay
+    ? "day"
+    : onlyMonth
+      ? "month"
+      : onlyWeek
+        ? "week"
+        : onlyAgenda
+          ? "agenda"
+          : onlyYear
+            ? "year"
+            : undefined;
+
   const [currentDate, setCurrentDate] = useState(
     (initialDate && new Date(initialDate)) || new Date(),
   );
-  const [view, setView] = useState<CalendarViewAgenda>(initialView);
+  const [view, setView] = useState<CalendarViewAgenda>(
+    lockedView || initialView,
+  );
   const [selectedEvent, setSelectedEvent] =
     useState<CalendarEventAgenda | null>(null);
 
+  const activeView = lockedView || view;
+
   const goPrevious = () => {
-    if (view === "month") setCurrentDate((d) => subMonths(d, 1));
-    else if (view === "week") setCurrentDate((d) => subWeeks(d, 1));
-    else if (view === "day") setCurrentDate((d) => addDays(d, -1));
-    else if (view === "agenda")
+    if (activeView === "month") setCurrentDate((d) => subMonths(d, 1));
+    else if (activeView === "week") setCurrentDate((d) => subWeeks(d, 1));
+    else if (activeView === "day") setCurrentDate((d) => addDays(d, -1));
+    else if (activeView === "agenda")
       setCurrentDate((d) => addDays(d, -AgendaDaysToShowAgenda));
-    else if (view === "year") setCurrentDate((d) => subYears(d, 1));
+    else if (activeView === "year") setCurrentDate((d) => subYears(d, 1));
   };
 
   const goNext = () => {
-    if (view === "month") setCurrentDate((d) => addMonths(d, 1));
-    else if (view === "week") setCurrentDate((d) => addWeeks(d, 1));
-    else if (view === "day") setCurrentDate((d) => addDays(d, 1));
-    else if (view === "agenda")
+    if (activeView === "month") setCurrentDate((d) => addMonths(d, 1));
+    else if (activeView === "week") setCurrentDate((d) => addWeeks(d, 1));
+    else if (activeView === "day") setCurrentDate((d) => addDays(d, 1));
+    else if (activeView === "agenda")
       setCurrentDate((d) => addDays(d, AgendaDaysToShowAgenda));
-    else if (view === "year") setCurrentDate((d) => addYears(d, 1));
+    else if (activeView === "year") setCurrentDate((d) => addYears(d, 1));
   };
 
   const handleEventSelect = (
@@ -144,9 +170,9 @@ export function EventAgenda({
   const viewTitle = useMemo(() => {
     const capitalize = (s: string) =>
       s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-    if (view === "month")
+    if (activeView === "month")
       return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
-    if (view === "week") {
+    if (activeView === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 1 });
       const end = endOfWeek(currentDate, { weekStartsOn: 1 });
       if (isSameMonth(start, end))
@@ -155,17 +181,19 @@ export function EventAgenda({
       const s2 = capitalize(format(end, "MMM yyyy", { locale: ptBR }));
       return `${s1} - ${s2}`;
     }
-    if (view === "day")
-      return format(currentDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR });
-    if (view === "agenda") {
+    if (activeView === "day")
+      return capitalize(
+        format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR }),
+      );
+    if (activeView === "agenda") {
       const start = currentDate;
       return capitalize(format(start, "MMMM yyyy", { locale: ptBR }));
     }
-    if (view === "year") {
+    if (activeView === "year") {
       return format(currentDate, "yyyy");
     }
     return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
-  }, [currentDate, view]);
+  }, [currentDate, activeView]);
 
   const availableViews: CalendarViewAgenda[] = showYearView
     ? ["year", "month", "week", "day", "agenda"]
@@ -217,22 +245,24 @@ export function EventAgenda({
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Select<CalendarViewAgenda>
-              selected={view}
-              onChange={(v) => {
-                setView(v);
-              }}
-              items={selectItems as SelectItem<CalendarViewAgenda>[]}
-              placeholder={viewLabel(view)}
-              className="min-w-24"
-              hideClear={true}
-            />
-          </div>
+          {!lockedView && (
+            <div className="flex items-center gap-2">
+              <Select<CalendarViewAgenda>
+                selected={activeView}
+                onChange={(v) => {
+                  setView(v);
+                }}
+                items={selectItems as SelectItem<CalendarViewAgenda>[]}
+                placeholder={viewLabel(activeView)}
+                className="min-w-24"
+                hideClear={true}
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col transition-all duration-200 ease-in-out">
-          {view === "month" && (
+          {activeView === "month" && (
             <MonthViewAgenda
               currentDate={currentDate}
               events={events}
@@ -240,7 +270,7 @@ export function EventAgenda({
               noTime={noTime}
             />
           )}
-          {view === "week" && (
+          {activeView === "week" && (
             <WeekViewAgenda
               currentDate={currentDate}
               events={events}
@@ -248,7 +278,7 @@ export function EventAgenda({
               noTime={noTime}
             />
           )}
-          {view === "day" && (
+          {activeView === "day" && (
             <DayViewAgenda
               currentDate={currentDate}
               events={events}
@@ -256,7 +286,7 @@ export function EventAgenda({
               noTime={noTime}
             />
           )}
-          {view === "agenda" && (
+          {activeView === "agenda" && (
             <Agenda
               currentDate={currentDate}
               events={events}
@@ -264,13 +294,15 @@ export function EventAgenda({
               noTime={noTime}
             />
           )}
-          {view === "year" && (
+          {activeView === "year" && (
             <YearViewAgenda
               currentDate={currentDate}
               events={events}
               onMonthSelect={(monthDate: Date) => {
                 setCurrentDate(monthDate);
-                setView("month");
+                if (!lockedView) {
+                  setView("month");
+                }
               }}
             />
           )}

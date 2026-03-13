@@ -63,10 +63,10 @@ function Badge({
   };
 
 const rankClasses: Record<BadgeRankType, string> = {
-  diamond: "bg-cyan-100 text-cyan-600 border-cyan-300",
-  gold: "bg-yellow-100 text-yellow-500 border-yellow-300",
-  silver: "bg-gray-100 text-gray-500 border-gray-300",
-  bronze: "bg-orange-100 text-orange-700 border-orange-300",
+  diamond: "bg-cyan-100 text-cyan-600 border-cyan-300 dark:text-cyan-800 dark:border-cyan-800",
+  gold: "bg-amber-50 text-amber-500 border-amber-300 dark:text-amber-600 dark:border-amber-600 dark:bg-amber-50",
+  silver: "bg-gray-100 text-gray-500 border-gray-300 dark:text-gray-800 dark:border-gray-800",
+  bronze: "bg-orange-100 text-orange-700 border-orange-300 dark:text-orange-800 dark:border-orange-800",
 };
 
   return (

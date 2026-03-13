@@ -1655,3 +1655,128 @@ export default function AllDaysAndMultiDaysExample() {
   },
   name: "Eventos AllDay e MultiDay",
 };
+export const OnlyDayView: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `import React from 'react';
+import { EventAgenda, CalendarEvent } from '@mlw-packages/react-components';
+import { addDays, setHours, setMinutes, subDays } from 'date-fns';
+
+export default function AllDaysAndMultiDaysExample() {
+  const today = new Date();
+
+  return (
+    <EventAgenda
+      initialView="month"
+      events={[
+        {
+          id: "evt-allday-1",
+          title: "Feriado",
+          start: today,
+          end: today,
+          allDay: true,
+          color: "rose",
+        },
+        {
+          id: "evt-multiday-1",
+          title: "Conferência",
+          start: addDays(today, 2),
+          end: addDays(today, 5),
+          allDay: true,
+          color: "sky",
+        },
+        {
+          id: "evt-multiday-timed",
+          title: "Hackathon",
+          start: setMinutes(setHours(addDays(today, 1), 18), 0),
+          end: setMinutes(setHours(addDays(today, 3), 20), 0),
+          color: "amber",
+        }
+      ]}
+    />
+  );
+}
+`,
+      },
+    },
+  },
+  render: () => {
+    const today = new Date();
+
+    const events: CalendarEventAgenda[] = [
+      {
+        id: "d1",
+        title: "Revisão de Código",
+        start: setMinutes(setHours(today, 9), 0),
+        end: setMinutes(setHours(today, 10), 0),
+        color: "sky",
+        location: "Sala Meet",
+      },
+      {
+        id: "d2",
+        title: "Entrevista Frente de Caixa",
+        start: setMinutes(setHours(today, 10), 0),
+        end: setMinutes(setHours(today, 11), 30),
+        color: "emerald",
+      },
+      {
+        id: "d3",
+        title: "Alinhamento com Diretoria",
+        start: setMinutes(setHours(today, 11), 30),
+        end: setMinutes(setHours(today, 12), 30),
+        color: "rose",
+        description: "Apresentação dos resultados semanais",
+      },
+      {
+        id: "d4",
+        title: "Almoço da Equipe",
+        start: setMinutes(setHours(today, 12), 30),
+        end: setMinutes(setHours(today, 14), 0),
+        color: "orange",
+        location: "Restaurante",
+      },
+      {
+        id: "d5",
+        title: "Design UX/UI Review",
+        start: setMinutes(setHours(today, 14), 0),
+        end: setMinutes(setHours(today, 15), 0),
+        color: "violet",
+      },
+      {
+        id: "d6",
+        title: "Reunião de Marketing",
+        start: setMinutes(setHours(today, 15), 0),
+        end: setMinutes(setHours(today, 16), 30),
+        color: "amber",
+        location: "Sala 2",
+      },
+      {
+        id: "d7",
+        title: "Fechamento de Sprint",
+        start: setMinutes(setHours(today, 16), 30),
+        end: setMinutes(setHours(today, 18), 0),
+        color: "sky",
+        description: "Review e retrospectiva",
+      },     
+      {
+        id: "a3",
+        title: "Aniversário do CEO",
+        start: today,
+        end: today,
+        allDay: true,
+        color: "emerald",
+      },
+    ];
+
+    return (
+      <EventAgenda
+        events={events}
+        initialView="month"
+        onClick={<EventDetailModalAgenda />}
+        onlyDay
+      />
+    );
+  },
+  name: "Only Day View",
+};

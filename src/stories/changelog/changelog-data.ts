@@ -11,6 +11,12 @@ export type ChangeItem = {
 
 export const changelogData: ChangeItem[] = [
   {
+    version: "1.10.19",
+    date: "2026-03-12",
+    shortTitle: "Event Agenda",
+    fixed: ["Event Agenda: arrumado geração de dias."],
+  },
+  {
     version: "1.10.18",
     date: "2026-03-10",
     shortTitle: "Badge",
