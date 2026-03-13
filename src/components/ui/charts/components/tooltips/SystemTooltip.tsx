@@ -64,65 +64,110 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
   const [localPos, setLocalPos] = useState<Position>(position);
   const [dragging, setDragging] = useState(false);
   const offsetRef = useRef({ x: 0, y: 0 });
-  const lastMouse = useRef({ x: 0, y: 0 });
+  const lastPos = useRef({ x: 0, y: 0 });
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const currentPosRef = useRef<Position>(position);
 
-  useEffect(() => setLocalPos(position), [position]);
+  useEffect(() => {
+    currentPosRef.current = position;
+    setLocalPos(position);
+  }, [position]);
 
   useEffect(() => {
     let rafId: number | null = null;
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!dragging) return;
-      lastMouse.current = { x: e.clientX, y: e.clientY };
+
+    const applyMove = (clientX: number, clientY: number) => {
+      lastPos.current = { x: clientX, y: clientY };
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const newLeft = lastMouse.current.x - offsetRef.current.x;
-        const newTop = lastMouse.current.y - offsetRef.current.y;
-        const rawPosition = {
-          top: Math.max(0, Math.min(newTop, window.innerHeight - 200)),
-          left: Math.max(0, Math.min(newLeft, window.innerWidth - 320)),
+        const p = {
+          top: Math.max(
+            0,
+            Math.min(
+              lastPos.current.y - offsetRef.current.y,
+              window.innerHeight - 200,
+            ),
+          ),
+          left: Math.max(
+            0,
+            Math.min(
+              lastPos.current.x - offsetRef.current.x,
+              window.innerWidth - 320,
+            ),
+          ),
         };
-        setLocalPos(rawPosition);
-        if (onPositionChange) onPositionChange(id, rawPosition);
+        currentPosRef.current = p;
+        if (tooltipRef.current) {
+          tooltipRef.current.style.top = `${p.top}px`;
+          tooltipRef.current.style.left = `${p.left}px`;
+        }
+        onPositionChange?.(id, p);
       });
     };
 
-    const handleMouseUp = () => {
-      if (dragging) {
-        setDragging(false);
-        if (rafId) cancelAnimationFrame(rafId);
-      }
+    const stopDrag = () => {
+      if (!dragging) return;
+      setDragging(false);
+      setLocalPos(currentPosRef.current);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (dragging) applyMove(e.clientX, e.clientY);
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragging || !e.touches[0]) return;
+      applyMove(e.touches[0].clientX, e.touches[0].clientY);
     };
 
     if (dragging) {
       document.addEventListener("mousemove", handleMouseMove, {
         passive: true,
       });
-      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("mouseup", stopDrag);
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: true,
+      });
+      document.addEventListener("touchend", stopDrag);
+      document.addEventListener("touchcancel", stopDrag);
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
     }
+
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseup", stopDrag);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", stopDrag);
+      document.removeEventListener("touchcancel", stopDrag);
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
     };
   }, [dragging, id, onPositionChange]);
 
-  const handleMouseDownLocal = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const rect = (e.currentTarget as HTMLElement)
-        .closest(".fixed")
-        ?.getBoundingClientRect();
+  const startDrag = useCallback(
+    (
+      clientX: number,
+      clientY: number,
+      e: React.MouseEvent | React.TouchEvent,
+    ) => {
+      const rect = tooltipRef.current?.getBoundingClientRect();
       if (!rect) return;
-      offsetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      offsetRef.current = { x: clientX - rect.left, y: clientY - rect.top };
       setDragging(true);
       onMouseDown?.(id, e);
     },
     [id, onMouseDown],
+  );
+
+  const handleMouseDownLocal = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      startDrag(e.clientX, e.clientY, e);
+    },
+    [startDrag],
   );
 
   const handleTouchStartLocal = useCallback(
@@ -130,18 +175,9 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
       e.stopPropagation();
       const touch = e.touches[0];
       if (!touch) return;
-      const rect = (e.currentTarget as HTMLElement)
-        .closest(".fixed")
-        ?.getBoundingClientRect();
-      if (!rect) return;
-      offsetRef.current = {
-        x: touch.clientX - rect.left,
-        y: touch.clientY - rect.top,
-      };
-      setDragging(true);
-      onMouseDown?.(id, e);
+      startDrag(touch.clientX, touch.clientY, e);
     },
-    [id, onMouseDown],
+    [startDrag],
   );
 
   const handleConnClick = useCallback(
@@ -149,7 +185,6 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
       e.stopPropagation();
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       const pos = { x: rect.right + 8, y: rect.top };
-
       if ((conn.integration as { processName?: string })?.processName) {
         onProcessClick?.(conn, pos);
       } else {
@@ -198,16 +233,14 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
   return (
     <AnimatePresence>
       <motion.div
+        ref={tooltipRef}
         key={id}
         className="fixed bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl z-[10000] w-80 overflow-hidden"
         variants={tooltipVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        style={{
-          top: localPos.top,
-          left: localPos.left,
-        }}
+        style={{ top: localPos.top, left: localPos.left }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -220,9 +253,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
           }}
         >
           <div className="flex items-center gap-2 px-3">
-            <div className="rounded">
-              <DotsSixVerticalIcon size={16} className="text-primary" />
-            </div>
+            <DotsSixVerticalIcon size={16} className="text-primary" />
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {title}
             </span>
@@ -263,28 +294,22 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
 
           {isLoading ? (
             <>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 px-1">
-                  <SkeletonBase className="w-1.5 h-1.5 rounded-full" />
-                  <SkeletonBase className="h-3 w-16" />
+              {[1, 2].map((g) => (
+                <div key={g} className="space-y-2">
+                  <div className="flex items-center gap-2 px-1">
+                    <SkeletonBase className="w-1.5 h-1.5 rounded-full" />
+                    <SkeletonBase className="h-3 w-16" />
+                  </div>
+                  <div className="space-y-1">
+                    {[1, 2, 3].map((i) => (
+                      <SkeletonBase
+                        key={i}
+                        className="h-10 w-full rounded-lg"
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  {[1, 2, 3].map((i) => (
-                    <SkeletonBase key={i} className="h-10 w-full rounded-lg" />
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 px-1">
-                  <SkeletonBase className="w-1.5 h-1.5 rounded-full" />
-                  <SkeletonBase className="h-3 w-16" />
-                </div>
-                <div className="space-y-1">
-                  {[1, 2].map((i) => (
-                    <SkeletonBase key={i} className="h-10 w-full rounded-lg" />
-                  ))}
-                </div>
-              </div>
+              ))}
             </>
           ) : (
             <>
@@ -316,7 +341,7 @@ const SystemTooltip: React.FC<SystemTooltipProps> = ({
                 </div>
               )}
 
-              {data.connections.length === 0 && !isLoading && (
+              {data.connections.length === 0 && (
                 <div className="flex flex-col items-center justify-center p-6 text-center">
                   <p className="text-xs text-muted-foreground">
                     Nenhuma conexão encontrada
