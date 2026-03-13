@@ -44,7 +44,6 @@ const meta: Meta<typeof IntegrationModal> = {
     onPositionChange: { action: "position changed" },
     onMouseDown: { action: "mouse down" },
   },
-  decorators: [(Story) => <Story />],
 };
 
 export default meta;
