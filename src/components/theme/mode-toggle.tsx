@@ -138,7 +138,7 @@ export function ModeToggleBase({
       setTheme(defaultTheme);
     }
     setMounted(true);
-  }, []);
+  }, [defaultTheme, setTheme, storageKey]);
 
   const isDark =
     mounted &&

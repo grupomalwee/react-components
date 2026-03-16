@@ -828,6 +828,7 @@ const DraggableTooltipComponent: React.FC<DraggableTooltipProps> = ({
                 toggleHighlight,
                 finalColors,
                 valueFormatter,
+                seriesTypeMap,
               ],
             )}
 

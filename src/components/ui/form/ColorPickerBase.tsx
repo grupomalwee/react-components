@@ -12,7 +12,6 @@ import {
   PopoverTriggerBase,
 } from "../overlays";
 
-
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const clean = hex.replace("#", "");
   if (clean.length !== 6) return null;
@@ -42,7 +41,6 @@ export const DEFAULT_SWATCHES = [
   "#D97706",
   "#0EA5E9",
 ];
-
 
 export interface ColorPickerBaseProps {
   value?: string;

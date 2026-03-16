@@ -79,9 +79,7 @@ export function CommandItemRow({
   item,
   isActive,
   isSelected,
-  multiSelect,
   onSelect,
-  onToggleSelection,
   onHover,
   searchQuery,
 }: CommandItemRowProps) {

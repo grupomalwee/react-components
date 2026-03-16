@@ -142,7 +142,10 @@ export function useCommandPalette({
     onOpenChange?.(false);
   }
 
-  function handleSelect(item?: CommandItem, event?: any) {
+  function handleSelect(
+    item?: CommandItem,
+    event?: React.MouseEvent | React.KeyboardEvent | KeyboardEvent | MouseEvent,
+  ) {
     if (!item) return;
 
     if (multiSelect) {
@@ -213,7 +216,17 @@ export function useCommandPalette({
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open, flatItems, activeIndex, pageItemCount, page, totalPages]);
+  }, [
+    open,
+    flatItems,
+    activeIndex,
+    pageItemCount,
+    page,
+    totalPages,
+    executeBulkAction,
+    handleSelect,
+    multiSelect,
+  ]);
 
   return {
     query,

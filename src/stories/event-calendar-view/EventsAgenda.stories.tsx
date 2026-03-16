@@ -1758,7 +1758,7 @@ export default function AllDaysAndMultiDaysExample() {
         end: setMinutes(setHours(today, 18), 0),
         color: "sky",
         description: "Review e retrospectiva",
-      },     
+      },
       {
         id: "a3",
         title: "Aniversário do CEO",
@@ -1778,5 +1778,4 @@ export default function AllDaysAndMultiDaysExample() {
       />
     );
   },
-  name: "Only Day View",
 };

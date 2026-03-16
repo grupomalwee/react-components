@@ -88,7 +88,10 @@ interface VirtualResultListProps {
   multiSelect?: boolean;
   selectedItemIds: Set<string>;
   onHover: (index: number) => void;
-  onSelect: (item: CommandItem, e?: any) => void;
+  onSelect: (
+    item: CommandItem,
+    e?: React.MouseEvent | React.KeyboardEvent,
+  ) => void;
   onToggleSelection: (id: string, e: React.MouseEvent) => void;
   searchQuery?: string;
 }
@@ -407,7 +410,8 @@ export function CommandPalette(props: CommandPaletteProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
             transition={ANIMATION.panel}
-            className="fixed z-[100] top-4  -translate-x-1/2 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60 bg-popover/95 backdrop-blur-xl"              style={{ maxHeight: "min(600px, 80vh)" }}
+            className="fixed z-[100] top-4  -translate-x-1/2 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60 bg-popover/95 backdrop-blur-xl"
+            style={{ maxHeight: "min(600px, 80vh)" }}
           >
             <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
               <MagnifyingGlassIcon
