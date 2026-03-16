@@ -83,20 +83,10 @@ export default function ThemeColorTest() {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-center mb-6">
-          <p className="mr-2">Aperta -&gt;</p>
           <ModeToggleBase
-            themes={[
-              "light",
-              "dark",
-              "system",
-              "light-purple",
-              "dark-purple",
-              "light-blue",
-              "dark-blue",
-              "light-green",
-              "dark-green",
-            ]}
+            directToggle
             variant="outline"
+            tooltip="Toggle theme"
           />
           <MultiSelect
             items={simpleItems}

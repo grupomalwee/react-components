@@ -131,10 +131,10 @@ export const FlatItems: Story = {
   },
   render: () => {
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState<string | null>(null);
+    const [selectedItems, setSelectedItems] = useState<CommandItem[]>([]);
 
     const handleSelect = (id: string) => {
-      setSelected(id);
+      console.log("Selected Single Item", id);
       setOpen(false);
     };
 
@@ -142,15 +142,19 @@ export const FlatItems: Story = {
       <div className="flex flex-col items-center gap-4 p-8">
         <div className="flex flex-col items-center gap-4">
           <ButtonBase onClick={() => setOpen(true)}>Abrir Palette</ButtonBase>
-          {selected && (
-            <div className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary-foreground">
-              Selecionado: <span className="font-bold">{selected}</span>
+          {selectedItems.length > 0 && (
+            <div className="px-3 py-1.5 rounded-2xl  border border-primary/20 text-xs font-medium max-w-sm text-center">
+              Itens em Lote Selecionados:{" "}
+              <span className="font-bold">
+                {selectedItems.map((i) => i.label).join(", ")}
+              </span>
             </div>
           )}
         </div>
         <CommandPalette
           open={open}
-          multiSearch
+          multiSelect
+          onSelectMultiple={(items) => setSelectedItems(items)}
           onOpenChange={setOpen}
           placeholder="Buscar ação…"
           items={[

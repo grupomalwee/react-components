@@ -4,6 +4,40 @@ import { CommandItem } from "./types";
 import { Kbd } from "./Kbd";
 import { Badge, type BadgeColorType } from "../../data/Badge";
 
+function HighlightText({ text, query }: { text: string; query?: string }) {
+  if (!query || !query.trim()) return <>{text}</>;
+
+  const terms = query
+    .split(/[, ]+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length > 0);
+
+  if (terms.length === 0) return <>{text}</>;
+
+  const escapedTerms = terms.map((t) =>
+    t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const regex = new RegExp(`(${escapedTerms.join("|")})`, "gi");
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) => {
+        const isMatch = terms.some(
+          (t) => t.toLowerCase() === part.toLowerCase(),
+        );
+        return isMatch ? (
+          <span key={i} className="text-primary font-semibold">
+            {part}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        );
+      })}
+    </>
+  );
+}
+
 function mapBadgeVariantToColor(
   variant?: CommandItem["badgeVariant"],
 ): BadgeColorType | undefined {
@@ -33,15 +67,23 @@ function mapBadgeVariantToColor(
 interface CommandItemRowProps {
   item: CommandItem;
   isActive: boolean;
-  onSelect: () => void;
+  isSelected?: boolean;
+  multiSelect?: boolean;
+  onSelect: (e?: React.MouseEvent | React.KeyboardEvent) => void;
+  onToggleSelection?: (e: React.MouseEvent) => void;
   onHover: () => void;
+  searchQuery?: string;
 }
 
 export function CommandItemRow({
   item,
   isActive,
+  isSelected,
+  multiSelect,
   onSelect,
+  onToggleSelection,
   onHover,
+  searchQuery,
 }: CommandItemRowProps) {
   return (
     <motion.button
@@ -57,7 +99,13 @@ export function CommandItemRow({
       {item.icon && (
         <span
           className={`relative flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-md text-base
-          ${isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground group-hover:text-foreground"}`}
+          ${
+            isSelected
+              ? "bg-primary text-primary-foreground"
+              : isActive
+                ? "bg-primary/20 text-primary"
+                : "bg-muted text-muted-foreground group-hover:text-foreground"
+          }`}
         >
           {item.icon}
         </span>
@@ -68,7 +116,7 @@ export function CommandItemRow({
           <span
             className={`text-sm font-medium truncate ${isActive ? "text-foreground" : "text-foreground/80"}`}
           >
-            {item.label}
+            <HighlightText text={item.label} query={searchQuery} />
           </span>
           {item.badge && (
             <Badge color={mapBadgeVariantToColor(item.badgeVariant)}>
@@ -78,7 +126,7 @@ export function CommandItemRow({
         </div>
         {item.description && (
           <p className="text-xs text-muted-foreground truncate">
-            {item.description}
+            <HighlightText text={item.description} query={searchQuery} />
           </p>
         )}
       </div>
@@ -91,7 +139,14 @@ export function CommandItemRow({
         </div>
       )}
 
-      {isActive && (
+      {isSelected && (
+        <motion.div
+          layoutId={`selected-indicator-${item.id}`}
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-2/3 bg-primary rounded-r-md"
+        />
+      )}
+
+      {isActive && !isSelected && (
         <CaretRightIcon
           className="relative w-4 h-4 text-primary flex-shrink-0"
           weight="bold"

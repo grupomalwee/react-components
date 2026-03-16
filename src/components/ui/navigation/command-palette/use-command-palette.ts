@@ -15,23 +15,43 @@ export function useCommandPalette({
   onRecentItemsChange,
   maxRecentItems = 5,
   multiSearch = false,
+  multiSelect = false,
+  onSelectMultiple,
 }: Partial<CommandPaletteProps>) {
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [page, setPage] = React.useState(0);
+  const [selectedItemIds, setSelectedItemIds] = React.useState<Set<string>>(
+    new Set(),
+  );
+
+  const toggleSelection = React.useCallback((id: string) => {
+    setSelectedItemIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const clearSelection = React.useCallback(
+    () => setSelectedItemIds(new Set()),
+    [],
+  );
 
   const baseGroups = React.useMemo(
     () => normaliseGroups(items, groups),
     [items, groups],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setQuery("");
       setActiveIndex(0);
       setPage(0);
+      clearSelection();
     }
-  }, [open]);
+  }, [open, clearSelection]);
 
   const searchTerms = React.useMemo(() => {
     const parts = query.split(",");
@@ -69,7 +89,7 @@ export function useCommandPalette({
   const totalItems = allFlatItems.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
- useEffect(() => {
+  useEffect(() => {
     setPage(0);
     setActiveIndex(0);
   }, [query]);
@@ -105,14 +125,49 @@ export function useCommandPalette({
     [displayedGroups],
   );
 
+  const selectedItems = useMemo(
+    () => allFlatItems.filter((i) => selectedItemIds.has(i.id)),
+    [allFlatItems, selectedItemIds],
+  );
+
   const pageItemCount = flatItems.length;
 
   useEffect(() => {
     setActiveIndex((i) => Math.min(i, Math.max(pageItemCount - 1, 0)));
   }, [pageItemCount]);
 
-  function handleSelect(item?: CommandItem) {
+  function executeBulkAction() {
+    if (!onSelectMultiple || selectedItems.length === 0) return;
+    onSelectMultiple(selectedItems);
+    onOpenChange?.(false);
+  }
+
+  function handleSelect(item?: CommandItem, event?: any) {
     if (!item) return;
+
+    if (multiSelect) {
+      if (
+        event &&
+        ("ctrlKey" in event || "metaKey" in event || "shiftKey" in event) &&
+        (event.ctrlKey || event.metaKey || event.shiftKey)
+      ) {
+        toggleSelection(item.id);
+        return;
+      }
+
+      if (selectedItems.length > 0) {
+        const itemsToSubmit = selectedItemIds.has(item.id)
+          ? selectedItems
+          : [...selectedItems, item];
+
+        if (onSelectMultiple) {
+          onSelectMultiple(itemsToSubmit);
+        }
+        onOpenChange?.(false);
+        return;
+      }
+    }
+
     item.onSelect();
     onOpenChange?.(false);
     if (onRecentItemsChange) {
@@ -147,7 +202,13 @@ export function useCommandPalette({
         }
       } else if (e.key === "Enter") {
         e.preventDefault();
-        handleSelect(flatItems[activeIndex]);
+
+        if (multiSelect && (e.ctrlKey || e.metaKey)) {
+          executeBulkAction();
+          return;
+        }
+
+        handleSelect(flatItems[activeIndex], e);
       }
     };
     document.addEventListener("keydown", handler);
@@ -169,6 +230,10 @@ export function useCommandPalette({
     totalItems,
     totalPages,
     handleSelect,
+    selectedItemIds,
+    toggleSelection,
+    selectedItems,
+    executeBulkAction,
     isEmpty: totalItems === 0 && query.trim().length > 0,
     showList: query.trim() !== "" || recentItems.length > 0,
   };

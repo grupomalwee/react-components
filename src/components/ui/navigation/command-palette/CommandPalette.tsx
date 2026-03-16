@@ -86,8 +86,12 @@ interface VirtualResultListProps {
   displayedGroups: CommandGroup[];
   flatItems: CommandItem[];
   activeIndex: number;
+  multiSelect?: boolean;
+  selectedItemIds: Set<string>;
   onHover: (index: number) => void;
-  onSelect: (item: CommandItem) => void;
+  onSelect: (item: CommandItem, e?: any) => void;
+  onToggleSelection: (id: string, e: React.MouseEvent) => void;
+  searchQuery?: string;
 }
 
 const VirtualResultList = memo(
@@ -98,8 +102,12 @@ const VirtualResultList = memo(
     displayedGroups,
     flatItems,
     activeIndex,
+    multiSelect,
+    selectedItemIds,
     onHover,
     onSelect,
+    onToggleSelection,
+    searchQuery,
   }: VirtualResultListProps) => {
     const rows = useMemo<VirtualRow[]>(() => {
       const acc: VirtualRow[] = [];
@@ -164,8 +172,14 @@ const VirtualResultList = memo(
                     <CommandItemRow
                       item={row.item}
                       isActive={row.globalIdx === activeIndex}
+                      isSelected={selectedItemIds.has(row.item.id)}
+                      multiSelect={multiSelect}
                       onHover={() => onHover(row.globalIdx)}
-                      onSelect={() => onSelect(row.item)}
+                      onSelect={(e) => onSelect(row.item, e)}
+                      onToggleSelection={(e) =>
+                        onToggleSelection(row.item.id, e)
+                      }
+                      searchQuery={searchQuery}
                     />
                   </div>
                 )}
@@ -182,34 +196,60 @@ VirtualResultList.displayName = "VirtualResultList";
 interface FooterBarProps {
   footer?: ReactNode;
   totalItems: number;
+  selectedCount?: number;
+  executeBulkAction?: () => void;
 }
 
-const FooterBar = memo(({ footer, totalItems }: FooterBarProps) => (
-  <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-muted/30">
-    {footer ?? (
-      <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <ArrowElbowDownRightIcon className="w-3 h-3" />
-          Selecionar
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="font-mono">↑↓</span>
-          Navegar
-        </span>
-        <span className="flex items-center gap-1.5">
-          <ArrowBendUpLeftIcon className="w-3 h-3" />
-          Fechar
+const FooterBar = memo(
+  ({
+    footer,
+    totalItems,
+    selectedCount = 0,
+    executeBulkAction,
+  }: FooterBarProps) => (
+    <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-muted/30">
+      {footer ?? (
+        <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
+          {selectedCount > 0 ? (
+            <>
+              <button
+                onClick={executeBulkAction}
+                className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors font-medium cursor-pointer"
+              >
+                <CommandIcon className="w-3 h-3" /> Confirmar ({selectedCount})
+              </button>
+              <span className="flex items-center gap-1.5">
+                <span className="font-mono">Ctrl+Enter</span>
+                Finalizar seleção
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="flex items-center gap-1.5">
+                <ArrowElbowDownRightIcon className="w-3 h-3" />
+                Selecionar
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="font-mono">↑↓</span>
+                Navegar
+              </span>
+              <span className="flex items-center gap-1.5">
+                <ArrowBendUpLeftIcon className="w-3 h-3" />
+                Fechar
+              </span>
+            </>
+          )}
+        </div>
+      )}
+      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+        <CommandIcon className="w-3 h-3" />
+        <span>
+          {totalItems} resultado{totalItems !== 1 ? "s" : ""}
         </span>
       </div>
-    )}
-    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-      <CommandIcon className="w-3 h-3" />
-      <span>
-        {totalItems} resultado{totalItems !== 1 ? "s" : ""}
-      </span>
     </div>
-  </div>
-));
+  ),
+);
 FooterBar.displayName = "FooterBar";
 
 export function CommandPalette(props: CommandPaletteProps) {
@@ -220,6 +260,7 @@ export function CommandPalette(props: CommandPaletteProps) {
     footer,
     debounceDelay = 300,
     multiSearch = false,
+    multiSelect = false,
     emptyMessage = "Nenhum resultado encontrado.",
     shortcut = { key: "k", ctrl: true },
   } = props;
@@ -238,6 +279,9 @@ export function CommandPalette(props: CommandPaletteProps) {
     flatItems,
     totalItems,
     handleSelect,
+    selectedItemIds,
+    toggleSelection,
+    executeBulkAction,
     isEmpty,
     showList,
   } = useCommandPalette({
@@ -305,8 +349,12 @@ export function CommandPalette(props: CommandPaletteProps) {
     displayedGroups,
     flatItems,
     activeIndex,
+    multiSelect,
+    selectedItemIds,
     onHover: setActiveIndex,
     onSelect: handleSelect,
+    onToggleSelection: toggleSelection,
+    searchQuery: query,
   };
 
   if (isMobile) {
@@ -403,7 +451,12 @@ export function CommandPalette(props: CommandPaletteProps) {
 
             {showList && <VirtualResultList {...sharedListProps} />}
 
-            <FooterBar footer={footer} totalItems={totalItems} />
+            <FooterBar
+              footer={footer}
+              totalItems={totalItems}
+              selectedCount={selectedItemIds.size}
+              executeBulkAction={executeBulkAction}
+            />
           </motion.div>
         </>
       )}

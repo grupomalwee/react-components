@@ -45,6 +45,8 @@ export interface CommandPaletteProps {
     alt?: boolean;
   };
   maxRecentItems?: number;
+  multiSelect?: boolean;
+  onSelectMultiple?: (items: CommandItem[]) => void;
   multiSearch?: boolean;
   debounceDelay?: number;
   footer?: React.ReactNode;

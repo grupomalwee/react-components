@@ -7,8 +7,17 @@ import {
   DropDownMenuItemBase,
   DropDownMenuTriggerBase,
 } from "@/components/ui/navigation/DropDownMenuBase";
+
 import { useTheme, type Theme } from "@/components/theme/theme-provider";
 import { cn } from "@/lib/utils";
+import {
+  TooltipBase,
+  TooltipContentBase,
+  TooltipProviderBase,
+  TooltipTriggerBase,
+} from "../ui/feedback/TooltipBase";
+
+type AnimationOrigin = "center" | "top-left" | "top-right" | "cursor";
 
 type ModeToggleBaseProps = {
   themes?: Theme[];
@@ -21,6 +30,14 @@ type ModeToggleBaseProps = {
     | "destructive"
     | "secondary"
     | "ghost";
+
+  showLabel?: boolean;
+  tooltip?: boolean | string;
+  animationOrigin?: AnimationOrigin;
+  transitionDuration?: number;
+  storageKey?: string;
+  defaultTheme?: Theme;
+  onThemeChange?: (theme: Theme) => void;
 };
 
 const themeLabels: Record<Theme, string> = {
@@ -67,17 +84,59 @@ const ThemeIcon = ({ theme }: { theme: Theme }) => {
   );
 };
 
+function resolveOrigin(
+  origin: AnimationOrigin,
+  buttonRef: React.RefObject<HTMLButtonElement | null>,
+  cursorPos: { x: number; y: number } | null,
+): { x: number; y: number } {
+  if (origin === "cursor" && cursorPos) {
+    return cursorPos;
+  }
+
+  if (!buttonRef.current) {
+    return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  }
+
+  const rect = buttonRef.current.getBoundingClientRect();
+
+  switch (origin) {
+    case "top-left":
+      return { x: rect.left, y: rect.top };
+    case "top-right":
+      return { x: rect.right, y: rect.top };
+    case "center":
+    default:
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  }
+}
+
 export function ModeToggleBase({
   themes = ["light", "dark", "system"],
   className,
   directToggle = false,
   variant = "ghost",
+  showLabel = false,
+  tooltip = false,
+  animationOrigin = "center",
+  transitionDuration = 400,
+  storageKey,
+  defaultTheme,
+  onThemeChange,
 }: ModeToggleBaseProps) {
   const [mounted, setMounted] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const cursorPos = useRef<{ x: number; y: number } | null>(null);
   const { setTheme, theme: currentTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  // Aplica storageKey e defaultTheme uma vez no mount
   useEffect(() => {
+    if (storageKey && defaultTheme) {
+      const stored = localStorage.getItem(storageKey) as Theme | null;
+      if (!stored) setTheme(defaultTheme);
+    } else if (defaultTheme && !localStorage.getItem("theme")) {
+      setTheme(defaultTheme);
+    }
     setMounted(true);
   }, []);
 
@@ -88,9 +147,21 @@ export function ModeToggleBase({
         typeof window !== "undefined" &&
         window.matchMedia("(prefers-color-scheme: dark)").matches));
 
+  const activeTheme = (mounted ? currentTheme : defaultTheme) as Theme;
+
+  const tooltipText =
+    tooltip === true
+      ? (themeLabels[activeTheme] ?? "Toggle theme")
+      : typeof tooltip === "string"
+        ? tooltip
+        : null;
+
   const toggleTheme = async (newTheme: Theme) => {
+    if (isTransitioning) return;
+
     if (!buttonRef.current) {
       setTheme(newTheme);
+      onThemeChange?.(newTheme);
       return;
     }
 
@@ -101,14 +172,18 @@ export function ModeToggleBase({
 
     if (!supportsViewTransition) {
       setTheme(newTheme);
+      onThemeChange?.(newTheme);
       return;
     }
 
     try {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
+      setIsTransitioning(true);
 
+      const { x, y } = resolveOrigin(
+        animationOrigin,
+        buttonRef,
+        cursorPos.current,
+      );
       const endRadius = Math.hypot(
         Math.max(x, window.innerWidth - x),
         Math.max(y, window.innerHeight - y),
@@ -116,27 +191,29 @@ export function ModeToggleBase({
 
       const transition = document.startViewTransition(async () => {
         setTheme(newTheme);
+        onThemeChange?.(newTheme);
       });
 
       await transition.ready;
 
-      document.documentElement.animate(
+      const animation = document.documentElement.animate(
         [
-          {
-            clipPath: `circle(0px at ${x}px ${y}px)`,
-          },
-          {
-            clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)`,
-          },
+          { clipPath: `circle(0px at ${x}px ${y}px)` },
+          { clipPath: `circle(${Math.ceil(endRadius)}px at ${x}px ${y}px)` },
         ],
         {
-          duration: 400,
+          duration: transitionDuration,
           easing: "cubic-bezier(0.4, 0, 0.2, 1)",
           pseudoElement: "::view-transition-new(root)",
         },
       );
+
+      animation.onfinish = () => setIsTransitioning(false);
+      animation.oncancel = () => setIsTransitioning(false);
     } catch {
       setTheme(newTheme);
+      onThemeChange?.(newTheme);
+      setIsTransitioning(false);
     }
   };
 
@@ -146,67 +223,85 @@ export function ModeToggleBase({
     toggleTheme(themes[nextIndex]);
   };
 
-  if (directToggle) {
+  const handleMouseMove = (e: React.MouseEvent) => {
+    cursorPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const buttonContent = (
+    <>
+      <SunIcon
+        className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+          isDark
+            ? "rotate-90 scale-0 opacity-0"
+            : "rotate-0 scale-100 opacity-100 group-hover:rotate-12"
+        }`}
+      />
+      <MoonIcon
+        className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+          isDark
+            ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
+            : "rotate-90 scale-0 opacity-0"
+        }`}
+      />
+      {showLabel && mounted && (
+        <span className="ml-5 text-sm font-medium">
+          {themeLabels[activeTheme]}
+        </span>
+      )}
+      <span className="sr-only">Toggle theme</span>
+    </>
+  );
+
+  const wrapWithTooltip = (node: React.ReactNode) => {
+    if (!tooltipText) return node;
     return (
+      <TooltipProviderBase>
+        <TooltipBase>
+          <TooltipTriggerBase asChild>{node}</TooltipTriggerBase>
+          <TooltipContentBase>{tooltipText}</TooltipContentBase>
+        </TooltipBase>
+      </TooltipProviderBase>
+    );
+  };
+
+  if (directToggle) {
+    return wrapWithTooltip(
       <ButtonBase
         ref={buttonRef}
         variant={variant}
-        size="icon"
+        size={showLabel ? "default" : "icon"}
         className={cn("relative overflow-hidden group", className)}
         onClick={handleDirectToggle}
+        onMouseMove={handleMouseMove}
+        onKeyDown={(e) => {
+          if (e.repeat && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+          }
+        }}
       >
-        <>
-          <SunIcon
-            className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-              isDark
-                ? "rotate-90 scale-0 opacity-0"
-                : "rotate-0 scale-100 opacity-100 group-hover:rotate-12"
-            }`}
-          />
-          <MoonIcon
-            className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-              isDark
-                ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
-                : "rotate-90 scale-0 opacity-0"
-            }`}
-          />
-        </>
-        <span className="sr-only">Toggle theme</span>
-      </ButtonBase>
+        {buttonContent}
+      </ButtonBase>,
     );
   }
 
   return (
     <DropDownMenuBase>
       <DropDownMenuTriggerBase asChild>
-        <ButtonBase
-          ref={buttonRef}
-          variant={variant}
-          size="icon"
-          className={cn("relative overflow-hidden group", className)}
-        >
-          <>
-            <SunIcon
-              className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-                isDark
-                  ? "rotate-90 scale-0 opacity-0"
-                  : "rotate-0 scale-100 opacity-100 group-hover:rotate-12"
-              }`}
-            />
-            <MoonIcon
-              className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-                isDark
-                  ? "rotate-0 scale-100 opacity-100 group-hover:-rotate-12"
-                  : "rotate-90 scale-0 opacity-0"
-              }`}
-            />
-          </>
-          <span className="sr-only">Toggle theme</span>
-        </ButtonBase>
+        {wrapWithTooltip(
+          <ButtonBase
+            ref={buttonRef}
+            variant={variant}
+            size={showLabel ? "default" : "icon"}
+            className={cn("relative overflow-hidden group", className)}
+            onMouseMove={handleMouseMove}
+          >
+            {buttonContent}
+          </ButtonBase>,
+        )}
       </DropDownMenuTriggerBase>
       <DropDownMenuContentBase
         align="end"
-        className="border-border bg-popover text-popover-foreground min-w-[140px] "
+        className="border-border bg-popover text-popover-foreground min-w-[140px]"
       >
         {themes.map((theme) => {
           const isActive = currentTheme === theme;
