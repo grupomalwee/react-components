@@ -17,8 +17,7 @@ import {
   ArrowBendUpLeftIcon,
   ArrowElbowDownRightIcon,
 } from "@phosphor-icons/react";
-import { useVirtualizer } from "@tanstack/react-virtual";
-
+import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
 import { CommandPaletteProps, CommandItem, CommandGroup } from "./types";
 import { GroupLabel } from "./GroupLabel";
 import { CommandItemRow } from "./CommandItemRow";
@@ -116,8 +115,8 @@ const VirtualResultList = memo(
     const virtualizer = useVirtualizer({
       count: rows.length,
       getScrollElement: () => listRef.current,
-      estimateSize: (i) =>
-        rows[i].kind === "label" ? LABEL_HEIGHT : ITEM_HEIGHT,
+      estimateSize: (i: number) =>
+  rows[i].kind === "label" ? LABEL_HEIGHT : ITEM_HEIGHT,
       overscan: 8,
     });
 
@@ -143,7 +142,7 @@ const VirtualResultList = memo(
         style={{ maxHeight: `min(${LIST_MAX_HEIGHT}px, 60vh)` }}
       >
         <div style={{ height: totalSize, position: "relative" }}>
-          {virtualItems.map((vItem) => {
+          {virtualItems.map((vItem: VirtualItem) => {
             const row = rows[vItem.index];
             return (
               <div
@@ -356,20 +355,11 @@ export function CommandPalette(props: CommandPaletteProps) {
       {open && (
         <>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={ANIMATION.overlay}
-            className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm"
-            onClick={handleClose}
-          />
-
-          <motion.div
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
             transition={ANIMATION.panel}
-            className="fixed z-[100] top-12 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60 bg-popover/95 backdrop-blur-xl"
+            className="fixed z-[100] top-16 left-1/2 -translate-x-1/2 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60 bg-popover/95 backdrop-blur-xl"
             style={{ maxHeight: "min(600px, 80vh)" }}
           >
             <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
@@ -409,4 +399,3 @@ export function CommandPalette(props: CommandPaletteProps) {
       )}
     </AnimatePresence>
   );
-}
