@@ -54,6 +54,7 @@ export interface EventCalendarProps {
   onlyWeek?: boolean;
   onlyAgenda?: boolean;
   onlyYear?: boolean;
+  allowCellClick?: boolean;
 }
 
 export interface ModalLikeProps {
@@ -76,6 +77,7 @@ export function EventAgenda({
   onlyWeek,
   onlyAgenda,
   onlyYear,
+  allowCellClick = false,
 }: EventCalendarProps) {
   const lockedView: CalendarViewAgenda | undefined = onlyDay
     ? "day"
@@ -268,6 +270,17 @@ export function EventAgenda({
               events={events}
               onEventSelect={handleEventSelect}
               noTime={noTime}
+              onEventCreate={
+                allowCellClick
+                  ? (d: Date) =>
+                      onEventUpdate?.({
+                        start: d,
+                        end: d,
+                        title: "Novo Evento",
+                        id: crypto.randomUUID(),
+                      })
+                  : undefined
+              }
             />
           )}
           {activeView === "week" && (
@@ -276,6 +289,17 @@ export function EventAgenda({
               events={events}
               onEventSelect={handleEventSelect}
               noTime={noTime}
+              onEventCreate={
+                allowCellClick
+                  ? (d: Date) =>
+                      onEventUpdate?.({
+                        start: d,
+                        end: d,
+                        title: "Novo Evento",
+                        id: crypto.randomUUID(),
+                      })
+                  : undefined
+              }
             />
           )}
           {activeView === "day" && (
@@ -284,6 +308,17 @@ export function EventAgenda({
               events={events}
               onEventSelect={handleEventSelect}
               noTime={noTime}
+              onEventCreate={
+                allowCellClick
+                  ? (d: Date) =>
+                      onEventUpdate?.({
+                        start: d,
+                        end: d,
+                        title: "Novo Evento",
+                        id: crypto.randomUUID(),
+                      })
+                  : undefined
+              }
             />
           )}
           {activeView === "agenda" && (
@@ -292,6 +327,17 @@ export function EventAgenda({
               events={events}
               onEventSelect={handleEventSelect}
               noTime={noTime}
+              onEventCreate={
+                allowCellClick
+                  ? (d: Date) =>
+                      onEventUpdate?.({
+                        start: d,
+                        end: d,
+                        title: "Novo Evento",
+                        id: crypto.randomUUID(),
+                      })
+                  : undefined
+              }
             />
           )}
           {activeView === "year" && (

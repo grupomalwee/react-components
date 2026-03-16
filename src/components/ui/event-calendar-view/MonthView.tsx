@@ -56,6 +56,7 @@ interface MonthViewProps {
   onEventSelect: (event: CalendarEventAgenda, e?: React.MouseEvent) => void;
   showUndatedEvents?: boolean;
   noTime?: boolean;
+  onEventCreate?: (startTime: Date) => void;
 }
 
 export function MonthViewAgenda({
@@ -64,6 +65,7 @@ export function MonthViewAgenda({
   onEventSelect,
   showUndatedEvents,
   noTime = false,
+  onEventCreate,
 }: MonthViewProps) {
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
@@ -251,6 +253,7 @@ export function MonthViewAgenda({
                       onClick={() => {
                         const t = new Date(day);
                         t.setHours(DefaultStartHourAgenda, 0, 0);
+                        if (onEventCreate) onEventCreate(t);
                       }}
                     >
                       <div

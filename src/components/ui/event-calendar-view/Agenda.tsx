@@ -26,6 +26,7 @@ interface AgendaViewProps {
   showUndatedEvents?: boolean;
   /** When true, hides event times */
   noTime?: boolean;
+  onEventCreate?: (startTime: Date) => void;
 }
 
 export function Agenda({
@@ -34,6 +35,7 @@ export function Agenda({
   onEventSelect,
   showUndatedEvents = true,
   noTime = false,
+  onEventCreate,
 }: AgendaViewProps) {
   const isValidDate = (d: unknown) => {
     try {

@@ -46,6 +46,7 @@ interface DayViewProps {
   showUndatedEvents?: boolean;
   /** When true, hides event times */
   noTime?: boolean;
+  onEventCreate?: (startTime: Date) => void;
 }
 
 interface PositionedEvent {
@@ -63,6 +64,7 @@ export function DayViewAgenda({
   onEventSelect,
   showUndatedEvents,
   noTime = false,
+  onEventCreate,
 }: DayViewProps) {
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
@@ -414,6 +416,7 @@ export function DayViewAgenda({
                         const startTime = new Date(currentDate);
                         startTime.setHours(hourValue);
                         startTime.setMinutes(quarter * 15);
+                        if (onEventCreate) onEventCreate(startTime);
                       }}
                       time={quarterHourTime}
                     />
