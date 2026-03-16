@@ -116,7 +116,7 @@ const VirtualResultList = memo(
       count: rows.length,
       getScrollElement: () => listRef.current,
       estimateSize: (i: number) =>
-  rows[i].kind === "label" ? LABEL_HEIGHT : ITEM_HEIGHT,
+        rows[i].kind === "label" ? LABEL_HEIGHT : ITEM_HEIGHT,
       overscan: 8,
     });
 
@@ -399,3 +399,4 @@ export function CommandPalette(props: CommandPaletteProps) {
       )}
     </AnimatePresence>
   );
+}
