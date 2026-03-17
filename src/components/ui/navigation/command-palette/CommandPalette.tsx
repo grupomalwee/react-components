@@ -152,7 +152,7 @@ const VirtualResultList = memo(
         className="overflow-y-auto overscroll-contain px-2 py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50 transition-colors"
         style={{ maxHeight: `min(${LIST_MAX_HEIGHT}px, 60vh)` }}
       >
-        <div style={{ height: totalSize, position: "relative" }}>
+        <div style={{ height: totalSize, position: "relative", width: "100%" }}>
           {virtualItems.map((vItem: VirtualItem) => {
             const row = rows[vItem.index];
             return (
@@ -162,9 +162,10 @@ const VirtualResultList = memo(
                 ref={virtualizer.measureElement}
                 style={{
                   position: "absolute",
-                  top: vItem.start,
+                  top: 0,
                   left: 0,
-                  right: 0,
+                  width: "100%",
+                  transform: `translateY(${vItem.start}px)`,
                 }}
               >
                 {row.kind === "label" ? (
@@ -178,9 +179,7 @@ const VirtualResultList = memo(
                       multiSelect={multiSelect}
                       onHover={() => onHover(row.globalIdx)}
                       onSelect={(e) => onSelect(row.item, e)}
-                      onToggleSelection={(e) =>
-                        onToggleSelection(row.item.id, e)
-                      }
+                      onToggleSelection={(e) => onToggleSelection(row.item.id, e)}
                       searchQuery={searchQuery}
                     />
                   </div>
@@ -221,7 +220,7 @@ const FooterBar = memo(
                 <CommandIcon className="w-3 h-3" /> Confirmar ({selectedCount})
               </button>
               <span className="flex items-center gap-1.5">
-                <span className="font-mono">Ctrl+Enter</span>
+                <span className="font-mono text-[10px] px-1 bg-muted rounded border">Ctrl+Enter</span>
                 Finalizar seleção
               </span>
             </>
@@ -288,10 +287,10 @@ export function CommandPalette(props: CommandPaletteProps) {
     showList,
   } = useCommandPalette({
     ...props,
-    open: isMobile ? true : props.open,
+    open: props.open,
   });
 
-  useKeyboardShortcut(shortcut.key, () => onOpenChange(!open), {
+  useKeyboardShortcut(shortcut.key, () => onOpenChange?.(!open), {
     ctrl: shortcut.ctrl,
     meta: shortcut.meta,
     shift: shortcut.shift,
@@ -301,7 +300,7 @@ export function CommandPalette(props: CommandPaletteProps) {
   useEffect(() => {
     if (!open) return;
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onOpenChange(false);
+      if (e.key === "Escape") onOpenChange?.(false);
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
@@ -332,12 +331,12 @@ export function CommandPalette(props: CommandPaletteProps) {
     (val: string) => {
       setQuery(val);
       setActiveIndex(0);
-      if (!open && val.trim() !== "") onOpenChange(true);
+      if (!open && val.trim() !== "") onOpenChange?.(true);
     },
     [setQuery, setActiveIndex, open, onOpenChange],
   );
 
-  const handleClose = useCallback(() => onOpenChange(false), [onOpenChange]);
+  const handleClose = useCallback(() => onOpenChange?.(false), [onOpenChange]);
   const handleClearQuery = useCallback(() => setQuery(""), [setQuery]);
 
   const searchPlaceholder = multiSearch
@@ -361,43 +360,57 @@ export function CommandPalette(props: CommandPaletteProps) {
 
   if (isMobile) {
     return (
-      <>
-        <div className="fixed top-0 left-0 right-0 z-[100] px-3 py-2 bg-background">
-          <DebouncedInput
-            ref={inputRef}
-            value={query}
-            debounce={debounceDelay}
-            onChange={handleQueryChangeMobile}
-            placeholder={searchPlaceholder}
-          />
-        </div>
-
-        <AnimatePresence>
-          {showList && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={ANIMATION.overlay}
-                className="fixed inset-0 z-[98] bg-background/60 backdrop-blur-[2px]"
-                onClick={handleClose}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed top-0 left-0 right-0 z-[100] px-4 py-3 bg-background border-b border-border shadow-sm flex items-center gap-3"
+            >
+              <MagnifyingGlassIcon className="w-5 h-5 text-muted-foreground" />
+              <DebouncedInput
+                ref={inputRef}
+                value={query}
+                debounce={debounceDelay}
+                onChange={handleQueryChangeMobile}
+                placeholder={searchPlaceholder}
+                className="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-base"
               />
+              {query && (
+                 <ButtonBase variant="ghost" size="icon" onClick={handleClearQuery} className="h-8 w-8">
+                    <XIcon className="w-4 h-4" />
+                 </ButtonBase>
+              )}
+            </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={ANIMATION.overlay}
+              className="fixed inset-0 z-[98] bg-background/80 backdrop-blur-md"
+              onClick={handleClose}
+            />
+
+            {showList && (
               <motion.div
-                initial={{ opacity: 0, y: -6 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
+                exit={{ opacity: 0, y: 10 }}
                 transition={ANIMATION.mobilePanel}
-                className="fixed left-3 right-3 z-[99] bg-popover border border-border rounded-lg shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden top-14"
+                className="fixed inset-x-0 bottom-0 top-[60px] z-[99] bg-background overflow-hidden flex flex-col"
               >
                 <SearchBadges terms={searchTerms} />
-                <VirtualResultList {...sharedListProps} />
+                <div className="flex-1 overflow-hidden">
+                   <VirtualResultList {...sharedListProps} />
+                </div>
               </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </>
+            )}
+          </>
+        )}
+      </AnimatePresence>
     );
   }
 
@@ -406,18 +419,26 @@ export function CommandPalette(props: CommandPaletteProps) {
       {open && (
         <>
           <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[99] bg-black/40 backdrop-blur-sm"
+            onClick={handleClose}
+          />
+          <motion.div
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
             transition={ANIMATION.panel}
+<<<<<<< HEAD
             className="fixed z-[100] top-4  -translate-x-1/2 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60 bg-popover/95 backdrop-blur-xl"
+=======
+            className="fixed z-[100] top-4 w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl bg-popover/95 backdrop-blur-xl"
+>>>>>>> origin/fix/CommandPallete
             style={{ maxHeight: "min(600px, 80vh)" }}
           >
             <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
-              <MagnifyingGlassIcon
-                className="w-4 h-4 text-muted-foreground flex-shrink-0"
-                weight="bold"
-              />
+              <MagnifyingGlassIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" weight="bold" />
               <DebouncedInput
                 ref={inputRef}
                 value={query}
@@ -441,7 +462,6 @@ export function CommandPalette(props: CommandPaletteProps) {
             </div>
 
             <SearchBadges terms={searchTerms} />
-
             {showList && <VirtualResultList {...sharedListProps} />}
 
             <FooterBar

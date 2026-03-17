@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { ClockCounterClockwiseIcon } from "@phosphor-icons/react";
 import { CommandPaletteProps, CommandGroup, CommandItem } from "./types";
