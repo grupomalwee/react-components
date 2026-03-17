@@ -85,15 +85,22 @@ export function CommandItemRow({
   onHover,
   searchQuery,
 }: CommandItemRowProps) {
+  
   return (
     <motion.button
       layout
-      onClick={onSelect}
+      onClick={(e) => {
+        if (multiSelect && onToggleSelection && (e.ctrlKey || e.metaKey || e.shiftKey)) {
+          onToggleSelection(e);
+        } else {
+          onSelect(e);
+        }
+      }}
       onMouseEnter={onHover}
       className={`
-        w-full flex items-center gap-1 px-2  py-1 rounded-md text-left cursor-pointer
+        w-full flex items-center gap-1 px-2 py-1 rounded-md text-left cursor-pointer
         transition-colors duration-75 group relative
-        ${isActive ? "text-accent-foreground hover:bg-accent" : "hover:bg-accent hover:text-accent-foreground"}
+        ${isActive ? "text-accent-foreground bg-accent" : "hover:bg-accent hover:text-accent-foreground"}
       `}
     >
       {item.icon && (
@@ -112,7 +119,7 @@ export function CommandItemRow({
       )}
 
       <div className="relative flex-1 min-w-0 px-1">
-        <div className="flex items-center gap-3  flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <span
             className={`text-sm font-medium truncate ${isActive ? "text-foreground" : "text-foreground/80"}`}
           >

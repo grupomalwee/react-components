@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { ClockCounterClockwiseIcon } from "@phosphor-icons/react";
 import { CommandPaletteProps, CommandGroup, CommandItem } from "./types";
@@ -142,7 +144,10 @@ export function useCommandPalette({
     onOpenChange?.(false);
   }
 
-  function handleSelect(item?: CommandItem, event?: any) {
+  function handleSelect(
+    item?: CommandItem, 
+    event?: React.MouseEvent | React.KeyboardEvent | KeyboardEvent
+  ) {
     if (!item) return;
 
     if (multiSelect) {
@@ -213,7 +218,7 @@ export function useCommandPalette({
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open, flatItems, activeIndex, pageItemCount, page, totalPages]);
+  }, [open, flatItems, activeIndex, pageItemCount, page, totalPages, multiSelect]); 
 
   return {
     query,
