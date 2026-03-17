@@ -35,7 +35,6 @@ export function Agenda({
   onEventSelect,
   showUndatedEvents = true,
   noTime = false,
-  onEventCreate,
 }: AgendaViewProps) {
   const isValidDate = (d: unknown) => {
     try {
