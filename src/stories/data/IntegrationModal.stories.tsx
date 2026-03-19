@@ -1,44 +1,82 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import IntegrationModal from "@/components/ui/data/IntegrationModal";
-import { IntegrationData } from "@/components/ui/data/hooks/integrationTooltipUtils";
+import { IntegrationModal } from "@/components/ui/"; 
+import { useState } from "react";
 
-const mockData: IntegrationData = {
-  name: "Esse sistema tem um nome muito grande meu deus olha isso",
-  description: "Sistema de Gestão de Recursos Humanos com o nome grande.",
+// Mock de dados robusto
+const mockData = {
+  name: "Sistema de Gestão de RH (Nexus-Alpha)",
+  description: "Plataforma centralizada para controle de folha e benefícios.",
   connections: [
     {
       id: "conn-1",
-      name: "Sistema com o nome muito grande meu deus olha isso",
+      name: "Gateway de Pagamentos",
       type: "entrada",
       integration: {
-        Nome: "Loja Principal",
+        Nome: "API Rest Pagamentos",
         Tipo: "Web Application",
-        Protocolos: "HTTPS/REST",
+        Protocolos: "HTTPS/TLS 1.3",
         Ambiente: "Produção",
-        Setor: "Vendas",
-        Contato: "equipe-vendas@empresa.com",
-        Sustentacao: "Time de SRE",
+        Setor: "Financeiro",
+        Contato: "sre.fin@empresa.com",
       },
     },
     {
       id: "conn-3",
-      name: "C8",
+      name: "Kafka Cluster",
       type: "saida",
       integration: {
-        Nome: "C8",
+        Nome: "Log-Streamer",
         tipo: "Messaging",
+        Protocolos: "Avro/TCP",
       },
     },
   ],
 };
 
 const meta: Meta<typeof IntegrationModal> = {
-  title: "data/Integration Modal",
+  title: "Data/IntegrationModal",
   component: IntegrationModal,
+  tags: ["autodocs"], 
   parameters: {
     layout: "fullscreen",
+  
+    docs: {
+      story: {
+        inline: false, 
+        iframeHeight: 600, 
+      },
+    },
   },
-  tags: ["autodocs"],
+  decorators: [
+    (Story, context) => {
+      const [isOpen, setIsOpen] = useState(true);
+      
+      return (
+        // Adicionei relative e overflow-hidden para conter o modal no preview
+        <div className="relative w-full h-screen bg-slate-100 p-10 dark:bg-slate-900 overflow-hidden">
+          {!isOpen && (
+            <button 
+              className="px-4 py-2 bg-primary text-white rounded font-medium shadow-sm hover:bg-primary/90 transition-colors"
+              onClick={() => setIsOpen(true)}
+            >
+              Reabrir Modal
+            </button>
+          )}
+          {isOpen && (
+            <Story
+              args={{
+                ...context.args,
+                onClose: (id: string) => {
+                  context.args.onClose?.(id);
+                  setIsOpen(false);
+                },
+              }}
+            />
+          )}
+        </div>
+      );
+    },
+  ],
   argTypes: {
     onClose: { action: "closed" },
     onPositionChange: { action: "position changed" },
@@ -51,10 +89,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    id: "tooltip-1",
+    id: "modal-default",
     title: "Dados de Integração",
     data: mockData,
-    position: { top: 100, left: 100 },
+    position: { top: 50, left: 50 },
     isLoading: false,
   },
 };
@@ -66,33 +104,47 @@ export const Loading: Story = {
   },
 };
 
-export const Empty: Story = {
+export const MobileView: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: "mobile1",
+    },
+    // No mobile view do docs, as vezes é melhor manter inline: false também
+  },
   args: {
     ...Default.args,
-    data: {
-      name: "Sem dados!",
-      description: "Nenhum dado encontrado.",
-      connections: [],
-    },
+    title: "Vista Mobile (Drawer)",
   },
 };
 
 export const LongList: Story = {
   args: {
     ...Default.args,
-    title: "Entrada e Saída de 15 serviços",
+    title: "Fluxo de Dados Complexo",
     data: {
       ...mockData,
-      connections: Array.from({ length: 15 }, (_, i) => ({
+      connections: Array.from({ length: 12 }, (_, i) => ({
         id: `conn-${i}`,
-        name: `Serviço Auxiliar ${i + 1}`,
+        name: `Microserviço de Dados ${i + 1}`,
         type: i % 2 === 0 ? "entrada" : "saida",
         integration: {
           Status: "Ativo",
-          Versao: `v1.${i}.0`,
-          Sustentacao: "Time Central",
+          Versao: `v2.${i}.4`,
+          Namespace: "kubernetes-prod-01",
+          Latencia: "24ms",
         },
       })),
+    },
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    ...Default.args,
+    data: {
+      name: "Serviço Isolado",
+      description: "Este sistema não possui conexões ativas no momento.",
+      connections: [],
     },
   },
 };
