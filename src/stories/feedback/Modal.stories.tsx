@@ -11,241 +11,210 @@ import {
 } from "@/components/ui/feedback/ModalBase";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { InputBase } from "@/components/ui/form/InputBase";
-import { MapPinLineIcon, PlusIcon } from "@phosphor-icons/react";
+import { 
+  MapPinLineIcon, 
+  PlusIcon, 
+  TrashIcon, 
+  WarningIcon,
+  ArrowLeftIcon,
+  FileCsvIcon,
+  DownloadSimpleIcon,
+  XCircleIcon,
+  CheckCircleIcon
+} from "@phosphor-icons/react";
+
 import {
   SelectBase,
   SelectTriggerBase,
   SelectValueBase,
   SelectContentBase,
-  SelectGroupBase,
-  SelectLabelBase,
   SelectItemBase,
 } from "@/components/ui/SelectBase";
 import { TextAreaBase } from "@/components/ui/form/TextAreaBase";
 import LabelBase from "@/components/ui/form/LabelBase";
 
-const meta: Meta<unknown> = {
+const meta: Meta<typeof ModalBase> = {
   title: "feedback/Modal",
-  component: ModalBase,
   tags: ["autodocs"],
   parameters: {
-    docs: {
-      description: {
-        component:
-          "Modal para edição/visualização de formulários e conteúdo — alinhado ao padrão de UI do projeto.",
-      },
-    },
-    backgrounds: {
-      default: "light",
-      values: [
-        { name: "light", value: "#f6f6f6" },
-        { name: "dark", value: "#222" },
-      ],
-    },
     layout: "centered",
   },
 };
 
 export default meta;
-type ModalArgs = {
-  insertLabel?: React.ReactNode;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  namePlaceholder?: string;
-  locationPlaceholder?: string;
-  otherPlaceholder?: string;
-  cancelLabel?: React.ReactNode;
-  confirmLabel?: React.ReactNode;
-};
+
 type Story = StoryObj<Record<string, unknown>>;
 
+
 export const Default: Story = {
-  render: (args?: Story["args"]) => {
-    const [selectOpen, setSelectOpen] = React.useState(false);
-    const a = (args ?? meta.args) as ModalArgs;
+  render: () => (
+    <ModalBase>
+      <ModalTriggerBase asChild>
+        <ButtonBase><PlusIcon size={16} /> Editar item</ButtonBase>
+      </ModalTriggerBase>
+      <ModalContentBase>
+        <ModalHeaderBase>
+          <ModalTitleBase>Editar item</ModalTitleBase>
+          <ModalDescriptionBase>Use este modal para editar informações do item.</ModalDescriptionBase>
+        </ModalHeaderBase>
+        <div className="py-4 space-y-3">
+          <InputBase type="text" placeholder="Nome" label="Nome" />
+          <InputBase
+            type="text"
+            placeholder="Localização"
+            label="Local"
+            leftIcon={<MapPinLineIcon size={16} />}
+          />
+          <SelectBase>
+            <SelectTriggerBase><SelectValueBase placeholder="Selecione uma fruta" /></SelectTriggerBase>
+            <SelectContentBase>
+                <SelectItemBase value="apple">Maçã</SelectItemBase>
+                <SelectItemBase value="banana">Banana</SelectItemBase>
+            </SelectContentBase>
+          </SelectBase>
+          <LabelBase>Observações</LabelBase>
+          <TextAreaBase placeholder="Outro campo" />
+        </div>
+        <ModalFooterBase>
+          <ButtonBase variant="outline">Cancelar</ButtonBase>
+          <ButtonBase>Confirmar</ButtonBase>
+        </ModalFooterBase>
+      </ModalContentBase>
+    </ModalBase>
+  ),
+};
+
+
+
+
+export const ImportCSV: Story = {
+  render: () => {
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const [fileName, setFileName] = React.useState<string | null>(null);
+
+    const handleClear = () => {
+      setFileName(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    };
 
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "32px 0",
-          gap: "16px",
-        }}
-      >
-        <ModalBase>
-          <ModalTriggerBase asChild>
-            <ButtonBase>
-              <PlusIcon size={16} />
-              {a.insertLabel}
-            </ButtonBase>
-          </ModalTriggerBase>
-          <ModalContentBase>
-            <ModalHeaderBase>
-              <ModalTitleBase>{a.title}</ModalTitleBase>
-              <ModalDescriptionBase>{a.description}</ModalDescriptionBase>
-            </ModalHeaderBase>
+      <ModalBase>
+        <ModalTriggerBase asChild>
+          <ButtonBase variant="outline">
+            <FileCsvIcon size={16} /> Abrir Importador
+          </ButtonBase>
+        </ModalTriggerBase>
 
-            <div className="py-4 space-y-3">
-              <InputBase
-                type="text"
-                placeholder={a.namePlaceholder}
-                label="Nome"
-              />
+        <ModalContentBase size="md">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            className="hidden" 
+            accept=".csv" 
+            onChange={(e) => setFileName(e.target.files?.[0]?.name || null)} 
+          />
 
-              <InputBase
-                type="text"
-                placeholder={a.locationPlaceholder}
-                label="Local"
-                leftIcon={<MapPinLineIcon size={16} />}
-              />
-              <SelectBase
-                open={selectOpen}
-                onOpenChange={setSelectOpen}
-                data-testid="select-base"
-              >
-                <SelectTriggerBase
-                  data-testid="select-trigger"
-                >
-                  <SelectValueBase
-                    placeholder="Select a fruit"
-                    data-testid="select-value"
-                  />
-                </SelectTriggerBase>
-                <SelectContentBase>
-                  <SelectGroupBase data-testid="select-group">
-                    <SelectLabelBase data-testid="select-label">
-                      Fruits
-                    </SelectLabelBase>
-                    <SelectItemBase value="apple" data-testid="select-item">
-                      Apple
-                    </SelectItemBase>
-                    <SelectItemBase value="banana" data-testid="select-item">
-                      Banana
-                    </SelectItemBase>
-                    <SelectItemBase value="blueberry" data-testid="select-item">
-                      Blueberry
-                    </SelectItemBase>
-                    <SelectItemBase value="grapes" data-testid="select-item">
-                      Grapes
-                    </SelectItemBase>
-                    <SelectItemBase value="pineapple" data-testid="select-item">
-                      Pineapple
-                    </SelectItemBase>
-                  </SelectGroupBase>
-                </SelectContentBase>
-              </SelectBase>
+          <ModalHeaderBase>
+            <ModalTitleBase>Importar CSV</ModalTitleBase>
+            <ModalDescriptionBase>
+              Carregue sua lista de contatos para processamento.
+            </ModalDescriptionBase>
+          </ModalHeaderBase>
 
-              <LabelBase>Outro campo</LabelBase>
-              <TextAreaBase placeholder={a.otherPlaceholder} />
+          <div className="py-2 space-y-4">
+            {/* Área de Seleção mais baixa e compacta */}
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all"
+            >
+              {!fileName ? (
+                <>
+                  <div className="bg-slate-50 p-3 rounded-full mb-2">
+                    <FileCsvIcon size={28} className="text-slate-400" weight="thin" />
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium text-center">
+                    Clique para buscar o arquivo .csv
+                  </p>
+                </>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <CheckCircleIcon size={32} className="text-green-500 mb-2" weight="fill" />
+                  <p className="text-sm font-bold text-slate-800 uppercase italic">{fileName}</p>
+                </div>
+              )}
             </div>
 
-            <ModalFooterBase>
-              <ButtonBase variant="outline">{a.cancelLabel}</ButtonBase>
-              <ButtonBase>{a.confirmLabel}</ButtonBase>
-            </ModalFooterBase>
-          </ModalContentBase>
-        </ModalBase>
-      </div>
+           
+            <div className="flex justify-center">
+               <button className="flex items-center gap-2 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 transition-colors">
+                  <DownloadSimpleIcon size={14} weight="bold" /> Baixar planilha modelo
+               </button>
+            </div>
+          </div>
+
+          <ModalFooterBase>
+            
+            <ButtonBase 
+              variant="outline" 
+              onClick={fileName ? handleClear : undefined}
+              className="min-w-[100px]"
+            >
+              {fileName ? "Limpar" : "Cancelar"}
+            </ButtonBase>
+            <ButtonBase disabled={!fileName} className="min-w-[120px]">
+              Processar
+            </ButtonBase>
+          </ModalFooterBase>
+        </ModalContentBase>
+      </ModalBase>
     );
   },
 };
 
-meta.parameters = {
-  ...meta.parameters,
-  docs: {
-    ...meta.parameters?.docs,
-    source: {
-      code: `import React from 'react';
-import {
-  ModalBase,
-  ModalTriggerBase,
-  ModalContentBase,
-  ModalHeaderBase,
-  ModalTitleBase,
-  ModalDescriptionBase,
-  ModalFooterBase,
-} from '@mlw-packages/react-components';
-import { ButtonBase } from '@mlw-packages/react-components';
 
-export default function Example() {
-  return (
+
+export const Scrollable: Story = {
+  render: () => (
     <ModalBase>
       <ModalTriggerBase asChild>
-        <ButtonBase>Open</ButtonBase>
+        <ButtonBase variant="ghost">Ver Termos de Uso</ButtonBase>
       </ModalTriggerBase>
-      <ModalContentBase>
-        <ModalHeaderBase>
-          <ModalTitleBase>Title</ModalTitleBase>
-          <ModalDescriptionBase>Description text</ModalDescriptionBase>
+      
+      <ModalContentBase size="md" className="max-h-[85vh] flex flex-col">
+        <ModalHeaderBase className="border-b pb-6">
+          <ModalTitleBase>Termos e Condições</ModalTitleBase>
+          <ModalDescriptionBase>Leia atentamente as regras de uso.</ModalDescriptionBase>
         </ModalHeaderBase>
-        <div style={{ padding: 16 }}>
-          Content goes here
+
+        
+        <div className="flex-1 overflow-y-auto py-6 pr-4 custom-scrollbar">
+          <div className="space-y-4 text-sm text-slate-500 leading-relaxed font-medium">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <p key={i}>
+                <span className="font-bold text-slate-900">{i + 1}. Cláusula de Exemplo:</span> Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore 
+                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+                ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+            ))}
+          </div>
         </div>
-        <ModalFooterBase>
-          <ButtonBase variant="outline">Cancel</ButtonBase>
-          <ButtonBase>Confirm</ButtonBase>
+
+        
+        <ModalFooterBase className="border-t pt-6 flex-row justify-end gap-3">
+          <ButtonBase 
+            variant="ghost" 
+            className="min-w-[20px] text-slate-400  tracking-widest"
+          >
+            Recusar
+          </ButtonBase>
+          <ButtonBase 
+            className="min-w-[140px] tracking-wider shadow-md"
+          >
+            Aceitar Termos
+          </ButtonBase>
         </ModalFooterBase>
       </ModalContentBase>
     </ModalBase>
-  );
-}`,
-    },
-  },
-};
-
-Default.parameters = {
-  ...Default.parameters,
-  docs: {
-    ...Default.parameters?.docs,
-    source: {
-      code: `import React from 'react';
-import { ModalBase, ModalTriggerBase, ModalContentBase, ModalTitleBase, ModalDescriptionBase, ModalFooterBase } from '@mlw-packages/react-components';
-import { ButtonBase } from '@mlw-packages/react-components';
-
-export const Default = () => (
-  <ModalBase>
-    <ModalTriggerBase asChild>
-      <ButtonBase>Open</ButtonBase>
-    </ModalTriggerBase>
-    <ModalContentBase>
-      <ModalTitleBase>Title</ModalTitleBase>
-      <ModalDescriptionBase>Content</ModalDescriptionBase>
-      <ModalFooterBase>
-        <ButtonBase variant="outline">Cancel</ButtonBase>
-        <ButtonBase>Confirm</ButtonBase>
-      </ModalFooterBase>
-    </ModalContentBase>
-  </ModalBase>
-);`,
-    },
-  },
-};
-
-meta.args = {
-  insertLabel: "Insert",
-  title: "Editar item",
-  description: "Use este modal para editar informações do item.",
-  namePlaceholder: "Nome",
-  locationPlaceholder: "Localização",
-  otherPlaceholder: "Outro campo",
-  cancelLabel: "Cancelar",
-  confirmLabel: "Confirmar",
-};
-
-meta.decorators = [
-  (Story) => (
-    <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
-      <Story />
-    </div>
   ),
-];
-
-meta.argTypes = {
-  insertLabel: { control: "text" },
-  title: { control: "text" },
-  description: { control: "text" },
-  namePlaceholder: { control: "text" },
-  locationPlaceholder: { control: "text" },
 };

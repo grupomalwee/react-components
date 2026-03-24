@@ -31,7 +31,8 @@ const ModalOverlayBase = React.forwardRef<
 ));
 ModalOverlayBase.displayName = DialogPrimitive.Overlay.displayName;
 
-type ModalSize = "sm" | "md" | "lg" | "full";
+
+type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
 
 type ModalContentProps = React.ComponentPropsWithoutRef<
   typeof DialogPrimitive.Content
@@ -40,6 +41,7 @@ type ModalContentProps = React.ComponentPropsWithoutRef<
     size?: ModalSize;
     centered?: boolean;
     backdropBlur?: boolean;
+    noPadding?: boolean; 
   };
 
 const ModalContentBase = React.forwardRef<
@@ -54,18 +56,18 @@ const ModalContentBase = React.forwardRef<
       size = "md",
       centered = true,
       backdropBlur = true,
+      noPadding = false,
       ...props
     },
     ref,
   ) => {
-    const sizeClass =
-      size === "sm"
-        ? "max-w-md"
-        : size === "lg"
-          ? "max-w-4xl"
-          : size === "full"
-            ? "w-full max-w-[calc(100%-2rem)]"
-            : "max-w-2xl";
+    const sizeClass = {
+      sm: "max-w-md",
+      md: "max-w-2xl",
+      lg: "max-w-4xl",
+      xl: "max-w-6xl",
+      full: "w-full max-w-[calc(100%-2rem)]",
+    }[size];
 
     const positionClass = centered
       ? "left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
@@ -95,8 +97,10 @@ const ModalContentBase = React.forwardRef<
         <DialogPrimitive.Content
           ref={ref}
           className={cn(
-            "fixed z-50 grid w-[calc(100%-2rem)] gap-3 sm:gap-4 border bg-background p-4 sm:p-6 shadow-lg rounded-md sm:rounded-lg max-h-[calc(100dvh-2rem)] sm:max-h-[90dvh] overflow-auto",
+            "fixed z-50 grid w-[calc(100%-2rem)] border bg-background shadow-lg rounded-md sm:rounded-lg max-h-[calc(100dvh-2rem)] sm:max-h-[90dvh] overflow-auto",
             "data-[state=open]:animate-modal-in data-[state=closed]:animate-modal-out border-border",
+            
+            !noPadding && "p-4 sm:p-6 gap-3 sm:gap-4",
             positionClass,
             sizeClass,
             className,
