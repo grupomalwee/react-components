@@ -79,16 +79,21 @@ export function CommandItemRow({
   item,
   isActive,
   isSelected,
+  multiSelect,
   onSelect,
+  onToggleSelection,
   onHover,
   searchQuery,
 }: CommandItemRowProps) {
-  
   return (
     <motion.button
       layout
       onClick={(e) => {
-        if (multiSelect && onToggleSelection && (e.ctrlKey || e.metaKey || e.shiftKey)) {
+        if (
+          multiSelect &&
+          onToggleSelection &&
+          (e.ctrlKey || e.metaKey || e.shiftKey)
+        ) {
           onToggleSelection(e);
         } else {
           onSelect(e);
