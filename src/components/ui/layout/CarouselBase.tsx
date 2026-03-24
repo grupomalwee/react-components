@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Lens } from "./Lens";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState, useMemo } from "react";
+import { toast } from "sonner";
 
 export interface CarouselItem {
   id: number | string;
@@ -195,7 +196,7 @@ export function CarouselBase({
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 2000);
     } catch (error) {
-      alert(
+      toast.error(
         "Erro ao baixar imagem. Verifique a URL ou permissões do servidor.",
       );
       console.error("Error downloading image:", error);

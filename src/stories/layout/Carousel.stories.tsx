@@ -7,43 +7,48 @@ import {
 const sampleItems: CarouselItem[] = [
   {
     id: 1,
-    url: "https://randomuser.me/api/portraits/men/32.jpg",
-    title: "John Doe",
+    url: "/pwa-512x512.png",
+    title: "layout/Carousel",
   },
   {
     id: 2,
-    url: "https://randomuser.me/api/portraits/women/44.jpg",
-    title: "Jane Smith",
+    url: "/pwa-512x512.png",
+    title: "BOXIEN BAY",
   },
   {
     id: 3,
-    url: "https://randomuser.me/api/portraits/men/65.jpg",
-    title: "Carlos Silva",
+    url: "/pwa-512x512.png",
+    title: "AUSIZE MAM",
   },
   {
     id: 4,
-    url: "https://randomuser.me/api/portraits/women/68.jpg",
-    title: "Maria Oliveira",
+    url: "/pwa-512x512.png",
+    title: "RECLKTIKA",
   },
   {
     id: 5,
-    url: "https://randomuser.me/api/portraits/men/12.jpg",
-    title: "Alex Johnson",
+    url: "/pwa-512x512.png",
+    title: "SONYPOO",
   },
   {
     id: 6,
-    url: "https://randomuser.me/api/portraits/women/25.jpg",
-    title: "Emily Clark",
+    url: "/pwa-512x512.png",
+    title: "DONM FLY",
+  },
+  {
+    id: 6,
+    url: "/pwa-512x512.png",
+    title: "DONM FLY",
   },
   {
     id: 7,
-    url: "https://randomuser.me/api/portraits/men/41.jpg",
-    title: "Michael Brown",
+    url: "/pwa-512x512.png",
+    title: "Snowy Mountain Highway",
   },
   {
     id: 8,
-    url: "https://randomuser.me/api/portraits/women/12.jpg",
-    title: "Laura Wilson",
+    url: "/pwa-512x512.png",
+    title: "FOGGY FOLS",
   },
 ];
 
@@ -515,8 +520,7 @@ export const ComPropFernando: Story = {
     items: sampleItems,
     showControls: true,
     showIndicators: true,
-    className: "h-[600px] w-[50%]",
-    fernando: "#8b5cf6",
+    fernando: "#8b5cf6", // Um tom de roxo (Violet 500)
   },
   parameters: {
     docs: {
