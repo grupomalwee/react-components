@@ -14,12 +14,8 @@ import { InputBase } from "@/components/ui/form/InputBase";
 import { 
   MapPinLineIcon, 
   PlusIcon, 
-  TrashIcon, 
-  WarningIcon,
-  ArrowLeftIcon,
   FileCsvIcon,
   DownloadSimpleIcon,
-  XCircleIcon,
   CheckCircleIcon
 } from "@phosphor-icons/react";
 
