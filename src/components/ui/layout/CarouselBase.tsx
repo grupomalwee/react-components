@@ -165,12 +165,27 @@ export function CarouselBase({
 
     const currentItem = items[index];
     try {
-      const response = await fetch(currentItem.url);
+      const response = await fetch(currentItem.url, { mode: "cors" });
+      if (!response.ok) throw new Error("Erro ao baixar imagem");
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = currentItem.title || "image";
+
+      let ext = "";
+      try {
+        const urlObj = new URL(currentItem.url, window.location.href);
+        const path = urlObj.pathname;
+        ext = path.substring(path.lastIndexOf("."));
+        if (!ext || ext.length > 6) ext = "";
+      } catch {
+        /* ignore */
+      }
+
+      let filename = currentItem.title || "image";
+      if (ext && !filename.endsWith(ext)) filename += ext;
+      link.download = filename;
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -180,6 +195,9 @@ export function CarouselBase({
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 2000);
     } catch (error) {
+      alert(
+        "Erro ao baixar imagem. Verifique a URL ou permissões do servidor.",
+      );
       console.error("Error downloading image:", error);
       setIsDownloading(false);
     }
@@ -229,8 +247,13 @@ export function CarouselBase({
                       <ZoomImage
                         src={item.url}
                         alt={item.title}
-                        className={cn("w-full h-full select-none")}
-                        imageClassName={imageClassName}
+                        className={cn(
+                          "w-full h-full select-none object-contain",
+                        )}
+                        imageClassName={cn(
+                          "object-contain w-full h-full",
+                          imageClassName,
+                        )}
                         borderRadius={8}
                         maxZoom={3.0}
                       />

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -37,7 +37,7 @@ export function ThemeProviderBase({
   storageKey = "app-ui-theme",
   ...props
 }: ThemeProviderProps) {
- const [theme, setThemeState] = useState<Theme>(defaultTheme);
+  const [theme, setThemeState] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -50,7 +50,7 @@ export function ThemeProviderBase({
       "dark-purple",
       "dark-green",
       "dark-blue",
-      "system"
+      "system",
     );
 
     if (theme === "system") {
@@ -60,17 +60,17 @@ export function ThemeProviderBase({
         : "light";
 
       root.classList.add(systemTheme);
-      
-      document.body.style.backgroundColor = '';
-      document.body.style.color = '';
+
+      document.body.style.backgroundColor = "";
+      document.body.style.color = "";
       return;
     }
 
     root.classList.add(theme);
-    
-    if (theme.includes('dark')) {
-      document.body.style.backgroundColor = '';
-      document.body.style.color = '';
+
+    if (theme.includes("dark")) {
+      document.body.style.backgroundColor = "";
+      document.body.style.color = "";
     }
   }, [theme]);
 

@@ -1,7 +1,5 @@
 export { default as Chart } from "./Chart";
 export { default as HorizontalChart } from "./HorizontalChart";
-// export { default as BarChart } from "./BarChart";
-// export { default as LineChart } from "./LineChart";
 export { default as TimeSeries } from "./TimeSeries";
 export * from "./components";
 export * from "./hooks";
@@ -17,3 +15,5 @@ export * from "./components/ChartTotalLegend";
 export * from "./components/HorizontalLegend";
 export * from "./types/chart.types";
 export * from "./components/tooltips/utils/systemTooltipUtils";
+
+export { default as PieChartComponent } from "./PieChart";
