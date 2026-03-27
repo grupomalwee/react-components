@@ -316,7 +316,12 @@ export function EventAgenda({
               onEventCreate={
                 allowCellClick
                   ? (d: Date) =>
-                     console.log(d)
+                    onEventUpdate?.({
+                      start: d,
+                      end: d,
+                      title: "Novo Evento",
+                      id: crypto.randomUUID(),
+                    })
                   : undefined
               }
             />
