@@ -44,6 +44,7 @@ export interface EventCalendarProps {
   className?: string;
   initialView?: CalendarViewAgenda;
   initialDate?: Date;
+  optionsViewEvents?: CalendarViewAgenda[], 
   onClick?:
     | ((event: CalendarEventAgenda, e?: React.MouseEvent) => void)
     | React.ReactElement<ModalLikeProps>;
@@ -65,6 +66,7 @@ export interface ModalLikeProps {
 
 export function EventAgenda({
   events = [],
+  optionsViewEvents,
   onEventUpdate,
   className,
   initialView = "month",
@@ -77,7 +79,7 @@ export function EventAgenda({
   onlyWeek,
   onlyAgenda,
   onlyYear,
-  allowCellClick = false,
+  allowCellClick = true,
 }: EventCalendarProps) {
   const lockedView: CalendarViewAgenda | undefined = onlyDay
     ? "day"
@@ -197,9 +199,12 @@ export function EventAgenda({
     return capitalize(format(currentDate, "MMMM yyyy", { locale: ptBR }));
   }, [currentDate, activeView]);
 
-  const availableViews: CalendarViewAgenda[] = showYearView
+  let availableViews: CalendarViewAgenda[];
+  if(optionsViewEvents?.length == 0 || !optionsViewEvents)
+    availableViews = showYearView
     ? ["year", "month", "week", "day", "agenda"]
     : ["month", "week", "day", "agenda"];
+  else availableViews = [...new Set(optionsViewEvents.map((options) => options))];
 
   const selectItems: SelectItem<CalendarViewAgenda>[] = availableViews.map(
     (v) => ({
@@ -311,12 +316,7 @@ export function EventAgenda({
               onEventCreate={
                 allowCellClick
                   ? (d: Date) =>
-                      onEventUpdate?.({
-                        start: d,
-                        end: d,
-                        title: "Novo Evento",
-                        id: crypto.randomUUID(),
-                      })
+                     console.log(d)
                   : undefined
               }
             />

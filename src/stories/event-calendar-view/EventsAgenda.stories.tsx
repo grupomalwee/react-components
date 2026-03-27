@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { ThemeProviderBase } from "@/components/theme/theme-provider";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { addDays, setHours, setMinutes, subDays } from "date-fns";
@@ -143,7 +142,6 @@ const meta: Meta<typeof EventAgenda> = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <ThemeProviderBase storageKey="vite-ui">
         <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
           <motion.div
             initial={{ opacity: 0, translateY: 8 }}
@@ -154,7 +152,6 @@ const meta: Meta<typeof EventAgenda> = {
             <Story />
           </motion.div>
         </div>
-      </ThemeProviderBase>
     ),
   ],
   parameters: {
@@ -203,6 +200,11 @@ export default function Example() {
     },
   },
   argTypes: {
+    optionsViewEvents: {
+      control: {
+        type: 'select'
+      }
+    },
     initialView: {
       control: { type: "select" },
       options: ["year", "month", "week", "day", "agenda"],
