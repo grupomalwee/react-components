@@ -6,6 +6,7 @@ interface UseScrollColumnOptions {
   onChange: (value: number) => void;
   max: number;
   step?: number;
+  disabledValues?: number[];
 }
 
 export function useScrollColumn({
@@ -13,9 +14,12 @@ export function useScrollColumn({
   onChange,
   max,
   step = 1,
+  disabledValues = [],
 }: UseScrollColumnOptions) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const items = getItems(max, step);
+  const rawItems = getItems(max, step);
+  const disabledSet = new Set(disabledValues);
+  const items = rawItems.filter((it) => !disabledSet.has(it));
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isScrollingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -27,14 +31,35 @@ export function useScrollColumn({
   const visibleItems = VISIBLE_ITEMS;
   const containerHeight = visibleItems * itemHeight;
 
+  const disabledKey = disabledValues.join("|");
+
   useEffect(() => {
-    if (containerRef.current && !isScrollingRef.current) {
-      const index = Math.round(value / step);
-      const clampedIndex = Math.max(0, Math.min(items.length - 1, index));
-      const scrollPosition = clampedIndex * itemHeight;
-      containerRef.current.scrollTop = scrollPosition;
+    if (!containerRef.current || isScrollingRef.current) return;
+
+    if (items.length === 0) {
+      containerRef.current.scrollTop = 0;
+      return;
     }
-  }, [value, itemHeight, step, items.length]);
+
+    const exactIndex = items.indexOf(value);
+    if (exactIndex >= 0) {
+      containerRef.current.scrollTop = exactIndex * itemHeight;
+      return;
+    }
+
+    const target = value;
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+    for (let i = 0; i < items.length; i++) {
+      const dist = Math.abs(items[i] - target);
+      if (dist < nearestDistance) {
+        nearestDistance = dist;
+        nearestIndex = i;
+      }
+    }
+
+    containerRef.current.scrollTop = nearestIndex * itemHeight;
+  }, [value, itemHeight, step, items, items.length, disabledKey]);
 
   useEffect(() => {
     return () => {
@@ -51,6 +76,8 @@ export function useScrollColumn({
 
     scrollTimeoutRef.current = setTimeout(() => {
       if (!containerRef.current) return;
+
+      if (items.length === 0) return;
 
       const newIndex = Math.round(containerRef.current.scrollTop / itemHeight);
       const newValue = items[newIndex];

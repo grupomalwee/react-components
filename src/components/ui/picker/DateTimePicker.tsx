@@ -3,6 +3,23 @@ import { add, format } from "date-fns";
 import { ButtonBase } from "@/components/ui/form/ButtonBase";
 import { CalendarBase } from "@/components/ui/picker/calendar";
 
+
+export type DisabledSlot = {
+  start: Date;
+  from: Date;
+  allDay?: boolean;
+};
+
+export type DisabledSlots = DisabledSlot[];
+
+
+type DisabledPropItem =
+  | { before: Date }
+  | { after: Date }
+  | ((d: Date) => boolean)
+  | Date;
+
+
 import { cn } from "../../../lib/utils";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
@@ -42,6 +59,7 @@ interface DateTimePickerProps extends ErrorMessageProps {
   fromDate?: Date;
   toDate?: Date;
   disabled?: boolean;
+  disabledSlots?: DisabledSlot[];
   className?: string;
   error?: string;
   hideClear?: boolean;
@@ -63,7 +81,24 @@ export function DateTimePicker({
   error,
   hideClear = true,
   triggerIcon,
+  disabledSlots,
 }: DateTimePickerProps) {
+  const allDayDates = (disabledSlots || [])
+    .filter((s) => s.allDay)
+    .map((s) => s.start)
+    .filter(Boolean) as Date[];
+
+  const allDaySet = new Set(allDayDates.map((d) => d.toDateString()));
+
+  const buildDisabledProp = (): DisabledPropItem[] | undefined => {
+    const arr: DisabledPropItem[] = [];
+    if (fromDate) arr.push({ before: fromDate });
+    if (toDate) arr.push({ after: toDate });
+    if (allDaySet.size) arr.push((d: Date) => allDaySet.has(d.toDateString()));
+    return arr.length > 0 ? arr : undefined;
+  };
+
+  const calendarDisabled = buildDisabledProp();
   const [internalDate, setInternalDate] = useState<Date | null>(date);
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("calendar");
@@ -218,14 +253,7 @@ export function DateTimePicker({
                 defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
                 {...(fromDate && { startMonth: fromDate })}
                 {...(toDate && { endMonth: toDate })}
-                {...(fromDate || toDate
-                  ? {
-                      disabled: [
-                        ...(fromDate ? [{ before: fromDate }] : []),
-                        ...(toDate ? [{ after: toDate }] : []),
-                      ],
-                    }
-                  : {})}
+                {...(calendarDisabled ? { disabled: calendarDisabled } : {})}
                 className={cn("w-full rounded-none border-none")}
               />
             </TabsContentBase>
@@ -235,6 +263,7 @@ export function DateTimePicker({
                   setDate={(d) => handleTimeChange(d ?? null)}
                   date={internalDate}
                   hideSeconds={hideSeconds}
+                  disabledSlots={disabledSlots}
                 />
               </div>
             </TabsContentBase>
@@ -254,14 +283,7 @@ export function DateTimePicker({
             defaultMonth={fromDate ?? toDate ?? internalDate ?? undefined}
             {...(fromDate && { startMonth: fromDate })}
             {...(toDate && { endMonth: toDate })}
-            {...(fromDate || toDate
-              ? {
-                  disabled: [
-                    ...(fromDate ? [{ before: fromDate }] : []),
-                    ...(toDate ? [{ after: toDate }] : []),
-                  ],
-                }
-              : {})}
+            {...(calendarDisabled ? { disabled: calendarDisabled } : {})}
             className={cn(
               "w-max rounded-none border-none",
               !hideTime && "sm:rounded-r-none",
@@ -283,6 +305,7 @@ export function DateTimePicker({
                 setDate={(d) => handleTimeChange(d ?? null)}
                 date={internalDate}
                 hideSeconds={hideSeconds}
+                disabledSlots={disabledSlots}
               />
             </div>
           )}

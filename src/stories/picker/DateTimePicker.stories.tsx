@@ -61,7 +61,7 @@ export default meta;
 type Story = StoryObj<typeof DateTimePicker>;
 
 const Template = (
-  args: Partial<React.ComponentProps<typeof DateTimePicker>>
+  args: Partial<React.ComponentProps<typeof DateTimePicker>>,
 ) => {
   const [date, setDate] = useState<Date | null>(args.date ?? null);
   return <DateTimePicker {...args} date={date} onChange={setDate} />;
@@ -86,7 +86,7 @@ export const TimeVariants: Story = {
   render: () => {
     const [date1, setDate1] = useState<Date | null>();
     const [date2, setDate2] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -123,13 +123,13 @@ export const ConfigurationOptions: Story = {
   name: "Opções de Configuração",
   render: () => {
     const [date1, setDate1] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
     const [date2, setDate2] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
     const [date3, setDate3] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
 
     return (
@@ -249,7 +249,7 @@ export const WithOnConfirm: Story = {
   name: "onConfirm",
   render: () => {
     const [date, setDate] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
 
     return (
@@ -300,7 +300,7 @@ export default function WithOnConfirm() {
 export const Trigger: Story = {
   render: () => {
     const [date, setDate] = useState<Date | null>(
-      new Date(2025, 9, 9, 14, 30, 0)
+      new Date(2025, 9, 9, 14, 30, 0),
     );
 
     return (
@@ -344,6 +344,72 @@ export default function WithOnConfirm() {
     </>
   );
 }`,
+      },
+    },
+  },
+};
+
+export const DisabledSlots: Story = {
+  name: "Disabled Slots Example",
+  render: Template,
+  args: {
+    label: "Horários bloqueados",
+    hideSeconds: true,
+    date: new Date(2026, 6, 13, 12, 0, 0),
+    disabledSlots: [
+      {
+        start: new Date(2026, 6, 13, 0, 0, 0),
+        from: new Date(2026, 6, 13, 23, 59, 59),
+        allDay: true,
+      },
+      {
+        start: new Date(2026, 6, 14, 9, 0, 0),
+        from: new Date(2026, 6, 14, 10, 30, 0),
+      },
+      {
+        start: new Date(2026, 6, 14, 12, 0, 0),
+        from: new Date(2026, 6, 14, 13, 0, 0),
+      },
+      {
+        start: new Date(2026, 6, 14, 15, 30, 0),
+        from: new Date(2026, 6, 14, 16, 15, 0),
+      },
+      {
+        start: new Date(2026, 6, 15, 8, 30, 0),
+        from: new Date(2026, 6, 15, 9, 30, 0),
+      },
+      {
+        start: new Date(2026, 6, 16, 22, 0, 0),
+        from: new Date(2026, 6, 16, 23, 59, 0),
+      },
+      {
+        start: new Date(2026, 6, 17, 0, 0, 0),
+        from: new Date(2026, 6, 17, 23, 59, 59),
+        allDay: true,
+      },
+    ],
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `// DateTimePicker com diversos horários e dias bloqueados
+import React, { useState } from 'react';
+import { DateTimePicker } from '@mlw-packages/react-components';
+
+export default function DisabledSlotsExample() {
+  const [date, setDate] = useState<Date | null>(new Date(2026,6,13,12,0,0));
+  const disabledSlots = [
+    { start: new Date(2026,6,13,0,0,0), from: new Date(2026,6,13,23,59,59), allDay: true },
+    { start: new Date(2026,6,14,9,0,0), from: new Date(2026,6,14,10,30,0) },
+    { start: new Date(2026,6,14,12,0,0), from: new Date(2026,6,14,13,0,0) },
+    { start: new Date(2026,6,14,15,30,0), from: new Date(2026,6,14,16,15,0) },
+    { start: new Date(2026,6,15,8,30,0), from: new Date(2026,6,15,9,30,0) },
+    { start: new Date(2026,6,16,22,0,0), from: new Date(2026,6,16,23,59,0) },
+    { start: new Date(2026,6,17,0,0,0), from: new Date(2026,6,17,23,59,59), allDay: true },
+  ];
+
+  return <DateTimePicker label='Horários bloqueados' date={date} onChange={setDate} disabledSlots={disabledSlots} />;
+`,
       },
     },
   },
