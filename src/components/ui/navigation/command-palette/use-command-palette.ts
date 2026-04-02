@@ -4,7 +4,7 @@ import * as React from "react";
 import { ClockCounterClockwiseIcon } from "@phosphor-icons/react";
 import { CommandPaletteProps, CommandGroup, CommandItem } from "./types";
 import { filterAndScore, normaliseGroups, unionGroups } from "./utils";
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useCallback, useRef } from "react";
 
 const PAGE_SIZE = 8;
 
@@ -23,9 +23,15 @@ export function useCommandPalette({
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [page, setPage] = React.useState(0);
-  const [selectedItemIds, setSelectedItemIds] = React.useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedItemIds, setSelectedItemIds] = React.useState<Set<string>>(new Set());
+
+  const stateRef = useRef({ 
+    activeIndex, 
+    page, 
+    flatItems: [] as CommandItem[], 
+    query, 
+    selectedItems: [] as CommandItem[] 
+  });
 
   const toggleSelection = useCallback((id: string) => {
     setSelectedItemIds((prev) => {
@@ -38,10 +44,7 @@ export function useCommandPalette({
 
   const clearSelection = useCallback(() => setSelectedItemIds(new Set()), []);
 
-  const baseGroups = useMemo(
-    () => normaliseGroups(items, groups),
-    [items, groups],
-  );
+  const baseGroups = useMemo(() => normaliseGroups(items, groups), [items, groups]);
 
   useEffect(() => {
     if (open) {
@@ -60,49 +63,27 @@ export function useCommandPalette({
 
   const allMatchedGroups = useMemo(() => {
     if (!query.trim()) {
-      if (recentItems.length > 0) {
-        return [
-          {
-            id: "__recent__",
-            label: "Recent",
-            icon: React.createElement(ClockCounterClockwiseIcon),
-            items: recentItems,
-            priority: 999,
-          },
-          ...baseGroups,
-        ];
-      }
-      return baseGroups;
+      return recentItems.length > 0 
+        ? [{ id: "__recent__", label: "Recent", icon: React.createElement(ClockCounterClockwiseIcon), items: recentItems, priority: 999 }, ...baseGroups]
+        : baseGroups;
     }
-    if (searchTerms.length > 1 || (multiSearch && searchTerms.length > 0)) {
-      return unionGroups(baseGroups, searchTerms);
-    }
-    return filterAndScore(baseGroups, query);
+    return (searchTerms.length > 1 || (multiSearch && searchTerms.length > 0))
+      ? unionGroups(baseGroups, searchTerms)
+      : filterAndScore(baseGroups, query);
   }, [query, baseGroups, recentItems, multiSearch, searchTerms]);
 
-  const allFlatItems = useMemo(
-    () => allMatchedGroups.flatMap((g) => g.items),
-    [allMatchedGroups],
-  );
-
+  const allFlatItems = useMemo(() => allMatchedGroups.flatMap((g) => g.items), [allMatchedGroups]);
   const totalItems = allFlatItems.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
-  useEffect(() => {
-    setPage(0);
-    setActiveIndex(0);
-  }, [query]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [page]);
+  useEffect(() => { setPage(0); setActiveIndex(0); }, [query]);
+  useEffect(() => { setActiveIndex(0); }, [page]);
 
   const displayedGroups = useMemo(() => {
     const start = page * PAGE_SIZE;
     const end = start + PAGE_SIZE;
     let count = 0;
     const result: CommandGroup[] = [];
-
     for (const group of allMatchedGroups) {
       const slicedItems: CommandItem[] = [];
       for (const item of group.items) {
@@ -110,30 +91,18 @@ export function useCommandPalette({
         count++;
         if (count >= end) break;
       }
-      if (slicedItems.length > 0) {
-        result.push({ ...group, items: slicedItems });
-      }
+      if (slicedItems.length > 0) result.push({ ...group, items: slicedItems });
       if (count >= end) break;
     }
-
     return result;
   }, [allMatchedGroups, page]);
 
-  const flatItems = useMemo(
-    () => displayedGroups.flatMap((g) => g.items),
-    [displayedGroups],
-  );
-
-  const selectedItems = useMemo(
-    () => allFlatItems.filter((i) => selectedItemIds.has(i.id)),
-    [allFlatItems, selectedItemIds],
-  );
-
-  const pageItemCount = flatItems.length;
+  const flatItems = useMemo(() => displayedGroups.flatMap((g) => g.items), [displayedGroups]);
+  const selectedItems = useMemo(() => allFlatItems.filter((i) => selectedItemIds.has(i.id)), [allFlatItems, selectedItemIds]);
 
   useEffect(() => {
-    setActiveIndex((i) => Math.min(i, Math.max(pageItemCount - 1, 0)));
-  }, [pageItemCount]);
+    stateRef.current = { activeIndex, page, flatItems, query, selectedItems };
+  }, [activeIndex, page, flatItems, query, selectedItems]);
 
   const executeBulkAction = useCallback(() => {
     if (!onSelectMultiple || selectedItems.length === 0) return;
@@ -141,88 +110,51 @@ export function useCommandPalette({
     onOpenChange?.(false);
   }, [onSelectMultiple, selectedItems, onOpenChange]);
 
-  const handleSelect = useCallback(
-    (
-      item?: CommandItem,
-      event?:
-        | React.MouseEvent
-        | React.KeyboardEvent
-        | KeyboardEvent
-        | MouseEvent,
-    ) => {
-      if (!item) return;
-
-      if (multiSelect) {
-        const isCmdKey =
-          event &&
-          ("ctrlKey" in event || "metaKey" in event || "shiftKey" in event) &&
-          (event.ctrlKey || event.metaKey || event.shiftKey);
-
-        if (isCmdKey) {
-          toggleSelection(item.id);
-          return;
-        }
-
-        if (selectedItems.length > 0) {
-          const finalItems = selectedItemIds.has(item.id)
-            ? selectedItems
-            : [...selectedItems, item];
-
-          onSelectMultiple?.(finalItems);
-          onOpenChange?.(false);
-          return;
-        }
+  const handleSelect = useCallback((
+    item?: CommandItem, 
+    event?: React.MouseEvent | React.KeyboardEvent | KeyboardEvent | MouseEvent
+  ) => {
+    if (!item) return;
+    if (multiSelect) {
+      const isCmdKey = event && ("ctrlKey" in event || "metaKey" in event || "shiftKey" in event) && 
+                       (event.ctrlKey || event.metaKey || event.shiftKey);
+      if (isCmdKey) {
+        toggleSelection(item.id);
+        return;
       }
-
-      item.onSelect();
-      onOpenChange?.(false);
-
-      if (onRecentItemsChange) {
-        const next = [
-          item,
-          ...recentItems.filter((r) => r.id !== item.id),
-        ].slice(0, maxRecentItems);
-        onRecentItemsChange(next);
+      if (selectedItems.length > 0) {
+        const finalItems = selectedItemIds.has(item.id) ? selectedItems : [...selectedItems, item];
+        onSelectMultiple?.(finalItems);
+        onOpenChange?.(false);
+        return;
       }
-    },
-    [
-      multiSelect,
-      selectedItems,
-      selectedItemIds,
-      onSelectMultiple,
-      onOpenChange,
-      onRecentItemsChange,
-      recentItems,
-      maxRecentItems,
-      toggleSelection,
-    ],
-  );
+    }
+    item.onSelect();
+    onOpenChange?.(false);
+    if (onRecentItemsChange) {
+      const next = [item, ...recentItems.filter((r) => r.id !== item.id)].slice(0, maxRecentItems);
+      onRecentItemsChange(next);
+    }
+  }, [multiSelect, selectedItems, selectedItemIds, onSelectMultiple, onOpenChange, onRecentItemsChange, recentItems, maxRecentItems, toggleSelection]);
 
   useEffect(() => {
     if (!open) return;
+
     const handler = (e: KeyboardEvent) => {
+      const { activeIndex: curIdx, flatItems: curItems, query: curQuery, selectedItems: curSelected } = stateRef.current;
+
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        if (activeIndex === pageItemCount - 1 && page < totalPages - 1) {
-          setPage((p) => p + 1);
-        } else {
-          setActiveIndex((i) => (i + 1) % Math.max(pageItemCount, 1));
-        }
+        if (curIdx === curItems.length - 1 && page < totalPages - 1) setPage(p => p + 1);
+        else setActiveIndex(i => (i + 1) % Math.max(curItems.length, 1));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        if (activeIndex === 0 && page > 0) {
-          setPage((p) => p - 1);
-          setActiveIndex(PAGE_SIZE - 1);
-        } else {
-          setActiveIndex(
-            (i) =>
-              (i - 1 + Math.max(pageItemCount, 1)) % Math.max(pageItemCount, 1),
-          );
-        }
+        if (curIdx === 0 && page > 0) { setPage(p => p - 1); setActiveIndex(PAGE_SIZE - 1); }
+        else setActiveIndex(i => (i - 1 + Math.max(curItems.length, 1)) % Math.max(curItems.length, 1));
       } else if (e.key === "Enter") {
         e.preventDefault();
-
-        if (multiSearch && query.includes(",")) {
+        
+        if (multiSearch && curQuery.includes(",") && curSelected.length === 0) {
           return;
         }
 
@@ -231,44 +163,18 @@ export function useCommandPalette({
           return;
         }
 
-        handleSelect(flatItems[activeIndex], e);
+        handleSelect(curItems[curIdx], e);
       }
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [
-    open,
-    flatItems,
-    activeIndex,
-    pageItemCount,
-    page,
-    totalPages,
-    query,
-    multiSearch,
-    multiSelect,
-    executeBulkAction,
-    handleSelect,
-  ]);
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, page, totalPages, multiSearch, multiSelect, handleSelect, executeBulkAction]);
 
   return {
-    query,
-    setQuery,
-    activeIndex,
-    setActiveIndex,
-    page,
-    setPage,
-    searchTerms,
-    allMatchedGroups,
-    allFlatItems,
-    displayedGroups,
-    flatItems,
-    totalItems,
-    totalPages,
-    handleSelect,
-    selectedItemIds,
-    toggleSelection,
-    selectedItems,
-    executeBulkAction,
+    query, setQuery, activeIndex, setActiveIndex, page, setPage, searchTerms,
+    allMatchedGroups, allFlatItems, displayedGroups, flatItems, totalItems, totalPages,
+    handleSelect, selectedItemIds, toggleSelection, selectedItems, executeBulkAction,
     isEmpty: totalItems === 0 && query.trim().length > 0,
     showList: query.trim() !== "" || recentItems.length > 0,
   };
