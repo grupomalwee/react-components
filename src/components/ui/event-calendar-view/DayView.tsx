@@ -47,6 +47,7 @@ interface DayViewProps {
   /** When true, hides event times */
   noTime?: boolean;
   onEventCreate?: (startTime: Date) => void;
+  allDayCell?: boolean;
 }
 
 interface PositionedEvent {
@@ -65,6 +66,7 @@ export function DayViewAgenda({
   showUndatedEvents,
   noTime = false,
   onEventCreate,
+  allDayCell
 }: DayViewProps) {
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
@@ -235,7 +237,7 @@ export function DayViewAgenda({
 
   return (
     <div className="contents" data-slot="day-view">
-      {showAllDaySection && (
+      {showAllDaySection && !allDayCell && (
         <div className="border-border/70 border-t bg-muted/50">
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative border-border/70 border-r flex items-center justify-center p-1">
@@ -313,119 +315,232 @@ export function DayViewAgenda({
           ))}
         </div>
 
-        <div className="relative">
-          {positionedEvents.map((positionedEvent) => {
-            const evt = positionedEvent.event;
-            const eventStart = new Date(evt.start ?? evt.end ?? Date.now());
-            const eventEnd = new Date(evt.end ?? evt.start ?? Date.now());
-            const isFirstDay = isSameDay(currentDate, eventStart);
-            const isLastDay = isSameDay(currentDate, eventEnd);
+        {showAllDaySection && allDayCell ? (
+            <>
+              <div className="relative">
+                {allDayEvents.map((event) => {
+                  const eventStart = new Date(event.start!);
+                  const eventEnd = new Date(new Date(event.end!).setHours(23, 59));
+                  const isFirstDay = isSameDay(currentDate, eventStart);
+                  const isLastDay = isSameDay(currentDate, eventEnd);
 
-            return (
-              <div
-                className="absolute z-10 px-0.5"
-                key={positionedEvent.event.id}
-                style={{
-                  height: `${positionedEvent.height}px`,
-                  left: `${positionedEvent.left * 100}%`,
-                  top: `${positionedEvent.top}px`,
-                  width: `${positionedEvent.width * 100}%`,
-                  zIndex: positionedEvent.zIndex,
-                }}
-              >
-                <TooltipProviderBase delayDuration={400}>
-                  <TooltipBase>
-                    <TooltipTriggerBase asChild>
-                      <div className="size-full">
-                        <EventItemAgenda
-                          event={evt}
-                          view="day"
-                          isFirstDay={isFirstDay}
-                          isLastDay={isLastDay}
-                          onClick={(e) => handleEventClick(evt, e)}
-                          showTime
-                          noTime={noTime}
-                        />
-                      </div>
-                    </TooltipTriggerBase>
-                    <TooltipContentBase
-                      side="top"
-                      sideOffset={6}
-                      className="max-w-[220px] space-y-0.5"
-                    >
-                      <p className="font-semibold text-sm leading-snug">
-                        {evt.title}
-                      </p>
-                      <p className="text-xs opacity-90">
-                        {formatDurationAgenda(evt)}
-                      </p>
-                      {evt.location && (
-                        <p className="text-xs flex items-center gap-2">
-                          <MapPinIcon size={15} /> {evt.location}
-                        </p>
-                      )}
-                      {evt.description && (
-                        <p className="text-xs opacity-75 line-clamp-2">
-                          {evt.description}
-                        </p>
-                      )}
-                    </TooltipContentBase>
-                  </TooltipBase>
-                </TooltipProviderBase>
-              </div>
-            );
-          })}
-
-          {currentTimeVisible && (
-            <div
-              className="pointer-events-none absolute right-0 left-0 z-20"
-              style={{ top: `${currentTimePosition}%` }}
-            >
-              <div className="relative flex items-center">
-                <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
-                <div className="h-[2px] w-full bg-primary" />
-              </div>
-            </div>
-          )}
-
-          {hours.map((hour) => {
-            const hourValue = getHours(hour);
-            return (
-              <div
-                className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
-                key={hour.toString()}
-              >
-                {[0, 1, 2, 3].map((quarter) => {
-                  const quarterHourTime = hourValue + quarter * 0.25;
                   return (
-                    <DroppableCellAgenda
-                      className={cn(
-                        "absolute h-[calc(var(--week-cells-height)/4)] w-full",
-                        quarter === 0 && "top-0",
-                        quarter === 1 &&
-                          "top-[calc(var(--week-cells-height)/4)]",
-                        quarter === 2 &&
-                          "top-[calc(var(--week-cells-height)/4*2)]",
-                        quarter === 3 &&
-                          "top-[calc(var(--week-cells-height)/4*3)]",
-                      )}
-                      date={currentDate}
-                      id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
-                      key={`${hour.toString()}-${quarter}`}
-                      onClick={() => {
-                        const startTime = new Date(currentDate);
-                        startTime.setHours(hourValue);
-                        startTime.setMinutes(quarter * 15);
-                        if (onEventCreate) onEventCreate(startTime);
-                      }}
-                      time={quarterHourTime}
-                    />
+                    <div
+                      className="absolute z-10 px-0.5"
+                      key={`spanning-${event.id}`}
+                      style={{height: '100%', width: '100%', padding: '10px'}}
+                    >
+                      <TooltipProviderBase delayDuration={400}>
+                        <TooltipBase>
+                          <TooltipTriggerBase asChild>
+                            <div className="size-full">
+                              <EventItemAgenda
+                                event={event}
+                                view="day"
+                                isFirstDay={isFirstDay}
+                                isLastDay={isLastDay}
+                                onClick={(e) => handleEventClick(event, e)}
+                                showTime
+                                noTime={noTime}
+                              />
+                            </div>
+                          </TooltipTriggerBase>
+                          <TooltipContentBase
+                            side="top"
+                            sideOffset={6}
+                            className="max-w-[220px] space-y-0.5"
+                          >
+                            <p className="font-semibold text-sm leading-snug">
+                              {event.title}
+                            </p>
+                            <p className="text-xs opacity-90">
+                              {formatDurationAgenda(event)}
+                            </p>
+                            {event.location && (
+                              <p className="text-xs flex items-center gap-2">
+                                <MapPinIcon size={15} /> {event.location}
+                              </p>
+                            )}
+                            {event.description && (
+                              <p className="text-xs opacity-75 line-clamp-2">
+                                {event.description}
+                              </p>
+                            )}
+                          </TooltipContentBase>
+                        </TooltipBase>
+                      </TooltipProviderBase>
+                    </div>
+                  );
+                })}
+
+                {currentTimeVisible && (
+                  <div
+                    className="pointer-events-none absolute right-0 left-0 z-20"
+                    style={{ top: `${currentTimePosition}%` }}
+                  >
+                    <div className="relative flex items-center">
+                      <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
+                      <div className="h-[2px] w-full bg-primary" />
+                    </div>
+                  </div>
+                )}
+
+                {hours.map((hour) => {
+                  const hourValue = getHours(hour);
+                  return (
+                    <div
+                      className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
+                      key={hour.toString()}
+                    >
+                      {[0, 1, 2, 3].map((quarter) => {
+                        const quarterHourTime = hourValue + quarter * 0.25;
+                        return (
+                          <DroppableCellAgenda
+                            className={cn(
+                              "absolute h-[calc(var(--week-cells-height)/4)] w-full",
+                              quarter === 0 && "top-0",
+                              quarter === 1 &&
+                                "top-[calc(var(--week-cells-height)/4)]",
+                              quarter === 2 &&
+                                "top-[calc(var(--week-cells-height)/4*2)]",
+                              quarter === 3 &&
+                                "top-[calc(var(--week-cells-height)/4*3)]",
+                            )}
+                            date={currentDate}
+                            id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
+                            key={`${hour.toString()}-${quarter}`}
+                            onClick={() => {
+                              const startTime = new Date(currentDate);
+                              startTime.setHours(hourValue);
+                              startTime.setMinutes(quarter * 15);
+                              if (onEventCreate) onEventCreate(startTime);
+                            }}
+                            time={quarterHourTime}
+                          />
+                        );
+                      })}
+                    </div>
                   );
                 })}
               </div>
-            );
-          })}
-        </div>
+            </>
+          ) : (
+            <>
+              <div className="relative">
+                {positionedEvents.map((positionedEvent) => {
+                  const evt = positionedEvent.event;
+                  const eventStart = new Date(evt.start ?? evt.end ?? Date.now());
+                  const eventEnd = new Date(evt.end ?? evt.start ?? Date.now());
+                  const isFirstDay = isSameDay(currentDate, eventStart);
+                  const isLastDay = isSameDay(currentDate, eventEnd);
+
+                  return (
+                    <div
+                      className="absolute z-10 px-0.5"
+                      key={positionedEvent.event.id}
+                      style={{
+                        height: `${positionedEvent.height}px`,
+                        left: `${positionedEvent.left * 100}%`,
+                        top: `${positionedEvent.top}px`,
+                        width: `${positionedEvent.width * 100}%`,
+                        zIndex: positionedEvent.zIndex,
+                      }}
+                    >
+                      <TooltipProviderBase delayDuration={400}>
+                        <TooltipBase>
+                          <TooltipTriggerBase asChild>
+                            <div className="size-full">
+                              <EventItemAgenda
+                                event={evt}
+                                view="day"
+                                isFirstDay={isFirstDay}
+                                isLastDay={isLastDay}
+                                onClick={(e) => handleEventClick(evt, e)}
+                                showTime
+                                noTime={noTime}
+                              />
+                            </div>
+                          </TooltipTriggerBase>
+                          <TooltipContentBase
+                            side="top"
+                            sideOffset={6}
+                            className="max-w-[220px] space-y-0.5"
+                          >
+                            <p className="font-semibold text-sm leading-snug">
+                              {evt.title}
+                            </p>
+                            <p className="text-xs opacity-90">
+                              {formatDurationAgenda(evt)}
+                            </p>
+                            {evt.location && (
+                              <p className="text-xs flex items-center gap-2">
+                                <MapPinIcon size={15} /> {evt.location}
+                              </p>
+                            )}
+                            {evt.description && (
+                              <p className="text-xs opacity-75 line-clamp-2">
+                                {evt.description}
+                              </p>
+                            )}
+                          </TooltipContentBase>
+                        </TooltipBase>
+                      </TooltipProviderBase>
+                    </div>
+                  );
+                })}
+
+                {currentTimeVisible && (
+                  <div
+                    className="pointer-events-none absolute right-0 left-0 z-20"
+                    style={{ top: `${currentTimePosition}%` }}
+                  >
+                    <div className="relative flex items-center">
+                      <div className="-left-1 absolute h-2 w-2 rounded-full bg-primary" />
+                      <div className="h-[2px] w-full bg-primary" />
+                    </div>
+                  </div>
+                )}
+
+                {hours.map((hour) => {
+                  const hourValue = getHours(hour);
+                  return (
+                    <div
+                      className="relative h-[var(--week-cells-height)] border-border/70 border-b last:border-b-0"
+                      key={hour.toString()}
+                    >
+                      {[0, 1, 2, 3].map((quarter) => {
+                        const quarterHourTime = hourValue + quarter * 0.25;
+                        return (
+                          <DroppableCellAgenda
+                            className={cn(
+                              "absolute h-[calc(var(--week-cells-height)/4)] w-full",
+                              quarter === 0 && "top-0",
+                              quarter === 1 &&
+                                "top-[calc(var(--week-cells-height)/4)]",
+                              quarter === 2 &&
+                                "top-[calc(var(--week-cells-height)/4*2)]",
+                              quarter === 3 &&
+                                "top-[calc(var(--week-cells-height)/4*3)]",
+                            )}
+                            date={currentDate}
+                            id={`day-cell-${currentDate.toISOString()}-${quarterHourTime}`}
+                            key={`${hour.toString()}-${quarter}`}
+                            onClick={() => {
+                              const startTime = new Date(currentDate);
+                              startTime.setHours(hourValue);
+                              startTime.setMinutes(quarter * 15);
+                              if (onEventCreate) onEventCreate(startTime);
+                            }}
+                            time={quarterHourTime}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+        )}
       </div>
       <UndatedEvents
         events={events}

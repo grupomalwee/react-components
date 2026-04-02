@@ -56,6 +56,7 @@ export interface EventCalendarProps {
   onlyAgenda?: boolean;
   onlyYear?: boolean;
   allowCellClick?: boolean;
+  allDayCell?: boolean;
 }
 
 export interface ModalLikeProps {
@@ -80,6 +81,7 @@ export function EventAgenda({
   onlyAgenda,
   onlyYear,
   allowCellClick = true,
+  allDayCell = true
 }: EventCalendarProps) {
   const lockedView: CalendarViewAgenda | undefined = onlyDay
     ? "day"
@@ -314,6 +316,7 @@ export function EventAgenda({
               events={events}
               onEventSelect={handleEventSelect}
               noTime={noTime}
+              allDayCell={allDayCell}
               onEventCreate={
                 allowCellClick
                   ? (d: Date) =>

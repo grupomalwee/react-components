@@ -58,6 +58,7 @@ interface WeekViewProps {
   showUndatedEvents?: boolean;
   /** When true, hides event times */
   noTime?: boolean;
+  allDayCell?:boolean;
 }
 
 interface PositionedEvent {
@@ -77,6 +78,7 @@ export function WeekViewAgenda({
   onEventCreate,
   showUndatedEvents,
   noTime = false,
+  allDayCell = true
 }: WeekViewProps) {
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
@@ -134,6 +136,8 @@ export function WeekViewAgenda({
     () => allDayEvents.filter((e) => e.allDay),
     [allDayEvents],
   );
+
+  console.log(trueAllDayEvents);
 
   const multiDayTimedEvents = useMemo(
     () => allDayEvents.filter((e) => !e.allDay),
@@ -330,7 +334,7 @@ export function WeekViewAgenda({
             ))}
           </div>
 
-          {showAllDaySection && (
+          {showAllDaySection && !allDayCell && (
             <div className="border-border/70 border-b bg-muted/50">
               {trueAllDayEvents.length > 0 && (
                 <div className="grid grid-cols-8">
@@ -587,6 +591,64 @@ export function WeekViewAgenda({
                 data-today={isToday(day) || undefined}
                 key={day.toString()}
               >
+                {trueAllDayEvents.length > 0 && allDayCell && (
+                  <>
+                    {trueAllDayEvents.map((event) => {
+                      const eventStart = new Date(event.start!);
+                      const eventEnd = new Date(new Date(event.end!).setHours(23, 59));
+                      const isFirstDay = isSameDay(currentDate, eventStart);
+                      const isLastDay = isSameDay(currentDate, eventEnd);
+
+                      return (
+                        <div
+                          className="absolute z-10 px-0.5"
+                          key={`spanning-${event.id}`}
+                          style={{height: '100%', width: '100%', padding: '10px'}}
+                        >
+                          <TooltipProviderBase delayDuration={400}>
+                            <TooltipBase>
+                              <TooltipTriggerBase asChild>
+                                <div className="size-full">
+                                  <EventItemAgenda
+                                    event={event}
+                                    view="day"
+                                    isFirstDay={isFirstDay}
+                                    isLastDay={isLastDay}
+                                    onClick={(e) => handleEventClick(event, e)}
+                                    showTime
+                                    noTime={noTime}
+                                  />
+                                </div>
+                              </TooltipTriggerBase>
+                              <TooltipContentBase
+                                side="top"
+                                sideOffset={6}
+                                className="max-w-[220px] space-y-0.5"
+                              >
+                                <p className="font-semibold text-sm leading-snug">
+                                  {event.title}
+                                </p>
+                                <p className="text-xs opacity-90">
+                                  {formatDurationAgenda(event)}
+                                </p>
+                                {event.location && (
+                                  <p className="text-xs flex items-center gap-2">
+                                    <MapPinIcon size={15} /> {event.location}
+                                  </p>
+                                )}
+                                {event.description && (
+                                  <p className="text-xs opacity-75 line-clamp-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                              </TooltipContentBase>
+                            </TooltipBase>
+                          </TooltipProviderBase>
+                        </div>
+                      )
+                    })}
+                  </>
+                )}
                 {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => {
                   const timeLabel = formatDurationAgenda(positionedEvent.event);
 
