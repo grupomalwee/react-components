@@ -4,7 +4,7 @@ import * as React from "react";
 import { ClockCounterClockwiseIcon } from "@phosphor-icons/react";
 import { CommandPaletteProps, CommandGroup, CommandItem } from "./types";
 import { filterAndScore, normaliseGroups, unionGroups } from "./utils";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 
 const PAGE_SIZE = 8;
 
@@ -27,7 +27,7 @@ export function useCommandPalette({
     new Set(),
   );
 
-  const toggleSelection = React.useCallback((id: string) => {
+  const toggleSelection = useCallback((id: string) => {
     setSelectedItemIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -36,12 +36,9 @@ export function useCommandPalette({
     });
   }, []);
 
-  const clearSelection = React.useCallback(
-    () => setSelectedItemIds(new Set()),
-    [],
-  );
+  const clearSelection = useCallback(() => setSelectedItemIds(new Set()), []);
 
-  const baseGroups = React.useMemo(
+  const baseGroups = useMemo(
     () => normaliseGroups(items, groups),
     [items, groups],
   );
@@ -55,13 +52,13 @@ export function useCommandPalette({
     }
   }, [open, clearSelection]);
 
-  const searchTerms = React.useMemo(() => {
+  const searchTerms = useMemo(() => {
     const parts = query.split(",");
     if (parts.length <= 1 && !multiSearch) return [];
     return parts.map((t) => t.trim().toLowerCase()).filter(Boolean);
   }, [query, multiSearch]);
 
-  const allMatchedGroups = React.useMemo(() => {
+  const allMatchedGroups = useMemo(() => {
     if (!query.trim()) {
       if (recentItems.length > 0) {
         return [
@@ -138,51 +135,68 @@ export function useCommandPalette({
     setActiveIndex((i) => Math.min(i, Math.max(pageItemCount - 1, 0)));
   }, [pageItemCount]);
 
-  function executeBulkAction() {
+  const executeBulkAction = useCallback(() => {
     if (!onSelectMultiple || selectedItems.length === 0) return;
     onSelectMultiple(selectedItems);
     onOpenChange?.(false);
-  }
+  }, [onSelectMultiple, selectedItems, onOpenChange]);
 
-  function handleSelect(
-    item?: CommandItem,
-    event?: React.MouseEvent | React.KeyboardEvent | KeyboardEvent | MouseEvent,
-  ) {
-    if (!item) return;
+  const handleSelect = useCallback(
+    (
+      item?: CommandItem,
+      event?:
+        | React.MouseEvent
+        | React.KeyboardEvent
+        | KeyboardEvent
+        | MouseEvent,
+    ) => {
+      if (!item) return;
 
-    if (multiSelect) {
-      if (
-        event &&
-        ("ctrlKey" in event || "metaKey" in event || "shiftKey" in event) &&
-        (event.ctrlKey || event.metaKey || event.shiftKey)
-      ) {
-        toggleSelection(item.id);
-        return;
-      }
+      if (multiSelect) {
+        const isCmdKey =
+          event &&
+          ("ctrlKey" in event || "metaKey" in event || "shiftKey" in event) &&
+          (event.ctrlKey || event.metaKey || event.shiftKey);
 
-      if (selectedItems.length > 0) {
-        const itemsToSubmit = selectedItemIds.has(item.id)
-          ? selectedItems
-          : [...selectedItems, item];
-
-        if (onSelectMultiple) {
-          onSelectMultiple(itemsToSubmit);
+        if (isCmdKey) {
+          toggleSelection(item.id);
+          return;
         }
-        onOpenChange?.(false);
-        return;
-      }
-    }
 
-    item.onSelect();
-    onOpenChange?.(false);
-    if (onRecentItemsChange) {
-      const next = [item, ...recentItems.filter((r) => r.id !== item.id)].slice(
-        0,
-        maxRecentItems,
-      );
-      onRecentItemsChange(next);
-    }
-  }
+        if (selectedItems.length > 0) {
+          const finalItems = selectedItemIds.has(item.id)
+            ? selectedItems
+            : [...selectedItems, item];
+
+          onSelectMultiple?.(finalItems);
+          onOpenChange?.(false);
+          return;
+        }
+      }
+
+      item.onSelect();
+      onOpenChange?.(false);
+
+      if (onRecentItemsChange) {
+        const next = [
+          item,
+          ...recentItems.filter((r) => r.id !== item.id),
+        ].slice(0, maxRecentItems);
+        onRecentItemsChange(next);
+      }
+    },
+    [
+      multiSelect,
+      selectedItems,
+      selectedItemIds,
+      onSelectMultiple,
+      onOpenChange,
+      onRecentItemsChange,
+      recentItems,
+      maxRecentItems,
+      toggleSelection,
+    ],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -208,6 +222,10 @@ export function useCommandPalette({
       } else if (e.key === "Enter") {
         e.preventDefault();
 
+        if (multiSearch && query.includes(",")) {
+          return;
+        }
+
         if (multiSelect && (e.ctrlKey || e.metaKey)) {
           executeBulkAction();
           return;
@@ -225,9 +243,11 @@ export function useCommandPalette({
     pageItemCount,
     page,
     totalPages,
+    query,
+    multiSearch,
+    multiSelect,
     executeBulkAction,
     handleSelect,
-    multiSelect,
   ]);
 
   return {
